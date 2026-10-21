@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "uplinkstead"
+version = "0.0.1"
+description = "Exploratory Linux dual-uplink failover service core"
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+uplinkstead = "uplinkstead.agent:main"
+
+[tool.setuptools.packages.find]
+include = ["uplinkstead*"]

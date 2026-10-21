@@ -1,0 +1,420 @@
+{
+  "passed": false,
+  "source_changed": false,
+  "run_id": "47838792e3de3838",
+  "recorded_at_utc": "2026-10-21T17:06:52.418129+00:00",
+  "source": {
+    "deploy/uplinkstead.service": "d7e234c881fd227980d72fe7cf3166f99d52f21a3af17f58934edf5e2046d586",
+    "pyproject.toml": "051d38153c43394fdc9f28dc07ea246cb4c27c67e23479f23c247e49e3adafa7",
+    "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/fixtures/ip-rules-linux68.json": "2d08b8328c3c3cb53e716e12241d29ed32b1be2820ce42549dd9204bc9d3013b",
+    "tests/test_core.py": "a932157c9102ca39adf5a87bf5c69ca1e9f0b287857e19a7dd7d38127b716bf7",
+    "tests/test_policy.py": "2fc4d8f10081a8596c6121720c62a6358f9891dd54da449ebf4154cef8676c0c",
+    "tools/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tools/evidence.py": "a7afd75e562b0beb4149d5b3d311a32c1154855a86a945791477f85376885748",
+    "tools/fault.py": "eb6e62f0d519bd30499e8e725c2364fd348e4977245cf156685298b1b7f8c075",
+    "tools/guest.py": "7a0647dd7fdb717e450536110beff5cd84fbd8e1ed56decf03ab17f4c60fbe1e",
+    "tools/report.py": "6ca658f1084df1c7a129c32bc68918de4a5781ef845b183b7a79cc45ad719ab9",
+    "tools/server.py": "7d029c94295b11c1d63ff544fbfc7f409493bf0966eff988d6ec2c8c94883626",
+    "tools/unit.py": "42cab4ae4649b8667787f3ff51468dc30f81f50e768a95bf41ebed204904bb9d",
+    "tools/validate.py": "d9fc329af55b2446fb8bce6f08de3958c843842fd2ceec524e7ffd9dce423c60",
+    "uplinkstead/__init__.py": "cb644b7273fc92cbe35a017c687d64ed5d39fb9388a9b5a98bda0fe0a1c18d62",
+    "uplinkstead/agent.py": "58f98f9a4107e7ab374beea646c020a9da2663bc0e923e92fe300c01529bf9cf",
+    "uplinkstead/config.py": "826aa8759d0a40034449f88473d46fde99744309b4187045106eb5fd0c2b9d03",
+    "uplinkstead/linux.py": "de5232aee87eb7c2ae72069b676bdb74d3b7d7643a504594c47a9a1509b6e89e",
+    "uplinkstead/policy.py": "5ce6ee6fb9ab28e54b1d8c1230f566e8cc1261cc503bb87cf08686ad5de865fd",
+    "uplinkstead/probe.py": "ad7ba6b1e51850b46760037675ff218909d67f4c4b94debfbc43a6fdcfb72419",
+    "uplinkstead/writer.py": "5f93db84f0db6681086e825313351c33111982b7c6e0a57ce2b70c02e93caa4f"
+  },
+  "source_sha256": "39a67d3994ddb85800dbf8f4f94028daa6334d7c3e00fd0fdd25137ad5a13702",
+  "stages": [
+    {
+      "name": "native-unit",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.14351754200470168
+    },
+    {
+      "name": "vm-initial",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.26875087499502115
+    },
+    {
+      "name": "vm-start",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 10.388774334001937
+    },
+    {
+      "name": "upload-preflight",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.2559836250002263
+    },
+    {
+      "name": "upload",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.2516908749967115
+    },
+    {
+      "name": "setup",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 1.0876446250040317
+    },
+    {
+      "name": "linux-unit",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.3812531250005122
+    },
+    {
+      "name": "linux-unit-read",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.2605267499893671
+    },
+    {
+      "name": "cases",
+      "exit_code": 1,
+      "timed_out": false,
+      "seconds": 2.534222917005536
+    },
+    {
+      "name": "failure-diagnostics",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.49288304199581034
+    },
+    {
+      "name": "remove",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.761785292008426
+    },
+    {
+      "name": "vm-stop",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 2.5765214999992168
+    },
+    {
+      "name": "vm-final",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.26767687499523163
+    }
+  ],
+  "native_unit": {
+    "passed": true,
+    "tests": [
+      "test_core.ConfigTests.test_duplicate_target_rejected",
+      "test_core.ConfigTests.test_exclusions_bounded",
+      "test_core.ConfigTests.test_hash_stable",
+      "test_core.ConfigTests.test_invalid_source_rejected",
+      "test_core.ConfigTests.test_overlapping_interfaces_rejected",
+      "test_core.ConfigTests.test_unknown_key_rejected",
+      "test_core.RoutingShapeTests.test_every_lookup_has_matching_terminal_guard",
+      "test_core.RoutingShapeTests.test_forward_selector_not_host_source_alone",
+      "test_core.RoutingShapeTests.test_internal_lookup_suppresses_main_default",
+      "test_core.RoutingShapeTests.test_probe_is_local_and_marked",
+      "test_core.RoutingShapeTests.test_real_iproute2_rule_output_normalization",
+      "test_core.WriterTests.test_actual_new_route_reconciles_incomplete_receipt",
+      "test_core.WriterTests.test_actual_old_route_reconciles_pending_without_replay",
+      "test_core.WriterTests.test_generation_rejects_stale_after_reopen",
+      "test_core.WriterTests.test_invalid_journal_rejected",
+      "test_core.WriterTests.test_lock_contention_blocks",
+      "test_core.WriterTests.test_symlink_lock_rejected",
+      "test_core.WriterTests.test_unexpected_route_blocks",
+      "test_policy.PolicyTests.test_auto_failback_requires_continuous_stability",
+      "test_policy.PolicyTests.test_budget_latches_and_restart_retains_latch",
+      "test_policy.PolicyTests.test_cross_boot_budget_not_replenished_by_reboot",
+      "test_policy.PolicyTests.test_default_never_preference_failback",
+      "test_policy.PolicyTests.test_expired_result_breaks_streak",
+      "test_policy.PolicyTests.test_failover_threshold",
+      "test_policy.PolicyTests.test_history_expires_same_boot_without_process_reset",
+      "test_policy.PolicyTests.test_initial_success_requires_multiple_rounds",
+      "test_policy.PolicyTests.test_invalid_settings",
+      "test_policy.PolicyTests.test_missing_round_expires_health",
+      "test_policy.PolicyTests.test_one_target_failure_not_link_failure",
+      "test_policy.PolicyTests.test_reordered_round_rejected",
+      "test_policy.PolicyTests.test_stability_gap_resets_recovery",
+      "test_policy.PolicyTests.test_stale_wrong_boot_and_wrong_config_rejected",
+      "test_policy.PolicyTests.test_unknown_current_does_not_trigger_speculative_switch",
+      "test_policy.PolicyTests.test_unknown_not_destination"
+    ],
+    "count": 34,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "source_sha256": "39a67d3994ddb85800dbf8f4f94028daa6334d7c3e00fd0fdd25137ad5a13702",
+    "platform": "Darwin",
+    "python": "3.12.14"
+  },
+  "vm_initial": "Stopped",
+  "linux_unit": {
+    "passed": true,
+    "tests": [
+      "test_core.ConfigTests.test_duplicate_target_rejected",
+      "test_core.ConfigTests.test_exclusions_bounded",
+      "test_core.ConfigTests.test_hash_stable",
+      "test_core.ConfigTests.test_invalid_source_rejected",
+      "test_core.ConfigTests.test_overlapping_interfaces_rejected",
+      "test_core.ConfigTests.test_unknown_key_rejected",
+      "test_core.RoutingShapeTests.test_every_lookup_has_matching_terminal_guard",
+      "test_core.RoutingShapeTests.test_forward_selector_not_host_source_alone",
+      "test_core.RoutingShapeTests.test_internal_lookup_suppresses_main_default",
+      "test_core.RoutingShapeTests.test_probe_is_local_and_marked",
+      "test_core.RoutingShapeTests.test_real_iproute2_rule_output_normalization",
+      "test_core.WriterTests.test_actual_new_route_reconciles_incomplete_receipt",
+      "test_core.WriterTests.test_actual_old_route_reconciles_pending_without_replay",
+      "test_core.WriterTests.test_generation_rejects_stale_after_reopen",
+      "test_core.WriterTests.test_invalid_journal_rejected",
+      "test_core.WriterTests.test_lock_contention_blocks",
+      "test_core.WriterTests.test_symlink_lock_rejected",
+      "test_core.WriterTests.test_unexpected_route_blocks",
+      "test_policy.PolicyTests.test_auto_failback_requires_continuous_stability",
+      "test_policy.PolicyTests.test_budget_latches_and_restart_retains_latch",
+      "test_policy.PolicyTests.test_cross_boot_budget_not_replenished_by_reboot",
+      "test_policy.PolicyTests.test_default_never_preference_failback",
+      "test_policy.PolicyTests.test_expired_result_breaks_streak",
+      "test_policy.PolicyTests.test_failover_threshold",
+      "test_policy.PolicyTests.test_history_expires_same_boot_without_process_reset",
+      "test_policy.PolicyTests.test_initial_success_requires_multiple_rounds",
+      "test_policy.PolicyTests.test_invalid_settings",
+      "test_policy.PolicyTests.test_missing_round_expires_health",
+      "test_policy.PolicyTests.test_one_target_failure_not_link_failure",
+      "test_policy.PolicyTests.test_reordered_round_rejected",
+      "test_policy.PolicyTests.test_stability_gap_resets_recovery",
+      "test_policy.PolicyTests.test_stale_wrong_boot_and_wrong_config_rejected",
+      "test_policy.PolicyTests.test_unknown_current_does_not_trigger_speculative_switch",
+      "test_policy.PolicyTests.test_unknown_not_destination"
+    ],
+    "count": 34,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "source_sha256": "39a67d3994ddb85800dbf8f4f94028daa6334d7c3e00fd0fdd25137ad5a13702",
+    "platform": "Linux",
+    "python": "3.12.3"
+  },
+  "failure_diagnostics": {
+    "rules": [
+      {
+        "priority": 0,
+        "src": "all",
+        "table": "local"
+      },
+      {
+        "priority": 10010,
+        "src": "all",
+        "fwmark": "0x5101",
+        "iif": "lo",
+        "table": "41001"
+      },
+      {
+        "priority": 10011,
+        "src": "all",
+        "fwmark": "0x5101",
+        "iif": "lo",
+        "action": "prohibit"
+      },
+      {
+        "priority": 10012,
+        "src": "all",
+        "fwmark": "0x5102",
+        "iif": "lo",
+        "table": "41002"
+      },
+      {
+        "priority": 10013,
+        "src": "all",
+        "fwmark": "0x5102",
+        "iif": "lo",
+        "action": "prohibit"
+      },
+      {
+        "priority": 10030,
+        "src": "10.77.0.0",
+        "srclen": 24,
+        "dst": "10.77.0.0",
+        "dstlen": 24,
+        "iif": "lan0",
+        "table": "main",
+        "suppress_prefixlen": 0
+      },
+      {
+        "priority": 10031,
+        "src": "10.77.0.0",
+        "srclen": 24,
+        "dst": "10.77.0.0",
+        "dstlen": 24,
+        "iif": "lan0",
+        "action": "prohibit"
+      },
+      {
+        "priority": 10032,
+        "src": "10.77.0.0",
+        "srclen": 24,
+        "dst": "192.0.2.0",
+        "dstlen": 30,
+        "iif": "lan0",
+        "table": "main",
+        "suppress_prefixlen": 0
+      },
+      {
+        "priority": 10033,
+        "src": "10.77.0.0",
+        "srclen": 24,
+        "dst": "192.0.2.0",
+        "dstlen": 30,
+        "iif": "lan0",
+        "action": "prohibit"
+      },
+      {
+        "priority": 10034,
+        "src": "10.77.0.0",
+        "srclen": 24,
+        "dst": "192.0.2.4",
+        "dstlen": 30,
+        "iif": "lan0",
+        "table": "main",
+        "suppress_prefixlen": 0
+      },
+      {
+        "priority": 10035,
+        "src": "10.77.0.0",
+        "srclen": 24,
+        "dst": "192.0.2.4",
+        "dstlen": 30,
+        "iif": "lan0",
+        "action": "prohibit"
+      },
+      {
+        "priority": 10036,
+        "src": "10.77.0.0",
+        "srclen": 24,
+        "dst": "198.18.0.0",
+        "dstlen": 24,
+        "iif": "lan0",
+        "table": "main",
+        "suppress_prefixlen": 0
+      },
+      {
+        "priority": 10037,
+        "src": "10.77.0.0",
+        "srclen": 24,
+        "dst": "198.18.0.0",
+        "dstlen": 24,
+        "iif": "lan0",
+        "action": "prohibit"
+      },
+      {
+        "priority": 10100,
+        "src": "10.77.0.0",
+        "srclen": 24,
+        "iif": "lan0",
+        "table": "41003"
+      },
+      {
+        "priority": 10101,
+        "src": "10.77.0.0",
+        "srclen": 24,
+        "iif": "lan0",
+        "action": "prohibit"
+      },
+      {
+        "priority": 32766,
+        "src": "all",
+        "table": "main"
+      },
+      {
+        "priority": 32767,
+        "src": "all",
+        "table": "default"
+      }
+    ],
+    "routes": {
+      "41001": "[]\n",
+      "41002": "[{\"dst\":\"default\",\"gateway\":\"192.0.2.5\",\"dev\":\"wanB\",\"metric\":100,\"flags\":[]},{\"dst\":\"192.0.2.4/30\",\"dev\":\"wanB\",\"scope\":\"link\",\"flags\":[]}]\n",
+      "41003": "[{\"dst\":\"192.0.2.4/30\",\"dev\":\"wanB\",\"scope\":\"link\",\"flags\":[]}]\n"
+    },
+    "guest.json": {
+      "passed": false,
+      "source_sha256": "39a67d3994ddb85800dbf8f4f94028daa6334d7c3e00fd0fdd25137ad5a13702",
+      "boot": "56b6b590-c641-4976-84d2-ad5821bfebc9",
+      "cases": [
+        {
+          "name": "pinned_healthy_probes",
+          "passed": true,
+          "seconds": 0.06014358299999856,
+          "details": {
+            "A": [
+              3,
+              [
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.005794666999999976,
+                  "peer_observed": "10.99.1.1",
+                  "link": "A"
+                },
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.005838916999998389,
+                  "peer_observed": "10.99.1.1",
+                  "link": "A"
+                },
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.006094333000000063,
+                  "peer_observed": "10.99.1.1",
+                  "link": "A"
+                }
+              ]
+            ],
+            "B": [
+              3,
+              [
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.0023025420000006847,
+                  "peer_observed": "10.99.2.1",
+                  "link": "B"
+                },
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.003068292000000028,
+                  "peer_observed": "10.99.2.1",
+                  "link": "B"
+                },
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.0019425000000001802,
+                  "peer_observed": "10.99.2.1",
+                  "link": "B"
+                }
+              ]
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "error": "RuntimeError: cases failed or timed out",
+  "snapshot_removed": true,
+  "cleanup": {
+    "passed": true,
+    "root_network_unchanged": true,
+    "namespaces_removed": true,
+    "units_removed": true
+  },
+  "vm_final": "Stopped"
+}

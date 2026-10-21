@@ -1,0 +1,135 @@
+[
+  {
+    "priority": 0,
+    "src": "all",
+    "table": "local"
+  },
+  {
+    "priority": 10010,
+    "src": "all",
+    "fwmark": "0x5101",
+    "iif": "lo",
+    "table": "41001"
+  },
+  {
+    "priority": 10011,
+    "src": "all",
+    "fwmark": "0x5101",
+    "iif": "lo",
+    "action": "prohibit"
+  },
+  {
+    "priority": 10012,
+    "src": "all",
+    "fwmark": "0x5102",
+    "iif": "lo",
+    "table": "41002"
+  },
+  {
+    "priority": 10013,
+    "src": "all",
+    "fwmark": "0x5102",
+    "iif": "lo",
+    "action": "prohibit"
+  },
+  {
+    "priority": 10030,
+    "src": "10.77.0.0",
+    "srclen": 24,
+    "dst": "10.77.0.0",
+    "dstlen": 24,
+    "iif": "lan0",
+    "table": "main",
+    "suppress_prefixlen": 0
+  },
+  {
+    "priority": 10031,
+    "src": "10.77.0.0",
+    "srclen": 24,
+    "dst": "10.77.0.0",
+    "dstlen": 24,
+    "iif": "lan0",
+    "action": "prohibit"
+  },
+  {
+    "priority": 10032,
+    "src": "10.77.0.0",
+    "srclen": 24,
+    "dst": "192.0.2.0",
+    "dstlen": 30,
+    "iif": "lan0",
+    "table": "main",
+    "suppress_prefixlen": 0
+  },
+  {
+    "priority": 10033,
+    "src": "10.77.0.0",
+    "srclen": 24,
+    "dst": "192.0.2.0",
+    "dstlen": 30,
+    "iif": "lan0",
+    "action": "prohibit"
+  },
+  {
+    "priority": 10034,
+    "src": "10.77.0.0",
+    "srclen": 24,
+    "dst": "192.0.2.4",
+    "dstlen": 30,
+    "iif": "lan0",
+    "table": "main",
+    "suppress_prefixlen": 0
+  },
+  {
+    "priority": 10035,
+    "src": "10.77.0.0",
+    "srclen": 24,
+    "dst": "192.0.2.4",
+    "dstlen": 30,
+    "iif": "lan0",
+    "action": "prohibit"
+  },
+  {
+    "priority": 10036,
+    "src": "10.77.0.0",
+    "srclen": 24,
+    "dst": "198.18.0.0",
+    "dstlen": 24,
+    "iif": "lan0",
+    "table": "main",
+    "suppress_prefixlen": 0
+  },
+  {
+    "priority": 10037,
+    "src": "10.77.0.0",
+    "srclen": 24,
+    "dst": "198.18.0.0",
+    "dstlen": 24,
+    "iif": "lan0",
+    "action": "prohibit"
+  },
+  {
+    "priority": 10100,
+    "src": "10.77.0.0",
+    "srclen": 24,
+    "iif": "lan0",
+    "table": "41003"
+  },
+  {
+    "priority": 10101,
+    "src": "10.77.0.0",
+    "srclen": 24,
+    "iif": "lan0",
+    "action": "prohibit"
+  },
+  {
+    "priority": 32766,
+    "src": "all",
+    "table": "main"
+  },
+  {
+    "priority": 32767,
+    "src": "all",
+    "table": "default"
+  }
+]

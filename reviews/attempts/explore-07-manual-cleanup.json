@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "owner": "1230c6b60e99706a",
+  "root_before_sha256": "e8cf25d9a0a9bfc08b9e8ba4d235a1a02b6cc95915324932e234a62a519f4bc5",
+  "root_after_sha256": "e8cf25d9a0a9bfc08b9e8ba4d235a1a02b6cc95915324932e234a62a519f4bc5",
+  "owned_resources_removed": true,
+  "snapshot_removed": true,
+  "vm_final": "Stopped"
+}

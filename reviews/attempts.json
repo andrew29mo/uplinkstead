@@ -1,0 +1,99 @@
+[
+  {
+    "run_id": "1d05e9de13c55a5d",
+    "source_sha256": "ce4fd86cc8615da79aa869027008178a20f4e3e72dee39493875486ccb3cd7dc",
+    "passed": false,
+    "error": "RuntimeError: setup failed or timed out",
+    "verification_error": null,
+    "cleanup_error": null,
+    "vm_final": "Stopped",
+    "attempt": "explore-01",
+    "diagnosis": "Setup rejected an ambiguous veth interface name; fixture corrected to an explicit name.",
+    "receipt": "attempts/explore-01.json"
+  },
+  {
+    "run_id": "d46d61f996897acf",
+    "source_sha256": "72894e728d5753bda1382dc2282a2bc95add0b2b4567f4175246be79e2b92698",
+    "passed": false,
+    "error": "RuntimeError: cases failed or timed out",
+    "verification_error": null,
+    "cleanup_error": null,
+    "vm_final": "Stopped",
+    "attempt": "explore-02",
+    "diagnosis": "Backend rule readback failed; diagnostics were too short to identify the representation difference.",
+    "receipt": "attempts/explore-02.json"
+  },
+  {
+    "run_id": "5dcd01c9ada9e5dd",
+    "source_sha256": "1059e9d1f445aa0bec88084cafba5e76b4c62eb10d91bcf87eea6bca1373a381",
+    "passed": false,
+    "error": "RuntimeError: cases failed or timed out",
+    "verification_error": null,
+    "cleanup_error": null,
+    "vm_final": "Stopped",
+    "attempt": "explore-03",
+    "diagnosis": "Actual iproute2 JSON used string table IDs and separate address/prefix fields. Strict normalization and a captured-format regression test added.",
+    "receipt": "attempts/explore-03.json"
+  },
+  {
+    "run_id": "47838792e3de3838",
+    "source_sha256": "39a67d3994ddb85800dbf8f4f94028daa6334d7c3e00fd0fdd25137ad5a13702",
+    "passed": false,
+    "error": "RuntimeError: cases failed or timed out",
+    "verification_error": null,
+    "cleanup_error": null,
+    "vm_final": "Stopped",
+    "attempt": "explore-04",
+    "diagnosis": "No-borrow sequence failed after an interface down/up; opposite link no longer had its removed probe route restored.",
+    "receipt": "attempts/explore-04.json"
+  },
+  {
+    "run_id": "c553db4a1066726a",
+    "source_sha256": "529e5e90f9f22b01c0062164e9cfabbd5ee28bd3b8be40a498cc8eb9f94da9c1",
+    "passed": false,
+    "error": "RuntimeError: cases failed or timed out",
+    "verification_error": null,
+    "cleanup_error": null,
+    "vm_final": "Stopped",
+    "attempt": "explore-05",
+    "diagnosis": "Retained probe results and empty table confirmed kernel route deletion on link-down. Owned route refresh added; no guard was weakened.",
+    "receipt": "attempts/explore-05.json"
+  },
+  {
+    "run_id": "7f497ccf76222e72",
+    "source_sha256": "e372270a7759bb756d5e2e5d49e0c8d70c607fbc3b4b63ae9f758a6397263220",
+    "passed": false,
+    "error": "RuntimeError: cleanup failed or timed out",
+    "verification_error": null,
+    "cleanup_error": "remove failed or timed out",
+    "vm_final": "Stopped",
+    "attempt": "explore-06",
+    "diagnosis": "14 scenarios and orderly reboot passed, but whole run failed raw nft counter comparison during cleanup. Owned namespaces/units removed; snapshot manually removed after semantic equality was verified.",
+    "receipt": "attempts/explore-06.json"
+  },
+  {
+    "run_id": "1230c6b60e99706a",
+    "source_sha256": "6cf80c89912f89112c7be6161abbdc79cce1b6a67625dfe6590067ee125a9a6c",
+    "passed": false,
+    "error": "RuntimeError: cases failed or timed out",
+    "verification_error": null,
+    "cleanup_error": "remove failed or timed out",
+    "vm_final": "Stopped",
+    "attempt": "explore-07",
+    "diagnosis": "New active-link-down test exposed loose rp_filter dependence on an external reverse route; fixture external main fallback provisioned. Cleanup also exposed a local variable shadowing the digest function; fixed. Manual cleanup receipt retained.",
+    "receipt": "attempts/explore-07.json",
+    "manual_cleanup": "attempts/explore-07-manual-cleanup.json"
+  },
+  {
+    "run_id": "0d654962a2900a8b",
+    "source_sha256": "c1de7e81770bd87a427209b087f478aebf8496e5db8ca376478de79190769a0b",
+    "passed": true,
+    "error": null,
+    "verification_error": null,
+    "cleanup_error": null,
+    "vm_final": "Stopped",
+    "attempt": "explore-08",
+    "diagnosis": "Complete final source run passed, including cleanup and VM stopped.",
+    "receipt": "attempts/explore-08.json"
+  }
+]

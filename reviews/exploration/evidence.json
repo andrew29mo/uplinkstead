@@ -1,0 +1,1567 @@
+{
+  "passed": true,
+  "source_changed": false,
+  "run_id": "0d654962a2900a8b",
+  "recorded_at_utc": "2026-10-21T17:20:43.662674+00:00",
+  "source": {
+    "deploy/uplinkstead.service": "d7e234c881fd227980d72fe7cf3166f99d52f21a3af17f58934edf5e2046d586",
+    "pyproject.toml": "051d38153c43394fdc9f28dc07ea246cb4c27c67e23479f23c247e49e3adafa7",
+    "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/fixtures/ip-rules-linux68.json": "2d08b8328c3c3cb53e716e12241d29ed32b1be2820ce42549dd9204bc9d3013b",
+    "tests/test_core.py": "34065d5bac6ba3412eb05e52ddc58639a40361f83eab7d4f9ec573bb88d4be96",
+    "tests/test_netproof.py": "67417884f476e95ec5dcb91b9b2c1b9517291538b65f70e480f342bc11652d02",
+    "tests/test_policy.py": "2fc4d8f10081a8596c6121720c62a6358f9891dd54da449ebf4154cef8676c0c",
+    "tools/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tools/evidence.py": "a7afd75e562b0beb4149d5b3d311a32c1154855a86a945791477f85376885748",
+    "tools/fault.py": "eb6e62f0d519bd30499e8e725c2364fd348e4977245cf156685298b1b7f8c075",
+    "tools/guest.py": "b6616533faa0fc2f83149768aeec18c8ec60c17357648e01b437356024ab26ad",
+    "tools/netproof.py": "1186a5080336d1434cc7ff36aa1479af10a37dff9d78617147c30e52fb764b8a",
+    "tools/report.py": "8ef0edef7d175a55d1277a8088c972a06e87e0ad2c00b032971bfa74aac0d4c5",
+    "tools/server.py": "7d029c94295b11c1d63ff544fbfc7f409493bf0966eff988d6ec2c8c94883626",
+    "tools/unit.py": "42cab4ae4649b8667787f3ff51468dc30f81f50e768a95bf41ebed204904bb9d",
+    "tools/validate.py": "87ac4d4813bd51fc5e0242ccb41f8f1c2b28b214a2dc3f5fd5590c5a2ec4a46c",
+    "uplinkstead/__init__.py": "cb644b7273fc92cbe35a017c687d64ed5d39fb9388a9b5a98bda0fe0a1c18d62",
+    "uplinkstead/agent.py": "6019af1ab68f2bd55f43a9f60f69a3bf39af6af6eb0b882918f2270451cdb897",
+    "uplinkstead/config.py": "826aa8759d0a40034449f88473d46fde99744309b4187045106eb5fd0c2b9d03",
+    "uplinkstead/linux.py": "d25b5dabbaa1b15d7a477e2f97b6c18c1ff65271a74673f67b4d0a76f51c7dcc",
+    "uplinkstead/policy.py": "5ce6ee6fb9ab28e54b1d8c1230f566e8cc1261cc503bb87cf08686ad5de865fd",
+    "uplinkstead/probe.py": "ad7ba6b1e51850b46760037675ff218909d67f4c4b94debfbc43a6fdcfb72419",
+    "uplinkstead/writer.py": "24606f8404f70f0b8f20728ee912a2627a945f6320205b026c6766df3cfd9d50"
+  },
+  "source_sha256": "c1de7e81770bd87a427209b087f478aebf8496e5db8ca376478de79190769a0b",
+  "stages": [
+    {
+      "name": "native-unit",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.14206962499883957
+    },
+    {
+      "name": "vm-initial",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.27154141599021386
+    },
+    {
+      "name": "vm-start",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 9.187169166005333
+    },
+    {
+      "name": "upload-preflight",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.24004849999619182
+    },
+    {
+      "name": "upload",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.24518016701040324
+    },
+    {
+      "name": "setup",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 1.1414337919995887
+    },
+    {
+      "name": "linux-unit",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.46052008400147315
+    },
+    {
+      "name": "linux-unit-read",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.23792425000283401
+    },
+    {
+      "name": "cases",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 29.429011041997
+    },
+    {
+      "name": "prepare",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 4.859808749999502
+    },
+    {
+      "name": "vm-orderly-stop",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 2.5195549159980146
+    },
+    {
+      "name": "vm-between",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.1955220840027323
+    },
+    {
+      "name": "vm-restart",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 9.595465042002616
+    },
+    {
+      "name": "after",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.5118130000046222
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.8125201670045499
+    },
+    {
+      "name": "remove",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.3736394160077907
+    },
+    {
+      "name": "vm-stop",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 2.5133085000124993
+    },
+    {
+      "name": "vm-final",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.24485054200340528
+    }
+  ],
+  "native_unit": {
+    "passed": true,
+    "tests": [
+      "test_core.ConfigTests.test_duplicate_target_rejected",
+      "test_core.ConfigTests.test_exclusions_bounded",
+      "test_core.ConfigTests.test_hash_stable",
+      "test_core.ConfigTests.test_invalid_source_rejected",
+      "test_core.ConfigTests.test_overlapping_interfaces_rejected",
+      "test_core.ConfigTests.test_unknown_key_rejected",
+      "test_core.RoutingShapeTests.test_every_lookup_has_matching_terminal_guard",
+      "test_core.RoutingShapeTests.test_forward_selector_not_host_source_alone",
+      "test_core.RoutingShapeTests.test_internal_lookup_suppresses_main_default",
+      "test_core.RoutingShapeTests.test_probe_is_local_and_marked",
+      "test_core.RoutingShapeTests.test_real_iproute2_rule_output_normalization",
+      "test_core.WriterTests.test_actual_new_route_reconciles_incomplete_receipt",
+      "test_core.WriterTests.test_actual_old_route_reconciles_pending_without_replay",
+      "test_core.WriterTests.test_generation_rejects_stale_after_reopen",
+      "test_core.WriterTests.test_invalid_journal_rejected",
+      "test_core.WriterTests.test_lock_contention_blocks",
+      "test_core.WriterTests.test_symlink_lock_rejected",
+      "test_core.WriterTests.test_unexpected_route_blocks",
+      "test_netproof.NetworkProofTests.test_meaningful_bytes_operand_not_ignored",
+      "test_netproof.NetworkProofTests.test_only_nft_counter_values_and_handles_ignored",
+      "test_netproof.NetworkProofTests.test_rule_order_preserved",
+      "test_netproof.NetworkProofTests.test_xt_counters_and_timestamp_comments_only",
+      "test_netproof.NetworkProofTests.test_xt_rule_comment_not_mistaken_for_counter",
+      "test_policy.PolicyTests.test_auto_failback_requires_continuous_stability",
+      "test_policy.PolicyTests.test_budget_latches_and_restart_retains_latch",
+      "test_policy.PolicyTests.test_cross_boot_budget_not_replenished_by_reboot",
+      "test_policy.PolicyTests.test_default_never_preference_failback",
+      "test_policy.PolicyTests.test_expired_result_breaks_streak",
+      "test_policy.PolicyTests.test_failover_threshold",
+      "test_policy.PolicyTests.test_history_expires_same_boot_without_process_reset",
+      "test_policy.PolicyTests.test_initial_success_requires_multiple_rounds",
+      "test_policy.PolicyTests.test_invalid_settings",
+      "test_policy.PolicyTests.test_missing_round_expires_health",
+      "test_policy.PolicyTests.test_one_target_failure_not_link_failure",
+      "test_policy.PolicyTests.test_reordered_round_rejected",
+      "test_policy.PolicyTests.test_stability_gap_resets_recovery",
+      "test_policy.PolicyTests.test_stale_wrong_boot_and_wrong_config_rejected",
+      "test_policy.PolicyTests.test_unknown_current_does_not_trigger_speculative_switch",
+      "test_policy.PolicyTests.test_unknown_not_destination"
+    ],
+    "count": 39,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "source_sha256": "c1de7e81770bd87a427209b087f478aebf8496e5db8ca376478de79190769a0b",
+    "platform": "Darwin",
+    "python": "3.12.14"
+  },
+  "vm_initial": "Stopped",
+  "linux_unit": {
+    "passed": true,
+    "tests": [
+      "test_core.ConfigTests.test_duplicate_target_rejected",
+      "test_core.ConfigTests.test_exclusions_bounded",
+      "test_core.ConfigTests.test_hash_stable",
+      "test_core.ConfigTests.test_invalid_source_rejected",
+      "test_core.ConfigTests.test_overlapping_interfaces_rejected",
+      "test_core.ConfigTests.test_unknown_key_rejected",
+      "test_core.RoutingShapeTests.test_every_lookup_has_matching_terminal_guard",
+      "test_core.RoutingShapeTests.test_forward_selector_not_host_source_alone",
+      "test_core.RoutingShapeTests.test_internal_lookup_suppresses_main_default",
+      "test_core.RoutingShapeTests.test_probe_is_local_and_marked",
+      "test_core.RoutingShapeTests.test_real_iproute2_rule_output_normalization",
+      "test_core.WriterTests.test_actual_new_route_reconciles_incomplete_receipt",
+      "test_core.WriterTests.test_actual_old_route_reconciles_pending_without_replay",
+      "test_core.WriterTests.test_generation_rejects_stale_after_reopen",
+      "test_core.WriterTests.test_invalid_journal_rejected",
+      "test_core.WriterTests.test_lock_contention_blocks",
+      "test_core.WriterTests.test_symlink_lock_rejected",
+      "test_core.WriterTests.test_unexpected_route_blocks",
+      "test_netproof.NetworkProofTests.test_meaningful_bytes_operand_not_ignored",
+      "test_netproof.NetworkProofTests.test_only_nft_counter_values_and_handles_ignored",
+      "test_netproof.NetworkProofTests.test_rule_order_preserved",
+      "test_netproof.NetworkProofTests.test_xt_counters_and_timestamp_comments_only",
+      "test_netproof.NetworkProofTests.test_xt_rule_comment_not_mistaken_for_counter",
+      "test_policy.PolicyTests.test_auto_failback_requires_continuous_stability",
+      "test_policy.PolicyTests.test_budget_latches_and_restart_retains_latch",
+      "test_policy.PolicyTests.test_cross_boot_budget_not_replenished_by_reboot",
+      "test_policy.PolicyTests.test_default_never_preference_failback",
+      "test_policy.PolicyTests.test_expired_result_breaks_streak",
+      "test_policy.PolicyTests.test_failover_threshold",
+      "test_policy.PolicyTests.test_history_expires_same_boot_without_process_reset",
+      "test_policy.PolicyTests.test_initial_success_requires_multiple_rounds",
+      "test_policy.PolicyTests.test_invalid_settings",
+      "test_policy.PolicyTests.test_missing_round_expires_health",
+      "test_policy.PolicyTests.test_one_target_failure_not_link_failure",
+      "test_policy.PolicyTests.test_reordered_round_rejected",
+      "test_policy.PolicyTests.test_stability_gap_resets_recovery",
+      "test_policy.PolicyTests.test_stale_wrong_boot_and_wrong_config_rejected",
+      "test_policy.PolicyTests.test_unknown_current_does_not_trigger_speculative_switch",
+      "test_policy.PolicyTests.test_unknown_not_destination"
+    ],
+    "count": 39,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "source_sha256": "c1de7e81770bd87a427209b087f478aebf8496e5db8ca376478de79190769a0b",
+    "platform": "Linux",
+    "python": "3.12.3"
+  },
+  "guest": {
+    "passed": true,
+    "source_sha256": "c1de7e81770bd87a427209b087f478aebf8496e5db8ca376478de79190769a0b",
+    "boot": "624c09af-7d2b-4202-a575-28f79cebacbc",
+    "cases": [
+      {
+        "name": "pinned_healthy_probes",
+        "passed": true,
+        "seconds": 0.07055083299999865,
+        "details": {
+          "A": [
+            3,
+            [
+              {
+                "ok": true,
+                "infrastructure": false,
+                "seconds": 0.006157167000001351,
+                "peer_observed": "10.99.1.1",
+                "link": "A"
+              },
+              {
+                "ok": true,
+                "infrastructure": false,
+                "seconds": 0.005395916999999528,
+                "peer_observed": "10.99.1.1",
+                "link": "A"
+              },
+              {
+                "ok": true,
+                "infrastructure": false,
+                "seconds": 0.005399832999998466,
+                "peer_observed": "10.99.1.1",
+                "link": "A"
+              }
+            ]
+          ],
+          "B": [
+            3,
+            [
+              {
+                "ok": true,
+                "infrastructure": false,
+                "seconds": 0.0016198749999993822,
+                "peer_observed": "10.99.2.1",
+                "link": "B"
+              },
+              {
+                "ok": true,
+                "infrastructure": false,
+                "seconds": 0.001742416999999108,
+                "peer_observed": "10.99.2.1",
+                "link": "B"
+              },
+              {
+                "ok": true,
+                "infrastructure": false,
+                "seconds": 0.001727167000000307,
+                "peer_observed": "10.99.2.1",
+                "link": "B"
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "name": "probe_blackhole_missing_route_link_down",
+        "passed": true,
+        "seconds": 3.128441294,
+        "details": [
+          {
+            "link": "A",
+            "blackhole": [
+              0,
+              [
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5059074589999994,
+                  "link": "A"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5058632499999991,
+                  "link": "A"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5045581260000009,
+                  "link": "A"
+                }
+              ]
+            ],
+            "other": [
+              3,
+              [
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.008477207999998626,
+                  "peer_observed": "10.99.2.1",
+                  "link": "B"
+                },
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.007819624999999775,
+                  "peer_observed": "10.99.2.1",
+                  "link": "B"
+                },
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.008527958000000169,
+                  "peer_observed": "10.99.2.1",
+                  "link": "B"
+                }
+              ]
+            ],
+            "missing_route": [
+              0,
+              [
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5046212079999997,
+                  "link": "A"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5042606260000007,
+                  "link": "A"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5042225840000008,
+                  "link": "A"
+                }
+              ]
+            ],
+            "link_down": [
+              0,
+              [
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "OSError",
+                  "seconds": 0.00018512499999978616,
+                  "link": "A"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "OSError",
+                  "seconds": 0.00010758400000021595,
+                  "link": "A"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "OSError",
+                  "seconds": 5.3291000000399436e-05,
+                  "link": "A"
+                }
+              ]
+            ],
+            "wrong_egress_packets": 0,
+            "terminal_lookup_rejected": true
+          },
+          {
+            "link": "B",
+            "blackhole": [
+              0,
+              [
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5037579169999997,
+                  "link": "B"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5036438329999999,
+                  "link": "B"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5032587500000005,
+                  "link": "B"
+                }
+              ]
+            ],
+            "other": [
+              3,
+              [
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.009729584000000457,
+                  "peer_observed": "10.99.1.1",
+                  "link": "A"
+                },
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.008636333000000107,
+                  "peer_observed": "10.99.1.1",
+                  "link": "A"
+                },
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.007800458000000177,
+                  "peer_observed": "10.99.1.1",
+                  "link": "A"
+                }
+              ]
+            ],
+            "missing_route": [
+              0,
+              [
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5034638339999997,
+                  "link": "B"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5030875420000012,
+                  "link": "B"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5026102090000002,
+                  "link": "B"
+                }
+              ]
+            ],
+            "link_down": [
+              0,
+              [
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "OSError",
+                  "seconds": 0.00034795799999898236,
+                  "link": "B"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "OSError",
+                  "seconds": 0.0003067080000000999,
+                  "link": "B"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "OSError",
+                  "seconds": 0.00013724999999986665,
+                  "link": "B"
+                }
+              ]
+            ],
+            "wrong_egress_packets": 0,
+            "terminal_lookup_rejected": true
+          }
+        ]
+      },
+      {
+        "name": "binding_error_unknown",
+        "passed": true,
+        "seconds": 0.02677729200000023,
+        "details": [
+          null,
+          [
+            {
+              "ok": false,
+              "infrastructure": true,
+              "error": "OSError",
+              "seconds": 0.00013154200000009553,
+              "link": "A"
+            },
+            {
+              "ok": false,
+              "infrastructure": true,
+              "error": "OSError",
+              "seconds": 9.254099999900234e-05,
+              "link": "A"
+            },
+            {
+              "ok": false,
+              "infrastructure": true,
+              "error": "OSError",
+              "seconds": 6.899999999987472e-05,
+              "link": "A"
+            }
+          ]
+        ]
+      },
+      {
+        "name": "lan_scope_new_tls_and_internal_exclusion",
+        "passed": true,
+        "seconds": 0.1859763749999992,
+        "details": {
+          "lan_A": {
+            "ok": true,
+            "result": {
+              "ok": true,
+              "nonce": "cbafaa8e3e9f2ce40ea13424",
+              "peer": "10.99.1.1"
+            },
+            "error": null
+          },
+          "lan_B": {
+            "ok": true,
+            "result": {
+              "ok": true,
+              "nonce": "7b8eab15c7ae6aef5f41b025",
+              "peer": "10.99.2.1"
+            },
+            "error": null
+          },
+          "host_before": {
+            "ok": true,
+            "result": {
+              "ok": true,
+              "nonce": "4dc46de0b1f94e12bff86d0c",
+              "peer": "10.99.1.1"
+            },
+            "error": null
+          },
+          "host_after": {
+            "ok": true,
+            "result": {
+              "ok": true,
+              "nonce": "581f6bfad6de9ed78659c2a5",
+              "peer": "10.99.1.1"
+            },
+            "error": null
+          },
+          "other_before": {
+            "ok": true,
+            "result": {
+              "ok": true,
+              "nonce": "cb464515eaa2797b6dfadcb0",
+              "peer": "10.99.1.1"
+            },
+            "error": null
+          },
+          "other_after": {
+            "ok": true,
+            "result": {
+              "ok": true,
+              "nonce": "29559d391baa081b414ec2a8",
+              "peer": "10.99.1.1"
+            },
+            "error": null
+          },
+          "main_unchanged": true,
+          "internal_route": [
+            {
+              "dst": "198.18.0.1",
+              "from": "10.77.0.2",
+              "gateway": "192.0.2.1",
+              "dev": "wanA",
+              "flags": [],
+              "cache": [],
+              "iif": "lan0"
+            }
+          ]
+        }
+      },
+      {
+        "name": "external_rpdb_conflict_and_preservation",
+        "passed": true,
+        "seconds": 0.08163558299999885,
+        "details": {
+          "intersecting_rejected": true,
+          "no_changes_on_rejection": true,
+          "disjoint_preserved": true
+        }
+      },
+      {
+        "name": "output_success_does_not_prove_forwarding",
+        "passed": true,
+        "seconds": 1.1303325009999998,
+        "details": {
+          "exit_probe_successes": 3,
+          "lan_request": {
+            "ok": false,
+            "result": null,
+            "error": "request_failed"
+          },
+          "not_counted_as_recovery": true
+        }
+      },
+      {
+        "name": "strict_rp_filter_contract",
+        "passed": true,
+        "seconds": 0.09128004200000106,
+        "details": {
+          "strict_all_rejected": true,
+          "external_setting_not_rewritten": true
+        }
+      },
+      {
+        "name": "routed_without_nat_and_provisioned_return_path",
+        "passed": true,
+        "seconds": 0.15098841700000065,
+        "details": {
+          "requests": [
+            {
+              "ok": true,
+              "result": {
+                "ok": true,
+                "nonce": "dab43dc23d2158e7e2a2440a",
+                "peer": "10.77.0.2"
+              },
+              "error": null
+            },
+            {
+              "ok": true,
+              "result": {
+                "ok": true,
+                "nonce": "dced745f2de6d042e5b135ce",
+                "peer": "10.77.0.2"
+              },
+              "error": null
+            }
+          ],
+          "return_routes_explicitly_provisioned_by_fixture": true
+        }
+      },
+      {
+        "name": "link_down_owned_route_reconstruction",
+        "passed": true,
+        "seconds": 0.2898386249999998,
+        "details": {
+          "actual_route_loss_reconciled": true,
+          "backup_request": {
+            "ok": true,
+            "result": {
+              "ok": true,
+              "nonce": "b0ebb1b61416beb6124ee7cf",
+              "peer": "10.99.2.1"
+            },
+            "error": null
+          },
+          "probe_after_link_up": [
+            3,
+            [
+              {
+                "ok": true,
+                "infrastructure": false,
+                "seconds": 0.004023374999999163,
+                "peer_observed": "10.99.1.1",
+                "link": "A"
+              },
+              {
+                "ok": true,
+                "infrastructure": false,
+                "seconds": 0.003799791999998803,
+                "peer_observed": "10.99.1.1",
+                "link": "A"
+              },
+              {
+                "ok": true,
+                "infrastructure": false,
+                "seconds": 0.0037861249999995295,
+                "peer_observed": "10.99.1.1",
+                "link": "A"
+              }
+            ]
+          ],
+          "selection_remains_B": true
+        }
+      },
+      {
+        "name": "delayed_old_operation_rejected",
+        "passed": true,
+        "seconds": 0.21302029200000128,
+        "details": {
+          "stale_epoch": 15,
+          "rejected_exit": 1,
+          "selected": "B"
+        }
+      },
+      {
+        "name": "live_old_writer_blocks_takeover",
+        "passed": true,
+        "seconds": 0.11041833300000015,
+        "details": {
+          "successor_blocked_while_owner_alive": true,
+          "successor_after_retirement": "B"
+        }
+      },
+      {
+        "name": "inherited_mutation_helper_lock",
+        "passed": true,
+        "seconds": 0.21307112499999903,
+        "details": {
+          "parent_killed": true,
+          "live_mutation_child_blocks_successor": true,
+          "child_retired_before_successor": true
+        }
+      },
+      {
+        "name": "sigkill_intent_route_and_receipt_boundaries",
+        "passed": true,
+        "seconds": 0.46940733399999957,
+        "details": [
+          {
+            "boundary": "before-route",
+            "pending_before": {
+              "before": "A",
+              "target": "B",
+              "token": "0f5fe4b76a2f48cf94f57d0be46a621b"
+            },
+            "routes_before": [
+              {
+                "dst": "default",
+                "gateway": "192.0.2.1",
+                "dev": "wanA",
+                "metric": 100,
+                "flags": []
+              },
+              {
+                "dst": "192.0.2.0/30",
+                "dev": "wanA",
+                "scope": "link",
+                "flags": []
+              },
+              {
+                "dst": "192.0.2.4/30",
+                "dev": "wanB",
+                "scope": "link",
+                "flags": []
+              }
+            ],
+            "recovered_selected": "A",
+            "epoch_before": 25,
+            "epoch_after": 26
+          },
+          {
+            "boundary": "after-route",
+            "pending_before": {
+              "before": "A",
+              "target": "B",
+              "token": "de93cf35dcfd498d893ce2c5fc127a8f"
+            },
+            "routes_before": [
+              {
+                "dst": "default",
+                "gateway": "192.0.2.5",
+                "dev": "wanB",
+                "metric": 100,
+                "flags": []
+              },
+              {
+                "dst": "192.0.2.0/30",
+                "dev": "wanA",
+                "scope": "link",
+                "flags": []
+              },
+              {
+                "dst": "192.0.2.4/30",
+                "dev": "wanB",
+                "scope": "link",
+                "flags": []
+              }
+            ],
+            "recovered_selected": "B",
+            "epoch_before": 28,
+            "epoch_after": 29
+          },
+          {
+            "boundary": "before-complete",
+            "pending_before": {
+              "before": "A",
+              "target": "B",
+              "token": "852230bac0bb4910abbbcb9ac7ff416a"
+            },
+            "routes_before": [
+              {
+                "dst": "default",
+                "gateway": "192.0.2.5",
+                "dev": "wanB",
+                "metric": 100,
+                "flags": []
+              },
+              {
+                "dst": "192.0.2.0/30",
+                "dev": "wanA",
+                "scope": "link",
+                "flags": []
+              },
+              {
+                "dst": "192.0.2.4/30",
+                "dev": "wanB",
+                "scope": "link",
+                "flags": []
+              }
+            ],
+            "recovered_selected": "B",
+            "epoch_before": 31,
+            "epoch_after": 32
+          }
+        ]
+      },
+      {
+        "name": "real_probe_failover_flapping_and_budget",
+        "passed": true,
+        "seconds": 22.397003280999996,
+        "details": {
+          "transitions": [
+            {
+              "stage": "A_down",
+              "selected": "B"
+            },
+            {
+              "stage": "B_down",
+              "selected": "A"
+            },
+            {
+              "stage": "A_down_again",
+              "selected": "B"
+            }
+          ],
+          "rounds": [
+            {
+              "stage": "healthy",
+              "round": 1,
+              "observed": {
+                "A": 3,
+                "B": 3
+              },
+              "selected": "A",
+              "state": "NO_HEALTHY_UPLINK",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "3d0c0c5f3f4dd0ee04de3331",
+                  "peer": "10.99.1.1"
+                },
+                "error": null
+              }
+            },
+            {
+              "stage": "healthy",
+              "round": 2,
+              "observed": {
+                "A": 3,
+                "B": 3
+              },
+              "selected": "A",
+              "state": "NO_HEALTHY_UPLINK",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "7e51b5f76a1c8c020764099f",
+                  "peer": "10.99.1.1"
+                },
+                "error": null
+              }
+            },
+            {
+              "stage": "healthy",
+              "round": 3,
+              "observed": {
+                "A": 3,
+                "B": 3
+              },
+              "selected": "A",
+              "state": "RUNNING",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "1e44f7f85be46f4ea4449b78",
+                  "peer": "10.99.1.1"
+                },
+                "error": null
+              }
+            },
+            {
+              "stage": "healthy",
+              "round": 4,
+              "observed": {
+                "A": 3,
+                "B": 3
+              },
+              "selected": "A",
+              "state": "RUNNING",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "55c718502cebfe4293a951f9",
+                  "peer": "10.99.1.1"
+                },
+                "error": null
+              }
+            },
+            {
+              "stage": "single_target",
+              "round": 5,
+              "observed": {
+                "A": 2,
+                "B": 3
+              },
+              "selected": "A",
+              "state": "RUNNING",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "a2f3307fb41818e1699e16e8",
+                  "peer": "10.99.1.1"
+                },
+                "error": null
+              }
+            },
+            {
+              "stage": "single_target",
+              "round": 6,
+              "observed": {
+                "A": 2,
+                "B": 3
+              },
+              "selected": "A",
+              "state": "RUNNING",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "02a486ce3f98087ded8aefd9",
+                  "peer": "10.99.1.1"
+                },
+                "error": null
+              }
+            },
+            {
+              "stage": "single_target",
+              "round": 7,
+              "observed": {
+                "A": 2,
+                "B": 3
+              },
+              "selected": "A",
+              "state": "RUNNING",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "0da4f516af8cbfea2df0939e",
+                  "peer": "10.99.1.1"
+                },
+                "error": null
+              }
+            },
+            {
+              "stage": "single_target",
+              "round": 8,
+              "observed": {
+                "A": 2,
+                "B": 3
+              },
+              "selected": "A",
+              "state": "RUNNING",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "66a411bc92c35d46531e9456",
+                  "peer": "10.99.1.1"
+                },
+                "error": null
+              }
+            },
+            {
+              "stage": "A_down",
+              "round": 9,
+              "observed": {
+                "A": 0,
+                "B": 3
+              },
+              "selected": "A",
+              "state": "RUNNING",
+              "lan_request": {
+                "ok": false,
+                "result": null,
+                "error": "request_failed"
+              }
+            },
+            {
+              "stage": "A_down",
+              "round": 10,
+              "observed": {
+                "A": 0,
+                "B": 3
+              },
+              "selected": "A",
+              "state": "RUNNING",
+              "lan_request": {
+                "ok": false,
+                "result": null,
+                "error": "request_failed"
+              }
+            },
+            {
+              "stage": "A_down",
+              "round": 11,
+              "observed": {
+                "A": 0,
+                "B": 3
+              },
+              "selected": "B",
+              "state": "SWITCHING",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "ad6f58bf2bb723cb7666188d",
+                  "peer": "10.99.2.1"
+                },
+                "error": null
+              }
+            },
+            {
+              "stage": "A_down",
+              "round": 12,
+              "observed": {
+                "A": 0,
+                "B": 3
+              },
+              "selected": "B",
+              "state": "RUNNING",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "0366395244e2e3992d93bc5f",
+                  "peer": "10.99.2.1"
+                },
+                "error": null
+              }
+            },
+            {
+              "stage": "A_recovers",
+              "round": 13,
+              "observed": {
+                "A": 3,
+                "B": 3
+              },
+              "selected": "B",
+              "state": "RUNNING",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "d599b16fb22aea732e019ce9",
+                  "peer": "10.99.2.1"
+                },
+                "error": null
+              }
+            },
+            {
+              "stage": "A_recovers",
+              "round": 14,
+              "observed": {
+                "A": 3,
+                "B": 3
+              },
+              "selected": "B",
+              "state": "RUNNING",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "4bb752f896b04bff77adfa93",
+                  "peer": "10.99.2.1"
+                },
+                "error": null
+              }
+            },
+            {
+              "stage": "A_recovers",
+              "round": 15,
+              "observed": {
+                "A": 3,
+                "B": 3
+              },
+              "selected": "B",
+              "state": "RUNNING",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "bb2d458e19907dba72f1839b",
+                  "peer": "10.99.2.1"
+                },
+                "error": null
+              }
+            },
+            {
+              "stage": "A_recovers",
+              "round": 16,
+              "observed": {
+                "A": 3,
+                "B": 3
+              },
+              "selected": "B",
+              "state": "RUNNING",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "0f6c3c2aa60fed5665e13ed5",
+                  "peer": "10.99.2.1"
+                },
+                "error": null
+              }
+            },
+            {
+              "stage": "B_down",
+              "round": 17,
+              "observed": {
+                "A": 3,
+                "B": 0
+              },
+              "selected": "B",
+              "state": "RUNNING",
+              "lan_request": {
+                "ok": false,
+                "result": null,
+                "error": "request_failed"
+              }
+            },
+            {
+              "stage": "B_down",
+              "round": 18,
+              "observed": {
+                "A": 3,
+                "B": 0
+              },
+              "selected": "B",
+              "state": "RUNNING",
+              "lan_request": {
+                "ok": false,
+                "result": null,
+                "error": "request_failed"
+              }
+            },
+            {
+              "stage": "B_down",
+              "round": 19,
+              "observed": {
+                "A": 3,
+                "B": 0
+              },
+              "selected": "A",
+              "state": "SWITCHING",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "0b8b7d8cdd4ca2f1fef9b71e",
+                  "peer": "10.99.1.1"
+                },
+                "error": null
+              }
+            },
+            {
+              "stage": "B_down",
+              "round": 20,
+              "observed": {
+                "A": 3,
+                "B": 0
+              },
+              "selected": "A",
+              "state": "RUNNING",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "51b182279422a19b4e052499",
+                  "peer": "10.99.1.1"
+                },
+                "error": null
+              }
+            },
+            {
+              "stage": "A_down_again",
+              "round": 21,
+              "observed": {
+                "A": 0,
+                "B": 3
+              },
+              "selected": "A",
+              "state": "NO_HEALTHY_UPLINK",
+              "lan_request": {
+                "ok": false,
+                "result": null,
+                "error": "request_failed"
+              }
+            },
+            {
+              "stage": "A_down_again",
+              "round": 22,
+              "observed": {
+                "A": 0,
+                "B": 3
+              },
+              "selected": "A",
+              "state": "NO_HEALTHY_UPLINK",
+              "lan_request": {
+                "ok": false,
+                "result": null,
+                "error": "request_failed"
+              }
+            },
+            {
+              "stage": "A_down_again",
+              "round": 23,
+              "observed": {
+                "A": 0,
+                "B": 3
+              },
+              "selected": "B",
+              "state": "SWITCHING",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "ea1b2e05c5f70a10d938f8e5",
+                  "peer": "10.99.2.1"
+                },
+                "error": null
+              }
+            },
+            {
+              "stage": "A_down_again",
+              "round": 24,
+              "observed": {
+                "A": 0,
+                "B": 3
+              },
+              "selected": "B",
+              "state": "RUNNING",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "a5f9b88168803783cf630b2d",
+                  "peer": "10.99.2.1"
+                },
+                "error": null
+              }
+            },
+            {
+              "stage": "B_down_again",
+              "round": 25,
+              "observed": {
+                "A": 3,
+                "B": 0
+              },
+              "selected": "B",
+              "state": "NO_HEALTHY_UPLINK",
+              "lan_request": {
+                "ok": false,
+                "result": null,
+                "error": "request_failed"
+              }
+            },
+            {
+              "stage": "B_down_again",
+              "round": 26,
+              "observed": {
+                "A": 3,
+                "B": 0
+              },
+              "selected": "B",
+              "state": "NO_HEALTHY_UPLINK",
+              "lan_request": {
+                "ok": false,
+                "result": null,
+                "error": "request_failed"
+              }
+            },
+            {
+              "stage": "B_down_again",
+              "round": 27,
+              "observed": {
+                "A": 3,
+                "B": 0
+              },
+              "selected": "B",
+              "state": "DEGRADED_LATCHED",
+              "lan_request": {
+                "ok": false,
+                "result": null,
+                "error": "request_failed"
+              }
+            },
+            {
+              "stage": "B_down_again",
+              "round": 28,
+              "observed": {
+                "A": 3,
+                "B": 0
+              },
+              "selected": "B",
+              "state": "DEGRADED_LATCHED",
+              "lan_request": {
+                "ok": false,
+                "result": null,
+                "error": "request_failed"
+              }
+            }
+          ],
+          "latched": true
+        }
+      },
+      {
+        "name": "single_real_target_failure",
+        "passed": true,
+        "seconds": 0.5451803949999956,
+        "details": [
+          2,
+          [
+            {
+              "ok": false,
+              "infrastructure": false,
+              "error": "TimeoutError",
+              "seconds": 0.501490675999996,
+              "link": "A"
+            },
+            {
+              "ok": true,
+              "infrastructure": false,
+              "seconds": 0.003609994000001393,
+              "peer_observed": "10.99.1.1",
+              "link": "A"
+            },
+            {
+              "ok": true,
+              "infrastructure": false,
+              "seconds": 0.0032706639999986464,
+              "peer_observed": "10.99.1.1",
+              "link": "A"
+            }
+          ]
+        ]
+      }
+    ],
+    "environment": {
+      "kernel": "6.8.0-117-generic",
+      "python": "3.12.3",
+      "systemd": "systemd 255 (255.4-1ubuntu8.15)"
+    },
+    "service_source_sha256": "d7e234c881fd227980d72fe7cf3166f99d52f21a3af17f58934edf5e2046d586",
+    "installed_unit_sha256": "82d18d51e0ddc0d5762bd0d13320918bc47229d1bb8dab36fe670104f19a0fb7"
+  },
+  "reboot_before": {
+    "before_boot": "624c09af-7d2b-4202-a575-28f79cebacbc",
+    "pending": {
+      "before": "A",
+      "target": "B",
+      "token": "6c318c48c8fb4c6a8c47b3c0a075dfba"
+    },
+    "selected_receipt": "A",
+    "actual_route": [
+      {
+        "dst": "default",
+        "gateway": "192.0.2.5",
+        "dev": "wanB",
+        "metric": 100,
+        "flags": []
+      },
+      {
+        "dst": "192.0.2.0/30",
+        "dev": "wanA",
+        "scope": "link",
+        "flags": []
+      },
+      {
+        "dst": "192.0.2.4/30",
+        "dev": "wanB",
+        "scope": "link",
+        "flags": []
+      }
+    ],
+    "process_restart_before": "MainPID=3538\nInvocationID=f2ca88e3058a44f2889cf3dc0660fd0f\n",
+    "process_restart_after": "MainPID=3600\nActiveState=active\nInvocationID=6d40944c19404e0d9854708234b49929\n",
+    "latched_before": true
+  },
+  "reboot": {
+    "passed": true,
+    "orderly_vm_restart": true,
+    "power_loss_tested": false,
+    "before": {
+      "before_boot": "624c09af-7d2b-4202-a575-28f79cebacbc",
+      "pending": {
+        "before": "A",
+        "target": "B",
+        "token": "6c318c48c8fb4c6a8c47b3c0a075dfba"
+      },
+      "selected_receipt": "A",
+      "actual_route": [
+        {
+          "dst": "default",
+          "gateway": "192.0.2.5",
+          "dev": "wanB",
+          "metric": 100,
+          "flags": []
+        },
+        {
+          "dst": "192.0.2.0/30",
+          "dev": "wanA",
+          "scope": "link",
+          "flags": []
+        },
+        {
+          "dst": "192.0.2.4/30",
+          "dev": "wanB",
+          "scope": "link",
+          "flags": []
+        }
+      ],
+      "process_restart_before": "MainPID=3538\nInvocationID=f2ca88e3058a44f2889cf3dc0660fd0f\n",
+      "process_restart_after": "MainPID=3600\nActiveState=active\nInvocationID=6d40944c19404e0d9854708234b49929\n",
+      "latched_before": true
+    },
+    "pre_agent_journal": {
+      "boot": "690713e2-771c-44b7-8132-e4211d56a422",
+      "pending": {
+        "before": "A",
+        "target": "B",
+        "token": "6c318c48c8fb4c6a8c47b3c0a075dfba"
+      },
+      "selected": "A"
+    },
+    "after": {
+      "boot": "690713e2-771c-44b7-8132-e4211d56a422",
+      "selected": "B",
+      "pending": null,
+      "latched": true,
+      "unit": "MainPID=710\nActiveState=active\nInvocationID=d1a601e7ec254f19b1f8e5ce103b8fb4\n",
+      "request": {
+        "ok": true,
+        "result": {
+          "ok": true,
+          "nonce": "095a0a25459d1d42e8f07185",
+          "peer": "10.99.2.1"
+        },
+        "error": null
+      },
+      "first_tick": {
+        "name": "tick",
+        "boot": "690713e2-771c-44b7-8132-e4211d56a422",
+        "at": 3.029206126,
+        "state": "DEGRADED_LATCHED",
+        "selected": "B",
+        "health": {
+          "A": "RECOVERING",
+          "B": "RECOVERING"
+        }
+      },
+      "rss_snapshot": "VmRSS:\t   23700 kB"
+    }
+  },
+  "cleanup": {
+    "passed": true,
+    "root_network_unchanged": true,
+    "namespaces_removed": true,
+    "units_removed": true,
+    "root_before_sha256": "e8cf25d9a0a9bfc08b9e8ba4d235a1a02b6cc95915324932e234a62a519f4bc5",
+    "root_after_sha256": "e8cf25d9a0a9bfc08b9e8ba4d235a1a02b6cc95915324932e234a62a519f4bc5",
+    "ignored_fields": [
+      "nft_handles",
+      "nft_counter_values",
+      "xt_chain_counters",
+      "xt_generated_comments"
+    ]
+  },
+  "snapshot_removed": true,
+  "vm_final": "Stopped",
+  "controls": [
+    "failed_stage",
+    "timeout",
+    "missing_case",
+    "missing_test",
+    "source_mismatch",
+    "fake_reboot",
+    "shutdown_rollback",
+    "cleanup_failed",
+    "vm_running",
+    "power_loss_claim"
+  ]
+}

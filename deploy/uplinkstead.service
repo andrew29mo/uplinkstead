@@ -1,0 +1,22 @@
+[Unit]
+Description=Uplinkstead exploratory dual-uplink agent
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 -m uplinkstead.agent --config /etc/uplinkstead/config.json --state /var/lib/uplinkstead
+Restart=on-failure
+RestartSec=2
+KillMode=control-group
+TimeoutStopSec=5
+NoNewPrivileges=yes
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_RAW
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/uplinkstead
+PrivateTmp=yes
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

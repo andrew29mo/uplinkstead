@@ -1,0 +1,814 @@
+{
+  "passed": false,
+  "source_changed": false,
+  "run_id": "1230c6b60e99706a",
+  "recorded_at_utc": "2026-10-21T17:16:11.565511+00:00",
+  "source": {
+    "deploy/uplinkstead.service": "d7e234c881fd227980d72fe7cf3166f99d52f21a3af17f58934edf5e2046d586",
+    "pyproject.toml": "051d38153c43394fdc9f28dc07ea246cb4c27c67e23479f23c247e49e3adafa7",
+    "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/fixtures/ip-rules-linux68.json": "2d08b8328c3c3cb53e716e12241d29ed32b1be2820ce42549dd9204bc9d3013b",
+    "tests/test_core.py": "34065d5bac6ba3412eb05e52ddc58639a40361f83eab7d4f9ec573bb88d4be96",
+    "tests/test_netproof.py": "d98d5cc98dc697b826ec532ae731c909d5adacd878333c7f049a47251fa86e2f",
+    "tests/test_policy.py": "2fc4d8f10081a8596c6121720c62a6358f9891dd54da449ebf4154cef8676c0c",
+    "tools/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tools/evidence.py": "a7afd75e562b0beb4149d5b3d311a32c1154855a86a945791477f85376885748",
+    "tools/fault.py": "eb6e62f0d519bd30499e8e725c2364fd348e4977245cf156685298b1b7f8c075",
+    "tools/guest.py": "a6456461409153230a14cd8d2a70a4694a22e45001e62dd9a183d3a42ff8c86f",
+    "tools/netproof.py": "6c2d4dd1910ffadd2cd38aa68fb593096008340a89d482425596f7a9aadc09bf",
+    "tools/report.py": "8ef0edef7d175a55d1277a8088c972a06e87e0ad2c00b032971bfa74aac0d4c5",
+    "tools/server.py": "7d029c94295b11c1d63ff544fbfc7f409493bf0966eff988d6ec2c8c94883626",
+    "tools/unit.py": "42cab4ae4649b8667787f3ff51468dc30f81f50e768a95bf41ebed204904bb9d",
+    "tools/validate.py": "d9fc329af55b2446fb8bce6f08de3958c843842fd2ceec524e7ffd9dce423c60",
+    "uplinkstead/__init__.py": "cb644b7273fc92cbe35a017c687d64ed5d39fb9388a9b5a98bda0fe0a1c18d62",
+    "uplinkstead/agent.py": "6019af1ab68f2bd55f43a9f60f69a3bf39af6af6eb0b882918f2270451cdb897",
+    "uplinkstead/config.py": "826aa8759d0a40034449f88473d46fde99744309b4187045106eb5fd0c2b9d03",
+    "uplinkstead/linux.py": "d25b5dabbaa1b15d7a477e2f97b6c18c1ff65271a74673f67b4d0a76f51c7dcc",
+    "uplinkstead/policy.py": "5ce6ee6fb9ab28e54b1d8c1230f566e8cc1261cc503bb87cf08686ad5de865fd",
+    "uplinkstead/probe.py": "ad7ba6b1e51850b46760037675ff218909d67f4c4b94debfbc43a6fdcfb72419",
+    "uplinkstead/writer.py": "24606f8404f70f0b8f20728ee912a2627a945f6320205b026c6766df3cfd9d50"
+  },
+  "source_sha256": "6cf80c89912f89112c7be6161abbdc79cce1b6a67625dfe6590067ee125a9a6c",
+  "stages": [
+    {
+      "name": "native-unit",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.16063379200932104
+    },
+    {
+      "name": "vm-initial",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.5431459999963408
+    },
+    {
+      "name": "vm-start",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 10.664593000008608
+    },
+    {
+      "name": "upload-preflight",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.2718930000119144
+    },
+    {
+      "name": "upload",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.24916004200349562
+    },
+    {
+      "name": "setup",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 1.3454919999931008
+    },
+    {
+      "name": "linux-unit",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.37788812500366475
+    },
+    {
+      "name": "linux-unit-read",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.2718731250060955
+    },
+    {
+      "name": "cases",
+      "exit_code": 1,
+      "timed_out": false,
+      "seconds": 5.542806124998606
+    },
+    {
+      "name": "failure-diagnostics",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.29558691701095086
+    },
+    {
+      "name": "remove",
+      "exit_code": 1,
+      "timed_out": false,
+      "seconds": 0.707268334008404
+    },
+    {
+      "name": "vm-stop",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 3.0439685409946833
+    },
+    {
+      "name": "vm-final",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.2179175000055693
+    }
+  ],
+  "native_unit": {
+    "passed": true,
+    "tests": [
+      "test_core.ConfigTests.test_duplicate_target_rejected",
+      "test_core.ConfigTests.test_exclusions_bounded",
+      "test_core.ConfigTests.test_hash_stable",
+      "test_core.ConfigTests.test_invalid_source_rejected",
+      "test_core.ConfigTests.test_overlapping_interfaces_rejected",
+      "test_core.ConfigTests.test_unknown_key_rejected",
+      "test_core.RoutingShapeTests.test_every_lookup_has_matching_terminal_guard",
+      "test_core.RoutingShapeTests.test_forward_selector_not_host_source_alone",
+      "test_core.RoutingShapeTests.test_internal_lookup_suppresses_main_default",
+      "test_core.RoutingShapeTests.test_probe_is_local_and_marked",
+      "test_core.RoutingShapeTests.test_real_iproute2_rule_output_normalization",
+      "test_core.WriterTests.test_actual_new_route_reconciles_incomplete_receipt",
+      "test_core.WriterTests.test_actual_old_route_reconciles_pending_without_replay",
+      "test_core.WriterTests.test_generation_rejects_stale_after_reopen",
+      "test_core.WriterTests.test_invalid_journal_rejected",
+      "test_core.WriterTests.test_lock_contention_blocks",
+      "test_core.WriterTests.test_symlink_lock_rejected",
+      "test_core.WriterTests.test_unexpected_route_blocks",
+      "test_netproof.NetworkProofTests.test_meaningful_bytes_operand_not_ignored",
+      "test_netproof.NetworkProofTests.test_only_nft_counter_values_and_handles_ignored",
+      "test_netproof.NetworkProofTests.test_rule_order_preserved",
+      "test_netproof.NetworkProofTests.test_xt_counters_and_timestamp_comments_only",
+      "test_policy.PolicyTests.test_auto_failback_requires_continuous_stability",
+      "test_policy.PolicyTests.test_budget_latches_and_restart_retains_latch",
+      "test_policy.PolicyTests.test_cross_boot_budget_not_replenished_by_reboot",
+      "test_policy.PolicyTests.test_default_never_preference_failback",
+      "test_policy.PolicyTests.test_expired_result_breaks_streak",
+      "test_policy.PolicyTests.test_failover_threshold",
+      "test_policy.PolicyTests.test_history_expires_same_boot_without_process_reset",
+      "test_policy.PolicyTests.test_initial_success_requires_multiple_rounds",
+      "test_policy.PolicyTests.test_invalid_settings",
+      "test_policy.PolicyTests.test_missing_round_expires_health",
+      "test_policy.PolicyTests.test_one_target_failure_not_link_failure",
+      "test_policy.PolicyTests.test_reordered_round_rejected",
+      "test_policy.PolicyTests.test_stability_gap_resets_recovery",
+      "test_policy.PolicyTests.test_stale_wrong_boot_and_wrong_config_rejected",
+      "test_policy.PolicyTests.test_unknown_current_does_not_trigger_speculative_switch",
+      "test_policy.PolicyTests.test_unknown_not_destination"
+    ],
+    "count": 38,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "source_sha256": "6cf80c89912f89112c7be6161abbdc79cce1b6a67625dfe6590067ee125a9a6c",
+    "platform": "Darwin",
+    "python": "3.12.14"
+  },
+  "vm_initial": "Stopped",
+  "linux_unit": {
+    "passed": true,
+    "tests": [
+      "test_core.ConfigTests.test_duplicate_target_rejected",
+      "test_core.ConfigTests.test_exclusions_bounded",
+      "test_core.ConfigTests.test_hash_stable",
+      "test_core.ConfigTests.test_invalid_source_rejected",
+      "test_core.ConfigTests.test_overlapping_interfaces_rejected",
+      "test_core.ConfigTests.test_unknown_key_rejected",
+      "test_core.RoutingShapeTests.test_every_lookup_has_matching_terminal_guard",
+      "test_core.RoutingShapeTests.test_forward_selector_not_host_source_alone",
+      "test_core.RoutingShapeTests.test_internal_lookup_suppresses_main_default",
+      "test_core.RoutingShapeTests.test_probe_is_local_and_marked",
+      "test_core.RoutingShapeTests.test_real_iproute2_rule_output_normalization",
+      "test_core.WriterTests.test_actual_new_route_reconciles_incomplete_receipt",
+      "test_core.WriterTests.test_actual_old_route_reconciles_pending_without_replay",
+      "test_core.WriterTests.test_generation_rejects_stale_after_reopen",
+      "test_core.WriterTests.test_invalid_journal_rejected",
+      "test_core.WriterTests.test_lock_contention_blocks",
+      "test_core.WriterTests.test_symlink_lock_rejected",
+      "test_core.WriterTests.test_unexpected_route_blocks",
+      "test_netproof.NetworkProofTests.test_meaningful_bytes_operand_not_ignored",
+      "test_netproof.NetworkProofTests.test_only_nft_counter_values_and_handles_ignored",
+      "test_netproof.NetworkProofTests.test_rule_order_preserved",
+      "test_netproof.NetworkProofTests.test_xt_counters_and_timestamp_comments_only",
+      "test_policy.PolicyTests.test_auto_failback_requires_continuous_stability",
+      "test_policy.PolicyTests.test_budget_latches_and_restart_retains_latch",
+      "test_policy.PolicyTests.test_cross_boot_budget_not_replenished_by_reboot",
+      "test_policy.PolicyTests.test_default_never_preference_failback",
+      "test_policy.PolicyTests.test_expired_result_breaks_streak",
+      "test_policy.PolicyTests.test_failover_threshold",
+      "test_policy.PolicyTests.test_history_expires_same_boot_without_process_reset",
+      "test_policy.PolicyTests.test_initial_success_requires_multiple_rounds",
+      "test_policy.PolicyTests.test_invalid_settings",
+      "test_policy.PolicyTests.test_missing_round_expires_health",
+      "test_policy.PolicyTests.test_one_target_failure_not_link_failure",
+      "test_policy.PolicyTests.test_reordered_round_rejected",
+      "test_policy.PolicyTests.test_stability_gap_resets_recovery",
+      "test_policy.PolicyTests.test_stale_wrong_boot_and_wrong_config_rejected",
+      "test_policy.PolicyTests.test_unknown_current_does_not_trigger_speculative_switch",
+      "test_policy.PolicyTests.test_unknown_not_destination"
+    ],
+    "count": 38,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "source_sha256": "6cf80c89912f89112c7be6161abbdc79cce1b6a67625dfe6590067ee125a9a6c",
+    "platform": "Linux",
+    "python": "3.12.3"
+  },
+  "failure_diagnostics": {
+    "rules": [
+      {
+        "priority": 0,
+        "src": "all",
+        "table": "local"
+      },
+      {
+        "priority": 10010,
+        "src": "all",
+        "fwmark": "0x5101",
+        "iif": "lo",
+        "table": "41001"
+      },
+      {
+        "priority": 10011,
+        "src": "all",
+        "fwmark": "0x5101",
+        "iif": "lo",
+        "action": "prohibit"
+      },
+      {
+        "priority": 10012,
+        "src": "all",
+        "fwmark": "0x5102",
+        "iif": "lo",
+        "table": "41002"
+      },
+      {
+        "priority": 10013,
+        "src": "all",
+        "fwmark": "0x5102",
+        "iif": "lo",
+        "action": "prohibit"
+      },
+      {
+        "priority": 10030,
+        "src": "10.77.0.0",
+        "srclen": 24,
+        "dst": "10.77.0.0",
+        "dstlen": 24,
+        "iif": "lan0",
+        "table": "main",
+        "suppress_prefixlen": 0
+      },
+      {
+        "priority": 10031,
+        "src": "10.77.0.0",
+        "srclen": 24,
+        "dst": "10.77.0.0",
+        "dstlen": 24,
+        "iif": "lan0",
+        "action": "prohibit"
+      },
+      {
+        "priority": 10032,
+        "src": "10.77.0.0",
+        "srclen": 24,
+        "dst": "192.0.2.0",
+        "dstlen": 30,
+        "iif": "lan0",
+        "table": "main",
+        "suppress_prefixlen": 0
+      },
+      {
+        "priority": 10033,
+        "src": "10.77.0.0",
+        "srclen": 24,
+        "dst": "192.0.2.0",
+        "dstlen": 30,
+        "iif": "lan0",
+        "action": "prohibit"
+      },
+      {
+        "priority": 10034,
+        "src": "10.77.0.0",
+        "srclen": 24,
+        "dst": "192.0.2.4",
+        "dstlen": 30,
+        "iif": "lan0",
+        "table": "main",
+        "suppress_prefixlen": 0
+      },
+      {
+        "priority": 10035,
+        "src": "10.77.0.0",
+        "srclen": 24,
+        "dst": "192.0.2.4",
+        "dstlen": 30,
+        "iif": "lan0",
+        "action": "prohibit"
+      },
+      {
+        "priority": 10036,
+        "src": "10.77.0.0",
+        "srclen": 24,
+        "dst": "198.18.0.0",
+        "dstlen": 24,
+        "iif": "lan0",
+        "table": "main",
+        "suppress_prefixlen": 0
+      },
+      {
+        "priority": 10037,
+        "src": "10.77.0.0",
+        "srclen": 24,
+        "dst": "198.18.0.0",
+        "dstlen": 24,
+        "iif": "lan0",
+        "action": "prohibit"
+      },
+      {
+        "priority": 10100,
+        "src": "10.77.0.0",
+        "srclen": 24,
+        "iif": "lan0",
+        "table": "41003"
+      },
+      {
+        "priority": 10101,
+        "src": "10.77.0.0",
+        "srclen": 24,
+        "iif": "lan0",
+        "action": "prohibit"
+      },
+      {
+        "priority": 32766,
+        "src": "all",
+        "table": "main"
+      },
+      {
+        "priority": 32767,
+        "src": "all",
+        "table": "default"
+      }
+    ],
+    "routes": {
+      "41001": "[]\n",
+      "41002": "[{\"dst\":\"default\",\"gateway\":\"192.0.2.5\",\"dev\":\"wanB\",\"metric\":100,\"flags\":[]},{\"dst\":\"192.0.2.4/30\",\"dev\":\"wanB\",\"scope\":\"link\",\"flags\":[]}]\n",
+      "41003": "[{\"dst\":\"192.0.2.4/30\",\"dev\":\"wanB\",\"scope\":\"link\",\"flags\":[]}]\n"
+    },
+    "guest.json": {
+      "passed": false,
+      "source_sha256": "6cf80c89912f89112c7be6161abbdc79cce1b6a67625dfe6590067ee125a9a6c",
+      "boot": "a632ea11-b1d9-4671-b1fd-493dff722a7f",
+      "cases": [
+        {
+          "name": "pinned_healthy_probes",
+          "passed": true,
+          "seconds": 0.07226299999999952,
+          "details": {
+            "A": [
+              3,
+              [
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.012179000000001494,
+                  "peer_observed": "10.99.1.1",
+                  "link": "A"
+                },
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.01140104199999925,
+                  "peer_observed": "10.99.1.1",
+                  "link": "A"
+                },
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.012115875000000997,
+                  "peer_observed": "10.99.1.1",
+                  "link": "A"
+                }
+              ]
+            ],
+            "B": [
+              3,
+              [
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.0025446659999985854,
+                  "peer_observed": "10.99.2.1",
+                  "link": "B"
+                },
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.0015553749999988042,
+                  "peer_observed": "10.99.2.1",
+                  "link": "B"
+                },
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.0019882080000002134,
+                  "peer_observed": "10.99.2.1",
+                  "link": "B"
+                }
+              ]
+            ]
+          }
+        },
+        {
+          "name": "probe_blackhole_missing_route_link_down",
+          "passed": true,
+          "seconds": 2.8252758349999993,
+          "details": [
+            {
+              "link": "A",
+              "blackhole": [
+                0,
+                [
+                  {
+                    "ok": false,
+                    "infrastructure": false,
+                    "error": "TimeoutError",
+                    "seconds": 0.5015764170000008,
+                    "link": "A"
+                  },
+                  {
+                    "ok": false,
+                    "infrastructure": false,
+                    "error": "TimeoutError",
+                    "seconds": 0.501662249999999,
+                    "link": "A"
+                  },
+                  {
+                    "ok": false,
+                    "infrastructure": false,
+                    "error": "TimeoutError",
+                    "seconds": 0.5015352920000016,
+                    "link": "A"
+                  }
+                ]
+              ],
+              "other": [
+                3,
+                [
+                  {
+                    "ok": true,
+                    "infrastructure": false,
+                    "seconds": 0.008068124999999426,
+                    "peer_observed": "10.99.2.1",
+                    "link": "B"
+                  },
+                  {
+                    "ok": true,
+                    "infrastructure": false,
+                    "seconds": 0.006424374999999927,
+                    "peer_observed": "10.99.2.1",
+                    "link": "B"
+                  },
+                  {
+                    "ok": true,
+                    "infrastructure": false,
+                    "seconds": 0.006126832999999721,
+                    "peer_observed": "10.99.2.1",
+                    "link": "B"
+                  }
+                ]
+              ],
+              "missing_route": [
+                0,
+                [
+                  {
+                    "ok": false,
+                    "infrastructure": false,
+                    "error": "TimeoutError",
+                    "seconds": 0.5046125000000004,
+                    "link": "A"
+                  },
+                  {
+                    "ok": false,
+                    "infrastructure": false,
+                    "error": "TimeoutError",
+                    "seconds": 0.5040844580000012,
+                    "link": "A"
+                  },
+                  {
+                    "ok": false,
+                    "infrastructure": false,
+                    "error": "TimeoutError",
+                    "seconds": 0.504497584000001,
+                    "link": "A"
+                  }
+                ]
+              ],
+              "link_down": [
+                0,
+                [
+                  {
+                    "ok": false,
+                    "infrastructure": false,
+                    "error": "OSError",
+                    "seconds": 0.0004454999999996545,
+                    "link": "A"
+                  },
+                  {
+                    "ok": false,
+                    "infrastructure": false,
+                    "error": "OSError",
+                    "seconds": 0.00028925000000157297,
+                    "link": "A"
+                  },
+                  {
+                    "ok": false,
+                    "infrastructure": false,
+                    "error": "OSError",
+                    "seconds": 0.00014087499999959618,
+                    "link": "A"
+                  }
+                ]
+              ],
+              "wrong_egress_packets": 0,
+              "terminal_lookup_rejected": true
+            },
+            {
+              "link": "B",
+              "blackhole": [
+                0,
+                [
+                  {
+                    "ok": false,
+                    "infrastructure": false,
+                    "error": "TimeoutError",
+                    "seconds": 0.5018842499999998,
+                    "link": "B"
+                  },
+                  {
+                    "ok": false,
+                    "infrastructure": false,
+                    "error": "TimeoutError",
+                    "seconds": 0.5017185839999989,
+                    "link": "B"
+                  },
+                  {
+                    "ok": false,
+                    "infrastructure": false,
+                    "error": "TimeoutError",
+                    "seconds": 0.5017104579999998,
+                    "link": "B"
+                  }
+                ]
+              ],
+              "other": [
+                3,
+                [
+                  {
+                    "ok": true,
+                    "infrastructure": false,
+                    "seconds": 0.004069458000000026,
+                    "peer_observed": "10.99.1.1",
+                    "link": "A"
+                  },
+                  {
+                    "ok": true,
+                    "infrastructure": false,
+                    "seconds": 0.0036937080000001288,
+                    "peer_observed": "10.99.1.1",
+                    "link": "A"
+                  },
+                  {
+                    "ok": true,
+                    "infrastructure": false,
+                    "seconds": 0.0023097090000003817,
+                    "peer_observed": "10.99.1.1",
+                    "link": "A"
+                  }
+                ]
+              ],
+              "missing_route": [
+                0,
+                [
+                  {
+                    "ok": false,
+                    "infrastructure": false,
+                    "error": "TimeoutError",
+                    "seconds": 0.5030563749999999,
+                    "link": "B"
+                  },
+                  {
+                    "ok": false,
+                    "infrastructure": false,
+                    "error": "TimeoutError",
+                    "seconds": 0.5023242499999991,
+                    "link": "B"
+                  },
+                  {
+                    "ok": false,
+                    "infrastructure": false,
+                    "error": "TimeoutError",
+                    "seconds": 0.5025217919999996,
+                    "link": "B"
+                  }
+                ]
+              ],
+              "link_down": [
+                0,
+                [
+                  {
+                    "ok": false,
+                    "infrastructure": false,
+                    "error": "OSError",
+                    "seconds": 0.0003454160000000428,
+                    "link": "B"
+                  },
+                  {
+                    "ok": false,
+                    "infrastructure": false,
+                    "error": "OSError",
+                    "seconds": 0.00025045800000000895,
+                    "link": "B"
+                  },
+                  {
+                    "ok": false,
+                    "infrastructure": false,
+                    "error": "OSError",
+                    "seconds": 0.00012749999999961403,
+                    "link": "B"
+                  }
+                ]
+              ],
+              "wrong_egress_packets": 0,
+              "terminal_lookup_rejected": true
+            }
+          ]
+        },
+        {
+          "name": "binding_error_unknown",
+          "passed": true,
+          "seconds": 0.028502165999999107,
+          "details": [
+            null,
+            [
+              {
+                "ok": false,
+                "infrastructure": true,
+                "error": "OSError",
+                "seconds": 0.00023554200000042158,
+                "link": "A"
+              },
+              {
+                "ok": false,
+                "infrastructure": true,
+                "error": "OSError",
+                "seconds": 6.154099999911011e-05,
+                "link": "A"
+              },
+              {
+                "ok": false,
+                "infrastructure": true,
+                "error": "OSError",
+                "seconds": 1.4207999999626963e-05,
+                "link": "A"
+              }
+            ]
+          ]
+        },
+        {
+          "name": "lan_scope_new_tls_and_internal_exclusion",
+          "passed": true,
+          "seconds": 0.199602917,
+          "details": {
+            "lan_A": {
+              "ok": true,
+              "result": {
+                "ok": true,
+                "nonce": "758bac614fe986fe2fc7a892",
+                "peer": "10.99.1.1"
+              },
+              "error": null
+            },
+            "lan_B": {
+              "ok": true,
+              "result": {
+                "ok": true,
+                "nonce": "7c551bec6ae7af0b6dc162d3",
+                "peer": "10.99.2.1"
+              },
+              "error": null
+            },
+            "host_before": {
+              "ok": true,
+              "result": {
+                "ok": true,
+                "nonce": "73daac19a0386933478f3df5",
+                "peer": "10.99.1.1"
+              },
+              "error": null
+            },
+            "host_after": {
+              "ok": true,
+              "result": {
+                "ok": true,
+                "nonce": "7e457a6d37d2b245b38ed895",
+                "peer": "10.99.1.1"
+              },
+              "error": null
+            },
+            "other_before": {
+              "ok": true,
+              "result": {
+                "ok": true,
+                "nonce": "fb50015c54e90c58942ef938",
+                "peer": "10.99.1.1"
+              },
+              "error": null
+            },
+            "other_after": {
+              "ok": true,
+              "result": {
+                "ok": true,
+                "nonce": "825839998e6daca6c80d1411",
+                "peer": "10.99.1.1"
+              },
+              "error": null
+            },
+            "main_unchanged": true,
+            "internal_route": [
+              {
+                "dst": "198.18.0.1",
+                "from": "10.77.0.2",
+                "gateway": "192.0.2.1",
+                "dev": "wanA",
+                "flags": [],
+                "cache": [],
+                "iif": "lan0"
+              }
+            ]
+          }
+        },
+        {
+          "name": "external_rpdb_conflict_and_preservation",
+          "passed": true,
+          "seconds": 0.07458491700000103,
+          "details": {
+            "intersecting_rejected": true,
+            "no_changes_on_rejection": true,
+            "disjoint_preserved": true
+          }
+        },
+        {
+          "name": "output_success_does_not_prove_forwarding",
+          "passed": true,
+          "seconds": 1.1154788339999993,
+          "details": {
+            "exit_probe_successes": 3,
+            "lan_request": {
+              "ok": false,
+              "result": null,
+              "error": "request_failed"
+            },
+            "not_counted_as_recovery": true
+          }
+        },
+        {
+          "name": "strict_rp_filter_contract",
+          "passed": true,
+          "seconds": 0.07980783300000027,
+          "details": {
+            "strict_all_rejected": true,
+            "external_setting_not_rewritten": true
+          }
+        },
+        {
+          "name": "routed_without_nat_and_provisioned_return_path",
+          "passed": true,
+          "seconds": 0.1451396660000004,
+          "details": {
+            "requests": [
+              {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "60ac3be25a9eb89c228a888b",
+                  "peer": "10.77.0.2"
+                },
+                "error": null
+              },
+              {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "c3b478e2df5d992888767a75",
+                  "peer": "10.77.0.2"
+                },
+                "error": null
+              }
+            ],
+            "return_routes_explicitly_provisioned_by_fixture": true
+          }
+        }
+      ]
+    }
+  },
+  "error": "RuntimeError: cases failed or timed out",
+  "cleanup_error": "remove failed or timed out",
+  "vm_final": "Stopped"
+}

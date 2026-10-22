@@ -108,3 +108,10 @@ class AutomaticTests(unittest.TestCase):
         self.bind('A');self.health('A',3,1);self.cycle(1)
         self.assertEqual(self.w.health['A']['state'],'UNVERIFIED');self.assertIsNone(self.w.s['active'])
         self.health('A',3,1);self.cycle();self.assertEqual(self.w.s['active']['link'],'A');self.assertEqual(history,self.w.s['history'])
+    def test_expired_SUSPECT_cannot_reuse_qualification_or_free_restore(self):
+        self.initial();old=copy.deepcopy(self.w.s['active']);history=copy.deepcopy(self.w.s['history'])
+        self.health('A',0,1);self.assertEqual(self.w.health['A']['state'],'SUSPECT')
+        self.cycle(self.w.freshness+.01);self.assertIsNone(self.w.s['active'])
+        self.health('A',3,1);self.cycle();self.assertEqual(self.w.health['A']['state'],'UNVERIFIED');self.assertIsNone(self.w.s['active'])
+        self.health('A',3,1);self.cycle();self.cycle(.51)
+        self.assertEqual(self.w.s['active'],old);self.assertEqual(len(self.w.s['history']),len(history)+1)

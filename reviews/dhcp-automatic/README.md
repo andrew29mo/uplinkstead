@@ -1,5 +1,13 @@
 # Automatic dual-DHCP selection: milestone 1
 
+**Historical run; superseded by the [reviewed evidence](../dhcp-automatic-review/README.md).**
+The original raw data supports ACK-race recovery with fresh quorum and unchanged
+budget, but its verifier accepted missing quorum/old health or an extra budget
+record in that recovery case. The new review enforces these conditions and adds
+an expired-SUSPECT boundary regression. The original HTML also inherited a sentence
+denying any automatic failover claim. Raw receipts/HTML are preserved as generated;
+these qualifications and the new report take precedence over that wording.
+
 Accepted run `ef28b81686a296b5`, matching-source fingerprint
 `b5a3d5f93525dd3938d8f222881c7a90d618b33aa4a454e84224984161d920cc`.
 

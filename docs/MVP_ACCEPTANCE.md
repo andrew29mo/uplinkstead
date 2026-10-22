@@ -196,7 +196,9 @@ A viable independent A/main witness must accompany latched LAN rejection.
 Inject new ACK and real client loss during a bounded pause around the production
 backend's completed route write. Require target intake during the pause and
 formal invalidation/withdrawal before publication, then new-generation health for
-recovery. The injection wrapper must not replace health/admission/backend results.
+recovery. Require the ACK-recovery health quorum/timing and exact unchanged budget
+history, plus an increase in the lease-restoration counter; reject HEALTHY without
+those proofs. The injection wrapper must not replace health/admission/backend results.
 Delayed stale operator and probe results cannot change new authority. Portable
 pause and restore-rate tests, matching-source dual-platform IDs, build readback,
 negative report controls, JSON/HTML agreement and cleanup remain required.

@@ -1,0 +1,100 @@
+[
+  {
+    "run_id": "1baf8762680a6885",
+    "source_sha256": "761538bd1c3aee9c247176f0ff48db6367529bb9b4e34c1ccea376eedf02ee4f",
+    "passed": true,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.4623052909737453
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.350750915997196
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 9.479645624989644
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.24317383399466053
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.39896566700190306
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.4703542919887695
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.4505280420125928
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.23991966698667966
+      },
+      {
+        "name": "cases",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 44.97255620799842
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.30668937499285676
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.30338212501374073
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.542270541016478
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.20832054200582206
+      }
+    ],
+    "controls": {
+      "passed": true,
+      "rejected": 36
+    },
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped"
+  }
+]

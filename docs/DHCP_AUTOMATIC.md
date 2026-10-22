@@ -106,7 +106,11 @@ one bounded pause **after real B route write/readback, before writer completion*
 During the pause, the actual client receives a renewal trigger or release signal;
 its shipped hook queues an ACK-backed renewal or deconfig. The pause is released
 only after intake is observed. Require formal invalidation/withdrawal, fresh
-new-generation recovery for ACK, and absence of B allocation after loss. This
+new-generation recovery for ACK, and absence of B allocation after loss. The ACK
+recovery check requires the fixture's two successful rounds, a health start no
+earlier than the new lease event, unchanged invalidation-to-recovery budget history
+and an increased automatic lease-restoration counter. HEALTHY alone is insufficient.
+This
 wrapper is not installed or presented as the unmodified production service.
 It does not model a crashed helper or every possible write interleaving.
 
@@ -118,7 +122,11 @@ failed/timed-out stage rejection, corrupted-receipt controls, exact JSON/HTML an
 owned cleanup/stopped VM are mandatory. RSS is a VM process snapshot, not a peak;
 scenario durations include lease/detection waits and are not outage SLOs.
 
-See [retained evidence](../reviews/dhcp-automatic/README.md).
+See [reviewed evidence](../reviews/dhcp-automatic-review/README.md). The
+[original run](../reviews/dhcp-automatic/README.md) remains historical: its data met
+the new health/budget conditions, but its verifier did not enforce them for ACK
+write-race recovery. The review also preserves a portable expired-SUSPECT regression;
+that expiry boundary is not an additional VM injection.
 
 ## Still outside milestone 1
 

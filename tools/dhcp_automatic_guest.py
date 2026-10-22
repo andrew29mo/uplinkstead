@@ -127,7 +127,11 @@ def run(root,source):
             done=json.loads((race/'barrier-done.json').read_text())
             return start,dict(before=before,barrier=ready,queued=queued,release_at=release_at,done=done,invalid=invalid)
         start,d=barrier('ACK',lambda s:os.kill(s['runtime']['children']['B'],signal.SIGUSR1))
-        after=active('B');case('ACK_during_backend_write',start,**d,after=after,transaction=tx(after),client=traffic('B'))
+        after=active('B');r=after['state']['links']['B']
+        assert r['good']>=c['success_rounds'] and r['until']-c['freshness']>=r['last_event']
+        assert after['state']['history']==d['invalid']['state']['history']
+        assert after['runtime']['metrics']['lease_restores']>d['invalid']['runtime']['metrics']['lease_restores']
+        case('ACK_during_backend_write',start,**d,after=after,transaction=tx(after),client=traffic('B'))
         # Bring A back, then force a real B loss so automatic routing selects A.
         f.fault('A',False);healthy('A');os.kill(after['runtime']['children']['B'],signal.SIGUSR2);active('A')
         os.kill(status()['runtime']['children']['B'],signal.SIGUSR1);healthy('B')

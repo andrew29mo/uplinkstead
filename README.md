@@ -116,7 +116,7 @@ withdrawal grace, sticky failover and authoritative switching budget. Initial
 selection is charged; new-generation same-WAN lease restoration remains free and
 bounded. Observed ACK/loss during a selection write causes withdrawal and new
 health qualification; no atomic ACK/kernel or zero-gap guarantee is made.
-[Evidence](reviews/dhcp-automatic/README.md) distinguishes the normal foreground
+[Reviewed evidence](reviews/dhcp-automatic-review/README.md) distinguishes the normal foreground
 service from explicitly labelled backend-delay fault injections. Installed
 privilege separation/recovery, capacity longevity and application traffic
 comparisons remain later gates: this is not the completed deployed dual-DHCP MVP.

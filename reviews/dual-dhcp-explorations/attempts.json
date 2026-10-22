@@ -1,0 +1,25 @@
+[
+  {
+    "run_id": "98061a8517c66381",
+    "passed": false,
+    "source_sha256": "b5417262fc4c13f03573caf6874c07e72bfb5dc94effdf6836c317f9458268b5",
+    "source_changed": true,
+    "failed_stages": [
+      "cases",
+      "cleanup"
+    ],
+    "vm_final": "Stopped",
+    "explanation": "Rejected: root snapshot compared changing counter/timestamp fields; source also changed during development. Later independent semantic comparison found no route or firewall semantic change. All development observations remain unqualified."
+  },
+  {
+    "run_id": "bc6c66300d88ca74",
+    "passed": false,
+    "source_sha256": "c5b692a2e804d4f20122c71cf712e8f1ce6f5a23c1812b8bb3d2b4a0e25bcdd2",
+    "source_changed": false,
+    "failed_stages": [
+      "reboot-prepare"
+    ],
+    "vm_final": "Stopped",
+    "explanation": "Rejected: reboot preparation consumed prior-phase hook records; the formal core rejected their retired sessions. Fixed fixture offsets without refreshing event timestamps."
+  }
+]

@@ -47,6 +47,22 @@ fresh health. It does not establish sudden power-loss recovery or protection
 before service startup. Earlier [DHCP audit](reviews/dhcp-audit/README.md) and
 [static regression](reviews/dhcp-audit-static/README.md) remain historical.
 
+## Dual-DHCP technical explorations
+
+A separate [formal dual-DHCP core and scoped Linux backend](docs/DUAL_DHCP.md)
+explore independent lease authority, no-fallback routing, conflict rejection and
+crash/boot quarantine. The fixture uses two real DHCP clients and servers, pinned
+TLS probes and LAN requests. Test provenance separates wire observations from
+synthetic challenges and manually orchestrated core recovery.
+The [retained exploration receipt](reviews/dual-dhcp-explorations/README.md)
+records 151 matching-source portable tests per platform, 12 Linux VM scenarios
+and a separate orderly VM restart; no general performance advantage is claimed.
+
+This is **not an installed dual-DHCP service or automatic failover MVP**. Bounded
+production intake, client supervision, exact lease-time origin, natural T2 and
+operator recovery remain explicit [MVP gates](docs/MVP_ACCEPTANCE.md). Existing
+static and single-DHCP installed services are unchanged.
+
 ## Reproduce
 
 Python 3.12+ is required. Runtime uses the standard library and separately installed

@@ -77,3 +77,31 @@ cross-boot identity and actual SQLite save rejection. Same-source macOS/Linux
 tests, failed-run retention, source change/timeout rejection and owned cleanup
 are required. This does not qualify DHCP VM reboot, sudden power loss, DHCPv6,
 PPPoE, dual-DHCP failover, transparent connections or production throughput.
+
+## Dual-DHCP integration: exploration and future MVP gates
+
+The [four exploration contracts](DUAL_DHCP.md) are separate from acceptance of a
+deployed dual-DHCP service. Real DHCP acquisition/natural T1, scoped backend
+mutations, both pinned blackhole directions, controlled conflict/option rejection,
+actual partial network write and manually invoked core after an orderly VM reboot
+can qualify the underlying mechanisms. They do not qualify service orchestration.
+
+Future dual service acceptance additionally requires:
+
+1. Two bounded independently supervised DHCP clients; loss of B does not restart
+   A or reset A's fresh authority/proof/route. Writer failure quarantines both.
+2. Immutable callback authority/time, finite queues and explicit timeout outcomes.
+   Simultaneous renewals, slow probes/helper operations and queue saturation must
+   not relabel old events or silently preserve expired health.
+3. Exact supported lease-time origin and DHCP options/server routing contract;
+   natural T2/rebinding and delayed delivery must be observed on the real adapter.
+4. Default non-preemptive automatic selection, bounded persistent switching,
+   explicit operator recovery, and safety withdrawal independent of pause/latch.
+5. Shipped installed-service orderly reboot with unchanged pre-start journal and
+   actual empty old allocations before any DHCP client is created, plus new wire
+   acquisition and fresh health before LAN forwarding.
+6. Real delayed network helper ownership and generation checks, and complete
+   same-schedule fixed/automatic traffic with all failures retained before any
+   throughput, outage or failover advantage claim.
+
+No successful exploration may silently stand in for one of these untested gates.

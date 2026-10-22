@@ -138,3 +138,27 @@ The [DHCP lifecycle](DHCP.md) is a separate controller and journal. It owns dedi
 A/B controller or share its health, switch budget or authority. Every lease update
 invalidates health; restart quarantines persisted allocations before a new client
 session. Integration of dynamic links into dual-uplink failover remains future work.
+
+## Dual-DHCP exploration architecture
+
+The [dual-DHCP exploration](DUAL_DHCP.md) uses a separate formal core/backend with
+tables 41201/41202/41203. It is not two single-DHCP daemons and is not integrated
+into either existing installed service. Local lease mutations and shared LAN
+selection are distinct. Per-link client authority and health generations cannot
+be replaced by a global callback revision; writer epoch/global selection revision
+are a separate fence. Inactive renewal must preserve the other active route.
+
+DHCP-bound local unicast and marked probes each have a per-WAN lookup plus a
+terminal prohibit. Raw discovery/rebinding needs separate client/interface
+qualification. New admission requires fresh HEALTHY; stale/unknown health and
+invalid leases require withdrawal even while paused/latched. Required withdrawal
+has no health-admission deadline, though helper timeout can still force recovery.
+Valid callback completion services expiry; rejected old callbacks are readonly.
+No hard scheduling bound follows from the synchronous core API.
+
+Process/boot recovery quarantines all known old/new DHCP allocations rather than
+reconstructing a static selected route. A client-only restart invalidates only its
+own authority; the fixture orchestrates that restart, not a shipped supervisor.
+Before a dual service MVP, bounded event intake, actual per-client supervision,
+exact lease-time origin, automatic non-preemptive selection and operator recovery
+must pass the additional gates in [the exploration contract](DUAL_DHCP.md).

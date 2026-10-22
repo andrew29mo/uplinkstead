@@ -31,3 +31,22 @@ Runtime Python imports are first-party/standard library. No external system bina
 VM image or TLS private key is distributed. First-party project files are covered
 by the [MIT License](../LICENSE); separately installed dependencies retain their
 own terms as recorded in [THIRD_PARTY.md](THIRD_PARTY.md).
+
+## DHCP dual-exit exploration materials
+
+- [RFC 2131](https://www.rfc-editor.org/rfc/rfc2131.html): natural renewing and
+  rebinding are distinct paths; callback time is not automatically the protocol's
+  lease origin. Testing SIGUSR1 alone cannot qualify natural T1/T2 behavior.
+- [RFC 3442](https://www.rfc-editor.org/rfc/rfc3442.html): option 121 changes route
+  interpretation; forwarding only option 3 is not proof of rejecting other route
+  semantics. Actual hook export must be checked on the installed client build.
+- [BusyBox 1.36.1 DHCP client source](https://github.com/mirror/busybox/blob/1_36_1/networking/udhcp/dhcpc.c)
+  and [packet path](https://github.com/mirror/busybox/blob/1_36_1/networking/udhcp/packet.c):
+  interface-bound kernel unicast differs from raw broadcast, and synchronous hook
+  execution affects client timing. The VM records its actual distro version;
+  source inspection is a hypothesis to challenge on the wire, not proof of that
+  distro's behavior or of all DHCP implementations.
+
+These materials support the bounded explorations, not a conclusion that the
+production queue, natural T2, exact lease timing or installed dual service is
+already qualified. See [dual-DHCP scope and remaining gates](DUAL_DHCP.md).

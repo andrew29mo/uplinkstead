@@ -1,4 +1,30 @@
-# Current reviewed DHCP validation
+# Current dual-DHCP technical explorations
+
+[Retained JSON/HTML and procedure](../reviews/dual-dhcp-explorations/README.md),
+run `55936aa4724bd1de`, source fingerprint
+`440e7f89ba76343924d068108cfb5116cb751e13b2d537b889cd0ff8fd99ba9d`.
+
+- **151 same-source portable tests per platform**, identical IDs, zero skips.
+- **12 isolated Linux VM scenarios**: two wire leases, inactive renewal/client
+  isolation, positive main fallback/missing probe route, both blackhole directions,
+  synthetic and actual wire overlap, natural T1 on both WANs, wire option 121,
+  process restart fencing and actual partial backend write/quarantine.
+- Separate actual orderly VM stop/start: changed boot, unchanged pre-core journal
+  hash, old allocations not replayed, new wire acquisition and fresh TLS forwarding.
+  Separate synthetic session/boot challenges leave state and actual network unchanged.
+- **23 corruption controls** reject in normal/optimized Python; JSON/HTML agree.
+  Owned cleanup/root network semantic preservation/source removal/stopped VM pass.
+- Post-recovery core driver RSS snapshot **23,592 KiB**; main SQLite **8,192 bytes**.
+  VM-only, not peak/tree/whole-VM memory, with no performance superiority claim.
+
+This is a formal core/backend exploration driven manually, not a shipped dual
+DHCP service or automatic-failover benchmark. Production queues/supervision,
+exact lease-time origin, natural T2, live delayed network helper takeover and
+installed dual-service boot remain unqualified. Power loss and boot-zero-gap are
+untested. Older single-DHCP/static receipts below retain their original source
+identities; they do not establish new installed-service regressions at this source.
+
+# Historical reviewed single-DHCP validation
 
 [Reviewed DHCP lifecycle and VM restart receipt](../reviews/dhcp-reboot-review/README.md),
 run `2d40cc540f51c289`, source fingerprint

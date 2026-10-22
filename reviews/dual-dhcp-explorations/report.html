@@ -1,0 +1,2334 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Dual DHCP explorations</title><style>body{font:16px system-ui;max-width:1100px;margin:40px auto;padding:0 20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style><h1>Uplinkstead dual DHCP explorations</h1><p>Passed: True</p><p>Linux VM observations are separate from native portable tests. No production, power-loss or zero-gap guarantee.</p><p>This is a formal core/backend exploration, not an installed dual service or automatic failover qualification.</p><h2>Linux VM scenarios</h2><table><tr><th>Scenario</th><th>Passed</th><th>Elapsed seconds</th></tr><tr><td>two_real_wire_leases_and_A_data_path</td><td>True</td><td>4.238</td></tr><tr><td>missing_A_probe_table_terminal_guard_no_B_borrow</td><td>True</td><td>0.583</td></tr><tr><td>inactive_B_real_renewal_isolation</td><td>True</td><td>0.085</td></tr><tr><td>B_client_restart_isolation</td><td>True</td><td>0.153</td></tr><tr><td>A_blackhole_no_borrow_and_explicit_safe_B_selection</td><td>True</td><td>1.096</td></tr><tr><td>B_blackhole_no_borrow_and_explicit_safe_A_selection</td><td>True</td><td>1.170</td></tr><tr><td>synthetic_cross_link_conflict_withdraws_only_proposer</td><td>True</td><td>0.025</td></tr><tr><td>real_wire_cross_link_conflict_withdraws_only_proposer</td><td>True</td><td>4.457</td></tr><tr><td>natural_T1_both_clients_unicast_no_wrong_WAN</td><td>True</td><td>59.281</td></tr><tr><td>real_wire_option121_detected_and_B_withdrawn</td><td>True</td><td>0.322</td></tr><tr><td>writer_SIGKILL_quarantine_both_and_reject_old_sessions</td><td>True</td><td>0.281</td></tr><tr><td>real_backend_partial_address_write_recovery</td><td>True</td><td>0.084</td></tr></table><h2>VM measurement scope</h2><pre>{
+  &quot;driver_pid&quot;: 3934,
+  &quot;driver_rss_kib&quot;: 23592,
+  &quot;sqlite_main_bytes&quot;: 8192,
+  &quot;scope&quot;: &quot;One post-recovery formal driver VmRSS snapshot; not peak, process tree, host, or whole-VM memory&quot;
+}</pre><p>Stage duration includes fixture work and is not outage or recovery SLO. Reboot results are manually invoked core recovery.</p><h2>Complete evidence</h2><p>Canonical JSON SHA-256: 635abb7912db21fd5ee3be86ea7beb9a6e3604438672d59a0caf8fabc3a10bdb</p><pre>{
+  &quot;cleanup&quot;: {
+    &quot;idempotent&quot;: true,
+    &quot;namespaces_removed&quot;: true,
+    &quot;owned_children_reaped&quot;: true,
+    &quot;root_network_unchanged&quot;: true
+  },
+  &quot;controls&quot;: {
+    &quot;passed&quot;: true,
+    &quot;rejected&quot;: 23
+  },
+  &quot;guest&quot;: {
+    &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;,
+    &quot;cases&quot;: [
+      {
+        &quot;details&quot;: {
+          &quot;client&quot;: {
+            &quot;ok&quot;: true,
+            &quot;response&quot;: {
+              &quot;nonce&quot;: &quot;965829cf854bfc501639c790&quot;,
+              &quot;ok&quot;: true,
+              &quot;peer&quot;: &quot;10.99.1.1&quot;,
+              &quot;server&quot;: &quot;203.0.113.2&quot;
+            }
+          },
+          &quot;counts&quot;: {
+            &quot;A&quot;: {
+              &quot;own_dhcp&quot;: 0,
+              &quot;target&quot;: 59,
+              &quot;wrong_dhcp&quot;: 0
+            },
+            &quot;B&quot;: {
+              &quot;own_dhcp&quot;: 0,
+              &quot;target&quot;: 49,
+              &quot;wrong_dhcp&quot;: 0
+            }
+          },
+          &quot;state&quot;: {
+            &quot;active&quot;: {
+              &quot;generation&quot;: 2,
+              &quot;link&quot;: &quot;A&quot;,
+              &quot;value&quot;: {
+                &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+                &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+                &quot;ip&quot;: &quot;192.0.2.2&quot;,
+                &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+                &quot;seconds&quot;: 120
+              }
+            },
+            &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;,
+            &quot;config_hash&quot;: &quot;cc5bb4048b603b5b9e4b3f5a3ff555dcacc18346b051c6f37edf45b373aeac50&quot;,
+            &quot;epoch&quot;: 1,
+            &quot;history&quot;: [
+              {
+                &quot;at&quot;: 15.005348923,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              }
+            ],
+            &quot;latched&quot;: false,
+            &quot;links&quot;: {
+              &quot;A&quot;: {
+                &quot;bad&quot;: 0,
+                &quot;current&quot;: {
+                  &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+                  &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+                  &quot;ip&quot;: &quot;192.0.2.2&quot;,
+                  &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+                  &quot;seconds&quot;: 120
+                },
+                &quot;expires&quot;: 134.953711089,
+                &quot;generation&quot;: 2,
+                &quot;good&quot;: 2,
+                &quot;last_event&quot;: 14.953711089,
+                &quot;revision&quot;: 2,
+                &quot;round&quot;: 2,
+                &quot;session&quot;: &quot;3f3a7e6ae23f42040a1c65e9a75f14709873b1197eb57691&quot;,
+                &quot;state&quot;: &quot;HEALTHY&quot;,
+                &quot;until&quot;: 19.997762756
+              },
+              &quot;B&quot;: {
+                &quot;bad&quot;: 0,
+                &quot;current&quot;: {
+                  &quot;address&quot;: &quot;198.51.100.2/24&quot;,
+                  &quot;gateway&quot;: &quot;198.51.100.1&quot;,
+                  &quot;ip&quot;: &quot;198.51.100.2&quot;,
+                  &quot;prefix&quot;: &quot;198.51.100.0/24&quot;,
+                  &quot;seconds&quot;: 120
+                },
+                &quot;expires&quot;: 134.955816881,
+                &quot;generation&quot;: 2,
+                &quot;good&quot;: 2,
+                &quot;last_event&quot;: 14.955816881,
+                &quot;revision&quot;: 2,
+                &quot;round&quot;: 2,
+                &quot;session&quot;: &quot;f2de36ab62588b4bda605a7de92b932938080aeba3d871d4&quot;,
+                &quot;state&quot;: &quot;HEALTHY&quot;,
+                &quot;until&quot;: 20.002610131
+              }
+            },
+            &quot;paused&quot;: false,
+            &quot;pending&quot;: null,
+            &quot;phase&quot;: &quot;READY&quot;,
+            &quot;revision&quot;: 4
+          }
+        },
+        &quot;name&quot;: &quot;two_real_wire_leases_and_A_data_path&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 4.237954460999999
+      },
+      {
+        &quot;details&quot;: {
+          &quot;after&quot;: {
+            &quot;A&quot;: {
+              &quot;own_dhcp&quot;: 0,
+              &quot;target&quot;: 59,
+              &quot;wrong_dhcp&quot;: 0
+            },
+            &quot;B&quot;: {
+              &quot;own_dhcp&quot;: 0,
+              &quot;target&quot;: 57,
+              &quot;wrong_dhcp&quot;: 0
+            }
+          },
+          &quot;before&quot;: {
+            &quot;A&quot;: {
+              &quot;own_dhcp&quot;: 0,
+              &quot;target&quot;: 59,
+              &quot;wrong_dhcp&quot;: 0
+            },
+            &quot;B&quot;: {
+              &quot;own_dhcp&quot;: 0,
+              &quot;target&quot;: 57,
+              &quot;wrong_dhcp&quot;: 0
+            }
+          },
+          &quot;probe&quot;: {
+            &quot;ok&quot;: true,
+            &quot;rows&quot;: [
+              {
+                &quot;error&quot;: &quot;TimeoutError&quot;,
+                &quot;infrastructure&quot;: false,
+                &quot;link&quot;: &quot;A&quot;,
+                &quot;ok&quot;: false,
+                &quot;seconds&quot;: 0.5012064589999987
+              },
+              {
+                &quot;error&quot;: &quot;TimeoutError&quot;,
+                &quot;infrastructure&quot;: false,
+                &quot;link&quot;: &quot;A&quot;,
+                &quot;ok&quot;: false,
+                &quot;seconds&quot;: 0.5023060830000006
+              },
+              {
+                &quot;error&quot;: &quot;TimeoutError&quot;,
+                &quot;infrastructure&quot;: false,
+                &quot;link&quot;: &quot;A&quot;,
+                &quot;ok&quot;: false,
+                &quot;seconds&quot;: 0.501285416
+              }
+            ],
+            &quot;state&quot;: {
+              &quot;active&quot;: {
+                &quot;generation&quot;: 2,
+                &quot;link&quot;: &quot;A&quot;,
+                &quot;value&quot;: {
+                  &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+                  &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+                  &quot;ip&quot;: &quot;192.0.2.2&quot;,
+                  &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+                  &quot;seconds&quot;: 120
+                }
+              },
+              &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;,
+              &quot;config_hash&quot;: &quot;cc5bb4048b603b5b9e4b3f5a3ff555dcacc18346b051c6f37edf45b373aeac50&quot;,
+              &quot;epoch&quot;: 1,
+              &quot;history&quot;: [
+                {
+                  &quot;at&quot;: 15.005348923,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                }
+              ],
+              &quot;latched&quot;: false,
+              &quot;links&quot;: {
+                &quot;A&quot;: {
+                  &quot;bad&quot;: 1,
+                  &quot;current&quot;: {
+                    &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+                    &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+                    &quot;ip&quot;: &quot;192.0.2.2&quot;,
+                    &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+                    &quot;seconds&quot;: 120
+                  },
+                  &quot;expires&quot;: 134.953711089,
+                  &quot;generation&quot;: 2,
+                  &quot;good&quot;: 0,
+                  &quot;last_event&quot;: 14.953711089,
+                  &quot;revision&quot;: 2,
+                  &quot;round&quot;: 3,
+                  &quot;session&quot;: &quot;3f3a7e6ae23f42040a1c65e9a75f14709873b1197eb57691&quot;,
+                  &quot;state&quot;: &quot;SUSPECT&quot;,
+                  &quot;until&quot;: 19.997762756
+                },
+                &quot;B&quot;: {
+                  &quot;bad&quot;: 0,
+                  &quot;current&quot;: {
+                    &quot;address&quot;: &quot;198.51.100.2/24&quot;,
+                    &quot;gateway&quot;: &quot;198.51.100.1&quot;,
+                    &quot;ip&quot;: &quot;198.51.100.2&quot;,
+                    &quot;prefix&quot;: &quot;198.51.100.0/24&quot;,
+                    &quot;seconds&quot;: 120
+                  },
+                  &quot;expires&quot;: 134.955816881,
+                  &quot;generation&quot;: 2,
+                  &quot;good&quot;: 2,
+                  &quot;last_event&quot;: 14.955816881,
+                  &quot;revision&quot;: 2,
+                  &quot;round&quot;: 2,
+                  &quot;session&quot;: &quot;f2de36ab62588b4bda605a7de92b932938080aeba3d871d4&quot;,
+                  &quot;state&quot;: &quot;HEALTHY&quot;,
+                  &quot;until&quot;: 20.002610131
+                }
+              },
+              &quot;paused&quot;: false,
+              &quot;pending&quot;: null,
+              &quot;phase&quot;: &quot;READY&quot;,
+              &quot;revision&quot;: 4
+            },
+            &quot;votes&quot;: 0
+          },
+          &quot;repair_origin&quot;: &quot;synthetic_rebuild_after_missing_route_challenge&quot;,
+          &quot;viable_main_fallback&quot;: {
+            &quot;ok&quot;: true,
+            &quot;response&quot;: {
+              &quot;nonce&quot;: &quot;e7b50cdbacac9a69ae9dd2f1&quot;,
+              &quot;ok&quot;: true,
+              &quot;peer&quot;: &quot;10.99.2.1&quot;,
+              &quot;server&quot;: &quot;203.0.113.2&quot;
+            }
+          }
+        },
+        &quot;name&quot;: &quot;missing_A_probe_table_terminal_guard_no_B_borrow&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 0.5827937909999985
+      },
+      {
+        &quot;details&quot;: {
+          &quot;client&quot;: {
+            &quot;ok&quot;: true,
+            &quot;response&quot;: {
+              &quot;nonce&quot;: &quot;e67db99b5972d05b995abdb2&quot;,
+              &quot;ok&quot;: true,
+              &quot;peer&quot;: &quot;10.99.1.1&quot;,
+              &quot;server&quot;: &quot;203.0.113.2&quot;
+            }
+          },
+          &quot;event&quot;: {
+            &quot;at&quot;: 15.631443089,
+            &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;,
+            &quot;lease&quot;: {
+              &quot;ip&quot;: &quot;198.51.100.2&quot;,
+              &quot;lease&quot;: &quot;120&quot;,
+              &quot;router&quot;: &quot;198.51.100.1&quot;,
+              &quot;subnet&quot;: &quot;255.255.255.0&quot;
+            },
+            &quot;link&quot;: &quot;B&quot;,
+            &quot;options&quot;: [],
+            &quot;origin&quot;: &quot;real_busybox_hook&quot;,
+            &quot;reason&quot;: &quot;renew&quot;,
+            &quot;server_id&quot;: &quot;198.51.100.1&quot;,
+            &quot;session&quot;: &quot;f2de36ab62588b4bda605a7de92b932938080aeba3d871d4&quot;
+          },
+          &quot;state&quot;: {
+            &quot;active&quot;: {
+              &quot;generation&quot;: 3,
+              &quot;link&quot;: &quot;A&quot;,
+              &quot;value&quot;: {
+                &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+                &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+                &quot;ip&quot;: &quot;192.0.2.2&quot;,
+                &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+                &quot;seconds&quot;: 120
+              }
+            },
+            &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;,
+            &quot;config_hash&quot;: &quot;cc5bb4048b603b5b9e4b3f5a3ff555dcacc18346b051c6f37edf45b373aeac50&quot;,
+            &quot;epoch&quot;: 1,
+            &quot;history&quot;: [
+              {
+                &quot;at&quot;: 15.005348923,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              },
+              {
+                &quot;at&quot;: 15.588260089,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              }
+            ],
+            &quot;latched&quot;: false,
+            &quot;links&quot;: {
+              &quot;A&quot;: {
+                &quot;bad&quot;: 0,
+                &quot;current&quot;: {
+                  &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+                  &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+                  &quot;ip&quot;: &quot;192.0.2.2&quot;,
+                  &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+                  &quot;seconds&quot;: 120
+                },
+                &quot;expires&quot;: 135.562350923,
+                &quot;generation&quot;: 3,
+                &quot;good&quot;: 4,
+                &quot;last_event&quot;: 15.562350923,
+                &quot;revision&quot;: 3,
+                &quot;round&quot;: 7,
+                &quot;session&quot;: &quot;3f3a7e6ae23f42040a1c65e9a75f14709873b1197eb57691&quot;,
+                &quot;state&quot;: &quot;HEALTHY&quot;,
+                &quot;until&quot;: 20.622170798
+              },
+              &quot;B&quot;: {
+                &quot;bad&quot;: 0,
+                &quot;current&quot;: {
+                  &quot;address&quot;: &quot;198.51.100.2/24&quot;,
+                  &quot;gateway&quot;: &quot;198.51.100.1&quot;,
+                  &quot;ip&quot;: &quot;198.51.100.2&quot;,
+                  &quot;prefix&quot;: &quot;198.51.100.0/24&quot;,
+                  &quot;seconds&quot;: 120
+                },
+                &quot;expires&quot;: 135.631443089,
+                &quot;generation&quot;: 3,
+                &quot;good&quot;: 0,
+                &quot;last_event&quot;: 15.631443089,
+                &quot;revision&quot;: 3,
+                &quot;round&quot;: -1,
+                &quot;session&quot;: &quot;f2de36ab62588b4bda605a7de92b932938080aeba3d871d4&quot;,
+                &quot;state&quot;: &quot;UNVERIFIED&quot;,
+                &quot;until&quot;: 0.0
+              }
+            },
+            &quot;paused&quot;: false,
+            &quot;pending&quot;: null,
+            &quot;phase&quot;: &quot;READY&quot;,
+            &quot;revision&quot;: 7
+          }
+        },
+        &quot;name&quot;: &quot;inactive_B_real_renewal_isolation&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 0.08517649999999932
+      },
+      {
+        &quot;details&quot;: {
+          &quot;client&quot;: {
+            &quot;ok&quot;: true,
+            &quot;response&quot;: {
+              &quot;nonce&quot;: &quot;339e7c38ac94df9ca84a032e&quot;,
+              &quot;ok&quot;: true,
+              &quot;peer&quot;: &quot;10.99.1.1&quot;,
+              &quot;server&quot;: &quot;203.0.113.2&quot;
+            }
+          },
+          &quot;state&quot;: {
+            &quot;active&quot;: {
+              &quot;generation&quot;: 3,
+              &quot;link&quot;: &quot;A&quot;,
+              &quot;value&quot;: {
+                &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+                &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+                &quot;ip&quot;: &quot;192.0.2.2&quot;,
+                &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+                &quot;seconds&quot;: 120
+              }
+            },
+            &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;,
+            &quot;config_hash&quot;: &quot;cc5bb4048b603b5b9e4b3f5a3ff555dcacc18346b051c6f37edf45b373aeac50&quot;,
+            &quot;epoch&quot;: 1,
+            &quot;history&quot;: [
+              {
+                &quot;at&quot;: 15.005348923,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              },
+              {
+                &quot;at&quot;: 15.588260089,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              }
+            ],
+            &quot;latched&quot;: false,
+            &quot;links&quot;: {
+              &quot;A&quot;: {
+                &quot;bad&quot;: 0,
+                &quot;current&quot;: {
+                  &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+                  &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+                  &quot;ip&quot;: &quot;192.0.2.2&quot;,
+                  &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+                  &quot;seconds&quot;: 120
+                },
+                &quot;expires&quot;: 135.562350923,
+                &quot;generation&quot;: 3,
+                &quot;good&quot;: 8,
+                &quot;last_event&quot;: 15.562350923,
+                &quot;revision&quot;: 3,
+                &quot;round&quot;: 11,
+                &quot;session&quot;: &quot;3f3a7e6ae23f42040a1c65e9a75f14709873b1197eb57691&quot;,
+                &quot;state&quot;: &quot;HEALTHY&quot;,
+                &quot;until&quot;: 20.83851884
+              },
+              &quot;B&quot;: {
+                &quot;bad&quot;: 0,
+                &quot;current&quot;: {
+                  &quot;address&quot;: &quot;198.51.100.2/24&quot;,
+                  &quot;gateway&quot;: &quot;198.51.100.1&quot;,
+                  &quot;ip&quot;: &quot;198.51.100.2&quot;,
+                  &quot;prefix&quot;: &quot;198.51.100.0/24&quot;,
+                  &quot;seconds&quot;: 120
+                },
+                &quot;expires&quot;: 135.810031923,
+                &quot;generation&quot;: 5,
+                &quot;good&quot;: 2,
+                &quot;last_event&quot;: 15.810031923,
+                &quot;revision&quot;: 5,
+                &quot;round&quot;: 4,
+                &quot;session&quot;: &quot;fc27c45b393a78a1fdfee16c3effe9f42268efacea43af09&quot;,
+                &quot;state&quot;: &quot;HEALTHY&quot;,
+                &quot;until&quot;: 20.852863673
+              }
+            },
+            &quot;paused&quot;: false,
+            &quot;pending&quot;: null,
+            &quot;phase&quot;: &quot;READY&quot;,
+            &quot;revision&quot;: 9
+          }
+        },
+        &quot;name&quot;: &quot;B_client_restart_isolation&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 0.1533299579999987
+      },
+      {
+        &quot;details&quot;: {
+          &quot;after&quot;: {
+            &quot;A&quot;: {
+              &quot;own_dhcp&quot;: 0,
+              &quot;target&quot;: 288,
+              &quot;wrong_dhcp&quot;: 0
+            },
+            &quot;B&quot;: {
+              &quot;own_dhcp&quot;: 1,
+              &quot;target&quot;: 106,
+              &quot;wrong_dhcp&quot;: 0
+            }
+          },
+          &quot;before&quot;: {
+            &quot;A&quot;: {
+              &quot;own_dhcp&quot;: 0,
+              &quot;target&quot;: 282,
+              &quot;wrong_dhcp&quot;: 0
+            },
+            &quot;B&quot;: {
+              &quot;own_dhcp&quot;: 1,
+              &quot;target&quot;: 106,
+              &quot;wrong_dhcp&quot;: 0
+            }
+          },
+          &quot;blocked&quot;: {
+            &quot;ok&quot;: false,
+            &quot;response&quot;: null
+          },
+          &quot;client&quot;: {
+            &quot;ok&quot;: true,
+            &quot;response&quot;: {
+              &quot;nonce&quot;: &quot;5baa2cf462f27fd4b4f231a3&quot;,
+              &quot;ok&quot;: true,
+              &quot;peer&quot;: &quot;10.99.2.1&quot;,
+              &quot;server&quot;: &quot;203.0.113.2&quot;
+            }
+          }
+        },
+        &quot;name&quot;: &quot;A_blackhole_no_borrow_and_explicit_safe_B_selection&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 1.0961387090000017
+      },
+      {
+        &quot;details&quot;: {
+          &quot;after&quot;: {
+            &quot;A&quot;: {
+              &quot;own_dhcp&quot;: 0,
+              &quot;target&quot;: 337,
+              &quot;wrong_dhcp&quot;: 0
+            },
+            &quot;B&quot;: {
+              &quot;own_dhcp&quot;: 1,
+              &quot;target&quot;: 172,
+              &quot;wrong_dhcp&quot;: 0
+            }
+          },
+          &quot;before&quot;: {
+            &quot;A&quot;: {
+              &quot;own_dhcp&quot;: 0,
+              &quot;target&quot;: 337,
+              &quot;wrong_dhcp&quot;: 0
+            },
+            &quot;B&quot;: {
+              &quot;own_dhcp&quot;: 1,
+              &quot;target&quot;: 166,
+              &quot;wrong_dhcp&quot;: 0
+            }
+          },
+          &quot;blocked&quot;: {
+            &quot;ok&quot;: false,
+            &quot;response&quot;: null
+          },
+          &quot;client&quot;: {
+            &quot;ok&quot;: true,
+            &quot;response&quot;: {
+              &quot;nonce&quot;: &quot;e5c3ce5371c42b8027967c03&quot;,
+              &quot;ok&quot;: true,
+              &quot;peer&quot;: &quot;10.99.1.1&quot;,
+              &quot;server&quot;: &quot;203.0.113.2&quot;
+            }
+          }
+        },
+        &quot;name&quot;: &quot;B_blackhole_no_borrow_and_explicit_safe_A_selection&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 1.170035084000002
+      },
+      {
+        &quot;details&quot;: {
+          &quot;client&quot;: {
+            &quot;ok&quot;: true,
+            &quot;response&quot;: {
+              &quot;nonce&quot;: &quot;df128df8922b74507f58a099&quot;,
+              &quot;ok&quot;: true,
+              &quot;peer&quot;: &quot;10.99.2.1&quot;,
+              &quot;server&quot;: &quot;203.0.113.2&quot;
+            }
+          },
+          &quot;result&quot;: {
+            &quot;ok&quot;: true,
+            &quot;state&quot;: {
+              &quot;active&quot;: {
+                &quot;generation&quot;: 5,
+                &quot;link&quot;: &quot;B&quot;,
+                &quot;value&quot;: {
+                  &quot;address&quot;: &quot;198.51.100.2/24&quot;,
+                  &quot;gateway&quot;: &quot;198.51.100.1&quot;,
+                  &quot;ip&quot;: &quot;198.51.100.2&quot;,
+                  &quot;prefix&quot;: &quot;198.51.100.0/24&quot;,
+                  &quot;seconds&quot;: 120
+                }
+              },
+              &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;,
+              &quot;config_hash&quot;: &quot;cc5bb4048b603b5b9e4b3f5a3ff555dcacc18346b051c6f37edf45b373aeac50&quot;,
+              &quot;epoch&quot;: 1,
+              &quot;history&quot;: [
+                {
+                  &quot;at&quot;: 15.005348923,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                },
+                {
+                  &quot;at&quot;: 15.588260089,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                },
+                {
+                  &quot;at&quot;: 16.914163882,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                },
+                {
+                  &quot;at&quot;: 18.042437132,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                },
+                {
+                  &quot;at&quot;: 18.112145799,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                }
+              ],
+              &quot;latched&quot;: false,
+              &quot;links&quot;: {
+                &quot;A&quot;: {
+                  &quot;bad&quot;: 0,
+                  &quot;current&quot;: null,
+                  &quot;expires&quot;: 0.0,
+                  &quot;generation&quot;: 4,
+                  &quot;good&quot;: 0,
+                  &quot;last_event&quot;: 18.123082216,
+                  &quot;revision&quot;: 4,
+                  &quot;round&quot;: -1,
+                  &quot;session&quot;: &quot;3f3a7e6ae23f42040a1c65e9a75f14709873b1197eb57691&quot;,
+                  &quot;state&quot;: &quot;WAITING&quot;,
+                  &quot;until&quot;: 0.0
+                },
+                &quot;B&quot;: {
+                  &quot;bad&quot;: 0,
+                  &quot;current&quot;: {
+                    &quot;address&quot;: &quot;198.51.100.2/24&quot;,
+                    &quot;gateway&quot;: &quot;198.51.100.1&quot;,
+                    &quot;ip&quot;: &quot;198.51.100.2&quot;,
+                    &quot;prefix&quot;: &quot;198.51.100.0/24&quot;,
+                    &quot;seconds&quot;: 120
+                  },
+                  &quot;expires&quot;: 135.810031923,
+                  &quot;generation&quot;: 5,
+                  &quot;good&quot;: 2,
+                  &quot;last_event&quot;: 15.810031923,
+                  &quot;revision&quot;: 5,
+                  &quot;round&quot;: 10,
+                  &quot;session&quot;: &quot;fc27c45b393a78a1fdfee16c3effe9f42268efacea43af09&quot;,
+                  &quot;state&quot;: &quot;HEALTHY&quot;,
+                  &quot;until&quot;: 23.109659632
+                }
+              },
+              &quot;paused&quot;: false,
+              &quot;pending&quot;: null,
+              &quot;phase&quot;: &quot;READY&quot;,
+              &quot;revision&quot;: 15
+            }
+          }
+        },
+        &quot;name&quot;: &quot;synthetic_cross_link_conflict_withdraws_only_proposer&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 0.024718165999999542
+      },
+      {
+        &quot;details&quot;: {
+          &quot;client&quot;: {
+            &quot;ok&quot;: true,
+            &quot;response&quot;: {
+              &quot;nonce&quot;: &quot;178cd55cb2afc656dda95c28&quot;,
+              &quot;ok&quot;: true,
+              &quot;peer&quot;: &quot;10.99.2.1&quot;,
+              &quot;server&quot;: &quot;203.0.113.2&quot;
+            }
+          },
+          &quot;event&quot;: {
+            &quot;at&quot;: 22.513556134,
+            &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;,
+            &quot;lease&quot;: {
+              &quot;ip&quot;: &quot;198.51.100.3&quot;,
+              &quot;lease&quot;: &quot;120&quot;,
+              &quot;router&quot;: &quot;198.51.100.1&quot;,
+              &quot;subnet&quot;: &quot;255.255.255.0&quot;
+            },
+            &quot;link&quot;: &quot;A&quot;,
+            &quot;options&quot;: [],
+            &quot;origin&quot;: &quot;real_busybox_hook&quot;,
+            &quot;reason&quot;: &quot;bound&quot;,
+            &quot;server_id&quot;: &quot;198.51.100.1&quot;,
+            &quot;session&quot;: &quot;fff14024abaf4059b02330a512e93cc81c9f96090bbaba3c&quot;
+          },
+          &quot;external_fixture_change&quot;: &quot;Added overlapping server-side address to isolated A edge and changed A DHCP offer&quot;,
+          &quot;result&quot;: {
+            &quot;ok&quot;: true,
+            &quot;state&quot;: {
+              &quot;active&quot;: {
+                &quot;generation&quot;: 5,
+                &quot;link&quot;: &quot;B&quot;,
+                &quot;value&quot;: {
+                  &quot;address&quot;: &quot;198.51.100.2/24&quot;,
+                  &quot;gateway&quot;: &quot;198.51.100.1&quot;,
+                  &quot;ip&quot;: &quot;198.51.100.2&quot;,
+                  &quot;prefix&quot;: &quot;198.51.100.0/24&quot;,
+                  &quot;seconds&quot;: 120
+                }
+              },
+              &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;,
+              &quot;config_hash&quot;: &quot;cc5bb4048b603b5b9e4b3f5a3ff555dcacc18346b051c6f37edf45b373aeac50&quot;,
+              &quot;epoch&quot;: 1,
+              &quot;history&quot;: [
+                {
+                  &quot;at&quot;: 15.005348923,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                },
+                {
+                  &quot;at&quot;: 15.588260089,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                },
+                {
+                  &quot;at&quot;: 16.914163882,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                },
+                {
+                  &quot;at&quot;: 18.042437132,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                },
+                {
+                  &quot;at&quot;: 18.112145799,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                }
+              ],
+              &quot;latched&quot;: false,
+              &quot;links&quot;: {
+                &quot;A&quot;: {
+                  &quot;bad&quot;: 0,
+                  &quot;current&quot;: null,
+                  &quot;expires&quot;: 0.0,
+                  &quot;generation&quot;: 6,
+                  &quot;good&quot;: 0,
+                  &quot;last_event&quot;: 22.513556134,
+                  &quot;revision&quot;: 6,
+                  &quot;round&quot;: -1,
+                  &quot;session&quot;: &quot;fff14024abaf4059b02330a512e93cc81c9f96090bbaba3c&quot;,
+                  &quot;state&quot;: &quot;WAITING&quot;,
+                  &quot;until&quot;: 0.0
+                },
+                &quot;B&quot;: {
+                  &quot;bad&quot;: 0,
+                  &quot;current&quot;: {
+                    &quot;address&quot;: &quot;198.51.100.2/24&quot;,
+                    &quot;gateway&quot;: &quot;198.51.100.1&quot;,
+                    &quot;ip&quot;: &quot;198.51.100.2&quot;,
+                    &quot;prefix&quot;: &quot;198.51.100.0/24&quot;,
+                    &quot;seconds&quot;: 120
+                  },
+                  &quot;expires&quot;: 135.810031923,
+                  &quot;generation&quot;: 5,
+                  &quot;good&quot;: 4,
+                  &quot;last_event&quot;: 15.810031923,
+                  &quot;revision&quot;: 5,
+                  &quot;round&quot;: 12,
+                  &quot;session&quot;: &quot;fc27c45b393a78a1fdfee16c3effe9f42268efacea43af09&quot;,
+                  &quot;state&quot;: &quot;HEALTHY&quot;,
+                  &quot;until&quot;: 27.561131593
+                }
+              },
+              &quot;paused&quot;: false,
+              &quot;pending&quot;: null,
+              &quot;phase&quot;: &quot;READY&quot;,
+              &quot;revision&quot;: 17
+            }
+          }
+        },
+        &quot;name&quot;: &quot;real_wire_cross_link_conflict_withdraws_only_proposer&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 4.456604335999998
+      },
+      {
+        &quot;details&quot;: {
+          &quot;after&quot;: {
+            &quot;A&quot;: {
+              &quot;own_dhcp&quot;: 2,
+              &quot;target&quot;: 3246,
+              &quot;wrong_dhcp&quot;: 0
+            },
+            &quot;B&quot;: {
+              &quot;own_dhcp&quot;: 2,
+              &quot;target&quot;: 3171,
+              &quot;wrong_dhcp&quot;: 0
+            }
+          },
+          &quot;before&quot;: {
+            &quot;A&quot;: {
+              &quot;own_dhcp&quot;: 1,
+              &quot;target&quot;: 447,
+              &quot;wrong_dhcp&quot;: 0
+            },
+            &quot;B&quot;: {
+              &quot;own_dhcp&quot;: 1,
+              &quot;target&quot;: 386,
+              &quot;wrong_dhcp&quot;: 0
+            }
+          },
+          &quot;events&quot;: [
+            {
+              &quot;at&quot;: 75.891366091,
+              &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;,
+              &quot;lease&quot;: {
+                &quot;ip&quot;: &quot;198.51.100.2&quot;,
+                &quot;lease&quot;: &quot;120&quot;,
+                &quot;router&quot;: &quot;198.51.100.1&quot;,
+                &quot;subnet&quot;: &quot;255.255.255.0&quot;
+              },
+              &quot;link&quot;: &quot;B&quot;,
+              &quot;options&quot;: [],
+              &quot;origin&quot;: &quot;real_busybox_hook&quot;,
+              &quot;reason&quot;: &quot;renew&quot;,
+              &quot;server_id&quot;: &quot;198.51.100.1&quot;,
+              &quot;session&quot;: &quot;fc27c45b393a78a1fdfee16c3effe9f42268efacea43af09&quot;
+            },
+            {
+              &quot;at&quot;: 85.083395758,
+              &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;,
+              &quot;lease&quot;: {
+                &quot;ip&quot;: &quot;192.0.2.2&quot;,
+                &quot;lease&quot;: &quot;120&quot;,
+                &quot;router&quot;: &quot;192.0.2.1&quot;,
+                &quot;subnet&quot;: &quot;255.255.255.0&quot;
+              },
+              &quot;link&quot;: &quot;A&quot;,
+              &quot;options&quot;: [],
+              &quot;origin&quot;: &quot;real_busybox_hook&quot;,
+              &quot;reason&quot;: &quot;renew&quot;,
+              &quot;server_id&quot;: &quot;192.0.2.1&quot;,
+              &quot;session&quot;: &quot;7f847b19a44fe585fd5f9b55993df4912d587ddbb0ba8741&quot;
+            }
+          ]
+        },
+        &quot;name&quot;: &quot;natural_T1_both_clients_unicast_no_wrong_WAN&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 59.280532102
+      },
+      {
+        &quot;details&quot;: {
+          &quot;client&quot;: {
+            &quot;ok&quot;: true,
+            &quot;response&quot;: {
+              &quot;nonce&quot;: &quot;d70d2d59024c738d4593c583&quot;,
+              &quot;ok&quot;: true,
+              &quot;peer&quot;: &quot;10.99.1.1&quot;,
+              &quot;server&quot;: &quot;203.0.113.2&quot;
+            }
+          },
+          &quot;event&quot;: {
+            &quot;at&quot;: 85.519874402,
+            &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;,
+            &quot;lease&quot;: {
+              &quot;ip&quot;: &quot;198.51.100.2&quot;,
+              &quot;lease&quot;: &quot;120&quot;,
+              &quot;router&quot;: &quot;198.51.100.1&quot;,
+              &quot;subnet&quot;: &quot;255.255.255.0&quot;
+            },
+            &quot;link&quot;: &quot;B&quot;,
+            &quot;options&quot;: [
+              &quot;staticroutes&quot;
+            ],
+            &quot;origin&quot;: &quot;real_busybox_hook&quot;,
+            &quot;reason&quot;: &quot;renew&quot;,
+            &quot;server_id&quot;: &quot;198.51.100.1&quot;,
+            &quot;session&quot;: &quot;fc27c45b393a78a1fdfee16c3effe9f42268efacea43af09&quot;
+          },
+          &quot;result&quot;: {
+            &quot;ok&quot;: true,
+            &quot;state&quot;: {
+              &quot;active&quot;: {
+                &quot;generation&quot;: 10,
+                &quot;link&quot;: &quot;A&quot;,
+                &quot;value&quot;: {
+                  &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+                  &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+                  &quot;ip&quot;: &quot;192.0.2.2&quot;,
+                  &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+                  &quot;seconds&quot;: 120
+                }
+              },
+              &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;,
+              &quot;config_hash&quot;: &quot;cc5bb4048b603b5b9e4b3f5a3ff555dcacc18346b051c6f37edf45b373aeac50&quot;,
+              &quot;epoch&quot;: 1,
+              &quot;history&quot;: [
+                {
+                  &quot;at&quot;: 15.005348923,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                },
+                {
+                  &quot;at&quot;: 15.588260089,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                },
+                {
+                  &quot;at&quot;: 16.914163882,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                },
+                {
+                  &quot;at&quot;: 18.042437132,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                },
+                {
+                  &quot;at&quot;: 18.112145799,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                },
+                {
+                  &quot;at&quot;: 76.785571944,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                },
+                {
+                  &quot;at&quot;: 85.281712127,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                }
+              ],
+              &quot;latched&quot;: false,
+              &quot;links&quot;: {
+                &quot;A&quot;: {
+                  &quot;bad&quot;: 0,
+                  &quot;current&quot;: {
+                    &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+                    &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+                    &quot;ip&quot;: &quot;192.0.2.2&quot;,
+                    &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+                    &quot;seconds&quot;: 120
+                  },
+                  &quot;expires&quot;: 205.083395758,
+                  &quot;generation&quot;: 10,
+                  &quot;good&quot;: 2,
+                  &quot;last_event&quot;: 85.083395758,
+                  &quot;revision&quot;: 10,
+                  &quot;round&quot;: 133,
+                  &quot;session&quot;: &quot;7f847b19a44fe585fd5f9b55993df4912d587ddbb0ba8741&quot;,
+                  &quot;state&quot;: &quot;HEALTHY&quot;,
+                  &quot;until&quot;: 90.278739303
+                },
+                &quot;B&quot;: {
+                  &quot;bad&quot;: 0,
+                  &quot;current&quot;: null,
+                  &quot;expires&quot;: 0.0,
+                  &quot;generation&quot;: 7,
+                  &quot;good&quot;: 0,
+                  &quot;last_event&quot;: 85.519874402,
+                  &quot;revision&quot;: 7,
+                  &quot;round&quot;: -1,
+                  &quot;session&quot;: &quot;fc27c45b393a78a1fdfee16c3effe9f42268efacea43af09&quot;,
+                  &quot;state&quot;: &quot;WAITING&quot;,
+                  &quot;until&quot;: 0.0
+                }
+              },
+              &quot;paused&quot;: false,
+              &quot;pending&quot;: null,
+              &quot;phase&quot;: &quot;READY&quot;,
+              &quot;revision&quot;: 25
+            }
+          }
+        },
+        &quot;name&quot;: &quot;real_wire_option121_detected_and_B_withdrawn&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 0.32173636699999975
+      },
+      {
+        &quot;details&quot;: {
+          &quot;authority_challenges&quot;: [
+            {
+              &quot;field&quot;: &quot;session&quot;,
+              &quot;link&quot;: &quot;A&quot;,
+              &quot;network_unchanged&quot;: true,
+              &quot;origin&quot;: &quot;synthetic_isolated_authority_challenge&quot;,
+              &quot;rejected&quot;: true,
+              &quot;snapshot_unchanged&quot;: true
+            },
+            {
+              &quot;field&quot;: &quot;session&quot;,
+              &quot;link&quot;: &quot;B&quot;,
+              &quot;network_unchanged&quot;: true,
+              &quot;origin&quot;: &quot;synthetic_isolated_authority_challenge&quot;,
+              &quot;rejected&quot;: true,
+              &quot;snapshot_unchanged&quot;: true
+            }
+          ],
+          &quot;before&quot;: {
+            &quot;active&quot;: {
+              &quot;generation&quot;: 10,
+              &quot;link&quot;: &quot;A&quot;,
+              &quot;value&quot;: {
+                &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+                &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+                &quot;ip&quot;: &quot;192.0.2.2&quot;,
+                &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+                &quot;seconds&quot;: 120
+              }
+            },
+            &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;,
+            &quot;config_hash&quot;: &quot;cc5bb4048b603b5b9e4b3f5a3ff555dcacc18346b051c6f37edf45b373aeac50&quot;,
+            &quot;epoch&quot;: 1,
+            &quot;history&quot;: [
+              {
+                &quot;at&quot;: 15.005348923,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              },
+              {
+                &quot;at&quot;: 15.588260089,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              },
+              {
+                &quot;at&quot;: 16.914163882,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              },
+              {
+                &quot;at&quot;: 18.042437132,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              },
+              {
+                &quot;at&quot;: 18.112145799,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              },
+              {
+                &quot;at&quot;: 76.785571944,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              },
+              {
+                &quot;at&quot;: 85.281712127,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              }
+            ],
+            &quot;latched&quot;: false,
+            &quot;links&quot;: {
+              &quot;A&quot;: {
+                &quot;bad&quot;: 0,
+                &quot;current&quot;: {
+                  &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+                  &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+                  &quot;ip&quot;: &quot;192.0.2.2&quot;,
+                  &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+                  &quot;seconds&quot;: 120
+                },
+                &quot;expires&quot;: 205.083395758,
+                &quot;generation&quot;: 10,
+                &quot;good&quot;: 4,
+                &quot;last_event&quot;: 85.083395758,
+                &quot;revision&quot;: 10,
+                &quot;round&quot;: 135,
+                &quot;session&quot;: &quot;7f847b19a44fe585fd5f9b55993df4912d587ddbb0ba8741&quot;,
+                &quot;state&quot;: &quot;HEALTHY&quot;,
+                &quot;until&quot;: 93.991279473
+              },
+              &quot;B&quot;: {
+                &quot;bad&quot;: 0,
+                &quot;current&quot;: {
+                  &quot;address&quot;: &quot;198.51.100.2/24&quot;,
+                  &quot;gateway&quot;: &quot;198.51.100.1&quot;,
+                  &quot;ip&quot;: &quot;198.51.100.2&quot;,
+                  &quot;prefix&quot;: &quot;198.51.100.0/24&quot;,
+                  &quot;seconds&quot;: 120
+                },
+                &quot;expires&quot;: 208.92190361299998,
+                &quot;generation&quot;: 9,
+                &quot;good&quot;: 2,
+                &quot;last_event&quot;: 88.921903613,
+                &quot;revision&quot;: 9,
+                &quot;round&quot;: 130,
+                &quot;session&quot;: &quot;83ee64d527d2f2cd2de456cb23e57c30ffd501f6825af4ec&quot;,
+                &quot;state&quot;: &quot;HEALTHY&quot;,
+                &quot;until&quot;: 93.985362072
+              }
+            },
+            &quot;paused&quot;: false,
+            &quot;pending&quot;: null,
+            &quot;phase&quot;: &quot;READY&quot;,
+            &quot;revision&quot;: 27
+          },
+          &quot;client&quot;: {
+            &quot;ok&quot;: true,
+            &quot;response&quot;: {
+              &quot;nonce&quot;: &quot;a1c8bf55b49accac8f083d78&quot;,
+              &quot;ok&quot;: true,
+              &quot;peer&quot;: &quot;10.99.1.1&quot;,
+              &quot;server&quot;: &quot;203.0.113.2&quot;
+            }
+          },
+          &quot;restarted&quot;: {
+            &quot;active&quot;: null,
+            &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;,
+            &quot;config_hash&quot;: &quot;cc5bb4048b603b5b9e4b3f5a3ff555dcacc18346b051c6f37edf45b373aeac50&quot;,
+            &quot;epoch&quot;: 2,
+            &quot;history&quot;: [
+              {
+                &quot;at&quot;: 15.005348923,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              },
+              {
+                &quot;at&quot;: 15.588260089,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              },
+              {
+                &quot;at&quot;: 16.914163882,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              },
+              {
+                &quot;at&quot;: 18.042437132,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              },
+              {
+                &quot;at&quot;: 18.112145799,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              },
+              {
+                &quot;at&quot;: 76.785571944,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              },
+              {
+                &quot;at&quot;: 85.281712127,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              }
+            ],
+            &quot;latched&quot;: false,
+            &quot;links&quot;: {
+              &quot;A&quot;: {
+                &quot;bad&quot;: 0,
+                &quot;current&quot;: null,
+                &quot;expires&quot;: 0.0,
+                &quot;generation&quot;: 11,
+                &quot;good&quot;: 0,
+                &quot;last_event&quot;: 0.0,
+                &quot;revision&quot;: 11,
+                &quot;round&quot;: -1,
+                &quot;session&quot;: &quot;91f6573b21962ea2a8c9787f41331cafec45edb30a312b21&quot;,
+                &quot;state&quot;: &quot;WAITING&quot;,
+                &quot;until&quot;: 0.0
+              },
+              &quot;B&quot;: {
+                &quot;bad&quot;: 0,
+                &quot;current&quot;: null,
+                &quot;expires&quot;: 0.0,
+                &quot;generation&quot;: 10,
+                &quot;good&quot;: 0,
+                &quot;last_event&quot;: 0.0,
+                &quot;revision&quot;: 10,
+                &quot;round&quot;: -1,
+                &quot;session&quot;: &quot;688ff1fc41dc435f52898970f7ce8fc53e27ae8dc91d40d9&quot;,
+                &quot;state&quot;: &quot;WAITING&quot;,
+                &quot;until&quot;: 0.0
+              }
+            },
+            &quot;paused&quot;: false,
+            &quot;pending&quot;: null,
+            &quot;phase&quot;: &quot;READY&quot;,
+            &quot;revision&quot;: 28
+          }
+        },
+        &quot;name&quot;: &quot;writer_SIGKILL_quarantine_both_and_reject_old_sessions&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 0.2812182629999995
+      },
+      {
+        &quot;details&quot;: {
+          &quot;actual_partial_addresses&quot;: [
+            {
+              &quot;addr_info&quot;: [
+                {
+                  &quot;family&quot;: &quot;inet&quot;,
+                  &quot;label&quot;: &quot;wanB&quot;,
+                  &quot;local&quot;: &quot;198.51.100.3&quot;,
+                  &quot;noprefixroute&quot;: true,
+                  &quot;preferred_life_time&quot;: 4294967295,
+                  &quot;prefixlen&quot;: 24,
+                  &quot;scope&quot;: &quot;global&quot;,
+                  &quot;valid_life_time&quot;: 4294967295
+                }
+              ],
+              &quot;flags&quot;: [
+                &quot;BROADCAST&quot;,
+                &quot;MULTICAST&quot;,
+                &quot;UP&quot;,
+                &quot;LOWER_UP&quot;
+              ],
+              &quot;group&quot;: &quot;default&quot;,
+              &quot;ifindex&quot;: 4,
+              &quot;ifname&quot;: &quot;wanB&quot;,
+              &quot;link_index&quot;: 2,
+              &quot;link_netnsid&quot;: 2,
+              &quot;mtu&quot;: 1500,
+              &quot;operstate&quot;: &quot;UP&quot;,
+              &quot;qdisc&quot;: &quot;noqueue&quot;,
+              &quot;txqlen&quot;: 1000
+            }
+          ],
+          &quot;failure&quot;: {
+            &quot;error&quot;: &quot;OSError&quot;,
+            &quot;ok&quot;: false,
+            &quot;state&quot;: {
+              &quot;active&quot;: {
+                &quot;generation&quot;: 12,
+                &quot;link&quot;: &quot;A&quot;,
+                &quot;value&quot;: {
+                  &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+                  &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+                  &quot;ip&quot;: &quot;192.0.2.2&quot;,
+                  &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+                  &quot;seconds&quot;: 120
+                }
+              },
+              &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;,
+              &quot;config_hash&quot;: &quot;cc5bb4048b603b5b9e4b3f5a3ff555dcacc18346b051c6f37edf45b373aeac50&quot;,
+              &quot;epoch&quot;: 2,
+              &quot;history&quot;: [
+                {
+                  &quot;at&quot;: 15.005348923,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                },
+                {
+                  &quot;at&quot;: 15.588260089,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                },
+                {
+                  &quot;at&quot;: 16.914163882,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                },
+                {
+                  &quot;at&quot;: 18.042437132,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                },
+                {
+                  &quot;at&quot;: 18.112145799,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                },
+                {
+                  &quot;at&quot;: 76.785571944,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                },
+                {
+                  &quot;at&quot;: 85.281712127,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                },
+                {
+                  &quot;at&quot;: 89.249176172,
+                  &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+                }
+              ],
+              &quot;latched&quot;: false,
+              &quot;links&quot;: {
+                &quot;A&quot;: {
+                  &quot;bad&quot;: 0,
+                  &quot;current&quot;: {
+                    &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+                    &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+                    &quot;ip&quot;: &quot;192.0.2.2&quot;,
+                    &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+                    &quot;seconds&quot;: 120
+                  },
+                  &quot;expires&quot;: 209.18045297700002,
+                  &quot;generation&quot;: 12,
+                  &quot;good&quot;: 2,
+                  &quot;last_event&quot;: 89.180452977,
+                  &quot;revision&quot;: 12,
+                  &quot;round&quot;: 137,
+                  &quot;session&quot;: &quot;91f6573b21962ea2a8c9787f41331cafec45edb30a312b21&quot;,
+                  &quot;state&quot;: &quot;HEALTHY&quot;,
+                  &quot;until&quot;: 94.24091686
+                },
+                &quot;B&quot;: {
+                  &quot;bad&quot;: 0,
+                  &quot;current&quot;: {
+                    &quot;address&quot;: &quot;198.51.100.2/24&quot;,
+                    &quot;gateway&quot;: &quot;198.51.100.1&quot;,
+                    &quot;ip&quot;: &quot;198.51.100.2&quot;,
+                    &quot;prefix&quot;: &quot;198.51.100.0/24&quot;,
+                    &quot;seconds&quot;: 120
+                  },
+                  &quot;expires&quot;: 209.174936075,
+                  &quot;generation&quot;: 11,
+                  &quot;good&quot;: 0,
+                  &quot;last_event&quot;: 89.276136685,
+                  &quot;revision&quot;: 11,
+                  &quot;round&quot;: -1,
+                  &quot;session&quot;: &quot;688ff1fc41dc435f52898970f7ce8fc53e27ae8dc91d40d9&quot;,
+                  &quot;state&quot;: &quot;UNVERIFIED&quot;,
+                  &quot;until&quot;: 0.0
+                }
+              },
+              &quot;paused&quot;: false,
+              &quot;pending&quot;: {
+                &quot;after&quot;: {
+                  &quot;generation&quot;: 12,
+                  &quot;link&quot;: &quot;A&quot;,
+                  &quot;value&quot;: {
+                    &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+                    &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+                    &quot;ip&quot;: &quot;192.0.2.2&quot;,
+                    &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+                    &quot;seconds&quot;: 120
+                  }
+                },
+                &quot;before&quot;: {
+                  &quot;generation&quot;: 12,
+                  &quot;link&quot;: &quot;A&quot;,
+                  &quot;value&quot;: {
+                    &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+                    &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+                    &quot;ip&quot;: &quot;192.0.2.2&quot;,
+                    &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+                    &quot;seconds&quot;: 120
+                  }
+                },
+                &quot;kind&quot;: &quot;link&quot;,
+                &quot;link&quot;: &quot;B&quot;,
+                &quot;new&quot;: {
+                  &quot;address&quot;: &quot;198.51.100.3/24&quot;,
+                  &quot;gateway&quot;: &quot;198.51.100.1&quot;,
+                  &quot;ip&quot;: &quot;198.51.100.3&quot;,
+                  &quot;prefix&quot;: &quot;198.51.100.0/24&quot;,
+                  &quot;seconds&quot;: 120
+                },
+                &quot;old&quot;: {
+                  &quot;address&quot;: &quot;198.51.100.2/24&quot;,
+                  &quot;gateway&quot;: &quot;198.51.100.1&quot;,
+                  &quot;ip&quot;: &quot;198.51.100.2&quot;,
+                  &quot;prefix&quot;: &quot;198.51.100.0/24&quot;,
+                  &quot;seconds&quot;: 120
+                }
+              },
+              &quot;phase&quot;: &quot;RECOVERY_REQUIRED&quot;,
+              &quot;revision&quot;: 31
+            }
+          },
+          &quot;recovered&quot;: {
+            &quot;active&quot;: null,
+            &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;,
+            &quot;config_hash&quot;: &quot;cc5bb4048b603b5b9e4b3f5a3ff555dcacc18346b051c6f37edf45b373aeac50&quot;,
+            &quot;epoch&quot;: 3,
+            &quot;history&quot;: [
+              {
+                &quot;at&quot;: 15.005348923,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              },
+              {
+                &quot;at&quot;: 15.588260089,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              },
+              {
+                &quot;at&quot;: 16.914163882,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              },
+              {
+                &quot;at&quot;: 18.042437132,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              },
+              {
+                &quot;at&quot;: 18.112145799,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              },
+              {
+                &quot;at&quot;: 76.785571944,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              },
+              {
+                &quot;at&quot;: 85.281712127,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              },
+              {
+                &quot;at&quot;: 89.249176172,
+                &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+              }
+            ],
+            &quot;latched&quot;: false,
+            &quot;links&quot;: {
+              &quot;A&quot;: {
+                &quot;bad&quot;: 0,
+                &quot;current&quot;: null,
+                &quot;expires&quot;: 0.0,
+                &quot;generation&quot;: 13,
+                &quot;good&quot;: 0,
+                &quot;last_event&quot;: 0.0,
+                &quot;revision&quot;: 13,
+                &quot;round&quot;: -1,
+                &quot;session&quot;: &quot;34b69b1392fc3990b6780cbafc39a7944005140c342e22d1&quot;,
+                &quot;state&quot;: &quot;WAITING&quot;,
+                &quot;until&quot;: 0.0
+              },
+              &quot;B&quot;: {
+                &quot;bad&quot;: 0,
+                &quot;current&quot;: null,
+                &quot;expires&quot;: 0.0,
+                &quot;generation&quot;: 12,
+                &quot;good&quot;: 0,
+                &quot;last_event&quot;: 0.0,
+                &quot;revision&quot;: 12,
+                &quot;round&quot;: -1,
+                &quot;session&quot;: &quot;7083151ee3b5e530a20aed26a9d633a8aa73063aa23c0c05&quot;,
+                &quot;state&quot;: &quot;WAITING&quot;,
+                &quot;until&quot;: 0.0
+              }
+            },
+            &quot;paused&quot;: false,
+            &quot;pending&quot;: null,
+            &quot;phase&quot;: &quot;READY&quot;,
+            &quot;revision&quot;: 32
+          }
+        },
+        &quot;name&quot;: &quot;real_backend_partial_address_write_recovery&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 0.08373423899999466
+      }
+    ],
+    &quot;cleanup&quot;: {
+      &quot;namespaces_removed&quot;: true,
+      &quot;owned_children_reaped&quot;: true,
+      &quot;root_network_unchanged&quot;: true
+    },
+    &quot;environment&quot;: {
+      &quot;busybox&quot;: &quot;BusyBox v1.36.1 (Ubuntu 1:1.36.1-6ubuntu3.1) multi-call binary.&quot;,
+      &quot;dnsmasq&quot;: &quot;Dnsmasq version 2.90  Copyright (c) 2000-2024 Simon Kelley&quot;,
+      &quot;kernel&quot;: &quot;6.8.0-117-generic&quot;,
+      &quot;machine&quot;: &quot;aarch64&quot;,
+      &quot;python&quot;: &quot;3.12.3&quot;
+    },
+    &quot;kind&quot;: &quot;isolated_linux_dual_dhcp_exploration&quot;,
+    &quot;limitations&quot;: [
+      &quot;Not an installed dual-DHCP systemd service&quot;,
+      &quot;No VM reboot in this phase; separate reboot receipt; power-loss untested&quot;,
+      &quot;Hook observations submitted by bounded fixture adapter; no production IPC scheduling claim&quot;,
+      &quot;Upstream NAT and return routes explicitly provisioned by fixture&quot;
+    ],
+    &quot;measurements&quot;: {
+      &quot;driver_pid&quot;: 3934,
+      &quot;driver_rss_kib&quot;: 23592,
+      &quot;scope&quot;: &quot;One post-recovery formal driver VmRSS snapshot; not peak, process tree, host, or whole-VM memory&quot;,
+      &quot;sqlite_main_bytes&quot;: 8192
+    },
+    &quot;passed&quot;: true,
+    &quot;source_sha256&quot;: &quot;440e7f89ba76343924d068108cfb5116cb751e13b2d537b889cd0ff8fd99ba9d&quot;
+  },
+  &quot;linux_unit&quot;: {
+    &quot;count&quot;: 151,
+    &quot;errors&quot;: 0,
+    &quot;failures&quot;: 0,
+    &quot;passed&quot;: true,
+    &quot;platform&quot;: &quot;Linux&quot;,
+    &quot;python&quot;: &quot;3.12.3&quot;,
+    &quot;skipped&quot;: 0,
+    &quot;source_sha256&quot;: &quot;440e7f89ba76343924d068108cfb5116cb751e13b2d537b889cd0ff8fd99ba9d&quot;,
+    &quot;tests&quot;: [
+      &quot;test_audit.OptimizedValidationTests.test_report_rejects_failure_under_optimization&quot;,
+      &quot;test_audit.OptimizedValidationTests.test_unit_runner_refuses_optimized_validation&quot;,
+      &quot;test_audit.PreflightTests.test_duplicate_builtin_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_inverted_disjoint_lookup_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_inverted_disjoint_prohibit_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_missing_local_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_plain_disjoint_lookup_still_accepted&quot;,
+      &quot;test_audit.PreflightTests.test_unknown_disjoint_selector_rejected&quot;,
+      &quot;test_audit.ProbeBodyTests.test_deeply_nested_json_is_target_failure&quot;,
+      &quot;test_audit.ProbeBodyTests.test_nonfinite_and_invalid_peer_are_target_failures&quot;,
+      &quot;test_audit.ProbeBodyTests.test_peer_limit_is_utf8_bytes_not_json_wire_or_character_count&quot;,
+      &quot;test_audit.ProbeBodyTests.test_two_healthy_targets_retain_quorum&quot;,
+      &quot;test_audit.ProbeBodyTests.test_valid_json_nonobjects_are_target_failures&quot;,
+      &quot;test_audit.ProbeBodyTests.test_valid_object_still_successful&quot;,
+      &quot;test_core.ConfigTests.test_duplicate_target_rejected&quot;,
+      &quot;test_core.ConfigTests.test_exclusions_bounded&quot;,
+      &quot;test_core.ConfigTests.test_hash_stable&quot;,
+      &quot;test_core.ConfigTests.test_invalid_source_rejected&quot;,
+      &quot;test_core.ConfigTests.test_overlapping_interfaces_rejected&quot;,
+      &quot;test_core.ConfigTests.test_unknown_key_rejected&quot;,
+      &quot;test_core.RoutingShapeTests.test_every_lookup_has_matching_terminal_guard&quot;,
+      &quot;test_core.RoutingShapeTests.test_forward_selector_not_host_source_alone&quot;,
+      &quot;test_core.RoutingShapeTests.test_internal_lookup_suppresses_main_default&quot;,
+      &quot;test_core.RoutingShapeTests.test_probe_is_local_and_marked&quot;,
+      &quot;test_core.RoutingShapeTests.test_real_iproute2_rule_output_normalization&quot;,
+      &quot;test_core.WriterTests.test_actual_new_route_reconciles_incomplete_receipt&quot;,
+      &quot;test_core.WriterTests.test_actual_old_route_reconciles_pending_without_replay&quot;,
+      &quot;test_core.WriterTests.test_automatic_admission_requires_proof&quot;,
+      &quot;test_core.WriterTests.test_generation_rejects_stale_after_reopen&quot;,
+      &quot;test_core.WriterTests.test_health_expired_after_intent_cannot_dispatch&quot;,
+      &quot;test_core.WriterTests.test_health_expired_during_preflight_cannot_write&quot;,
+      &quot;test_core.WriterTests.test_invalid_journal_rejected&quot;,
+      &quot;test_core.WriterTests.test_lock_contention_blocks&quot;,
+      &quot;test_core.WriterTests.test_symlink_lock_rejected&quot;,
+      &quot;test_core.WriterTests.test_unexpected_route_blocks&quot;,
+      &quot;test_core.WriterTests.test_wrong_boot_config_and_round_proof_rejected&quot;,
+      &quot;test_dhcp.BackendTests.test_formal_backend_accepts_empty_ipv4_and_installs_guards_first&quot;,
+      &quot;test_dhcp.BackendTests.test_formal_backend_rejects_foreign_route_before_flush&quot;,
+      &quot;test_dhcp.BackendTests.test_formal_backend_rejects_foreign_rule_before_mutation&quot;,
+      &quot;test_dhcp.BackendTests.test_runtime_check_requires_every_guard_and_lookup&quot;,
+      &quot;test_dhcp.DHCPTests.test_actual_journal_renew_invalidates_health_and_old_events&quot;,
+      &quot;test_dhcp.DHCPTests.test_actual_sqlite_save_failure_cannot_mutate_backend&quot;,
+      &quot;test_dhcp.DHCPTests.test_address_and_gateway_change_require_new_quorum&quot;,
+      &quot;test_dhcp.DHCPTests.test_changed_boot_quarantines_lease_before_new_authority&quot;,
+      &quot;test_dhcp.DHCPTests.test_current_renew_expired_in_transit_invalidates_old_health&quot;,
+      &quot;test_dhcp.DHCPTests.test_current_unsupported_lease_withdraws_old_healthy_allocation&quot;,
+      &quot;test_dhcp.DHCPTests.test_deconfig_withdraws_and_replay_is_rejected&quot;,
+      &quot;test_dhcp.DHCPTests.test_delayed_current_callbacks_withdraw_but_old_revision_cannot&quot;,
+      &quot;test_dhcp.DHCPTests.test_expiry_and_expiry_during_probe_never_activate&quot;,
+      &quot;test_dhcp.DHCPTests.test_failed_backend_recovers_intent_without_replaying_lease&quot;,
+      &quot;test_dhcp.DHCPTests.test_formal_startup_checks_kernel_before_any_client_callback&quot;,
+      &quot;test_dhcp.DHCPTests.test_lock_excludes_second_writer_and_corrupt_journal_refuses&quot;,
+      &quot;test_dhcp.DHCPTests.test_new_boot_requires_new_lease_and_fresh_quorum_then_fences_old_authorities&quot;,
+      &quot;test_dhcp.DHCPTests.test_restart_fences_session_and_does_not_trust_saved_lease&quot;,
+      &quot;test_dhcp.DHCPTests.test_retired_session_rejection_is_distinct_from_stale_time&quot;,
+      &quot;test_dhcp.DHCPTests.test_snapshot_does_not_report_expired_health_before_next_tick&quot;,
+      &quot;test_dhcp.DHCPTests.test_stale_future_wrong_boot_session_and_duplicate_are_readonly&quot;,
+      &quot;test_dhcp.DHCPTests.test_unknown_infrastructure_or_failed_quorum_withdraws&quot;,
+      &quot;test_dhcp_fixture.DHCPFixtureTests.test_known_absent_table_handles_truncated_ip_json&quot;,
+      &quot;test_dhcp_fixture.DHCPFixtureTests.test_unknown_command_failure_or_corrupt_success_is_not_empty_table&quot;,
+      &quot;test_dhcp_fixture.RebootOwnershipTests.test_exclusive_create_then_partial_write_is_owned_and_cleaned&quot;,
+      &quot;test_dhcp_fixture.RebootOwnershipTests.test_partial_install_ledger_owns_only_successful_creations&quot;,
+      &quot;test_dhcp_fixture.RebootOwnershipTests.test_preexisting_same_content_unit_or_link_is_never_owned_or_removed&quot;,
+      &quot;test_dhcp_report.DHCPReportTests.test_expiry_requires_previously_active_flow_and_allocation_removal&quot;,
+      &quot;test_dhcp_report.DHCPReportTests.test_installed_service_must_match_declared_fixture_transform&quot;,
+      &quot;test_dhcp_report.DHCPReportTests.test_reboot_verifier_requires_live_prestart_journal_no_borrow_and_distinct_authorities&quot;,
+      &quot;test_dhcp_report.DHCPReportTests.test_restart_rejects_environment_error_reused_session_and_changed_routes&quot;,
+      &quot;test_dhcp_report.DHCPReportTests.test_unknown_priority_rule_cannot_bypass_guards_for_an_unprobed_destination&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_budget_survives_new_boot_and_same_ip_reactivation_counts&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_choose_rechecks_revision_after_expiry_cleanup&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_client_restart_is_local_and_retires_callback&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_corrupt_journal_rejected_before_backend_mutation&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_current_conflict_withdraws_only_proposer&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_exclusive_writer_lock&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_failed_selection_is_durable_and_retires_writer&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_inactive_renew_preserves_active_identity_and_proof&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_inherited_helper_lock_blocks_successor_until_retirement&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_intent_save_failure_retires_before_any_network_mutation&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_internal_selection_refuses_retired_writer&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_partial_write_persists_intent_and_recovery_quarantines_both&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_pause_and_latch_never_block_expiry_cleanup&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_pause_resume_retires_queued_selection&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_restart_quarantines_both_valid_leases_and_health&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_route_options_and_delayed_current_event_invalidate_old&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_same_link_update_retires_old_health_but_not_other_authority&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_slow_callback_also_cleans_other_expired_health&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_slow_selection_does_not_leave_expired_lease_active&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_slow_withdrawal_precheck_has_no_health_deadline&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_snapshot_does_not_grant_mutable_authority&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_stale_callback_is_readonly_even_if_payload_conflicts&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_stale_probe_generation_and_selection_rejected&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_unknown_immediately_withdraws_and_failure_debounce_expires&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_valid_inactive_callback_cannot_preserve_expired_active_lease&quot;,
+      &quot;test_dual_dhcp_fixture.CleanupTests.test_cleanup_failure_overrides_passed_true_in_persisted_result&quot;,
+      &quot;test_dual_dhcp_fixture.CleanupTests.test_counter_timestamp_changes_accepted_and_raw_evidence_retained&quot;,
+      &quot;test_dual_dhcp_fixture.CleanupTests.test_new_phase_drains_old_hook_records_without_changing_raw_timestamps&quot;,
+      &quot;test_dual_dhcp_fixture.CleanupTests.test_partial_cleanup_missing_owned_namespace_is_idempotent&quot;,
+      &quot;test_dual_dhcp_fixture.CleanupTests.test_replaced_namespace_inode_is_never_killed_or_deleted&quot;,
+      &quot;test_dual_dhcp_fixture.CleanupTests.test_replacement_client_drains_retired_client_events_before_spawn&quot;,
+      &quot;test_dual_dhcp_fixture.CleanupTests.test_route_change_fails_and_preserves_ledger_and_raw_difference&quot;,
+      &quot;test_dual_dhcp_fixture.CleanupTests.test_rule_priority_or_nft_verdict_changes_are_not_ignored&quot;,
+      &quot;test_dual_dhcp_linux.DualBackendTests.test_dhcp_and_marked_probe_lookups_have_terminal_guards&quot;,
+      &quot;test_dual_dhcp_linux.DualBackendTests.test_inactive_update_cannot_flush_active_data_table&quot;,
+      &quot;test_dual_dhcp_linux.DualBackendTests.test_missing_expected_route_is_not_a_successful_readback&quot;,
+      &quot;test_dual_dhcp_linux.DualBackendTests.test_selection_unknown_allocation_rejects_before_network_write&quot;,
+      &quot;test_dual_dhcp_linux.DualBackendTests.test_unknown_route_properties_and_foreign_gateway_reject&quot;,
+      &quot;test_netproof.NetworkProofTests.test_meaningful_bytes_operand_not_ignored&quot;,
+      &quot;test_netproof.NetworkProofTests.test_only_nft_counter_values_and_handles_ignored&quot;,
+      &quot;test_netproof.NetworkProofTests.test_rule_order_preserved&quot;,
+      &quot;test_netproof.NetworkProofTests.test_xt_counters_and_timestamp_comments_only&quot;,
+      &quot;test_netproof.NetworkProofTests.test_xt_rule_comment_not_mistaken_for_counter&quot;,
+      &quot;test_policy.PolicyTests.test_auto_failback_requires_continuous_stability&quot;,
+      &quot;test_policy.PolicyTests.test_budget_latches_and_restart_retains_latch&quot;,
+      &quot;test_policy.PolicyTests.test_cross_boot_budget_not_replenished_by_reboot&quot;,
+      &quot;test_policy.PolicyTests.test_default_never_preference_failback&quot;,
+      &quot;test_policy.PolicyTests.test_expired_result_breaks_streak&quot;,
+      &quot;test_policy.PolicyTests.test_failover_threshold&quot;,
+      &quot;test_policy.PolicyTests.test_history_expires_same_boot_without_process_reset&quot;,
+      &quot;test_policy.PolicyTests.test_initial_success_requires_multiple_rounds&quot;,
+      &quot;test_policy.PolicyTests.test_invalid_settings&quot;,
+      &quot;test_policy.PolicyTests.test_missing_round_expires_health&quot;,
+      &quot;test_policy.PolicyTests.test_one_target_failure_not_link_failure&quot;,
+      &quot;test_policy.PolicyTests.test_reordered_round_rejected&quot;,
+      &quot;test_policy.PolicyTests.test_stability_gap_resets_recovery&quot;,
+      &quot;test_policy.PolicyTests.test_stale_wrong_boot_and_wrong_config_rejected&quot;,
+      &quot;test_policy.PolicyTests.test_unknown_current_does_not_trigger_speculative_switch&quot;,
+      &quot;test_policy.PolicyTests.test_unknown_not_destination&quot;,
+      &quot;test_report_review.ReportReviewTests.test_benchmark_path_fault_and_process_identity_are_required&quot;,
+      &quot;test_report_review.ReportReviewTests.test_reboot_correspondence_rejects_independent_counterexamples&quot;,
+      &quot;test_service.ServiceTests.test_actual_sqlite_capacity_error_is_not_success&quot;,
+      &quot;test_service.ServiceTests.test_clean_rejection_keeps_serving_but_partial_state_retires_owner&quot;,
+      &quot;test_service.ServiceTests.test_detached_corrupt_attached_intent_rejected&quot;,
+      &quot;test_service.ServiceTests.test_disable_explicit_handoff_and_reenable_has_no_stale_health&quot;,
+      &quot;test_service.ServiceTests.test_disabled_pause_does_not_switch_and_restart_retains_mode&quot;,
+      &quot;test_service.ServiceTests.test_event_retention_and_database_capacity&quot;,
+      &quot;test_service.ServiceTests.test_failed_disable_is_durable_and_restarts_to_disabled&quot;,
+      &quot;test_service.ServiceTests.test_failed_enable_is_durable_and_restarts_to_paused&quot;,
+      &quot;test_service.ServiceTests.test_first_start_detached_then_enable_paused&quot;,
+      &quot;test_service.ServiceTests.test_forged_automatic_target_and_old_round_rejected&quot;,
+      &quot;test_service.ServiceTests.test_low_disk_blocks_before_route_write&quot;,
+      &quot;test_service.ServiceTests.test_manual_selection_ignores_expired_history_but_preserves_latch&quot;,
+      &quot;test_service.ServiceTests.test_no_arbitrary_commands_or_caller_health_proofs&quot;,
+      &quot;test_service.ServiceTests.test_old_revision_rejected_after_pause_and_same_process_resume&quot;,
+      &quot;test_service.ServiceTests.test_one_oversized_peer_does_not_block_formal_controller_sample&quot;,
+      &quot;test_service.ServiceTests.test_parser_rejects_oversize_duplicate_and_nonobject&quot;,
+      &quot;test_service.ServiceTests.test_probe_rate_bounded&quot;,
+      &quot;test_service.ServiceTests.test_resume_needs_fresh_writer_health_and_ack&quot;,
+      &quot;test_service.ServiceTests.test_same_selected_resume_rechecks_health_after_budget_persistence&quot;,
+      &quot;test_service.ServiceTests.test_state_write_failure_precedes_lifecycle_mutation&quot;,
+      &quot;test_service.ServiceTests.test_uncertain_command_does_not_keep_serving_even_without_pending&quot;,
+      &quot;test_service.ServiceTests.test_untrusted_peer_and_worker_operator_denied&quot;
+    ]
+  },
+  &quot;native_unit&quot;: {
+    &quot;count&quot;: 151,
+    &quot;errors&quot;: 0,
+    &quot;failures&quot;: 0,
+    &quot;passed&quot;: true,
+    &quot;platform&quot;: &quot;Darwin&quot;,
+    &quot;python&quot;: &quot;3.12.14&quot;,
+    &quot;skipped&quot;: 0,
+    &quot;source_sha256&quot;: &quot;440e7f89ba76343924d068108cfb5116cb751e13b2d537b889cd0ff8fd99ba9d&quot;,
+    &quot;tests&quot;: [
+      &quot;test_audit.OptimizedValidationTests.test_report_rejects_failure_under_optimization&quot;,
+      &quot;test_audit.OptimizedValidationTests.test_unit_runner_refuses_optimized_validation&quot;,
+      &quot;test_audit.PreflightTests.test_duplicate_builtin_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_inverted_disjoint_lookup_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_inverted_disjoint_prohibit_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_missing_local_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_plain_disjoint_lookup_still_accepted&quot;,
+      &quot;test_audit.PreflightTests.test_unknown_disjoint_selector_rejected&quot;,
+      &quot;test_audit.ProbeBodyTests.test_deeply_nested_json_is_target_failure&quot;,
+      &quot;test_audit.ProbeBodyTests.test_nonfinite_and_invalid_peer_are_target_failures&quot;,
+      &quot;test_audit.ProbeBodyTests.test_peer_limit_is_utf8_bytes_not_json_wire_or_character_count&quot;,
+      &quot;test_audit.ProbeBodyTests.test_two_healthy_targets_retain_quorum&quot;,
+      &quot;test_audit.ProbeBodyTests.test_valid_json_nonobjects_are_target_failures&quot;,
+      &quot;test_audit.ProbeBodyTests.test_valid_object_still_successful&quot;,
+      &quot;test_core.ConfigTests.test_duplicate_target_rejected&quot;,
+      &quot;test_core.ConfigTests.test_exclusions_bounded&quot;,
+      &quot;test_core.ConfigTests.test_hash_stable&quot;,
+      &quot;test_core.ConfigTests.test_invalid_source_rejected&quot;,
+      &quot;test_core.ConfigTests.test_overlapping_interfaces_rejected&quot;,
+      &quot;test_core.ConfigTests.test_unknown_key_rejected&quot;,
+      &quot;test_core.RoutingShapeTests.test_every_lookup_has_matching_terminal_guard&quot;,
+      &quot;test_core.RoutingShapeTests.test_forward_selector_not_host_source_alone&quot;,
+      &quot;test_core.RoutingShapeTests.test_internal_lookup_suppresses_main_default&quot;,
+      &quot;test_core.RoutingShapeTests.test_probe_is_local_and_marked&quot;,
+      &quot;test_core.RoutingShapeTests.test_real_iproute2_rule_output_normalization&quot;,
+      &quot;test_core.WriterTests.test_actual_new_route_reconciles_incomplete_receipt&quot;,
+      &quot;test_core.WriterTests.test_actual_old_route_reconciles_pending_without_replay&quot;,
+      &quot;test_core.WriterTests.test_automatic_admission_requires_proof&quot;,
+      &quot;test_core.WriterTests.test_generation_rejects_stale_after_reopen&quot;,
+      &quot;test_core.WriterTests.test_health_expired_after_intent_cannot_dispatch&quot;,
+      &quot;test_core.WriterTests.test_health_expired_during_preflight_cannot_write&quot;,
+      &quot;test_core.WriterTests.test_invalid_journal_rejected&quot;,
+      &quot;test_core.WriterTests.test_lock_contention_blocks&quot;,
+      &quot;test_core.WriterTests.test_symlink_lock_rejected&quot;,
+      &quot;test_core.WriterTests.test_unexpected_route_blocks&quot;,
+      &quot;test_core.WriterTests.test_wrong_boot_config_and_round_proof_rejected&quot;,
+      &quot;test_dhcp.BackendTests.test_formal_backend_accepts_empty_ipv4_and_installs_guards_first&quot;,
+      &quot;test_dhcp.BackendTests.test_formal_backend_rejects_foreign_route_before_flush&quot;,
+      &quot;test_dhcp.BackendTests.test_formal_backend_rejects_foreign_rule_before_mutation&quot;,
+      &quot;test_dhcp.BackendTests.test_runtime_check_requires_every_guard_and_lookup&quot;,
+      &quot;test_dhcp.DHCPTests.test_actual_journal_renew_invalidates_health_and_old_events&quot;,
+      &quot;test_dhcp.DHCPTests.test_actual_sqlite_save_failure_cannot_mutate_backend&quot;,
+      &quot;test_dhcp.DHCPTests.test_address_and_gateway_change_require_new_quorum&quot;,
+      &quot;test_dhcp.DHCPTests.test_changed_boot_quarantines_lease_before_new_authority&quot;,
+      &quot;test_dhcp.DHCPTests.test_current_renew_expired_in_transit_invalidates_old_health&quot;,
+      &quot;test_dhcp.DHCPTests.test_current_unsupported_lease_withdraws_old_healthy_allocation&quot;,
+      &quot;test_dhcp.DHCPTests.test_deconfig_withdraws_and_replay_is_rejected&quot;,
+      &quot;test_dhcp.DHCPTests.test_delayed_current_callbacks_withdraw_but_old_revision_cannot&quot;,
+      &quot;test_dhcp.DHCPTests.test_expiry_and_expiry_during_probe_never_activate&quot;,
+      &quot;test_dhcp.DHCPTests.test_failed_backend_recovers_intent_without_replaying_lease&quot;,
+      &quot;test_dhcp.DHCPTests.test_formal_startup_checks_kernel_before_any_client_callback&quot;,
+      &quot;test_dhcp.DHCPTests.test_lock_excludes_second_writer_and_corrupt_journal_refuses&quot;,
+      &quot;test_dhcp.DHCPTests.test_new_boot_requires_new_lease_and_fresh_quorum_then_fences_old_authorities&quot;,
+      &quot;test_dhcp.DHCPTests.test_restart_fences_session_and_does_not_trust_saved_lease&quot;,
+      &quot;test_dhcp.DHCPTests.test_retired_session_rejection_is_distinct_from_stale_time&quot;,
+      &quot;test_dhcp.DHCPTests.test_snapshot_does_not_report_expired_health_before_next_tick&quot;,
+      &quot;test_dhcp.DHCPTests.test_stale_future_wrong_boot_session_and_duplicate_are_readonly&quot;,
+      &quot;test_dhcp.DHCPTests.test_unknown_infrastructure_or_failed_quorum_withdraws&quot;,
+      &quot;test_dhcp_fixture.DHCPFixtureTests.test_known_absent_table_handles_truncated_ip_json&quot;,
+      &quot;test_dhcp_fixture.DHCPFixtureTests.test_unknown_command_failure_or_corrupt_success_is_not_empty_table&quot;,
+      &quot;test_dhcp_fixture.RebootOwnershipTests.test_exclusive_create_then_partial_write_is_owned_and_cleaned&quot;,
+      &quot;test_dhcp_fixture.RebootOwnershipTests.test_partial_install_ledger_owns_only_successful_creations&quot;,
+      &quot;test_dhcp_fixture.RebootOwnershipTests.test_preexisting_same_content_unit_or_link_is_never_owned_or_removed&quot;,
+      &quot;test_dhcp_report.DHCPReportTests.test_expiry_requires_previously_active_flow_and_allocation_removal&quot;,
+      &quot;test_dhcp_report.DHCPReportTests.test_installed_service_must_match_declared_fixture_transform&quot;,
+      &quot;test_dhcp_report.DHCPReportTests.test_reboot_verifier_requires_live_prestart_journal_no_borrow_and_distinct_authorities&quot;,
+      &quot;test_dhcp_report.DHCPReportTests.test_restart_rejects_environment_error_reused_session_and_changed_routes&quot;,
+      &quot;test_dhcp_report.DHCPReportTests.test_unknown_priority_rule_cannot_bypass_guards_for_an_unprobed_destination&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_budget_survives_new_boot_and_same_ip_reactivation_counts&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_choose_rechecks_revision_after_expiry_cleanup&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_client_restart_is_local_and_retires_callback&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_corrupt_journal_rejected_before_backend_mutation&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_current_conflict_withdraws_only_proposer&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_exclusive_writer_lock&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_failed_selection_is_durable_and_retires_writer&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_inactive_renew_preserves_active_identity_and_proof&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_inherited_helper_lock_blocks_successor_until_retirement&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_intent_save_failure_retires_before_any_network_mutation&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_internal_selection_refuses_retired_writer&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_partial_write_persists_intent_and_recovery_quarantines_both&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_pause_and_latch_never_block_expiry_cleanup&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_pause_resume_retires_queued_selection&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_restart_quarantines_both_valid_leases_and_health&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_route_options_and_delayed_current_event_invalidate_old&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_same_link_update_retires_old_health_but_not_other_authority&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_slow_callback_also_cleans_other_expired_health&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_slow_selection_does_not_leave_expired_lease_active&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_slow_withdrawal_precheck_has_no_health_deadline&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_snapshot_does_not_grant_mutable_authority&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_stale_callback_is_readonly_even_if_payload_conflicts&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_stale_probe_generation_and_selection_rejected&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_unknown_immediately_withdraws_and_failure_debounce_expires&quot;,
+      &quot;test_dual_dhcp.DualDHCPTests.test_valid_inactive_callback_cannot_preserve_expired_active_lease&quot;,
+      &quot;test_dual_dhcp_fixture.CleanupTests.test_cleanup_failure_overrides_passed_true_in_persisted_result&quot;,
+      &quot;test_dual_dhcp_fixture.CleanupTests.test_counter_timestamp_changes_accepted_and_raw_evidence_retained&quot;,
+      &quot;test_dual_dhcp_fixture.CleanupTests.test_new_phase_drains_old_hook_records_without_changing_raw_timestamps&quot;,
+      &quot;test_dual_dhcp_fixture.CleanupTests.test_partial_cleanup_missing_owned_namespace_is_idempotent&quot;,
+      &quot;test_dual_dhcp_fixture.CleanupTests.test_replaced_namespace_inode_is_never_killed_or_deleted&quot;,
+      &quot;test_dual_dhcp_fixture.CleanupTests.test_replacement_client_drains_retired_client_events_before_spawn&quot;,
+      &quot;test_dual_dhcp_fixture.CleanupTests.test_route_change_fails_and_preserves_ledger_and_raw_difference&quot;,
+      &quot;test_dual_dhcp_fixture.CleanupTests.test_rule_priority_or_nft_verdict_changes_are_not_ignored&quot;,
+      &quot;test_dual_dhcp_linux.DualBackendTests.test_dhcp_and_marked_probe_lookups_have_terminal_guards&quot;,
+      &quot;test_dual_dhcp_linux.DualBackendTests.test_inactive_update_cannot_flush_active_data_table&quot;,
+      &quot;test_dual_dhcp_linux.DualBackendTests.test_missing_expected_route_is_not_a_successful_readback&quot;,
+      &quot;test_dual_dhcp_linux.DualBackendTests.test_selection_unknown_allocation_rejects_before_network_write&quot;,
+      &quot;test_dual_dhcp_linux.DualBackendTests.test_unknown_route_properties_and_foreign_gateway_reject&quot;,
+      &quot;test_netproof.NetworkProofTests.test_meaningful_bytes_operand_not_ignored&quot;,
+      &quot;test_netproof.NetworkProofTests.test_only_nft_counter_values_and_handles_ignored&quot;,
+      &quot;test_netproof.NetworkProofTests.test_rule_order_preserved&quot;,
+      &quot;test_netproof.NetworkProofTests.test_xt_counters_and_timestamp_comments_only&quot;,
+      &quot;test_netproof.NetworkProofTests.test_xt_rule_comment_not_mistaken_for_counter&quot;,
+      &quot;test_policy.PolicyTests.test_auto_failback_requires_continuous_stability&quot;,
+      &quot;test_policy.PolicyTests.test_budget_latches_and_restart_retains_latch&quot;,
+      &quot;test_policy.PolicyTests.test_cross_boot_budget_not_replenished_by_reboot&quot;,
+      &quot;test_policy.PolicyTests.test_default_never_preference_failback&quot;,
+      &quot;test_policy.PolicyTests.test_expired_result_breaks_streak&quot;,
+      &quot;test_policy.PolicyTests.test_failover_threshold&quot;,
+      &quot;test_policy.PolicyTests.test_history_expires_same_boot_without_process_reset&quot;,
+      &quot;test_policy.PolicyTests.test_initial_success_requires_multiple_rounds&quot;,
+      &quot;test_policy.PolicyTests.test_invalid_settings&quot;,
+      &quot;test_policy.PolicyTests.test_missing_round_expires_health&quot;,
+      &quot;test_policy.PolicyTests.test_one_target_failure_not_link_failure&quot;,
+      &quot;test_policy.PolicyTests.test_reordered_round_rejected&quot;,
+      &quot;test_policy.PolicyTests.test_stability_gap_resets_recovery&quot;,
+      &quot;test_policy.PolicyTests.test_stale_wrong_boot_and_wrong_config_rejected&quot;,
+      &quot;test_policy.PolicyTests.test_unknown_current_does_not_trigger_speculative_switch&quot;,
+      &quot;test_policy.PolicyTests.test_unknown_not_destination&quot;,
+      &quot;test_report_review.ReportReviewTests.test_benchmark_path_fault_and_process_identity_are_required&quot;,
+      &quot;test_report_review.ReportReviewTests.test_reboot_correspondence_rejects_independent_counterexamples&quot;,
+      &quot;test_service.ServiceTests.test_actual_sqlite_capacity_error_is_not_success&quot;,
+      &quot;test_service.ServiceTests.test_clean_rejection_keeps_serving_but_partial_state_retires_owner&quot;,
+      &quot;test_service.ServiceTests.test_detached_corrupt_attached_intent_rejected&quot;,
+      &quot;test_service.ServiceTests.test_disable_explicit_handoff_and_reenable_has_no_stale_health&quot;,
+      &quot;test_service.ServiceTests.test_disabled_pause_does_not_switch_and_restart_retains_mode&quot;,
+      &quot;test_service.ServiceTests.test_event_retention_and_database_capacity&quot;,
+      &quot;test_service.ServiceTests.test_failed_disable_is_durable_and_restarts_to_disabled&quot;,
+      &quot;test_service.ServiceTests.test_failed_enable_is_durable_and_restarts_to_paused&quot;,
+      &quot;test_service.ServiceTests.test_first_start_detached_then_enable_paused&quot;,
+      &quot;test_service.ServiceTests.test_forged_automatic_target_and_old_round_rejected&quot;,
+      &quot;test_service.ServiceTests.test_low_disk_blocks_before_route_write&quot;,
+      &quot;test_service.ServiceTests.test_manual_selection_ignores_expired_history_but_preserves_latch&quot;,
+      &quot;test_service.ServiceTests.test_no_arbitrary_commands_or_caller_health_proofs&quot;,
+      &quot;test_service.ServiceTests.test_old_revision_rejected_after_pause_and_same_process_resume&quot;,
+      &quot;test_service.ServiceTests.test_one_oversized_peer_does_not_block_formal_controller_sample&quot;,
+      &quot;test_service.ServiceTests.test_parser_rejects_oversize_duplicate_and_nonobject&quot;,
+      &quot;test_service.ServiceTests.test_probe_rate_bounded&quot;,
+      &quot;test_service.ServiceTests.test_resume_needs_fresh_writer_health_and_ack&quot;,
+      &quot;test_service.ServiceTests.test_same_selected_resume_rechecks_health_after_budget_persistence&quot;,
+      &quot;test_service.ServiceTests.test_state_write_failure_precedes_lifecycle_mutation&quot;,
+      &quot;test_service.ServiceTests.test_uncertain_command_does_not_keep_serving_even_without_pending&quot;,
+      &quot;test_service.ServiceTests.test_untrusted_peer_and_worker_operator_denied&quot;
+    ]
+  },
+  &quot;passed&quot;: true,
+  &quot;reboot&quot;: {
+    &quot;authority_challenges&quot;: [
+      {
+        &quot;field&quot;: &quot;session&quot;,
+        &quot;link&quot;: &quot;A&quot;,
+        &quot;network_unchanged&quot;: true,
+        &quot;origin&quot;: &quot;synthetic_isolated_authority_challenge&quot;,
+        &quot;rejected&quot;: true,
+        &quot;snapshot_unchanged&quot;: true
+      },
+      {
+        &quot;field&quot;: &quot;boot&quot;,
+        &quot;link&quot;: &quot;A&quot;,
+        &quot;network_unchanged&quot;: true,
+        &quot;origin&quot;: &quot;synthetic_isolated_authority_challenge&quot;,
+        &quot;rejected&quot;: true,
+        &quot;snapshot_unchanged&quot;: true
+      },
+      {
+        &quot;field&quot;: &quot;session&quot;,
+        &quot;link&quot;: &quot;B&quot;,
+        &quot;network_unchanged&quot;: true,
+        &quot;origin&quot;: &quot;synthetic_isolated_authority_challenge&quot;,
+        &quot;rejected&quot;: true,
+        &quot;snapshot_unchanged&quot;: true
+      },
+      {
+        &quot;field&quot;: &quot;boot&quot;,
+        &quot;link&quot;: &quot;B&quot;,
+        &quot;network_unchanged&quot;: true,
+        &quot;origin&quot;: &quot;synthetic_isolated_authority_challenge&quot;,
+        &quot;rejected&quot;: true,
+        &quot;snapshot_unchanged&quot;: true
+      }
+    ],
+    &quot;boot&quot;: &quot;9a3a32a4-7acc-483a-8194-2d3712e744af&quot;,
+    &quot;cases&quot;: [],
+    &quot;cleanup&quot;: {
+      &quot;namespaces_removed&quot;: true,
+      &quot;owned_children_reaped&quot;: true,
+      &quot;root_network_unchanged&quot;: true
+    },
+    &quot;client&quot;: {
+      &quot;ok&quot;: true,
+      &quot;response&quot;: {
+        &quot;nonce&quot;: &quot;9fcf231a753c71d18ddabce4&quot;,
+        &quot;ok&quot;: true,
+        &quot;peer&quot;: &quot;10.99.1.1&quot;,
+        &quot;server&quot;: &quot;203.0.113.2&quot;
+      }
+    },
+    &quot;initial&quot;: {
+      &quot;active&quot;: null,
+      &quot;boot&quot;: &quot;9a3a32a4-7acc-483a-8194-2d3712e744af&quot;,
+      &quot;config_hash&quot;: &quot;cc5bb4048b603b5b9e4b3f5a3ff555dcacc18346b051c6f37edf45b373aeac50&quot;,
+      &quot;epoch&quot;: 5,
+      &quot;history&quot;: [
+        {
+          &quot;at&quot;: 15.005348923,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 15.588260089,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 16.914163882,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 18.042437132,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 18.112145799,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 76.785571944,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 85.281712127,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 89.249176172,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 94.913104544,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        }
+      ],
+      &quot;latched&quot;: false,
+      &quot;links&quot;: {
+        &quot;A&quot;: {
+          &quot;bad&quot;: 0,
+          &quot;current&quot;: null,
+          &quot;expires&quot;: 0.0,
+          &quot;generation&quot;: 16,
+          &quot;good&quot;: 0,
+          &quot;last_event&quot;: 0.0,
+          &quot;revision&quot;: 16,
+          &quot;round&quot;: -1,
+          &quot;session&quot;: &quot;9237ef7a8081ea5658c3f62ffb417776149c811a2c8bad69&quot;,
+          &quot;state&quot;: &quot;WAITING&quot;,
+          &quot;until&quot;: 0.0
+        },
+        &quot;B&quot;: {
+          &quot;bad&quot;: 0,
+          &quot;current&quot;: null,
+          &quot;expires&quot;: 0.0,
+          &quot;generation&quot;: 15,
+          &quot;good&quot;: 0,
+          &quot;last_event&quot;: 0.0,
+          &quot;revision&quot;: 15,
+          &quot;round&quot;: -1,
+          &quot;session&quot;: &quot;388c8deb3f2704f95a3fec8a5496b1e2b798a44cf78851dd&quot;,
+          &quot;state&quot;: &quot;WAITING&quot;,
+          &quot;until&quot;: 0.0
+        }
+      },
+      &quot;paused&quot;: false,
+      &quot;pending&quot;: null,
+      &quot;phase&quot;: &quot;READY&quot;,
+      &quot;revision&quot;: 37
+    },
+    &quot;journal_sha256&quot;: &quot;d907a7a2a21b5e888160bc6d21826e34ada66f245abd14a5cf4b34f5cfe65174&quot;,
+    &quot;kind&quot;: &quot;manual_formal_core_orderly_VM_reboot&quot;,
+    &quot;limitations&quot;: [
+      &quot;Not an installed service or automatic startup test&quot;,
+      &quot;No sudden power-loss or boot zero-gap test&quot;
+    ],
+    &quot;passed&quot;: true,
+    &quot;pre_core_evidence&quot;: {
+      &quot;boot&quot;: &quot;9a3a32a4-7acc-483a-8194-2d3712e744af&quot;,
+      &quot;journal_sha256&quot;: &quot;dda1d508759e06c61a9cd8a3223e58e74984c690658e0342a63d02ac56631c98&quot;,
+      &quot;unchanged_since_before_VM_stop&quot;: true
+    },
+    &quot;state&quot;: {
+      &quot;active&quot;: {
+        &quot;generation&quot;: 17,
+        &quot;link&quot;: &quot;A&quot;,
+        &quot;value&quot;: {
+          &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+          &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+          &quot;ip&quot;: &quot;192.0.2.2&quot;,
+          &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+          &quot;seconds&quot;: 120
+        }
+      },
+      &quot;boot&quot;: &quot;9a3a32a4-7acc-483a-8194-2d3712e744af&quot;,
+      &quot;config_hash&quot;: &quot;cc5bb4048b603b5b9e4b3f5a3ff555dcacc18346b051c6f37edf45b373aeac50&quot;,
+      &quot;epoch&quot;: 5,
+      &quot;history&quot;: [
+        {
+          &quot;at&quot;: 15.005348923,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 15.588260089,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 16.914163882,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 18.042437132,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 18.112145799,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 76.785571944,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 85.281712127,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 89.249176172,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 94.913104544,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 15.487991381,
+          &quot;boot&quot;: &quot;9a3a32a4-7acc-483a-8194-2d3712e744af&quot;
+        }
+      ],
+      &quot;latched&quot;: false,
+      &quot;links&quot;: {
+        &quot;A&quot;: {
+          &quot;bad&quot;: 0,
+          &quot;current&quot;: {
+            &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+            &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+            &quot;ip&quot;: &quot;192.0.2.2&quot;,
+            &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+            &quot;seconds&quot;: 120
+          },
+          &quot;expires&quot;: 135.398241964,
+          &quot;generation&quot;: 17,
+          &quot;good&quot;: 2,
+          &quot;last_event&quot;: 15.398241964,
+          &quot;revision&quot;: 17,
+          &quot;round&quot;: 2,
+          &quot;session&quot;: &quot;9237ef7a8081ea5658c3f62ffb417776149c811a2c8bad69&quot;,
+          &quot;state&quot;: &quot;HEALTHY&quot;,
+          &quot;until&quot;: 20.479607006000002
+        },
+        &quot;B&quot;: {
+          &quot;bad&quot;: 0,
+          &quot;current&quot;: {
+            &quot;address&quot;: &quot;198.51.100.2/24&quot;,
+            &quot;gateway&quot;: &quot;198.51.100.1&quot;,
+            &quot;ip&quot;: &quot;198.51.100.2&quot;,
+            &quot;prefix&quot;: &quot;198.51.100.0/24&quot;,
+            &quot;seconds&quot;: 120
+          },
+          &quot;expires&quot;: 135.401382006,
+          &quot;generation&quot;: 16,
+          &quot;good&quot;: 2,
+          &quot;last_event&quot;: 15.401382006,
+          &quot;revision&quot;: 16,
+          &quot;round&quot;: 2,
+          &quot;session&quot;: &quot;388c8deb3f2704f95a3fec8a5496b1e2b798a44cf78851dd&quot;,
+          &quot;state&quot;: &quot;HEALTHY&quot;,
+          &quot;until&quot;: 20.485334172
+        }
+      },
+      &quot;paused&quot;: false,
+      &quot;pending&quot;: null,
+      &quot;phase&quot;: &quot;READY&quot;,
+      &quot;revision&quot;: 40
+    }
+  },
+  &quot;reboot_before&quot;: {
+    &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;,
+    &quot;cases&quot;: [],
+    &quot;cleanup&quot;: {
+      &quot;namespaces_removed&quot;: true,
+      &quot;owned_children_reaped&quot;: true,
+      &quot;root_network_unchanged&quot;: true
+    },
+    &quot;client&quot;: {
+      &quot;ok&quot;: true,
+      &quot;response&quot;: {
+        &quot;nonce&quot;: &quot;6daecf2823ad989a8dd6f7eb&quot;,
+        &quot;ok&quot;: true,
+        &quot;peer&quot;: &quot;10.99.1.1&quot;,
+        &quot;server&quot;: &quot;203.0.113.2&quot;
+      }
+    },
+    &quot;initial&quot;: {
+      &quot;active&quot;: null,
+      &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;,
+      &quot;config_hash&quot;: &quot;cc5bb4048b603b5b9e4b3f5a3ff555dcacc18346b051c6f37edf45b373aeac50&quot;,
+      &quot;epoch&quot;: 4,
+      &quot;history&quot;: [
+        {
+          &quot;at&quot;: 15.005348923,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 15.588260089,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 16.914163882,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 18.042437132,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 18.112145799,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 76.785571944,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 85.281712127,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 89.249176172,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        }
+      ],
+      &quot;latched&quot;: false,
+      &quot;links&quot;: {
+        &quot;A&quot;: {
+          &quot;bad&quot;: 0,
+          &quot;current&quot;: null,
+          &quot;expires&quot;: 0.0,
+          &quot;generation&quot;: 14,
+          &quot;good&quot;: 0,
+          &quot;last_event&quot;: 0.0,
+          &quot;revision&quot;: 14,
+          &quot;round&quot;: -1,
+          &quot;session&quot;: &quot;23a9478870e9133812e5a46b086618719b3cbd0e89d043de&quot;,
+          &quot;state&quot;: &quot;WAITING&quot;,
+          &quot;until&quot;: 0.0
+        },
+        &quot;B&quot;: {
+          &quot;bad&quot;: 0,
+          &quot;current&quot;: null,
+          &quot;expires&quot;: 0.0,
+          &quot;generation&quot;: 13,
+          &quot;good&quot;: 0,
+          &quot;last_event&quot;: 0.0,
+          &quot;revision&quot;: 13,
+          &quot;round&quot;: -1,
+          &quot;session&quot;: &quot;43235f2e782d28b5776a750a749f84b08d9c5ec41d2d739f&quot;,
+          &quot;state&quot;: &quot;WAITING&quot;,
+          &quot;until&quot;: 0.0
+        }
+      },
+      &quot;paused&quot;: false,
+      &quot;pending&quot;: null,
+      &quot;phase&quot;: &quot;READY&quot;,
+      &quot;revision&quot;: 33
+    },
+    &quot;journal_sha256&quot;: &quot;dda1d508759e06c61a9cd8a3223e58e74984c690658e0342a63d02ac56631c98&quot;,
+    &quot;kind&quot;: &quot;manual_formal_core_orderly_VM_reboot&quot;,
+    &quot;limitations&quot;: [
+      &quot;Not an installed service or automatic startup test&quot;,
+      &quot;No sudden power-loss or boot zero-gap test&quot;
+    ],
+    &quot;passed&quot;: true,
+    &quot;state&quot;: {
+      &quot;active&quot;: {
+        &quot;generation&quot;: 15,
+        &quot;link&quot;: &quot;A&quot;,
+        &quot;value&quot;: {
+          &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+          &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+          &quot;ip&quot;: &quot;192.0.2.2&quot;,
+          &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+          &quot;seconds&quot;: 120
+        }
+      },
+      &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;,
+      &quot;config_hash&quot;: &quot;cc5bb4048b603b5b9e4b3f5a3ff555dcacc18346b051c6f37edf45b373aeac50&quot;,
+      &quot;epoch&quot;: 4,
+      &quot;history&quot;: [
+        {
+          &quot;at&quot;: 15.005348923,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 15.588260089,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 16.914163882,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 18.042437132,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 18.112145799,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 76.785571944,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 85.281712127,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 89.249176172,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        },
+        {
+          &quot;at&quot;: 94.913104544,
+          &quot;boot&quot;: &quot;cbca0e26-1875-41eb-8751-4da26b1964f6&quot;
+        }
+      ],
+      &quot;latched&quot;: false,
+      &quot;links&quot;: {
+        &quot;A&quot;: {
+          &quot;bad&quot;: 0,
+          &quot;current&quot;: {
+            &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+            &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+            &quot;ip&quot;: &quot;192.0.2.2&quot;,
+            &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+            &quot;seconds&quot;: 120
+          },
+          &quot;expires&quot;: 214.82559270000002,
+          &quot;generation&quot;: 15,
+          &quot;good&quot;: 2,
+          &quot;last_event&quot;: 94.8255927,
+          &quot;revision&quot;: 15,
+          &quot;round&quot;: 2,
+          &quot;session&quot;: &quot;23a9478870e9133812e5a46b086618719b3cbd0e89d043de&quot;,
+          &quot;state&quot;: &quot;HEALTHY&quot;,
+          &quot;until&quot;: 99.906380514
+        },
+        &quot;B&quot;: {
+          &quot;bad&quot;: 0,
+          &quot;current&quot;: {
+            &quot;address&quot;: &quot;198.51.100.2/24&quot;,
+            &quot;gateway&quot;: &quot;198.51.100.1&quot;,
+            &quot;ip&quot;: &quot;198.51.100.2&quot;,
+            &quot;prefix&quot;: &quot;198.51.100.0/24&quot;,
+            &quot;seconds&quot;: 120
+          },
+          &quot;expires&quot;: 214.82773594600002,
+          &quot;generation&quot;: 14,
+          &quot;good&quot;: 2,
+          &quot;last_event&quot;: 94.827735946,
+          &quot;revision&quot;: 14,
+          &quot;round&quot;: 2,
+          &quot;session&quot;: &quot;43235f2e782d28b5776a750a749f84b08d9c5ec41d2d739f&quot;,
+          &quot;state&quot;: &quot;HEALTHY&quot;,
+          &quot;until&quot;: 99.910911048
+        }
+      },
+      &quot;paused&quot;: false,
+      &quot;pending&quot;: null,
+      &quot;phase&quot;: &quot;READY&quot;,
+      &quot;revision&quot;: 36
+    }
+  },
+  &quot;recorded_at_utc&quot;: &quot;2026-10-22T07:51:20.574236+00:00&quot;,
+  &quot;run_id&quot;: &quot;55936aa4724bd1de&quot;,
+  &quot;snapshot_removed&quot;: true,
+  &quot;source&quot;: {
+    &quot;LICENSE&quot;: &quot;0a5f48c5847660a83b6372cf47ef20c88bc20a0ae051dcc623707d081d8ad504&quot;,
+    &quot;deploy/config.example.json&quot;: &quot;d9dc6fa53d192485ac01409a0c142c415a8a0a9af228868ad76a580b54ee3a9d&quot;,
+    &quot;deploy/dhcp.example.json&quot;: &quot;a13ababf095a34b9ad962a7a416a50215ccdbe49fb1f7a9bd8eaf94454b4a893&quot;,
+    &quot;deploy/uplinkstead-dhcp.service&quot;: &quot;ee64da54c3527a4578ceef274ad2d31ae3de91b5d8a980a253424700ff57e857&quot;,
+    &quot;deploy/uplinkstead-policy.service&quot;: &quot;a133d411cdca7e60c6ac3434ffbab88f38c531e6d3ad536e9fb4a0137b2c7452&quot;,
+    &quot;deploy/uplinkstead-udhcpc.py&quot;: &quot;734bef993cceb1eb8d16c0423539e1bb616c27881b21040eee872a3e97ccdd10&quot;,
+    &quot;deploy/uplinkstead.conf&quot;: &quot;13c8d4f05436258043b94c378cb67b10e7e647539ef04fbbc12421750992636d&quot;,
+    &quot;deploy/uplinkstead.service&quot;: &quot;b94108e7b6187a9a7161f23762a535f220656cea20b084346c0ee70eb8d2dd8f&quot;,
+    &quot;pyproject.toml&quot;: &quot;0a70c8154047c9358dadfa11688c1d49edd73dfe540b6a9ab9d2bce42e90af25&quot;,
+    &quot;tests/__init__.py&quot;: &quot;e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855&quot;,
+    &quot;tests/fixtures/ip-rules-linux68.json&quot;: &quot;2d08b8328c3c3cb53e716e12241d29ed32b1be2820ce42549dd9204bc9d3013b&quot;,
+    &quot;tests/test_audit.py&quot;: &quot;f0f6701455f008af676c558814df34e4fdafbc1a573e7716515d9f55cccfe779&quot;,
+    &quot;tests/test_core.py&quot;: &quot;c601101d064557d199080c741406f86eb2781f9e8bdb31687adbcd9fc200b6fb&quot;,
+    &quot;tests/test_dhcp.py&quot;: &quot;9c2f1f38cc33ec077647c8f31d2bc4d60d08c26bd0477333e54c1bb711875470&quot;,
+    &quot;tests/test_dhcp_fixture.py&quot;: &quot;a6200355b3caf87d2a05749a252419205613c79890ae8bfc675c869c0f5239db&quot;,
+    &quot;tests/test_dhcp_report.py&quot;: &quot;4e9817b47d6037dabe2790aa3cb795c13eef4065515574b81d1792077a59ddfb&quot;,
+    &quot;tests/test_dual_dhcp.py&quot;: &quot;c1f37de552b54e34f76e76f96549ed6391eb8341ec72cb77ac23453d656cf22a&quot;,
+    &quot;tests/test_dual_dhcp_fixture.py&quot;: &quot;0f0fbe3172c2d388b49abb8785ee2385d8153b255b0e4cd51e963b9de9f5172a&quot;,
+    &quot;tests/test_dual_dhcp_linux.py&quot;: &quot;e77512cc0ce0be86edef5f4f24ceb00ba81d0f8bbb0e10e5a288f4a9c68e53b9&quot;,
+    &quot;tests/test_netproof.py&quot;: &quot;67417884f476e95ec5dcb91b9b2c1b9517291538b65f70e480f342bc11652d02&quot;,
+    &quot;tests/test_policy.py&quot;: &quot;2fc4d8f10081a8596c6121720c62a6358f9891dd54da449ebf4154cef8676c0c&quot;,
+    &quot;tests/test_report_review.py&quot;: &quot;3c11a2baa76b63cfb6db930e7dd2402dfbd08269bce815ad85c362f2f33cce45&quot;,
+    &quot;tests/test_service.py&quot;: &quot;c9b99749bade4a0de39cecca4e40a9b2bc7e339f5ae6aaa3c5749765a7d3dfb7&quot;,
+    &quot;tools/__init__.py&quot;: &quot;e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855&quot;,
+    &quot;tools/dhcp_fixture.py&quot;: &quot;015768e9047902184fa5c1684646a10e004b1c8acecfe379a5b04995eb297bac&quot;,
+    &quot;tools/dhcp_guest.py&quot;: &quot;ba3c3991c7c99c62d5f94efe41a0fe3abf37754b1307cbea253f5be508f59ba1&quot;,
+    &quot;tools/dhcp_reboot.py&quot;: &quot;76c5bddb352f4942c6756220dcf332317c83ec15242aca9445f0095bd28f4501&quot;,
+    &quot;tools/dhcp_report.py&quot;: &quot;4cfac44a7089862120523ff5821c1dec56415e7d9017e66041b9b8248e73fdc8&quot;,
+    &quot;tools/dhcp_validate.py&quot;: &quot;9cb79cbe5849c4a20e43071d968910a4ac2af77d5c2004f6b006e6b945a0ae4c&quot;,
+    &quot;tools/drive.py&quot;: &quot;030cdc8a91c8e9d1f7fecf96ca21673ccc65676d39bc0cc9db6556bd35afbdce&quot;,
+    &quot;tools/dual_dhcp_fixture.py&quot;: &quot;21ece922fefcb9c8fa3a79fba9606497e8e25123d5ddb1614096b344e953af48&quot;,
+    &quot;tools/dual_dhcp_guest.py&quot;: &quot;d3123512fcb00b421a7d536ee069dc0f563037e28d8ea3bd5b5cd1cf9b11bea8&quot;,
+    &quot;tools/dual_dhcp_report.py&quot;: &quot;827d51337f2a7701bc34e9d823e847a3fb8d16df601a252ac5d7c818bf831cac&quot;,
+    &quot;tools/dual_dhcp_validate.py&quot;: &quot;9d4acf54f5e5964a75f5679373c9eff373c3e0484a7637752b9983dce32a42ac&quot;,
+    &quot;tools/evidence.py&quot;: &quot;93ade5bf74c9ba48e95be5625739071e0bd9c32e56e705668038542173b3ef97&quot;,
+    &quot;tools/fault.py&quot;: &quot;0580e7d429cc8cb828451bfdea94b3f6f194f0de0364ff417ec6b2aca8dfeafd&quot;,
+    &quot;tools/guest.py&quot;: &quot;923c23705d9021c40285146e77f91a2ed554d0b3b06d48705d15d9f3e6ccd30a&quot;,
+    &quot;tools/mvp_guest.py&quot;: &quot;bdbb3ca45ec89a18c208eaecdb06156fc0d97992dc3e4fafc927864fff177805&quot;,
+    &quot;tools/netproof.py&quot;: &quot;1186a5080336d1434cc7ff36aa1479af10a37dff9d78617147c30e52fb764b8a&quot;,
+    &quot;tools/report.py&quot;: &quot;0790a9b26556164fed1b63fcb6001502a340428cac4f8d694083fb79e607861c&quot;,
+    &quot;tools/server.py&quot;: &quot;7c123ee05f915050fda293f762300be940f78be9cbec28cd258e3fd6d019ced2&quot;,
+    &quot;tools/unit.py&quot;: &quot;5fa4d7303908a7d9d27f5101478fcc3de7358d7d20cdd57134d712b4bdcf0a36&quot;,
+    &quot;tools/validate.py&quot;: &quot;00903e85fa7bde4ff589825051dc6b90e7c759ddb29c0dc2787d82672ef3bdbc&quot;,
+    &quot;uplinkstead/__init__.py&quot;: &quot;cb644b7273fc92cbe35a017c687d64ed5d39fb9388a9b5a98bda0fe0a1c18d62&quot;,
+    &quot;uplinkstead/agent.py&quot;: &quot;7fc1b865b33d67f52ad62b352edcb4a82529f5efa948edb008db83eba2903ed1&quot;,
+    &quot;uplinkstead/cli.py&quot;: &quot;6f4f2f48dfc71c13ca542900f884c792ae001460e87a14ae2e6d423124ab58f9&quot;,
+    &quot;uplinkstead/config.py&quot;: &quot;056c9a6c985f26bddf52835eed239d6bbec43745b22d0028c1b7e42c1410e08d&quot;,
+    &quot;uplinkstead/control.py&quot;: &quot;07aad9887782b774d61b1018ff0ae2d8f32526e4c8171cfa9df0d97e99ef6383&quot;,
+    &quot;uplinkstead/daemon.py&quot;: &quot;6ba4c3a5b9b3b9601304c4cb9967cdef6886c94957e2e6ca5ee44c6a00adefd4&quot;,
+    &quot;uplinkstead/dhcp.py&quot;: &quot;bee3223818a93996c3eb712edd7f3ae0a59f6ec05b9b51e712bb9f373bdc46d3&quot;,
+    &quot;uplinkstead/dhcp_service.py&quot;: &quot;888984b5a8e79ad396a2ed2f7d3eb506977207f29b7f6eab056c5ca421a07b72&quot;,
+    &quot;uplinkstead/dual_dhcp.py&quot;: &quot;0e83b0b30cd36b12871f6b2be90ab101545955285ec8f2406689d1d6c99c3c72&quot;,
+    &quot;uplinkstead/dual_dhcp_linux.py&quot;: &quot;117777c2fb6179ca942fdb110b72e9c1c2f2c90519478712ec9a310c42087210&quot;,
+    &quot;uplinkstead/linux.py&quot;: &quot;e163c800a1f77c48da6dedd71cf0f7696453e937f56e7e8df7ca02ab172b4da8&quot;,
+    &quot;uplinkstead/policy.py&quot;: &quot;d9a30ddf55ca1e84da224b4acdd912019b26a60c85887fc0d1383e5e6beb2947&quot;,
+    &quot;uplinkstead/probe.py&quot;: &quot;62f72a13dd3c02bd72319e545017862d220745791c187e541d8205c62c8f9187&quot;,
+    &quot;uplinkstead/worker.py&quot;: &quot;11de67689689b4b88c46e017452643e1bde7ba3a8745c6ca4bc34d92045e66cc&quot;,
+    &quot;uplinkstead/writer.py&quot;: &quot;811cd9d3ab589a864513bf748d746e1df48029014802aa91f49054bf4b3b8c0d&quot;
+  },
+  &quot;source_changed&quot;: false,
+  &quot;source_sha256&quot;: &quot;440e7f89ba76343924d068108cfb5116cb751e13b2d537b889cd0ff8fd99ba9d&quot;,
+  &quot;stages&quot;: [
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;name&quot;: &quot;native&quot;,
+      &quot;seconds&quot;: 0.8088204999803565,
+      &quot;timed_out&quot;: false
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;name&quot;: &quot;initial&quot;,
+      &quot;seconds&quot;: 0.24322079197736457,
+      &quot;timed_out&quot;: false
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;name&quot;: &quot;start&quot;,
+      &quot;seconds&quot;: 9.585923167003784,
+      &quot;timed_out&quot;: false
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;name&quot;: &quot;preflight&quot;,
+      &quot;seconds&quot;: 0.30660375001025386,
+      &quot;timed_out&quot;: false
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;name&quot;: &quot;upload&quot;,
+      &quot;seconds&quot;: 0.261682458978612,
+      &quot;timed_out&quot;: false
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;name&quot;: &quot;linux&quot;,
+      &quot;seconds&quot;: 1.8050694999983534,
+      &quot;timed_out&quot;: false
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;name&quot;: &quot;linux-read&quot;,
+      &quot;seconds&quot;: 0.30356850000680424,
+      &quot;timed_out&quot;: false
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;name&quot;: &quot;cases&quot;,
+      &quot;seconds&quot;: 79.77104558399878,
+      &quot;timed_out&quot;: false
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;name&quot;: &quot;reboot-prepare&quot;,
+      &quot;seconds&quot;: 5.562851958005922,
+      &quot;timed_out&quot;: false
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;name&quot;: &quot;reboot-stop&quot;,
+      &quot;seconds&quot;: 2.500860875006765,
+      &quot;timed_out&quot;: false
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;name&quot;: &quot;reboot-between&quot;,
+      &quot;seconds&quot;: 0.19463037501554936,
+      &quot;timed_out&quot;: false
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;name&quot;: &quot;reboot-start&quot;,
+      &quot;seconds&quot;: 12.721439374989131,
+      &quot;timed_out&quot;: false
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;name&quot;: &quot;reboot-after&quot;,
+      &quot;seconds&quot;: 5.618911165976897,
+      &quot;timed_out&quot;: false
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;name&quot;: &quot;cleanup&quot;,
+      &quot;seconds&quot;: 0.26967216600314714,
+      &quot;timed_out&quot;: false
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;name&quot;: &quot;remove&quot;,
+      &quot;seconds&quot;: 0.24531616698368452,
+      &quot;timed_out&quot;: false
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;name&quot;: &quot;stop&quot;,
+      &quot;seconds&quot;: 2.533512584021082,
+      &quot;timed_out&quot;: false
+    },
+    {
+      &quot;exit_code&quot;: 0,
+      &quot;name&quot;: &quot;final&quot;,
+      &quot;seconds&quot;: 0.18742054200265557,
+      &quot;timed_out&quot;: false
+    }
+  ],
+  &quot;vm_final&quot;: &quot;Stopped&quot;
+}</pre></html>

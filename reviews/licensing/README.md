@@ -18,8 +18,8 @@ These are separate evidence categories. No runtime product module changed.
 
 This receipt belongs to commit `b2df3be919f819e6d4cbb8672107c2dcc51ad902`.
 Its original verifier/source must be used to replay it. For the current source,
-use [DHCP validation](../dhcp/README.md) and
-[static regression](../dhcp-static-regression/README.md).
+use [DHCP validation](../dhcp-audit/README.md) and
+[static regression](../dhcp-audit-static/README.md).
 
 Wheel metadata declares MIT and includes the exact repository license. The sdist
 also includes it. Native installed imports and console help passed; installing

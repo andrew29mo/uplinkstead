@@ -34,8 +34,11 @@ def hook():
     path = os.environ['UPLINKSTEAD_SOCKET']
     status = request(path, {'op': 'status'})
     value = {k: os.environ.get(k, '') for k in ('ip', 'subnet', 'router', 'lease')} if reason in ('bound', 'renew') else None
-    request(path, dict(session=os.environ['UPLINKSTEAD_SESSION'], boot=os.environ['UPLINKSTEAD_BOOT'],
-                       revision=status['revision'], at=at, reason=reason, lease=value))
+    result = request(path, dict(session=os.environ['UPLINKSTEAD_SESSION'], boot=os.environ['UPLINKSTEAD_BOOT'],
+                               revision=status['revision'], at=at, reason=reason, lease=value))
+    if result.get('lease_rejected') or result.get('event_expired'):
+        print('Uplinkstead: rejected DHCP allocation withdrawn; waiting for a valid lease',
+              file=__import__('sys').stderr)
 
 
 def serve(c, state, path, executable, hook_path):
@@ -80,6 +83,11 @@ def serve(c, state, path, executable, hook_path):
                         if uid != 0:
                             raise PermissionError('Root-only DHCP adapter')
                         q = decode(peer.recv(4097))
+                        # Receiving a packet may straddle the lease deadline.
+                        # Expire before answering status or admitting an event.
+                        if w.s['current'] and now() >= w.s['expires']:
+                            w.transition(None, 0)
+                        revision = w.s['revision']
                         if q == {'op': 'status'}:
                             result = w.snapshot()
                         else:

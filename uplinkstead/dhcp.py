@@ -19,6 +19,10 @@ PROBE_TABLE = 41101
 DATA_TABLE = 41103
 
 
+class RetiredSession(Blocked):
+    """A callback from a replaced DHCP client; distinct from stale timestamps."""
+
+
 def config(path):
     if Path(path).stat().st_size > 16384:
         raise ValueError('DHCP config too large')
@@ -65,7 +69,7 @@ def lease(c, data):
 
 
 class Backend(Linux):
-    """Owns only two reserved tables, four rules and its DHCP address."""
+    """Owns only two reserved tables, six rules and its DHCP address."""
     def expected(self):
         return [dict(priority=10206, src=self.c['lan']['prefix'], iif=self.c['lan']['interface'], dst=self.c['lan']['prefix'], table='main', suppress_prefixlength=0),
                 dict(priority=10207, src=self.c['lan']['prefix'], iif=self.c['lan']['interface'], dst=self.c['lan']['prefix'], action='prohibit'),
@@ -74,7 +78,7 @@ class Backend(Linux):
                 dict(priority=10212, src=self.c['lan']['prefix'], iif=self.c['lan']['interface'], table=DATA_TABLE),
                 dict(priority=10213, src=self.c['lan']['prefix'], iif=self.c['lan']['interface'], action='prohibit')]
 
-    def check(self, allowed):
+    def check(self, allowed, complete=True):
         expected = self.expected()
         builtins = [dict(priority=0, src='all', table='local'),
                     dict(priority=32766, src='all', table='main'),
@@ -84,6 +88,8 @@ class Backend(Linux):
             raise Blocked('Unsupported RPDB rules; no coexistence claim')
         if any(rows.count(r) > 1 for r in expected):
             raise Blocked('Duplicate owned rules')
+        if complete and any(r not in rows for r in expected):
+            raise Blocked('Owned DHCP policy rule missing')
         addrs = json.loads(self.run(['-j', '-4', 'addr', 'show', 'dev', self.c['interface']]))
         allowed_addr = {v['address'] for v in allowed if v}
         if len(addrs) > 1 or any(str(a['local'])+'/'+str(a['prefixlen']) not in allowed_addr
@@ -103,7 +109,7 @@ class Backend(Linux):
         self.reconcile_many([old, new], new)
 
     def reconcile_many(self, allowed, new):
-        self.check(allowed)
+        self.check(allowed, complete=False)
         existing = [self.normalized(r) for r in self.rules()]
         # Terminal guards precede lookup rules and every destructive operation.
         for r in sorted(self.expected(), key=lambda r: 'table' in r):
@@ -215,22 +221,47 @@ class Lifecycle(Writer):
 
     def snapshot(self):
         return dict(session=self.s['session'], revision=self.s['revision'], boot=self.s['boot'],
-                    current=copy.deepcopy(self.s['current']), expires=self.s['expires'], healthy=self.healthy)
+                    current=copy.deepcopy(self.s['current']), expires=self.s['expires'],
+                    healthy=bool(self.healthy and self.s['current'] is not None and
+                                 self.s['intent'] is None and now() < self.s['expires']))
 
     def event(self, q):
         if set(q) != {'session', 'boot', 'revision', 'at', 'reason', 'lease'}:
             raise Blocked('Unexpected DHCP event')
         instant = now()
-        if (q['session'] != self.s['session'] or q['boot'] != boot_id() or
+        if q['session'] != self.s['session']:
+            raise RetiredSession('Retired DHCP client session')
+        if (q['boot'] != boot_id() or
                 type(q['revision']) is not int or q['revision'] != self.s['revision'] or
                 type(q['at']) not in (int, float) or not math.isfinite(q['at']) or
-                not self.s['last_event'] < q['at'] <= instant or instant-q['at'] > 3):
+                not self.s['last_event'] < q['at'] <= instant):
             raise Blocked('Stale DHCP event')
+        if q['reason'] not in ('bound', 'renew', 'deconfig', 'nak', 'leasefail'):
+            raise Blocked('Unsupported DHCP reason')
+        if q['reason'] in ('deconfig', 'nak', 'leasefail') and q['lease'] is not None:
+            raise Blocked('Loss notification must not contain a lease')
+        if instant-q['at'] > 3:
+            # This is the latest event from the current authority, not an old
+            # version. Its allocation cannot be admitted, but the old allocation
+            # is no longer trustworthy. Never install the delayed lease.
+            self.s['last_event'] = q['at']
+            self.transition(None, 0)
+            return dict(self.snapshot(), event_expired=True)
         if q['reason'] in ('bound', 'renew'):
-            value = lease(self.cfg, q['lease'])
+            try:
+                value = lease(self.cfg, q['lease'])
+            except (ValueError, TypeError, KeyError, OverflowError):
+                # Authority is current: this is a new DHCP allocation, not a
+                # stale caller. An unsupported allocation invalidates the old
+                # one even though it cannot be installed. Consume the event.
+                self.s['last_event'] = q['at']
+                self.transition(None, 0)
+                return dict(self.snapshot(), lease_rejected=True)
             expires = q['at']+value['seconds']
             if expires <= instant:
-                raise Blocked('Lease already expired')
+                self.s['last_event'] = q['at']
+                self.transition(None, 0)
+                return dict(self.snapshot(), lease_rejected=True)
         elif q['reason'] in ('deconfig', 'nak', 'leasefail') and q['lease'] is None:
             value, expires = None, 0
         else:

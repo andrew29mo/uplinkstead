@@ -1,0 +1,1632 @@
+<!doctype html><meta charset="utf-8"><title>Uplinkstead DHCP lifecycle evidence</title><style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}td,th{padding:8px;border-bottom:1px solid #ddd;text-align:left}</style><h1>Single DHCP uplink lifecycle</h1><p>Controlled Linux VM; real DHCP and installed service. Case times include fixture waits and DHCP protocol timers; not failover SLOs. RSS is a process snapshot, not peak or whole-VM memory. No VM reboot, power-loss or physical ISP claim.</p><p>Run: 52181356e66119f7; overall passed: True</p><p>Writer RSS snapshot: VmRSS:	   23916 kB; SQLite main file bytes: 8192</p><table><tr><th>Scenario</th><th>Passed</th><th>Elapsed seconds</th></tr><tr><td>wire_bound_and_pinned_tls</td><td>True</td><td>6.457</td></tr><tr><td>wire_renew</td><td>True</td><td>2.194</td></tr><tr><td>wire_gateway_change</td><td>True</td><td>2.075</td></tr><tr><td>wire_address_change</td><td>True</td><td>7.295</td></tr><tr><td>service_sigkill_restart_and_old_session_fenced</td><td>True</td><td>4.545</td></tr><tr><td>unsupported_current_renew_withdraws_old_lease</td><td>True</td><td>6.428</td></tr><tr><td>blackhole_no_false_health_or_backup_borrow</td><td>True</td><td>1.471</td></tr><tr><td>lease_deadline_with_stalled_client</td><td>True</td><td>114.399</td></tr><tr><td>formal_backend_partial_write_recovery</td><td>True</td><td>2.127</td></tr></table><details><summary>Full JSON evidence</summary><pre>{
+  &quot;passed&quot;: true,
+  &quot;source_changed&quot;: false,
+  &quot;run_id&quot;: &quot;52181356e66119f7&quot;,
+  &quot;recorded_at_utc&quot;: &quot;2026-10-22T05:37:17.201061+00:00&quot;,
+  &quot;source&quot;: {
+    &quot;LICENSE&quot;: &quot;0a5f48c5847660a83b6372cf47ef20c88bc20a0ae051dcc623707d081d8ad504&quot;,
+    &quot;deploy/config.example.json&quot;: &quot;d9dc6fa53d192485ac01409a0c142c415a8a0a9af228868ad76a580b54ee3a9d&quot;,
+    &quot;deploy/dhcp.example.json&quot;: &quot;a13ababf095a34b9ad962a7a416a50215ccdbe49fb1f7a9bd8eaf94454b4a893&quot;,
+    &quot;deploy/uplinkstead-dhcp.service&quot;: &quot;ee64da54c3527a4578ceef274ad2d31ae3de91b5d8a980a253424700ff57e857&quot;,
+    &quot;deploy/uplinkstead-policy.service&quot;: &quot;a133d411cdca7e60c6ac3434ffbab88f38c531e6d3ad536e9fb4a0137b2c7452&quot;,
+    &quot;deploy/uplinkstead-udhcpc.py&quot;: &quot;734bef993cceb1eb8d16c0423539e1bb616c27881b21040eee872a3e97ccdd10&quot;,
+    &quot;deploy/uplinkstead.conf&quot;: &quot;13c8d4f05436258043b94c378cb67b10e7e647539ef04fbbc12421750992636d&quot;,
+    &quot;deploy/uplinkstead.service&quot;: &quot;b94108e7b6187a9a7161f23762a535f220656cea20b084346c0ee70eb8d2dd8f&quot;,
+    &quot;pyproject.toml&quot;: &quot;0a70c8154047c9358dadfa11688c1d49edd73dfe540b6a9ab9d2bce42e90af25&quot;,
+    &quot;tests/__init__.py&quot;: &quot;e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855&quot;,
+    &quot;tests/fixtures/ip-rules-linux68.json&quot;: &quot;2d08b8328c3c3cb53e716e12241d29ed32b1be2820ce42549dd9204bc9d3013b&quot;,
+    &quot;tests/test_audit.py&quot;: &quot;f0f6701455f008af676c558814df34e4fdafbc1a573e7716515d9f55cccfe779&quot;,
+    &quot;tests/test_core.py&quot;: &quot;c601101d064557d199080c741406f86eb2781f9e8bdb31687adbcd9fc200b6fb&quot;,
+    &quot;tests/test_dhcp.py&quot;: &quot;3e31c10f94c8f1826d3a368afe7e383f2b2e90eff4eb29d2cf5a515482b662a2&quot;,
+    &quot;tests/test_dhcp_report.py&quot;: &quot;9237f64916d63b056b82a385eb5c7ba5e1c378b2d1017ccdd579e54a8fc8bed1&quot;,
+    &quot;tests/test_netproof.py&quot;: &quot;67417884f476e95ec5dcb91b9b2c1b9517291538b65f70e480f342bc11652d02&quot;,
+    &quot;tests/test_policy.py&quot;: &quot;2fc4d8f10081a8596c6121720c62a6358f9891dd54da449ebf4154cef8676c0c&quot;,
+    &quot;tests/test_report_review.py&quot;: &quot;3c11a2baa76b63cfb6db930e7dd2402dfbd08269bce815ad85c362f2f33cce45&quot;,
+    &quot;tests/test_service.py&quot;: &quot;c9b99749bade4a0de39cecca4e40a9b2bc7e339f5ae6aaa3c5749765a7d3dfb7&quot;,
+    &quot;tools/__init__.py&quot;: &quot;e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855&quot;,
+    &quot;tools/dhcp_fixture.py&quot;: &quot;dc45b2bcda362e4365a85a2d0a21f46b979808b0d8e9bf60676a5cdfd17163f1&quot;,
+    &quot;tools/dhcp_guest.py&quot;: &quot;8e1e3ddb7f2d1e18c1c23a9e405e96e3251cdbb84c3d3958cdc16c3626382f09&quot;,
+    &quot;tools/dhcp_report.py&quot;: &quot;e7ff050294346442663347f8fb754cf22a3521c7dfc3b3eeee15ccb32185302c&quot;,
+    &quot;tools/dhcp_validate.py&quot;: &quot;fbd29bc4d3bb2adc2bd064be1dc9c1da4c4756845218c37ca0e6e6199d253533&quot;,
+    &quot;tools/drive.py&quot;: &quot;030cdc8a91c8e9d1f7fecf96ca21673ccc65676d39bc0cc9db6556bd35afbdce&quot;,
+    &quot;tools/evidence.py&quot;: &quot;93ade5bf74c9ba48e95be5625739071e0bd9c32e56e705668038542173b3ef97&quot;,
+    &quot;tools/fault.py&quot;: &quot;0580e7d429cc8cb828451bfdea94b3f6f194f0de0364ff417ec6b2aca8dfeafd&quot;,
+    &quot;tools/guest.py&quot;: &quot;923c23705d9021c40285146e77f91a2ed554d0b3b06d48705d15d9f3e6ccd30a&quot;,
+    &quot;tools/mvp_guest.py&quot;: &quot;bdbb3ca45ec89a18c208eaecdb06156fc0d97992dc3e4fafc927864fff177805&quot;,
+    &quot;tools/netproof.py&quot;: &quot;1186a5080336d1434cc7ff36aa1479af10a37dff9d78617147c30e52fb764b8a&quot;,
+    &quot;tools/report.py&quot;: &quot;0790a9b26556164fed1b63fcb6001502a340428cac4f8d694083fb79e607861c&quot;,
+    &quot;tools/server.py&quot;: &quot;7c123ee05f915050fda293f762300be940f78be9cbec28cd258e3fd6d019ced2&quot;,
+    &quot;tools/unit.py&quot;: &quot;5fa4d7303908a7d9d27f5101478fcc3de7358d7d20cdd57134d712b4bdcf0a36&quot;,
+    &quot;tools/validate.py&quot;: &quot;00903e85fa7bde4ff589825051dc6b90e7c759ddb29c0dc2787d82672ef3bdbc&quot;,
+    &quot;uplinkstead/__init__.py&quot;: &quot;cb644b7273fc92cbe35a017c687d64ed5d39fb9388a9b5a98bda0fe0a1c18d62&quot;,
+    &quot;uplinkstead/agent.py&quot;: &quot;7fc1b865b33d67f52ad62b352edcb4a82529f5efa948edb008db83eba2903ed1&quot;,
+    &quot;uplinkstead/cli.py&quot;: &quot;6f4f2f48dfc71c13ca542900f884c792ae001460e87a14ae2e6d423124ab58f9&quot;,
+    &quot;uplinkstead/config.py&quot;: &quot;056c9a6c985f26bddf52835eed239d6bbec43745b22d0028c1b7e42c1410e08d&quot;,
+    &quot;uplinkstead/control.py&quot;: &quot;07aad9887782b774d61b1018ff0ae2d8f32526e4c8171cfa9df0d97e99ef6383&quot;,
+    &quot;uplinkstead/daemon.py&quot;: &quot;6ba4c3a5b9b3b9601304c4cb9967cdef6886c94957e2e6ca5ee44c6a00adefd4&quot;,
+    &quot;uplinkstead/dhcp.py&quot;: &quot;bee3223818a93996c3eb712edd7f3ae0a59f6ec05b9b51e712bb9f373bdc46d3&quot;,
+    &quot;uplinkstead/dhcp_service.py&quot;: &quot;7ce52a3b5918de0d27737aca3d516b344354912887920189613e4fca46152240&quot;,
+    &quot;uplinkstead/linux.py&quot;: &quot;e163c800a1f77c48da6dedd71cf0f7696453e937f56e7e8df7ca02ab172b4da8&quot;,
+    &quot;uplinkstead/policy.py&quot;: &quot;d9a30ddf55ca1e84da224b4acdd912019b26a60c85887fc0d1383e5e6beb2947&quot;,
+    &quot;uplinkstead/probe.py&quot;: &quot;62f72a13dd3c02bd72319e545017862d220745791c187e541d8205c62c8f9187&quot;,
+    &quot;uplinkstead/worker.py&quot;: &quot;11de67689689b4b88c46e017452643e1bde7ba3a8745c6ca4bc34d92045e66cc&quot;,
+    &quot;uplinkstead/writer.py&quot;: &quot;811cd9d3ab589a864513bf748d746e1df48029014802aa91f49054bf4b3b8c0d&quot;
+  },
+  &quot;source_sha256&quot;: &quot;18b9518ae1cbaaa8598c996bf73d3c4e8576508c02a6ede7745c1237cc652caf&quot;,
+  &quot;stages&quot;: [
+    {
+      &quot;name&quot;: &quot;native&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 0.7147284999955446
+    },
+    {
+      &quot;name&quot;: &quot;initial&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 0.2736621250078315
+    },
+    {
+      &quot;name&quot;: &quot;start&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 12.329057707989705
+    },
+    {
+      &quot;name&quot;: &quot;preflight&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 0.30002287500246894
+    },
+    {
+      &quot;name&quot;: &quot;upload&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 0.3311140410078224
+    },
+    {
+      &quot;name&quot;: &quot;linux&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 1.5417580420034938
+    },
+    {
+      &quot;name&quot;: &quot;linux-read&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 0.33625008299713954
+    },
+    {
+      &quot;name&quot;: &quot;cases&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 152.28463962499518
+    },
+    {
+      &quot;name&quot;: &quot;cleanup&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 0.5238738329935586
+    },
+    {
+      &quot;name&quot;: &quot;remove&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 0.3581096669950057
+    },
+    {
+      &quot;name&quot;: &quot;stop&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 2.640585875007673
+    },
+    {
+      &quot;name&quot;: &quot;final&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 0.20145929099817295
+    }
+  ],
+  &quot;native_unit&quot;: {
+    &quot;passed&quot;: true,
+    &quot;tests&quot;: [
+      &quot;test_audit.OptimizedValidationTests.test_report_rejects_failure_under_optimization&quot;,
+      &quot;test_audit.OptimizedValidationTests.test_unit_runner_refuses_optimized_validation&quot;,
+      &quot;test_audit.PreflightTests.test_duplicate_builtin_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_inverted_disjoint_lookup_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_inverted_disjoint_prohibit_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_missing_local_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_plain_disjoint_lookup_still_accepted&quot;,
+      &quot;test_audit.PreflightTests.test_unknown_disjoint_selector_rejected&quot;,
+      &quot;test_audit.ProbeBodyTests.test_deeply_nested_json_is_target_failure&quot;,
+      &quot;test_audit.ProbeBodyTests.test_nonfinite_and_invalid_peer_are_target_failures&quot;,
+      &quot;test_audit.ProbeBodyTests.test_peer_limit_is_utf8_bytes_not_json_wire_or_character_count&quot;,
+      &quot;test_audit.ProbeBodyTests.test_two_healthy_targets_retain_quorum&quot;,
+      &quot;test_audit.ProbeBodyTests.test_valid_json_nonobjects_are_target_failures&quot;,
+      &quot;test_audit.ProbeBodyTests.test_valid_object_still_successful&quot;,
+      &quot;test_core.ConfigTests.test_duplicate_target_rejected&quot;,
+      &quot;test_core.ConfigTests.test_exclusions_bounded&quot;,
+      &quot;test_core.ConfigTests.test_hash_stable&quot;,
+      &quot;test_core.ConfigTests.test_invalid_source_rejected&quot;,
+      &quot;test_core.ConfigTests.test_overlapping_interfaces_rejected&quot;,
+      &quot;test_core.ConfigTests.test_unknown_key_rejected&quot;,
+      &quot;test_core.RoutingShapeTests.test_every_lookup_has_matching_terminal_guard&quot;,
+      &quot;test_core.RoutingShapeTests.test_forward_selector_not_host_source_alone&quot;,
+      &quot;test_core.RoutingShapeTests.test_internal_lookup_suppresses_main_default&quot;,
+      &quot;test_core.RoutingShapeTests.test_probe_is_local_and_marked&quot;,
+      &quot;test_core.RoutingShapeTests.test_real_iproute2_rule_output_normalization&quot;,
+      &quot;test_core.WriterTests.test_actual_new_route_reconciles_incomplete_receipt&quot;,
+      &quot;test_core.WriterTests.test_actual_old_route_reconciles_pending_without_replay&quot;,
+      &quot;test_core.WriterTests.test_automatic_admission_requires_proof&quot;,
+      &quot;test_core.WriterTests.test_generation_rejects_stale_after_reopen&quot;,
+      &quot;test_core.WriterTests.test_health_expired_after_intent_cannot_dispatch&quot;,
+      &quot;test_core.WriterTests.test_health_expired_during_preflight_cannot_write&quot;,
+      &quot;test_core.WriterTests.test_invalid_journal_rejected&quot;,
+      &quot;test_core.WriterTests.test_lock_contention_blocks&quot;,
+      &quot;test_core.WriterTests.test_symlink_lock_rejected&quot;,
+      &quot;test_core.WriterTests.test_unexpected_route_blocks&quot;,
+      &quot;test_core.WriterTests.test_wrong_boot_config_and_round_proof_rejected&quot;,
+      &quot;test_dhcp.BackendTests.test_formal_backend_accepts_empty_ipv4_and_installs_guards_first&quot;,
+      &quot;test_dhcp.BackendTests.test_formal_backend_rejects_foreign_route_before_flush&quot;,
+      &quot;test_dhcp.BackendTests.test_formal_backend_rejects_foreign_rule_before_mutation&quot;,
+      &quot;test_dhcp.BackendTests.test_runtime_check_requires_every_guard_and_lookup&quot;,
+      &quot;test_dhcp.DHCPTests.test_actual_journal_renew_invalidates_health_and_old_events&quot;,
+      &quot;test_dhcp.DHCPTests.test_actual_sqlite_save_failure_cannot_mutate_backend&quot;,
+      &quot;test_dhcp.DHCPTests.test_address_and_gateway_change_require_new_quorum&quot;,
+      &quot;test_dhcp.DHCPTests.test_changed_boot_quarantines_lease_before_new_authority&quot;,
+      &quot;test_dhcp.DHCPTests.test_current_renew_expired_in_transit_invalidates_old_health&quot;,
+      &quot;test_dhcp.DHCPTests.test_current_unsupported_lease_withdraws_old_healthy_allocation&quot;,
+      &quot;test_dhcp.DHCPTests.test_deconfig_withdraws_and_replay_is_rejected&quot;,
+      &quot;test_dhcp.DHCPTests.test_delayed_current_callbacks_withdraw_but_old_revision_cannot&quot;,
+      &quot;test_dhcp.DHCPTests.test_expiry_and_expiry_during_probe_never_activate&quot;,
+      &quot;test_dhcp.DHCPTests.test_failed_backend_recovers_intent_without_replaying_lease&quot;,
+      &quot;test_dhcp.DHCPTests.test_lock_excludes_second_writer_and_corrupt_journal_refuses&quot;,
+      &quot;test_dhcp.DHCPTests.test_restart_fences_session_and_does_not_trust_saved_lease&quot;,
+      &quot;test_dhcp.DHCPTests.test_retired_session_rejection_is_distinct_from_stale_time&quot;,
+      &quot;test_dhcp.DHCPTests.test_snapshot_does_not_report_expired_health_before_next_tick&quot;,
+      &quot;test_dhcp.DHCPTests.test_stale_future_wrong_boot_session_and_duplicate_are_readonly&quot;,
+      &quot;test_dhcp.DHCPTests.test_unknown_infrastructure_or_failed_quorum_withdraws&quot;,
+      &quot;test_dhcp_report.DHCPReportTests.test_expiry_requires_previously_active_flow_and_allocation_removal&quot;,
+      &quot;test_dhcp_report.DHCPReportTests.test_installed_service_must_match_declared_fixture_transform&quot;,
+      &quot;test_dhcp_report.DHCPReportTests.test_restart_rejects_environment_error_reused_session_and_changed_routes&quot;,
+      &quot;test_netproof.NetworkProofTests.test_meaningful_bytes_operand_not_ignored&quot;,
+      &quot;test_netproof.NetworkProofTests.test_only_nft_counter_values_and_handles_ignored&quot;,
+      &quot;test_netproof.NetworkProofTests.test_rule_order_preserved&quot;,
+      &quot;test_netproof.NetworkProofTests.test_xt_counters_and_timestamp_comments_only&quot;,
+      &quot;test_netproof.NetworkProofTests.test_xt_rule_comment_not_mistaken_for_counter&quot;,
+      &quot;test_policy.PolicyTests.test_auto_failback_requires_continuous_stability&quot;,
+      &quot;test_policy.PolicyTests.test_budget_latches_and_restart_retains_latch&quot;,
+      &quot;test_policy.PolicyTests.test_cross_boot_budget_not_replenished_by_reboot&quot;,
+      &quot;test_policy.PolicyTests.test_default_never_preference_failback&quot;,
+      &quot;test_policy.PolicyTests.test_expired_result_breaks_streak&quot;,
+      &quot;test_policy.PolicyTests.test_failover_threshold&quot;,
+      &quot;test_policy.PolicyTests.test_history_expires_same_boot_without_process_reset&quot;,
+      &quot;test_policy.PolicyTests.test_initial_success_requires_multiple_rounds&quot;,
+      &quot;test_policy.PolicyTests.test_invalid_settings&quot;,
+      &quot;test_policy.PolicyTests.test_missing_round_expires_health&quot;,
+      &quot;test_policy.PolicyTests.test_one_target_failure_not_link_failure&quot;,
+      &quot;test_policy.PolicyTests.test_reordered_round_rejected&quot;,
+      &quot;test_policy.PolicyTests.test_stability_gap_resets_recovery&quot;,
+      &quot;test_policy.PolicyTests.test_stale_wrong_boot_and_wrong_config_rejected&quot;,
+      &quot;test_policy.PolicyTests.test_unknown_current_does_not_trigger_speculative_switch&quot;,
+      &quot;test_policy.PolicyTests.test_unknown_not_destination&quot;,
+      &quot;test_report_review.ReportReviewTests.test_benchmark_path_fault_and_process_identity_are_required&quot;,
+      &quot;test_report_review.ReportReviewTests.test_reboot_correspondence_rejects_independent_counterexamples&quot;,
+      &quot;test_service.ServiceTests.test_actual_sqlite_capacity_error_is_not_success&quot;,
+      &quot;test_service.ServiceTests.test_clean_rejection_keeps_serving_but_partial_state_retires_owner&quot;,
+      &quot;test_service.ServiceTests.test_detached_corrupt_attached_intent_rejected&quot;,
+      &quot;test_service.ServiceTests.test_disable_explicit_handoff_and_reenable_has_no_stale_health&quot;,
+      &quot;test_service.ServiceTests.test_disabled_pause_does_not_switch_and_restart_retains_mode&quot;,
+      &quot;test_service.ServiceTests.test_event_retention_and_database_capacity&quot;,
+      &quot;test_service.ServiceTests.test_failed_disable_is_durable_and_restarts_to_disabled&quot;,
+      &quot;test_service.ServiceTests.test_failed_enable_is_durable_and_restarts_to_paused&quot;,
+      &quot;test_service.ServiceTests.test_first_start_detached_then_enable_paused&quot;,
+      &quot;test_service.ServiceTests.test_forged_automatic_target_and_old_round_rejected&quot;,
+      &quot;test_service.ServiceTests.test_low_disk_blocks_before_route_write&quot;,
+      &quot;test_service.ServiceTests.test_manual_selection_ignores_expired_history_but_preserves_latch&quot;,
+      &quot;test_service.ServiceTests.test_no_arbitrary_commands_or_caller_health_proofs&quot;,
+      &quot;test_service.ServiceTests.test_old_revision_rejected_after_pause_and_same_process_resume&quot;,
+      &quot;test_service.ServiceTests.test_one_oversized_peer_does_not_block_formal_controller_sample&quot;,
+      &quot;test_service.ServiceTests.test_parser_rejects_oversize_duplicate_and_nonobject&quot;,
+      &quot;test_service.ServiceTests.test_probe_rate_bounded&quot;,
+      &quot;test_service.ServiceTests.test_resume_needs_fresh_writer_health_and_ack&quot;,
+      &quot;test_service.ServiceTests.test_same_selected_resume_rechecks_health_after_budget_persistence&quot;,
+      &quot;test_service.ServiceTests.test_state_write_failure_precedes_lifecycle_mutation&quot;,
+      &quot;test_service.ServiceTests.test_uncertain_command_does_not_keep_serving_even_without_pending&quot;,
+      &quot;test_service.ServiceTests.test_untrusted_peer_and_worker_operator_denied&quot;
+    ],
+    &quot;count&quot;: 104,
+    &quot;failures&quot;: 0,
+    &quot;errors&quot;: 0,
+    &quot;skipped&quot;: 0,
+    &quot;source_sha256&quot;: &quot;18b9518ae1cbaaa8598c996bf73d3c4e8576508c02a6ede7745c1237cc652caf&quot;,
+    &quot;platform&quot;: &quot;Darwin&quot;,
+    &quot;python&quot;: &quot;3.12.14&quot;
+  },
+  &quot;linux_unit&quot;: {
+    &quot;passed&quot;: true,
+    &quot;tests&quot;: [
+      &quot;test_audit.OptimizedValidationTests.test_report_rejects_failure_under_optimization&quot;,
+      &quot;test_audit.OptimizedValidationTests.test_unit_runner_refuses_optimized_validation&quot;,
+      &quot;test_audit.PreflightTests.test_duplicate_builtin_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_inverted_disjoint_lookup_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_inverted_disjoint_prohibit_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_missing_local_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_plain_disjoint_lookup_still_accepted&quot;,
+      &quot;test_audit.PreflightTests.test_unknown_disjoint_selector_rejected&quot;,
+      &quot;test_audit.ProbeBodyTests.test_deeply_nested_json_is_target_failure&quot;,
+      &quot;test_audit.ProbeBodyTests.test_nonfinite_and_invalid_peer_are_target_failures&quot;,
+      &quot;test_audit.ProbeBodyTests.test_peer_limit_is_utf8_bytes_not_json_wire_or_character_count&quot;,
+      &quot;test_audit.ProbeBodyTests.test_two_healthy_targets_retain_quorum&quot;,
+      &quot;test_audit.ProbeBodyTests.test_valid_json_nonobjects_are_target_failures&quot;,
+      &quot;test_audit.ProbeBodyTests.test_valid_object_still_successful&quot;,
+      &quot;test_core.ConfigTests.test_duplicate_target_rejected&quot;,
+      &quot;test_core.ConfigTests.test_exclusions_bounded&quot;,
+      &quot;test_core.ConfigTests.test_hash_stable&quot;,
+      &quot;test_core.ConfigTests.test_invalid_source_rejected&quot;,
+      &quot;test_core.ConfigTests.test_overlapping_interfaces_rejected&quot;,
+      &quot;test_core.ConfigTests.test_unknown_key_rejected&quot;,
+      &quot;test_core.RoutingShapeTests.test_every_lookup_has_matching_terminal_guard&quot;,
+      &quot;test_core.RoutingShapeTests.test_forward_selector_not_host_source_alone&quot;,
+      &quot;test_core.RoutingShapeTests.test_internal_lookup_suppresses_main_default&quot;,
+      &quot;test_core.RoutingShapeTests.test_probe_is_local_and_marked&quot;,
+      &quot;test_core.RoutingShapeTests.test_real_iproute2_rule_output_normalization&quot;,
+      &quot;test_core.WriterTests.test_actual_new_route_reconciles_incomplete_receipt&quot;,
+      &quot;test_core.WriterTests.test_actual_old_route_reconciles_pending_without_replay&quot;,
+      &quot;test_core.WriterTests.test_automatic_admission_requires_proof&quot;,
+      &quot;test_core.WriterTests.test_generation_rejects_stale_after_reopen&quot;,
+      &quot;test_core.WriterTests.test_health_expired_after_intent_cannot_dispatch&quot;,
+      &quot;test_core.WriterTests.test_health_expired_during_preflight_cannot_write&quot;,
+      &quot;test_core.WriterTests.test_invalid_journal_rejected&quot;,
+      &quot;test_core.WriterTests.test_lock_contention_blocks&quot;,
+      &quot;test_core.WriterTests.test_symlink_lock_rejected&quot;,
+      &quot;test_core.WriterTests.test_unexpected_route_blocks&quot;,
+      &quot;test_core.WriterTests.test_wrong_boot_config_and_round_proof_rejected&quot;,
+      &quot;test_dhcp.BackendTests.test_formal_backend_accepts_empty_ipv4_and_installs_guards_first&quot;,
+      &quot;test_dhcp.BackendTests.test_formal_backend_rejects_foreign_route_before_flush&quot;,
+      &quot;test_dhcp.BackendTests.test_formal_backend_rejects_foreign_rule_before_mutation&quot;,
+      &quot;test_dhcp.BackendTests.test_runtime_check_requires_every_guard_and_lookup&quot;,
+      &quot;test_dhcp.DHCPTests.test_actual_journal_renew_invalidates_health_and_old_events&quot;,
+      &quot;test_dhcp.DHCPTests.test_actual_sqlite_save_failure_cannot_mutate_backend&quot;,
+      &quot;test_dhcp.DHCPTests.test_address_and_gateway_change_require_new_quorum&quot;,
+      &quot;test_dhcp.DHCPTests.test_changed_boot_quarantines_lease_before_new_authority&quot;,
+      &quot;test_dhcp.DHCPTests.test_current_renew_expired_in_transit_invalidates_old_health&quot;,
+      &quot;test_dhcp.DHCPTests.test_current_unsupported_lease_withdraws_old_healthy_allocation&quot;,
+      &quot;test_dhcp.DHCPTests.test_deconfig_withdraws_and_replay_is_rejected&quot;,
+      &quot;test_dhcp.DHCPTests.test_delayed_current_callbacks_withdraw_but_old_revision_cannot&quot;,
+      &quot;test_dhcp.DHCPTests.test_expiry_and_expiry_during_probe_never_activate&quot;,
+      &quot;test_dhcp.DHCPTests.test_failed_backend_recovers_intent_without_replaying_lease&quot;,
+      &quot;test_dhcp.DHCPTests.test_lock_excludes_second_writer_and_corrupt_journal_refuses&quot;,
+      &quot;test_dhcp.DHCPTests.test_restart_fences_session_and_does_not_trust_saved_lease&quot;,
+      &quot;test_dhcp.DHCPTests.test_retired_session_rejection_is_distinct_from_stale_time&quot;,
+      &quot;test_dhcp.DHCPTests.test_snapshot_does_not_report_expired_health_before_next_tick&quot;,
+      &quot;test_dhcp.DHCPTests.test_stale_future_wrong_boot_session_and_duplicate_are_readonly&quot;,
+      &quot;test_dhcp.DHCPTests.test_unknown_infrastructure_or_failed_quorum_withdraws&quot;,
+      &quot;test_dhcp_report.DHCPReportTests.test_expiry_requires_previously_active_flow_and_allocation_removal&quot;,
+      &quot;test_dhcp_report.DHCPReportTests.test_installed_service_must_match_declared_fixture_transform&quot;,
+      &quot;test_dhcp_report.DHCPReportTests.test_restart_rejects_environment_error_reused_session_and_changed_routes&quot;,
+      &quot;test_netproof.NetworkProofTests.test_meaningful_bytes_operand_not_ignored&quot;,
+      &quot;test_netproof.NetworkProofTests.test_only_nft_counter_values_and_handles_ignored&quot;,
+      &quot;test_netproof.NetworkProofTests.test_rule_order_preserved&quot;,
+      &quot;test_netproof.NetworkProofTests.test_xt_counters_and_timestamp_comments_only&quot;,
+      &quot;test_netproof.NetworkProofTests.test_xt_rule_comment_not_mistaken_for_counter&quot;,
+      &quot;test_policy.PolicyTests.test_auto_failback_requires_continuous_stability&quot;,
+      &quot;test_policy.PolicyTests.test_budget_latches_and_restart_retains_latch&quot;,
+      &quot;test_policy.PolicyTests.test_cross_boot_budget_not_replenished_by_reboot&quot;,
+      &quot;test_policy.PolicyTests.test_default_never_preference_failback&quot;,
+      &quot;test_policy.PolicyTests.test_expired_result_breaks_streak&quot;,
+      &quot;test_policy.PolicyTests.test_failover_threshold&quot;,
+      &quot;test_policy.PolicyTests.test_history_expires_same_boot_without_process_reset&quot;,
+      &quot;test_policy.PolicyTests.test_initial_success_requires_multiple_rounds&quot;,
+      &quot;test_policy.PolicyTests.test_invalid_settings&quot;,
+      &quot;test_policy.PolicyTests.test_missing_round_expires_health&quot;,
+      &quot;test_policy.PolicyTests.test_one_target_failure_not_link_failure&quot;,
+      &quot;test_policy.PolicyTests.test_reordered_round_rejected&quot;,
+      &quot;test_policy.PolicyTests.test_stability_gap_resets_recovery&quot;,
+      &quot;test_policy.PolicyTests.test_stale_wrong_boot_and_wrong_config_rejected&quot;,
+      &quot;test_policy.PolicyTests.test_unknown_current_does_not_trigger_speculative_switch&quot;,
+      &quot;test_policy.PolicyTests.test_unknown_not_destination&quot;,
+      &quot;test_report_review.ReportReviewTests.test_benchmark_path_fault_and_process_identity_are_required&quot;,
+      &quot;test_report_review.ReportReviewTests.test_reboot_correspondence_rejects_independent_counterexamples&quot;,
+      &quot;test_service.ServiceTests.test_actual_sqlite_capacity_error_is_not_success&quot;,
+      &quot;test_service.ServiceTests.test_clean_rejection_keeps_serving_but_partial_state_retires_owner&quot;,
+      &quot;test_service.ServiceTests.test_detached_corrupt_attached_intent_rejected&quot;,
+      &quot;test_service.ServiceTests.test_disable_explicit_handoff_and_reenable_has_no_stale_health&quot;,
+      &quot;test_service.ServiceTests.test_disabled_pause_does_not_switch_and_restart_retains_mode&quot;,
+      &quot;test_service.ServiceTests.test_event_retention_and_database_capacity&quot;,
+      &quot;test_service.ServiceTests.test_failed_disable_is_durable_and_restarts_to_disabled&quot;,
+      &quot;test_service.ServiceTests.test_failed_enable_is_durable_and_restarts_to_paused&quot;,
+      &quot;test_service.ServiceTests.test_first_start_detached_then_enable_paused&quot;,
+      &quot;test_service.ServiceTests.test_forged_automatic_target_and_old_round_rejected&quot;,
+      &quot;test_service.ServiceTests.test_low_disk_blocks_before_route_write&quot;,
+      &quot;test_service.ServiceTests.test_manual_selection_ignores_expired_history_but_preserves_latch&quot;,
+      &quot;test_service.ServiceTests.test_no_arbitrary_commands_or_caller_health_proofs&quot;,
+      &quot;test_service.ServiceTests.test_old_revision_rejected_after_pause_and_same_process_resume&quot;,
+      &quot;test_service.ServiceTests.test_one_oversized_peer_does_not_block_formal_controller_sample&quot;,
+      &quot;test_service.ServiceTests.test_parser_rejects_oversize_duplicate_and_nonobject&quot;,
+      &quot;test_service.ServiceTests.test_probe_rate_bounded&quot;,
+      &quot;test_service.ServiceTests.test_resume_needs_fresh_writer_health_and_ack&quot;,
+      &quot;test_service.ServiceTests.test_same_selected_resume_rechecks_health_after_budget_persistence&quot;,
+      &quot;test_service.ServiceTests.test_state_write_failure_precedes_lifecycle_mutation&quot;,
+      &quot;test_service.ServiceTests.test_uncertain_command_does_not_keep_serving_even_without_pending&quot;,
+      &quot;test_service.ServiceTests.test_untrusted_peer_and_worker_operator_denied&quot;
+    ],
+    &quot;count&quot;: 104,
+    &quot;failures&quot;: 0,
+    &quot;errors&quot;: 0,
+    &quot;skipped&quot;: 0,
+    &quot;source_sha256&quot;: &quot;18b9518ae1cbaaa8598c996bf73d3c4e8576508c02a6ede7745c1237cc652caf&quot;,
+    &quot;platform&quot;: &quot;Linux&quot;,
+    &quot;python&quot;: &quot;3.12.3&quot;
+  },
+  &quot;guest&quot;: {
+    &quot;passed&quot;: true,
+    &quot;source_sha256&quot;: &quot;18b9518ae1cbaaa8598c996bf73d3c4e8576508c02a6ede7745c1237cc652caf&quot;,
+    &quot;boot&quot;: &quot;3083215d-dfca-4d53-9195-aaae8aff000c&quot;,
+    &quot;cases&quot;: [
+      {
+        &quot;name&quot;: &quot;wire_bound_and_pinned_tls&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 6.456639668999999,
+        &quot;details&quot;: {
+          &quot;state&quot;: {
+            &quot;session&quot;: &quot;8c6e70d1bda5c4d90c8cc567e561d67cdafde1bfb0a73af6&quot;,
+            &quot;revision&quot;: 4,
+            &quot;boot&quot;: &quot;3083215d-dfca-4d53-9195-aaae8aff000c&quot;,
+            &quot;current&quot;: {
+              &quot;ip&quot;: &quot;192.0.2.2&quot;,
+              &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+              &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+              &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+              &quot;seconds&quot;: 120
+            },
+            &quot;expires&quot;: 138.012725799,
+            &quot;healthy&quot;: true
+          },
+          &quot;request&quot;: {
+            &quot;ok&quot;: true,
+            &quot;response&quot;: {
+              &quot;ok&quot;: true,
+              &quot;nonce&quot;: &quot;afbfce26a6891f54a4bc5d9b&quot;,
+              &quot;peer&quot;: &quot;10.99.1.1&quot;,
+              &quot;server&quot;: &quot;203.0.113.2&quot;
+            }
+          },
+          &quot;invocation&quot;: &quot;6bd9d514b27f44d0833860acfe1637f0&quot;
+        }
+      },
+      {
+        &quot;name&quot;: &quot;wire_renew&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 2.193658668000001,
+        &quot;details&quot;: {
+          &quot;state&quot;: {
+            &quot;session&quot;: &quot;8c6e70d1bda5c4d90c8cc567e561d67cdafde1bfb0a73af6&quot;,
+            &quot;revision&quot;: 5,
+            &quot;boot&quot;: &quot;3083215d-dfca-4d53-9195-aaae8aff000c&quot;,
+            &quot;current&quot;: {
+              &quot;ip&quot;: &quot;192.0.2.2&quot;,
+              &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+              &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+              &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+              &quot;seconds&quot;: 120
+            },
+            &quot;expires&quot;: 139.226433175,
+            &quot;healthy&quot;: false
+          },
+          &quot;after_healthy&quot;: {
+            &quot;session&quot;: &quot;8c6e70d1bda5c4d90c8cc567e561d67cdafde1bfb0a73af6&quot;,
+            &quot;revision&quot;: 5,
+            &quot;boot&quot;: &quot;3083215d-dfca-4d53-9195-aaae8aff000c&quot;,
+            &quot;current&quot;: {
+              &quot;ip&quot;: &quot;192.0.2.2&quot;,
+              &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+              &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+              &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+              &quot;seconds&quot;: 120
+            },
+            &quot;expires&quot;: 139.226433175,
+            &quot;healthy&quot;: true
+          }
+        }
+      },
+      {
+        &quot;name&quot;: &quot;wire_gateway_change&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 2.0748680839999984,
+        &quot;details&quot;: {
+          &quot;state&quot;: {
+            &quot;session&quot;: &quot;8c6e70d1bda5c4d90c8cc567e561d67cdafde1bfb0a73af6&quot;,
+            &quot;revision&quot;: 6,
+            &quot;boot&quot;: &quot;3083215d-dfca-4d53-9195-aaae8aff000c&quot;,
+            &quot;current&quot;: {
+              &quot;ip&quot;: &quot;192.0.2.2&quot;,
+              &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+              &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+              &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+              &quot;seconds&quot;: 120
+            },
+            &quot;expires&quot;: 141.702649218,
+            &quot;healthy&quot;: false
+          }
+        }
+      },
+      {
+        &quot;name&quot;: &quot;wire_address_change&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 7.294914587000001,
+        &quot;details&quot;: {
+          &quot;before&quot;: {
+            &quot;session&quot;: &quot;8c6e70d1bda5c4d90c8cc567e561d67cdafde1bfb0a73af6&quot;,
+            &quot;revision&quot;: 6,
+            &quot;boot&quot;: &quot;3083215d-dfca-4d53-9195-aaae8aff000c&quot;,
+            &quot;current&quot;: {
+              &quot;ip&quot;: &quot;192.0.2.2&quot;,
+              &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+              &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+              &quot;address&quot;: &quot;192.0.2.2/24&quot;,
+              &quot;seconds&quot;: 120
+            },
+            &quot;expires&quot;: 141.702649218,
+            &quot;healthy&quot;: true
+          },
+          &quot;current&quot;: {
+            &quot;session&quot;: &quot;8c6e70d1bda5c4d90c8cc567e561d67cdafde1bfb0a73af6&quot;,
+            &quot;revision&quot;: 9,
+            &quot;boot&quot;: &quot;3083215d-dfca-4d53-9195-aaae8aff000c&quot;,
+            &quot;current&quot;: {
+              &quot;ip&quot;: &quot;192.0.2.3&quot;,
+              &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+              &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+              &quot;address&quot;: &quot;192.0.2.3/24&quot;,
+              &quot;seconds&quot;: 120
+            },
+            &quot;expires&quot;: 149.364473346,
+            &quot;healthy&quot;: false
+          }
+        }
+      },
+      {
+        &quot;name&quot;: &quot;service_sigkill_restart_and_old_session_fenced&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 4.545259983999998,
+        &quot;details&quot;: {
+          &quot;before&quot;: {
+            &quot;session&quot;: &quot;8c6e70d1bda5c4d90c8cc567e561d67cdafde1bfb0a73af6&quot;,
+            &quot;revision&quot;: 9,
+            &quot;boot&quot;: &quot;3083215d-dfca-4d53-9195-aaae8aff000c&quot;,
+            &quot;current&quot;: {
+              &quot;ip&quot;: &quot;192.0.2.3&quot;,
+              &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+              &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+              &quot;address&quot;: &quot;192.0.2.3/24&quot;,
+              &quot;seconds&quot;: 120
+            },
+            &quot;expires&quot;: 149.364473346,
+            &quot;healthy&quot;: true
+          },
+          &quot;state&quot;: {
+            &quot;session&quot;: &quot;56c207da40fc378e168391984c0887bfe4b50a2271b3b1de&quot;,
+            &quot;revision&quot;: 12,
+            &quot;boot&quot;: &quot;3083215d-dfca-4d53-9195-aaae8aff000c&quot;,
+            &quot;current&quot;: {
+              &quot;ip&quot;: &quot;192.0.2.3&quot;,
+              &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+              &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+              &quot;address&quot;: &quot;192.0.2.3/24&quot;,
+              &quot;seconds&quot;: 120
+            },
+            &quot;expires&quot;: 153.01992964,
+            &quot;healthy&quot;: true
+          },
+          &quot;old_service&quot;: {
+            &quot;MainPID&quot;: &quot;1677&quot;,
+            &quot;CapabilityBoundingSet&quot;: &quot;cap_net_bind_service cap_net_admin cap_net_raw&quot;,
+            &quot;ActiveState&quot;: &quot;active&quot;,
+            &quot;FragmentPath&quot;: &quot;/etc/systemd/system/uplinkstead-dhcp.service&quot;,
+            &quot;DropInPaths&quot;: &quot;&quot;,
+            &quot;InvocationID&quot;: &quot;6bd9d514b27f44d0833860acfe1637f0&quot;
+          },
+          &quot;new_service&quot;: {
+            &quot;MainPID&quot;: &quot;1982&quot;,
+            &quot;CapabilityBoundingSet&quot;: &quot;cap_net_bind_service cap_net_admin cap_net_raw&quot;,
+            &quot;ActiveState&quot;: &quot;active&quot;,
+            &quot;FragmentPath&quot;: &quot;/etc/systemd/system/uplinkstead-dhcp.service&quot;,
+            &quot;DropInPaths&quot;: &quot;&quot;,
+            &quot;InvocationID&quot;: &quot;50e99a581c1148c7a8961dcae947f897&quot;
+          },
+          &quot;event&quot;: {
+            &quot;session&quot;: &quot;8c6e70d1bda5c4d90c8cc567e561d67cdafde1bfb0a73af6&quot;,
+            &quot;boot&quot;: &quot;3083215d-dfca-4d53-9195-aaae8aff000c&quot;,
+            &quot;revision&quot;: 12,
+            &quot;at&quot;: 35.254967285,
+            &quot;reason&quot;: &quot;deconfig&quot;,
+            &quot;lease&quot;: null
+          },
+          &quot;rejection&quot;: {
+            &quot;rejected&quot;: true,
+            &quot;error&quot;: &quot;RetiredSession&quot;
+          },
+          &quot;before_network&quot;: {
+            &quot;data_routes&quot;: [
+              {
+                &quot;dst&quot;: &quot;default&quot;,
+                &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+                &quot;dev&quot;: &quot;wan0&quot;,
+                &quot;metric&quot;: 100,
+                &quot;flags&quot;: []
+              },
+              {
+                &quot;dst&quot;: &quot;192.0.2.0/24&quot;,
+                &quot;dev&quot;: &quot;wan0&quot;,
+                &quot;scope&quot;: &quot;link&quot;,
+                &quot;flags&quot;: []
+              }
+            ],
+            &quot;probe_routes&quot;: [
+              {
+                &quot;dst&quot;: &quot;default&quot;,
+                &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+                &quot;dev&quot;: &quot;wan0&quot;,
+                &quot;metric&quot;: 100,
+                &quot;flags&quot;: []
+              },
+              {
+                &quot;dst&quot;: &quot;192.0.2.0/24&quot;,
+                &quot;dev&quot;: &quot;wan0&quot;,
+                &quot;scope&quot;: &quot;link&quot;,
+                &quot;flags&quot;: []
+              }
+            ],
+            &quot;addresses&quot;: [
+              {
+                &quot;ifindex&quot;: 3,
+                &quot;link_index&quot;: 2,
+                &quot;ifname&quot;: &quot;wan0&quot;,
+                &quot;flags&quot;: [
+                  &quot;BROADCAST&quot;,
+                  &quot;MULTICAST&quot;,
+                  &quot;UP&quot;,
+                  &quot;LOWER_UP&quot;
+                ],
+                &quot;mtu&quot;: 1500,
+                &quot;qdisc&quot;: &quot;noqueue&quot;,
+                &quot;operstate&quot;: &quot;UP&quot;,
+                &quot;group&quot;: &quot;default&quot;,
+                &quot;txqlen&quot;: 1000,
+                &quot;link_netnsid&quot;: 1,
+                &quot;addr_info&quot;: [
+                  {
+                    &quot;family&quot;: &quot;inet&quot;,
+                    &quot;local&quot;: &quot;192.0.2.3&quot;,
+                    &quot;prefixlen&quot;: 24,
+                    &quot;scope&quot;: &quot;global&quot;,
+                    &quot;noprefixroute&quot;: true,
+                    &quot;label&quot;: &quot;wan0&quot;,
+                    &quot;valid_life_time&quot;: 4294967295,
+                    &quot;preferred_life_time&quot;: 4294967295
+                  }
+                ]
+              }
+            ],
+            &quot;rules&quot;: [
+              {
+                &quot;priority&quot;: 0,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;table&quot;: &quot;local&quot;
+              },
+              {
+                &quot;priority&quot;: 10206,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;dst&quot;: &quot;10.77.0.0&quot;,
+                &quot;dstlen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;table&quot;: &quot;main&quot;,
+                &quot;suppress_prefixlen&quot;: 0
+              },
+              {
+                &quot;priority&quot;: 10207,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;dst&quot;: &quot;10.77.0.0&quot;,
+                &quot;dstlen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;action&quot;: &quot;prohibit&quot;
+              },
+              {
+                &quot;priority&quot;: 10210,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;fwmark&quot;: &quot;0x5101&quot;,
+                &quot;iif&quot;: &quot;lo&quot;,
+                &quot;table&quot;: &quot;41101&quot;
+              },
+              {
+                &quot;priority&quot;: 10211,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;fwmark&quot;: &quot;0x5101&quot;,
+                &quot;iif&quot;: &quot;lo&quot;,
+                &quot;action&quot;: &quot;prohibit&quot;
+              },
+              {
+                &quot;priority&quot;: 10212,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;table&quot;: &quot;41103&quot;
+              },
+              {
+                &quot;priority&quot;: 10213,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;action&quot;: &quot;prohibit&quot;
+              },
+              {
+                &quot;priority&quot;: 32766,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;table&quot;: &quot;main&quot;
+              },
+              {
+                &quot;priority&quot;: 32767,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;table&quot;: &quot;default&quot;
+              }
+            ]
+          },
+          &quot;after_network&quot;: {
+            &quot;data_routes&quot;: [
+              {
+                &quot;dst&quot;: &quot;default&quot;,
+                &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+                &quot;dev&quot;: &quot;wan0&quot;,
+                &quot;metric&quot;: 100,
+                &quot;flags&quot;: []
+              },
+              {
+                &quot;dst&quot;: &quot;192.0.2.0/24&quot;,
+                &quot;dev&quot;: &quot;wan0&quot;,
+                &quot;scope&quot;: &quot;link&quot;,
+                &quot;flags&quot;: []
+              }
+            ],
+            &quot;probe_routes&quot;: [
+              {
+                &quot;dst&quot;: &quot;default&quot;,
+                &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+                &quot;dev&quot;: &quot;wan0&quot;,
+                &quot;metric&quot;: 100,
+                &quot;flags&quot;: []
+              },
+              {
+                &quot;dst&quot;: &quot;192.0.2.0/24&quot;,
+                &quot;dev&quot;: &quot;wan0&quot;,
+                &quot;scope&quot;: &quot;link&quot;,
+                &quot;flags&quot;: []
+              }
+            ],
+            &quot;addresses&quot;: [
+              {
+                &quot;ifindex&quot;: 3,
+                &quot;link_index&quot;: 2,
+                &quot;ifname&quot;: &quot;wan0&quot;,
+                &quot;flags&quot;: [
+                  &quot;BROADCAST&quot;,
+                  &quot;MULTICAST&quot;,
+                  &quot;UP&quot;,
+                  &quot;LOWER_UP&quot;
+                ],
+                &quot;mtu&quot;: 1500,
+                &quot;qdisc&quot;: &quot;noqueue&quot;,
+                &quot;operstate&quot;: &quot;UP&quot;,
+                &quot;group&quot;: &quot;default&quot;,
+                &quot;txqlen&quot;: 1000,
+                &quot;link_netnsid&quot;: 1,
+                &quot;addr_info&quot;: [
+                  {
+                    &quot;family&quot;: &quot;inet&quot;,
+                    &quot;local&quot;: &quot;192.0.2.3&quot;,
+                    &quot;prefixlen&quot;: 24,
+                    &quot;scope&quot;: &quot;global&quot;,
+                    &quot;noprefixroute&quot;: true,
+                    &quot;label&quot;: &quot;wan0&quot;,
+                    &quot;valid_life_time&quot;: 4294967295,
+                    &quot;preferred_life_time&quot;: 4294967295
+                  }
+                ]
+              }
+            ],
+            &quot;rules&quot;: [
+              {
+                &quot;priority&quot;: 0,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;table&quot;: &quot;local&quot;
+              },
+              {
+                &quot;priority&quot;: 10206,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;dst&quot;: &quot;10.77.0.0&quot;,
+                &quot;dstlen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;table&quot;: &quot;main&quot;,
+                &quot;suppress_prefixlen&quot;: 0
+              },
+              {
+                &quot;priority&quot;: 10207,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;dst&quot;: &quot;10.77.0.0&quot;,
+                &quot;dstlen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;action&quot;: &quot;prohibit&quot;
+              },
+              {
+                &quot;priority&quot;: 10210,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;fwmark&quot;: &quot;0x5101&quot;,
+                &quot;iif&quot;: &quot;lo&quot;,
+                &quot;table&quot;: &quot;41101&quot;
+              },
+              {
+                &quot;priority&quot;: 10211,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;fwmark&quot;: &quot;0x5101&quot;,
+                &quot;iif&quot;: &quot;lo&quot;,
+                &quot;action&quot;: &quot;prohibit&quot;
+              },
+              {
+                &quot;priority&quot;: 10212,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;table&quot;: &quot;41103&quot;
+              },
+              {
+                &quot;priority&quot;: 10213,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;action&quot;: &quot;prohibit&quot;
+              },
+              {
+                &quot;priority&quot;: 32766,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;table&quot;: &quot;main&quot;
+              },
+              {
+                &quot;priority&quot;: 32767,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;table&quot;: &quot;default&quot;
+              }
+            ]
+          }
+        }
+      },
+      {
+        &quot;name&quot;: &quot;unsupported_current_renew_withdraws_old_lease&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 6.427636030000002,
+        &quot;details&quot;: {
+          &quot;before&quot;: {
+            &quot;session&quot;: &quot;56c207da40fc378e168391984c0887bfe4b50a2271b3b1de&quot;,
+            &quot;revision&quot;: 12,
+            &quot;boot&quot;: &quot;3083215d-dfca-4d53-9195-aaae8aff000c&quot;,
+            &quot;current&quot;: {
+              &quot;ip&quot;: &quot;192.0.2.3&quot;,
+              &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+              &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+              &quot;address&quot;: &quot;192.0.2.3/24&quot;,
+              &quot;seconds&quot;: 120
+            },
+            &quot;expires&quot;: 153.01992964,
+            &quot;healthy&quot;: true
+          },
+          &quot;before_network&quot;: {
+            &quot;data_routes&quot;: [
+              {
+                &quot;dst&quot;: &quot;default&quot;,
+                &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+                &quot;dev&quot;: &quot;wan0&quot;,
+                &quot;metric&quot;: 100,
+                &quot;flags&quot;: []
+              },
+              {
+                &quot;dst&quot;: &quot;192.0.2.0/24&quot;,
+                &quot;dev&quot;: &quot;wan0&quot;,
+                &quot;scope&quot;: &quot;link&quot;,
+                &quot;flags&quot;: []
+              }
+            ],
+            &quot;probe_routes&quot;: [
+              {
+                &quot;dst&quot;: &quot;default&quot;,
+                &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+                &quot;dev&quot;: &quot;wan0&quot;,
+                &quot;metric&quot;: 100,
+                &quot;flags&quot;: []
+              },
+              {
+                &quot;dst&quot;: &quot;192.0.2.0/24&quot;,
+                &quot;dev&quot;: &quot;wan0&quot;,
+                &quot;scope&quot;: &quot;link&quot;,
+                &quot;flags&quot;: []
+              }
+            ],
+            &quot;addresses&quot;: [
+              {
+                &quot;ifindex&quot;: 3,
+                &quot;link_index&quot;: 2,
+                &quot;ifname&quot;: &quot;wan0&quot;,
+                &quot;flags&quot;: [
+                  &quot;BROADCAST&quot;,
+                  &quot;MULTICAST&quot;,
+                  &quot;UP&quot;,
+                  &quot;LOWER_UP&quot;
+                ],
+                &quot;mtu&quot;: 1500,
+                &quot;qdisc&quot;: &quot;noqueue&quot;,
+                &quot;operstate&quot;: &quot;UP&quot;,
+                &quot;group&quot;: &quot;default&quot;,
+                &quot;txqlen&quot;: 1000,
+                &quot;link_netnsid&quot;: 1,
+                &quot;addr_info&quot;: [
+                  {
+                    &quot;family&quot;: &quot;inet&quot;,
+                    &quot;local&quot;: &quot;192.0.2.3&quot;,
+                    &quot;prefixlen&quot;: 24,
+                    &quot;scope&quot;: &quot;global&quot;,
+                    &quot;noprefixroute&quot;: true,
+                    &quot;label&quot;: &quot;wan0&quot;,
+                    &quot;valid_life_time&quot;: 4294967295,
+                    &quot;preferred_life_time&quot;: 4294967295
+                  }
+                ]
+              }
+            ],
+            &quot;rules&quot;: [
+              {
+                &quot;priority&quot;: 0,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;table&quot;: &quot;local&quot;
+              },
+              {
+                &quot;priority&quot;: 10206,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;dst&quot;: &quot;10.77.0.0&quot;,
+                &quot;dstlen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;table&quot;: &quot;main&quot;,
+                &quot;suppress_prefixlen&quot;: 0
+              },
+              {
+                &quot;priority&quot;: 10207,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;dst&quot;: &quot;10.77.0.0&quot;,
+                &quot;dstlen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;action&quot;: &quot;prohibit&quot;
+              },
+              {
+                &quot;priority&quot;: 10210,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;fwmark&quot;: &quot;0x5101&quot;,
+                &quot;iif&quot;: &quot;lo&quot;,
+                &quot;table&quot;: &quot;41101&quot;
+              },
+              {
+                &quot;priority&quot;: 10211,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;fwmark&quot;: &quot;0x5101&quot;,
+                &quot;iif&quot;: &quot;lo&quot;,
+                &quot;action&quot;: &quot;prohibit&quot;
+              },
+              {
+                &quot;priority&quot;: 10212,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;table&quot;: &quot;41103&quot;
+              },
+              {
+                &quot;priority&quot;: 10213,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;action&quot;: &quot;prohibit&quot;
+              },
+              {
+                &quot;priority&quot;: 32766,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;table&quot;: &quot;main&quot;
+              },
+              {
+                &quot;priority&quot;: 32767,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;table&quot;: &quot;default&quot;
+              }
+            ]
+          },
+          &quot;reply&quot;: {
+            &quot;session&quot;: &quot;56c207da40fc378e168391984c0887bfe4b50a2271b3b1de&quot;,
+            &quot;revision&quot;: 13,
+            &quot;boot&quot;: &quot;3083215d-dfca-4d53-9195-aaae8aff000c&quot;,
+            &quot;current&quot;: null,
+            &quot;expires&quot;: 0,
+            &quot;healthy&quot;: false,
+            &quot;lease_rejected&quot;: true
+          },
+          &quot;after_network&quot;: {
+            &quot;data_routes&quot;: [],
+            &quot;probe_routes&quot;: [],
+            &quot;addresses&quot;: [],
+            &quot;rules&quot;: [
+              {
+                &quot;priority&quot;: 0,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;table&quot;: &quot;local&quot;
+              },
+              {
+                &quot;priority&quot;: 10206,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;dst&quot;: &quot;10.77.0.0&quot;,
+                &quot;dstlen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;table&quot;: &quot;main&quot;,
+                &quot;suppress_prefixlen&quot;: 0
+              },
+              {
+                &quot;priority&quot;: 10207,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;dst&quot;: &quot;10.77.0.0&quot;,
+                &quot;dstlen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;action&quot;: &quot;prohibit&quot;
+              },
+              {
+                &quot;priority&quot;: 10210,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;fwmark&quot;: &quot;0x5101&quot;,
+                &quot;iif&quot;: &quot;lo&quot;,
+                &quot;table&quot;: &quot;41101&quot;
+              },
+              {
+                &quot;priority&quot;: 10211,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;fwmark&quot;: &quot;0x5101&quot;,
+                &quot;iif&quot;: &quot;lo&quot;,
+                &quot;action&quot;: &quot;prohibit&quot;
+              },
+              {
+                &quot;priority&quot;: 10212,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;table&quot;: &quot;41103&quot;
+              },
+              {
+                &quot;priority&quot;: 10213,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;action&quot;: &quot;prohibit&quot;
+              },
+              {
+                &quot;priority&quot;: 32766,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;table&quot;: &quot;main&quot;
+              },
+              {
+                &quot;priority&quot;: 32767,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;table&quot;: &quot;default&quot;
+              }
+            ]
+          },
+          &quot;service_before&quot;: {
+            &quot;MainPID&quot;: &quot;1982&quot;,
+            &quot;CapabilityBoundingSet&quot;: &quot;cap_net_bind_service cap_net_admin cap_net_raw&quot;,
+            &quot;ActiveState&quot;: &quot;active&quot;,
+            &quot;FragmentPath&quot;: &quot;/etc/systemd/system/uplinkstead-dhcp.service&quot;,
+            &quot;DropInPaths&quot;: &quot;&quot;,
+            &quot;InvocationID&quot;: &quot;50e99a581c1148c7a8961dcae947f897&quot;
+          },
+          &quot;service_after&quot;: {
+            &quot;MainPID&quot;: &quot;1982&quot;,
+            &quot;CapabilityBoundingSet&quot;: &quot;cap_net_bind_service cap_net_admin cap_net_raw&quot;,
+            &quot;ActiveState&quot;: &quot;active&quot;,
+            &quot;FragmentPath&quot;: &quot;/etc/systemd/system/uplinkstead-dhcp.service&quot;,
+            &quot;DropInPaths&quot;: &quot;&quot;,
+            &quot;InvocationID&quot;: &quot;50e99a581c1148c7a8961dcae947f897&quot;
+          },
+          &quot;late&quot;: {
+            &quot;restore_event&quot;: {
+              &quot;session&quot;: &quot;56c207da40fc378e168391984c0887bfe4b50a2271b3b1de&quot;,
+              &quot;boot&quot;: &quot;3083215d-dfca-4d53-9195-aaae8aff000c&quot;,
+              &quot;revision&quot;: 13,
+              &quot;at&quot;: 35.411310866,
+              &quot;reason&quot;: &quot;bound&quot;,
+              &quot;lease&quot;: {
+                &quot;ip&quot;: &quot;192.0.2.3&quot;,
+                &quot;subnet&quot;: &quot;24&quot;,
+                &quot;router&quot;: &quot;192.0.2.5&quot;,
+                &quot;lease&quot;: &quot;117&quot;
+              }
+            },
+            &quot;restored&quot;: {
+              &quot;session&quot;: &quot;56c207da40fc378e168391984c0887bfe4b50a2271b3b1de&quot;,
+              &quot;revision&quot;: 14,
+              &quot;boot&quot;: &quot;3083215d-dfca-4d53-9195-aaae8aff000c&quot;,
+              &quot;current&quot;: {
+                &quot;ip&quot;: &quot;192.0.2.3&quot;,
+                &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+                &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+                &quot;address&quot;: &quot;192.0.2.3/24&quot;,
+                &quot;seconds&quot;: 117
+              },
+              &quot;expires&quot;: 152.411310866,
+              &quot;healthy&quot;: false
+            },
+            &quot;before&quot;: {
+              &quot;session&quot;: &quot;56c207da40fc378e168391984c0887bfe4b50a2271b3b1de&quot;,
+              &quot;revision&quot;: 14,
+              &quot;boot&quot;: &quot;3083215d-dfca-4d53-9195-aaae8aff000c&quot;,
+              &quot;current&quot;: {
+                &quot;ip&quot;: &quot;192.0.2.3&quot;,
+                &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+                &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+                &quot;address&quot;: &quot;192.0.2.3/24&quot;,
+                &quot;seconds&quot;: 117
+              },
+              &quot;expires&quot;: 152.411310866,
+              &quot;healthy&quot;: true
+            },
+            &quot;before_network&quot;: {
+              &quot;data_routes&quot;: [
+                {
+                  &quot;dst&quot;: &quot;default&quot;,
+                  &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+                  &quot;dev&quot;: &quot;wan0&quot;,
+                  &quot;metric&quot;: 100,
+                  &quot;flags&quot;: []
+                },
+                {
+                  &quot;dst&quot;: &quot;192.0.2.0/24&quot;,
+                  &quot;dev&quot;: &quot;wan0&quot;,
+                  &quot;scope&quot;: &quot;link&quot;,
+                  &quot;flags&quot;: []
+                }
+              ],
+              &quot;probe_routes&quot;: [
+                {
+                  &quot;dst&quot;: &quot;default&quot;,
+                  &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+                  &quot;dev&quot;: &quot;wan0&quot;,
+                  &quot;metric&quot;: 100,
+                  &quot;flags&quot;: []
+                },
+                {
+                  &quot;dst&quot;: &quot;192.0.2.0/24&quot;,
+                  &quot;dev&quot;: &quot;wan0&quot;,
+                  &quot;scope&quot;: &quot;link&quot;,
+                  &quot;flags&quot;: []
+                }
+              ],
+              &quot;addresses&quot;: [
+                {
+                  &quot;ifindex&quot;: 3,
+                  &quot;link_index&quot;: 2,
+                  &quot;ifname&quot;: &quot;wan0&quot;,
+                  &quot;flags&quot;: [
+                    &quot;BROADCAST&quot;,
+                    &quot;MULTICAST&quot;,
+                    &quot;UP&quot;,
+                    &quot;LOWER_UP&quot;
+                  ],
+                  &quot;mtu&quot;: 1500,
+                  &quot;qdisc&quot;: &quot;noqueue&quot;,
+                  &quot;operstate&quot;: &quot;UP&quot;,
+                  &quot;group&quot;: &quot;default&quot;,
+                  &quot;txqlen&quot;: 1000,
+                  &quot;link_netnsid&quot;: 1,
+                  &quot;addr_info&quot;: [
+                    {
+                      &quot;family&quot;: &quot;inet&quot;,
+                      &quot;local&quot;: &quot;192.0.2.3&quot;,
+                      &quot;prefixlen&quot;: 24,
+                      &quot;scope&quot;: &quot;global&quot;,
+                      &quot;noprefixroute&quot;: true,
+                      &quot;label&quot;: &quot;wan0&quot;,
+                      &quot;valid_life_time&quot;: 4294967295,
+                      &quot;preferred_life_time&quot;: 4294967295
+                    }
+                  ]
+                }
+              ],
+              &quot;rules&quot;: [
+                {
+                  &quot;priority&quot;: 0,
+                  &quot;src&quot;: &quot;all&quot;,
+                  &quot;table&quot;: &quot;local&quot;
+                },
+                {
+                  &quot;priority&quot;: 10206,
+                  &quot;src&quot;: &quot;10.77.0.0&quot;,
+                  &quot;srclen&quot;: 24,
+                  &quot;dst&quot;: &quot;10.77.0.0&quot;,
+                  &quot;dstlen&quot;: 24,
+                  &quot;iif&quot;: &quot;lan0&quot;,
+                  &quot;table&quot;: &quot;main&quot;,
+                  &quot;suppress_prefixlen&quot;: 0
+                },
+                {
+                  &quot;priority&quot;: 10207,
+                  &quot;src&quot;: &quot;10.77.0.0&quot;,
+                  &quot;srclen&quot;: 24,
+                  &quot;dst&quot;: &quot;10.77.0.0&quot;,
+                  &quot;dstlen&quot;: 24,
+                  &quot;iif&quot;: &quot;lan0&quot;,
+                  &quot;action&quot;: &quot;prohibit&quot;
+                },
+                {
+                  &quot;priority&quot;: 10210,
+                  &quot;src&quot;: &quot;all&quot;,
+                  &quot;fwmark&quot;: &quot;0x5101&quot;,
+                  &quot;iif&quot;: &quot;lo&quot;,
+                  &quot;table&quot;: &quot;41101&quot;
+                },
+                {
+                  &quot;priority&quot;: 10211,
+                  &quot;src&quot;: &quot;all&quot;,
+                  &quot;fwmark&quot;: &quot;0x5101&quot;,
+                  &quot;iif&quot;: &quot;lo&quot;,
+                  &quot;action&quot;: &quot;prohibit&quot;
+                },
+                {
+                  &quot;priority&quot;: 10212,
+                  &quot;src&quot;: &quot;10.77.0.0&quot;,
+                  &quot;srclen&quot;: 24,
+                  &quot;iif&quot;: &quot;lan0&quot;,
+                  &quot;table&quot;: &quot;41103&quot;
+                },
+                {
+                  &quot;priority&quot;: 10213,
+                  &quot;src&quot;: &quot;10.77.0.0&quot;,
+                  &quot;srclen&quot;: 24,
+                  &quot;iif&quot;: &quot;lan0&quot;,
+                  &quot;action&quot;: &quot;prohibit&quot;
+                },
+                {
+                  &quot;priority&quot;: 32766,
+                  &quot;src&quot;: &quot;all&quot;,
+                  &quot;table&quot;: &quot;main&quot;
+                },
+                {
+                  &quot;priority&quot;: 32767,
+                  &quot;src&quot;: &quot;all&quot;,
+                  &quot;table&quot;: &quot;default&quot;
+                }
+              ]
+            },
+            &quot;event&quot;: {
+              &quot;session&quot;: &quot;56c207da40fc378e168391984c0887bfe4b50a2271b3b1de&quot;,
+              &quot;boot&quot;: &quot;3083215d-dfca-4d53-9195-aaae8aff000c&quot;,
+              &quot;revision&quot;: 14,
+              &quot;at&quot;: 38.177995684,
+              &quot;reason&quot;: &quot;renew&quot;,
+              &quot;lease&quot;: {
+                &quot;ip&quot;: &quot;192.0.2.4&quot;,
+                &quot;subnet&quot;: &quot;255.255.255.0&quot;,
+                &quot;router&quot;: &quot;192.0.2.5&quot;,
+                &quot;lease&quot;: &quot;60&quot;
+              }
+            },
+            &quot;reply&quot;: {
+              &quot;session&quot;: &quot;56c207da40fc378e168391984c0887bfe4b50a2271b3b1de&quot;,
+              &quot;revision&quot;: 15,
+              &quot;boot&quot;: &quot;3083215d-dfca-4d53-9195-aaae8aff000c&quot;,
+              &quot;current&quot;: null,
+              &quot;expires&quot;: 0,
+              &quot;healthy&quot;: false,
+              &quot;event_expired&quot;: true
+            },
+            &quot;after_network&quot;: {
+              &quot;data_routes&quot;: [],
+              &quot;probe_routes&quot;: [],
+              &quot;addresses&quot;: [],
+              &quot;rules&quot;: [
+                {
+                  &quot;priority&quot;: 0,
+                  &quot;src&quot;: &quot;all&quot;,
+                  &quot;table&quot;: &quot;local&quot;
+                },
+                {
+                  &quot;priority&quot;: 10206,
+                  &quot;src&quot;: &quot;10.77.0.0&quot;,
+                  &quot;srclen&quot;: 24,
+                  &quot;dst&quot;: &quot;10.77.0.0&quot;,
+                  &quot;dstlen&quot;: 24,
+                  &quot;iif&quot;: &quot;lan0&quot;,
+                  &quot;table&quot;: &quot;main&quot;,
+                  &quot;suppress_prefixlen&quot;: 0
+                },
+                {
+                  &quot;priority&quot;: 10207,
+                  &quot;src&quot;: &quot;10.77.0.0&quot;,
+                  &quot;srclen&quot;: 24,
+                  &quot;dst&quot;: &quot;10.77.0.0&quot;,
+                  &quot;dstlen&quot;: 24,
+                  &quot;iif&quot;: &quot;lan0&quot;,
+                  &quot;action&quot;: &quot;prohibit&quot;
+                },
+                {
+                  &quot;priority&quot;: 10210,
+                  &quot;src&quot;: &quot;all&quot;,
+                  &quot;fwmark&quot;: &quot;0x5101&quot;,
+                  &quot;iif&quot;: &quot;lo&quot;,
+                  &quot;table&quot;: &quot;41101&quot;
+                },
+                {
+                  &quot;priority&quot;: 10211,
+                  &quot;src&quot;: &quot;all&quot;,
+                  &quot;fwmark&quot;: &quot;0x5101&quot;,
+                  &quot;iif&quot;: &quot;lo&quot;,
+                  &quot;action&quot;: &quot;prohibit&quot;
+                },
+                {
+                  &quot;priority&quot;: 10212,
+                  &quot;src&quot;: &quot;10.77.0.0&quot;,
+                  &quot;srclen&quot;: 24,
+                  &quot;iif&quot;: &quot;lan0&quot;,
+                  &quot;table&quot;: &quot;41103&quot;
+                },
+                {
+                  &quot;priority&quot;: 10213,
+                  &quot;src&quot;: &quot;10.77.0.0&quot;,
+                  &quot;srclen&quot;: 24,
+                  &quot;iif&quot;: &quot;lan0&quot;,
+                  &quot;action&quot;: &quot;prohibit&quot;
+                },
+                {
+                  &quot;priority&quot;: 32766,
+                  &quot;src&quot;: &quot;all&quot;,
+                  &quot;table&quot;: &quot;main&quot;
+                },
+                {
+                  &quot;priority&quot;: 32767,
+                  &quot;src&quot;: &quot;all&quot;,
+                  &quot;table&quot;: &quot;default&quot;
+                }
+              ]
+            },
+            &quot;observed&quot;: 41.740652046
+          }
+        }
+      },
+      {
+        &quot;name&quot;: &quot;blackhole_no_false_health_or_backup_borrow&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 1.471142441000005,
+        &quot;details&quot;: {
+          &quot;state&quot;: {
+            &quot;session&quot;: &quot;3e436ca5055ffb84cdadc4045f618e4efabdf2da0251fb41&quot;,
+            &quot;revision&quot;: 19,
+            &quot;boot&quot;: &quot;3083215d-dfca-4d53-9195-aaae8aff000c&quot;,
+            &quot;current&quot;: {
+              &quot;ip&quot;: &quot;192.0.2.3&quot;,
+              &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+              &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+              &quot;address&quot;: &quot;192.0.2.3/24&quot;,
+              &quot;seconds&quot;: 120
+            },
+            &quot;expires&quot;: 161.911045127,
+            &quot;healthy&quot;: false
+          },
+          &quot;service&quot;: {
+            &quot;MainPID&quot;: &quot;2209&quot;,
+            &quot;CapabilityBoundingSet&quot;: &quot;cap_net_bind_service cap_net_admin cap_net_raw&quot;,
+            &quot;ActiveState&quot;: &quot;active&quot;,
+            &quot;FragmentPath&quot;: &quot;/etc/systemd/system/uplinkstead-dhcp.service&quot;,
+            &quot;DropInPaths&quot;: &quot;&quot;,
+            &quot;InvocationID&quot;: &quot;69aed2911d4a43c2ad6fbc7ac67b0f39&quot;
+          },
+          &quot;request&quot;: {
+            &quot;ok&quot;: false,
+            &quot;response&quot;: null
+          },
+          &quot;backup_warmup_packets&quot;: 4,
+          &quot;backup_packets_before&quot;: 0,
+          &quot;backup_packets_after&quot;: 0
+        }
+      },
+      {
+        &quot;name&quot;: &quot;lease_deadline_with_stalled_client&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 114.39860482899999,
+        &quot;details&quot;: {
+          &quot;before&quot;: {
+            &quot;session&quot;: &quot;3e436ca5055ffb84cdadc4045f618e4efabdf2da0251fb41&quot;,
+            &quot;revision&quot;: 19,
+            &quot;boot&quot;: &quot;3083215d-dfca-4d53-9195-aaae8aff000c&quot;,
+            &quot;current&quot;: {
+              &quot;ip&quot;: &quot;192.0.2.3&quot;,
+              &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+              &quot;prefix&quot;: &quot;192.0.2.0/24&quot;,
+              &quot;address&quot;: &quot;192.0.2.3/24&quot;,
+              &quot;seconds&quot;: 120
+            },
+            &quot;expires&quot;: 161.911045127,
+            &quot;healthy&quot;: true
+          },
+          &quot;before_network&quot;: {
+            &quot;data_routes&quot;: [
+              {
+                &quot;dst&quot;: &quot;default&quot;,
+                &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+                &quot;dev&quot;: &quot;wan0&quot;,
+                &quot;metric&quot;: 100,
+                &quot;flags&quot;: []
+              },
+              {
+                &quot;dst&quot;: &quot;192.0.2.0/24&quot;,
+                &quot;dev&quot;: &quot;wan0&quot;,
+                &quot;scope&quot;: &quot;link&quot;,
+                &quot;flags&quot;: []
+              }
+            ],
+            &quot;probe_routes&quot;: [
+              {
+                &quot;dst&quot;: &quot;default&quot;,
+                &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+                &quot;dev&quot;: &quot;wan0&quot;,
+                &quot;metric&quot;: 100,
+                &quot;flags&quot;: []
+              },
+              {
+                &quot;dst&quot;: &quot;192.0.2.0/24&quot;,
+                &quot;dev&quot;: &quot;wan0&quot;,
+                &quot;scope&quot;: &quot;link&quot;,
+                &quot;flags&quot;: []
+              }
+            ],
+            &quot;addresses&quot;: [
+              {
+                &quot;ifindex&quot;: 3,
+                &quot;link_index&quot;: 2,
+                &quot;ifname&quot;: &quot;wan0&quot;,
+                &quot;flags&quot;: [
+                  &quot;BROADCAST&quot;,
+                  &quot;MULTICAST&quot;,
+                  &quot;UP&quot;,
+                  &quot;LOWER_UP&quot;
+                ],
+                &quot;mtu&quot;: 1500,
+                &quot;qdisc&quot;: &quot;noqueue&quot;,
+                &quot;operstate&quot;: &quot;UP&quot;,
+                &quot;group&quot;: &quot;default&quot;,
+                &quot;txqlen&quot;: 1000,
+                &quot;link_netnsid&quot;: 1,
+                &quot;addr_info&quot;: [
+                  {
+                    &quot;family&quot;: &quot;inet&quot;,
+                    &quot;local&quot;: &quot;192.0.2.3&quot;,
+                    &quot;prefixlen&quot;: 24,
+                    &quot;scope&quot;: &quot;global&quot;,
+                    &quot;noprefixroute&quot;: true,
+                    &quot;label&quot;: &quot;wan0&quot;,
+                    &quot;valid_life_time&quot;: 4294967295,
+                    &quot;preferred_life_time&quot;: 4294967295
+                  }
+                ]
+              }
+            ],
+            &quot;rules&quot;: [
+              {
+                &quot;priority&quot;: 0,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;table&quot;: &quot;local&quot;
+              },
+              {
+                &quot;priority&quot;: 10206,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;dst&quot;: &quot;10.77.0.0&quot;,
+                &quot;dstlen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;table&quot;: &quot;main&quot;,
+                &quot;suppress_prefixlen&quot;: 0
+              },
+              {
+                &quot;priority&quot;: 10207,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;dst&quot;: &quot;10.77.0.0&quot;,
+                &quot;dstlen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;action&quot;: &quot;prohibit&quot;
+              },
+              {
+                &quot;priority&quot;: 10210,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;fwmark&quot;: &quot;0x5101&quot;,
+                &quot;iif&quot;: &quot;lo&quot;,
+                &quot;table&quot;: &quot;41101&quot;
+              },
+              {
+                &quot;priority&quot;: 10211,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;fwmark&quot;: &quot;0x5101&quot;,
+                &quot;iif&quot;: &quot;lo&quot;,
+                &quot;action&quot;: &quot;prohibit&quot;
+              },
+              {
+                &quot;priority&quot;: 10212,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;table&quot;: &quot;41103&quot;
+              },
+              {
+                &quot;priority&quot;: 10213,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;action&quot;: &quot;prohibit&quot;
+              },
+              {
+                &quot;priority&quot;: 32766,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;table&quot;: &quot;main&quot;
+              },
+              {
+                &quot;priority&quot;: 32767,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;table&quot;: &quot;default&quot;
+              }
+            ]
+          },
+          &quot;before_request&quot;: {
+            &quot;ok&quot;: true,
+            &quot;response&quot;: {
+              &quot;ok&quot;: true,
+              &quot;nonce&quot;: &quot;e5935d58049dbed6cf2eb261&quot;,
+              &quot;peer&quot;: &quot;10.99.1.1&quot;,
+              &quot;server&quot;: &quot;203.0.113.2&quot;
+            }
+          },
+          &quot;current&quot;: {
+            &quot;session&quot;: &quot;3e436ca5055ffb84cdadc4045f618e4efabdf2da0251fb41&quot;,
+            &quot;revision&quot;: 20,
+            &quot;boot&quot;: &quot;3083215d-dfca-4d53-9195-aaae8aff000c&quot;,
+            &quot;current&quot;: null,
+            &quot;expires&quot;: 0,
+            &quot;healthy&quot;: false
+          },
+          &quot;after_network&quot;: {
+            &quot;data_routes&quot;: [],
+            &quot;probe_routes&quot;: [],
+            &quot;addresses&quot;: [],
+            &quot;rules&quot;: [
+              {
+                &quot;priority&quot;: 0,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;table&quot;: &quot;local&quot;
+              },
+              {
+                &quot;priority&quot;: 10206,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;dst&quot;: &quot;10.77.0.0&quot;,
+                &quot;dstlen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;table&quot;: &quot;main&quot;,
+                &quot;suppress_prefixlen&quot;: 0
+              },
+              {
+                &quot;priority&quot;: 10207,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;dst&quot;: &quot;10.77.0.0&quot;,
+                &quot;dstlen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;action&quot;: &quot;prohibit&quot;
+              },
+              {
+                &quot;priority&quot;: 10210,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;fwmark&quot;: &quot;0x5101&quot;,
+                &quot;iif&quot;: &quot;lo&quot;,
+                &quot;table&quot;: &quot;41101&quot;
+              },
+              {
+                &quot;priority&quot;: 10211,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;fwmark&quot;: &quot;0x5101&quot;,
+                &quot;iif&quot;: &quot;lo&quot;,
+                &quot;action&quot;: &quot;prohibit&quot;
+              },
+              {
+                &quot;priority&quot;: 10212,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;table&quot;: &quot;41103&quot;
+              },
+              {
+                &quot;priority&quot;: 10213,
+                &quot;src&quot;: &quot;10.77.0.0&quot;,
+                &quot;srclen&quot;: 24,
+                &quot;iif&quot;: &quot;lan0&quot;,
+                &quot;action&quot;: &quot;prohibit&quot;
+              },
+              {
+                &quot;priority&quot;: 32766,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;table&quot;: &quot;main&quot;
+              },
+              {
+                &quot;priority&quot;: 32767,
+                &quot;src&quot;: &quot;all&quot;,
+                &quot;table&quot;: &quot;default&quot;
+              }
+            ]
+          },
+          &quot;request&quot;: {
+            &quot;ok&quot;: false,
+            &quot;response&quot;: null
+          },
+          &quot;deadline&quot;: 161.911045127,
+          &quot;observed&quot;: 162.089396384,
+          &quot;client_stalled&quot;: true,
+          &quot;backup_packets&quot;: 0
+        }
+      },
+      {
+        &quot;name&quot;: &quot;formal_backend_partial_write_recovery&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 2.1265750659999867,
+        &quot;details&quot;: {
+          &quot;fault_after_actual_write&quot;: true,
+          &quot;intent_retained&quot;: true,
+          &quot;recovered_unverified&quot;: true,
+          &quot;owned_addresses_removed&quot;: true,
+          &quot;owned_tables_empty&quot;: true
+        }
+      }
+    ],
+    &quot;rss_snapshot&quot;: &quot;VmRSS:\t   23916 kB&quot;,
+    &quot;rss_service&quot;: {
+      &quot;MainPID&quot;: &quot;2209&quot;,
+      &quot;CapabilityBoundingSet&quot;: &quot;cap_net_bind_service cap_net_admin cap_net_raw&quot;,
+      &quot;ActiveState&quot;: &quot;active&quot;,
+      &quot;FragmentPath&quot;: &quot;/etc/systemd/system/uplinkstead-dhcp.service&quot;,
+      &quot;DropInPaths&quot;: &quot;&quot;,
+      &quot;InvocationID&quot;: &quot;69aed2911d4a43c2ad6fbc7ac67b0f39&quot;
+    },
+    &quot;db_bytes&quot;: 8192,
+    &quot;service_source_sha256&quot;: &quot;ee64da54c3527a4578ceef274ad2d31ae3de91b5d8a980a253424700ff57e857&quot;,
+    &quot;installed_unit_sha256&quot;: &quot;70c6561e135dbd486fa7a1a3c9b108c995fe52a6068b227aa41209165e90d814&quot;,
+    &quot;environment&quot;: {
+      &quot;kernel&quot;: &quot;6.8.0-117-generic&quot;,
+      &quot;python&quot;: &quot;3.12.3&quot;,
+      &quot;systemd&quot;: &quot;systemd 255 (255.4-1ubuntu8.15)&quot;,
+      &quot;busybox&quot;: &quot;BusyBox v1.36.1 (Ubuntu 1:1.36.1-6ubuntu3.1) multi-call binary.&quot;,
+      &quot;dnsmasq&quot;: &quot;Dnsmasq version 2.90  Copyright (c) 2000-2024 Simon Kelley&quot;
+    },
+    &quot;orderly_vm_restart_tested&quot;: false,
+    &quot;power_loss_tested&quot;: false
+  },
+  &quot;cleanup&quot;: {
+    &quot;passed&quot;: true,
+    &quot;root_network_unchanged&quot;: true,
+    &quot;namespaces_removed&quot;: true,
+    &quot;unit_removed&quot;: true
+  },
+  &quot;snapshot_removed&quot;: true,
+  &quot;vm_final&quot;: &quot;Stopped&quot;,
+  &quot;controls&quot;: 23
+}</pre></details>

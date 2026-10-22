@@ -1,4 +1,4 @@
-# Single DHCP uplink validation
+# Historical single DHCP uplink validation
 
 Run `29d384d681407367`, source fingerprint
 `b4bc56ad24c52e3f9d02ec3f0e223f40df54c3d3c5d09930d5fbaf9195b0ad2f`.
@@ -46,6 +46,7 @@ unscheduled or stopped service cannot enforce a hard kernel lease deadline.
 Earlier attempts remain failed, including source changes during exploratory runs.
 Private credentials, raw logs, VM images and compiled archives are not published.
 
-```sh
-.venv/bin/python -m tools.dhcp_report reviews/dhcp
-```
+This baseline belongs to commit `da9f29034864d96f5e53beff4750df37c23ddc69`;
+use that original source/verifier to replay it. The [corrected review](../dhcp-audit/README.md)
+is current. In particular, the expiry case here followed an already-withdrawn
+blackhole path and does not prove active forwarding is removed at expiry.

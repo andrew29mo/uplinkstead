@@ -1,28 +1,35 @@
 # Current validation
 
-The optional DHCP lifecycle and existing static dual-uplink controller were checked
-against source fingerprint
-`b4bc56ad24c52e3f9d02ec3f0e223f40df54c3d3c5d09930d5fbaf9195b0ad2f`.
+The reviewed DHCP lifecycle and existing static dual-uplink controller were checked
+against the exact same source manifest, fingerprint
+`18b9518ae1cbaaa8598c996bf73d3c4e8576508c02a6ede7745c1237cc652caf`.
 
-- [DHCP lifecycle](../reviews/dhcp/README.md): run `29d384d681407367`, 96 portable
-  tests per platform, eight isolated Linux scenarios and 12 report corruption
-  controls. Installed-service restart, fresh leases/health, stale events, real
-  expiry with stalled callbacks and partial backend write recovery are covered.
-- [Static regression](../reviews/dhcp-static-regression/README.md): run
-  `1d722bbdd25827be`, same 96 portable tests, 27 existing Linux scenarios and 36
+- [DHCP review](../reviews/dhcp-audit/README.md): run `52181356e66119f7`, 104 portable
+  tests per platform, nine isolated Linux scenarios and 23 report corruption
+  controls. Installed-service restart, valid/unsupported/latest-delayed callbacks,
+  expired status, stale sessions, active-route expiry with stalled callbacks and
+  partial backend recovery are covered at their documented layers. Some fault
+  inputs use synthetic IPC/time or direct-core injection; these are labeled.
+- [Static regression](../reviews/dhcp-audit-static/README.md): run
+  `887f7604f7979e60`, same 104 portable tests, 27 existing Linux scenarios and 36
   report corruption controls. Installed services and static-mode orderly VM reboot
-  recovery passed. The single low-load trial records 4/20 vs 13/20 successes.
-- Both runs verify source correspondence and owned cleanup, leave the dedicated VM
-  stopped and keep VM RSS/time separate from macOS portable validation. The DHCP
-  writer VmRSS snapshot is 23,816 KiB (client/kernel/VM excluded); its SQLite main
-  file is 8,192 bytes (temporary journal/filesystem excluded).
+  recovery passed. The single low-load trial records 4/20 vs 14/20 successes;
+  earlier 13/20 observations remain historical and do not establish a trend.
+- Both runs verify correspondence and owned cleanup, leave the dedicated VM
+  stopped and separate Linux VM measurements from macOS portable validation.
+  The DHCP writer VmRSS snapshot is 23,916 KiB (client/kernel/VM excluded); SQLite
+  main file is 8,192 bytes (temporary journal/filesystem excluded).
+- [Review findings](DHCP_REVIEW.md) distinguish runtime defects from verifier gaps.
+  Earlier DHCP receipts did not establish active-route expiry and are superseded
+  for that claim; their original JSON/HTML are preserved.
 
-DHCP is a separate **single-uplink** mode. Its VM reboot and sudden power-loss
-recovery were not tested; only its process restart and portable changed-boot logic
-are covered. Static-mode VM reboot evidence cannot establish DHCP-mode reboot
-behavior. Neither run establishes physical-ISP reliability, transparent TCP
-migration, sustained throughput, hard expiry scheduling or a production SLA.
-Read [DHCP deployment/limits](DHCP.md) before reproducing.
+DHCP remains a separate **single-uplink** mode. Its VM reboot and sudden power-loss
+recovery were not tested; only process restart and portable changed-boot logic are
+covered. Latest-delayed callback tests inject past timestamps; they do not measure
+real scheduler stalls. Static-mode VM reboot cannot establish DHCP reboot behavior.
+Neither run establishes physical-ISP reliability, transparent TCP migration,
+sustained throughput, hard expiry scheduling or a production SLA. Read
+[DHCP deployment/limits](DHCP.md) before reproducing.
 
 The earlier receipt and measurements below remain historical, unchanged in their
 original files. Their 81-test counts and older source fingerprint are not the

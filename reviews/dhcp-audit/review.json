@@ -1,0 +1,48 @@
+{
+  "baseline_commit": "da9f29034864d96f5e53beff4750df37c23ddc69",
+  "run_id": "52181356e66119f7",
+  "source_sha256": "18b9518ae1cbaaa8598c996bf73d3c4e8576508c02a6ede7745c1237cc652caf",
+  "portable_tests_per_platform": 104,
+  "vm_scenarios": 9,
+  "report_controls": 23,
+  "failed_attempt": {
+    "run_id": "bf8034427469355f",
+    "passed": false,
+    "source_sha256": "e51ca03a802f75daa8ee9271d0d2dc667e5b094cfe2328e66c6789bc744f785c",
+    "error": "RuntimeError: cases failed or timed out",
+    "cleanup": {
+      "passed": true,
+      "root_network_unchanged": true,
+      "namespaces_removed": true,
+      "unit_removed": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped"
+  },
+  "untested": [
+    "DHCP VM reboot",
+    "sudden power loss",
+    "physical WAN/ISP",
+    "natural long-running T1/T2 scheduling",
+    "integrated dynamic dual-uplink failover"
+  ],
+  "superseded_intermediate_runs": [
+    {
+      "run_id": "f1e1cb22661de696",
+      "passed": true,
+      "source_sha256": "8c95d74c3166b1880fbb6e68089eb1adfddd620792f512c0a7ea69f2a5f2e5a2",
+      "source_changed": false,
+      "vm_final": "Stopped"
+    },
+    {
+      "run_id": "ab89d659c2c54cd9",
+      "passed": true,
+      "source_sha256": "8c95d74c3166b1880fbb6e68089eb1adfddd620792f512c0a7ea69f2a5f2e5a2",
+      "source_changed": false,
+      "vm_final": "Stopped"
+    }
+  ],
+  "superseded_reason": "Additional latest-but-delayed callback defect found after intermediate runs; final3 source is current. Intermediate source variants were not committed; local run records remain retained.",
+  "static_regression_run": "887f7604f7979e60",
+  "same_source_manifest": true
+}

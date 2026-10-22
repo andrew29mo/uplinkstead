@@ -40,8 +40,8 @@ An independent [DHCP lifecycle mode](docs/DHCP.md) adds supervised lease acquisi
 renewal, expiry, address/gateway changes and fresh-session recovery. Every update
 invalidates health and requires fresh pinned TLS quorum before forwarding. It is
 not integrated into the static dual-uplink controller. See the
-[DHCP JSON/HTML evidence](reviews/dhcp/README.md) and
-[same-source static regression](reviews/dhcp-static-regression/README.md).
+[DHCP JSON/HTML evidence](reviews/dhcp-audit/README.md) and
+[same-source static regression](reviews/dhcp-audit-static/README.md).
 
 ## Reproduce
 

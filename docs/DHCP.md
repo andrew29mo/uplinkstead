@@ -14,20 +14,32 @@ withdraws the owned LAN default. Renewal is deliberately conservative and may
 interrupt traffic even when the address is unchanged. Two fresh rounds with at
 least two successful TLS targets are required before attaching LAN forwarding.
 A successful probe says only that the configured endpoints were reachable.
+A current bound/renew callback whose new allocation is unsupported or already
+expired in transit consumes that event and withdraws the old allocation; it does
+not keep probing the old address. The reply marks `lease_rejected`, and the hook
+logs that outcome. Stale authority still rejects without changing newer state. A latest callback
+whose session/boot/revision/order are current but whose three-second admission
+window elapsed also withdraws the old allocation and returns `event_expired`;
+it cannot install the delayed allocation.
+Status also checks the lease deadline rather than returning a cached healthy flag.
 
 The service runs the exact hook in `deploy/uplinkstead-udhcpc.py`. The client passes
 its fixed writer session and boot identity to that hook. A root-only local
 SOCK_SEQPACKET API checks session, boot, monotonic event time and revision. Old,
-reordered, duplicate or delayed events reject; hooks are synchronous, and rejected
+reordered or duplicate events reject; hooks are synchronous, and rejected
 updates are not silently retried with newer authority. The hook receives only
-IPv4 address, mask, one on-link gateway and bounded lease duration. It never runs
+IPv4 address, mask, one on-link gateway and a 1..86,400-second lease duration.
+Longer or otherwise unsupported allocations are withdrawn, not silently clamped. It never runs
 DHCP values through a shell or accepts arbitrary route commands.
 
-Every mutation saves a FULL-synchronous SQLite intent before executing commands.
+Lease/address transitions save a FULL-synchronous SQLite intent before executing
+commands. Health-driven data-route activation/withdrawal uses the already saved
+lease; health is not persisted or replayed across restart.
 The writer's exclusive lock is inherited by command helpers. Recovery quarantines
 both old and intended addresses/routes rather than replaying a pre-restart lease.
 Every service start creates a new session and requires a fresh DHCP exchange and
-fresh health. An incomplete write retires the service; it cannot keep serving as
+fresh health. A retired callback returns the distinct `RetiredSession` error,
+separate from stale time/revision checks. An incomplete write retires the service; it cannot keep serving as
 though the change succeeded. Corrupt state rejects rather than claiming repair.
 
 Probe traffic binds source, interface and mark. Reserved tables 41101/41103 and
@@ -35,6 +47,9 @@ priorities 10206/10207/10210–10213 provide terminal prohibitions after lookup
 misses. A missing route cannot fall through to the main default. The service
 changes only its validated objects and DHCP address, uses `noprefixroute`, and
 refuses foreign addresses, intersecting RPDB rules or unknown reserved routes.
+Active route operations require all six owned rules to be present. An incomplete
+owned layout is rejected and recovery can rebuild missing owned entries. This is
+scheduled checking, not continuous protection against another privileged writer.
 It does not reconcile other network managers. Ownership/cooperation is required.
 Only the declared LAN prefix is excluded from WAN forwarding; configure no other
 internal routed networks in this first slice.
@@ -88,8 +103,18 @@ SIGUSR1; address replacement uses release/reacquisition. This validates real
 exchanges through the formal hook, not long-running natural T1/T2 renewal behavior.
 A viable backup default is deliberately present.
 Blackhole and expiry cases must fail without packets on that backup. The expiry
-case also stalls the client, forcing the service to enforce the real wire-acquired
-lease deadline without relying on an earlier client deconfiguration callback. Controlled
+case first restores the uplink and records healthy status, an active LAN default
+and successful new TLS traffic, then stalls the client/server until the deadline.
+It records the removed address/probe/data routes and retained guards afterward.
+The retired-session case checks the explicit error and unchanged before/after
+network/state; subprocess failure alone cannot pass. PID/InvocationID and exact
+installed unit content are checked against the declared fixture transformation.
+A separate synthetic unsupported renew is injected through the formal root socket
+while healthy; it must clear the real allocation without replacing the service.
+That case also tests a latest but delayed callback after a controlled restoration
+using only the original wire lease's remaining lifetime. Both injected callbacks
+must clear old forwarding. Its backdated timestamp is synthetic, not a measured
+operating-system scheduling delay. These are not on-wire malformed/late DHCP-server tests. Controlled
 core tests separately inject write failures; those are not physical disk failures.
 The VM also injects an exception after a real backend command successfully changes
 the address/probe route, then opens the formal lifecycle again to prove both old
@@ -103,5 +128,8 @@ comparisons. No forwarding throughput, peak RSS or physical ISP result is claime
 Failed runs remain failed. Cleanup must remove owned units/namespaces/source,
 preserve the VM root network and stop the VM. Private fixture keys/logs stay local.
 
-Retained results: [DHCP JSON/HTML and measured scope](../reviews/dhcp/README.md),
-plus [same-source static regression](../reviews/dhcp-static-regression/README.md).
+Retained results: [DHCP JSON/HTML and measured scope](../reviews/dhcp-audit/README.md),
+plus [same-source static regression](../reviews/dhcp-audit-static/README.md).
+
+See [the lifecycle/evidence review](DHCP_REVIEW.md) for corrected findings and
+what the historical baseline did not establish.

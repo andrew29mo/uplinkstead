@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from uplinkstead.dhcp import Lifecycle, Backend, lease, config, PROBE_TABLE, DATA_TABLE
+from uplinkstead.dhcp import Lifecycle, Backend, RetiredSession, lease, config, PROBE_TABLE, DATA_TABLE
 from uplinkstead.linux import Blocked
 
 
@@ -149,14 +149,68 @@ class DHCPTests(unittest.TestCase):
                 with self.assertRaises(Blocked):w.event(q)
                 self.assertEqual(w.s,before);self.assertEqual(w.backend.calls,calls)
 
-    def test_invalid_lease_cannot_reach_backend(self):
+    def test_current_unsupported_lease_withdraws_old_healthy_allocation(self):
         with self.open() as w:
             for data in (self.value(router='198.51.100.1'),self.value(router='192.0.2.1 192.0.2.3'),
                          self.value(ip='10.77.0.2',router='10.77.0.1'),self.value(seconds='0'),
-                         self.value(seconds='999999'),self.value(ip='192.0.2.0')):
-                calls=len(w.backend.calls)
-                with self.assertRaises(ValueError):w.event(self.event(w,value=data))
-                self.assertEqual(len(w.backend.calls),calls)
+                         self.value(seconds='999999'),self.value(ip='192.0.2.0'),[],None):
+                for reason in ('bound','renew'):
+                    w.event(self.event(w));w.tick();w.tick()
+                    self.assertTrue(w.snapshot()['healthy'])
+                    q=self.event(w,reason);q['lease']=data
+                    result=w.event(q)
+                    self.assertTrue(result['lease_rejected'])
+                    self.assertIsNone(w.s['current']);self.assertFalse(w.healthy)
+                    self.assertFalse(w.backend.active)
+                    with self.assertRaises(Blocked):w.event(q)
+
+    def test_snapshot_does_not_report_expired_health_before_next_tick(self):
+        with self.open() as w:
+            w.event(self.event(w));w.tick();w.tick()
+            self.clock=w.s['expires']
+            self.assertFalse(w.snapshot()['healthy'])
+            w.tick()
+            self.assertIsNone(w.s['current']);self.assertFalse(w.backend.active)
+
+    def test_current_renew_expired_in_transit_invalidates_old_health(self):
+        with self.open() as w:
+            w.event(self.event(w));w.tick();w.tick()
+            q=self.event(w, 'renew',self.value(seconds='1'))
+            self.clock+=2  # Still a fresh event (<3 s), but its new lease expired.
+            result=w.event(q)
+            self.assertTrue(result['lease_rejected'])
+            self.assertIsNone(w.s['current']);self.assertFalse(w.healthy)
+            self.assertFalse(w.backend.active)
+
+    def test_retired_session_rejection_is_distinct_from_stale_time(self):
+        with self.open() as w:
+            w.event(self.event(w));w.tick();w.tick()
+            q=self.event(w);q['session']='retired'
+            self.clock+=4
+            with self.assertRaises(RetiredSession):w.event(q)
+            q['session']=w.s['session']
+            q['at']=w.s['last_event']  # Duplicate time is a distinct rejection.
+            with self.assertRaises(Blocked) as exc:w.event(q)
+            self.assertIs(type(exc.exception),Blocked)
+
+    def test_delayed_current_callbacks_withdraw_but_old_revision_cannot(self):
+        with self.open() as w:
+            for reason in ('bound','renew','deconfig','nak','leasefail'):
+                w.event(self.event(w));w.tick();w.tick()
+                q=self.event(w,reason)
+                if reason not in ('bound','renew'):q['lease']=None
+                self.clock+=4
+                self.assertTrue(w.event(q)['event_expired'])
+                self.assertIsNone(w.s['current']);self.assertFalse(w.backend.active)
+                with self.assertRaises(Blocked):w.event(q)
+            w.event(self.event(w));w.tick();w.tick()
+            old=self.event(w,'renew')
+            w.event(self.event(w,'renew',self.value('192.0.3.2','192.0.3.1')))
+            w.tick();w.tick();self.clock+=4
+            before=copy.deepcopy(w.s);calls=copy.deepcopy(w.backend.calls)
+            with self.assertRaises(Blocked):w.event(old)
+            self.assertEqual(before,w.s);self.assertEqual(calls,w.backend.calls)
+            self.assertTrue(w.snapshot()['healthy'])
 
     def test_lock_excludes_second_writer_and_corrupt_journal_refuses(self):
         with self.open() as w:
@@ -195,3 +249,9 @@ class BackendTests(unittest.TestCase):
         self.b.routes=lambda table:[dict(dst='default',gateway='198.51.100.1',dev='backup0',metric=100)]
         with self.assertRaises(Blocked):self.b.reconcile_many([None],None)
         self.assertFalse(any(c[0]=='route' for c in self.commands))
+
+    def test_runtime_check_requires_every_guard_and_lookup(self):
+        builtins=self.b.rules()
+        for missing in self.b.expected():
+            self.b.rules=lambda missing=missing:builtins+[r for r in self.b.expected() if r!=missing]
+            with self.assertRaises(Blocked):self.b.check([None])

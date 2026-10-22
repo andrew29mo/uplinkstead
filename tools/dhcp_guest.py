@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from tools.guest import cmd, ip, ns, nft, root_snapshot
 from tools.netproof import digest
 from tools.evidence import manifest, fingerprint
+from tools.dhcp_fixture import unit as fixture_unit
 from uplinkstead.writer import boot_id
 
 ROOT = Path('/opt/uplinkstead-dhcp')
@@ -94,6 +95,8 @@ def server(address='192.0.2.2', gateway='192.0.2.1'):
 def setup():
     assert Path('/proc/1/comm').read_text().strip()=='systemd'
     assert not Path('/etc/systemd/system',UNIT).exists()
+    meta=command('systemctl','show',UNIT,'-p','LoadState','-p','FragmentPath','-p','DropInPaths')
+    assert 'LoadState=not-found' in meta and 'FragmentPath=\n' in meta and 'DropInPaths=\n' in meta
     assert not {l.split()[0] for l in command('ip','netns','list').splitlines()} & set(NAMES)
     (ROOT/'root-before.json').write_text(json.dumps(root_snapshot()))
     # Ledger is created before any owned object; cleanup can handle partial setup.
@@ -128,11 +131,7 @@ def setup():
     c=json.loads((ROOT/'source/deploy/dhcp.example.json').read_text());c['ca']=str(ROOT/'ca.crt')
     (ROOT/'config.json').write_text(json.dumps(c))
     # Use exact shipped service with only fixture paths/namespace additions.
-    unit=(ROOT/'source/deploy/uplinkstead-dhcp.service').read_text()
-    unit=unit.replace('/etc/uplinkstead/dhcp.json',str(ROOT/'config.json')).replace('/var/lib/uplinkstead-dhcp',str(ROOT/'state')).replace('/run/uplinkstead-dhcp',str(ROOT/'run'))
-    unit=unit.replace('--socket '+str(ROOT/'run/events.sock'),'--socket '+str(ROOT/'run/events.sock')+' --hook '+str(ROOT/'source/deploy/uplinkstead-udhcpc.py'))
-    unit=unit.replace('StateDirectory=uplinkstead-dhcp\n', '').replace('StateDirectoryMode=0700\n', '').replace('RuntimeDirectory=uplinkstead-dhcp\n', '').replace('RuntimeDirectoryMode=0700\n', '')
-    unit=unit.replace('[Service]','[Service]\nWorkingDirectory='+str(ROOT/'source')+'\nEnvironment=PYTHONPATH='+str(ROOT/'source')+'\nNetworkNamespacePath=/run/netns/ud_r\nReadWritePaths='+str(ROOT))
+    unit=fixture_unit((ROOT/'source/deploy/uplinkstead-dhcp.service').read_text())
     (ROOT/'installed-unit').write_text(unit)
     Path('/etc/systemd/system',UNIT).write_text(unit)
     (ROOT/'source/deploy/uplinkstead-udhcpc.py').chmod(0o755)
@@ -148,6 +147,27 @@ def setup():
 def counter():
     rows=json.loads(ns('ud_b',['nft','-j','list','table','ip','observe']).stdout)['nftables']
     return next(e['counter']['packets'] for r in rows if 'rule' in r for e in r['rule']['expr'] if 'counter' in e)
+
+
+def identity():
+    raw=command('systemctl','show',UNIT,'-p','MainPID','-p','InvocationID','-p','ActiveState',
+                '-p','FragmentPath','-p','DropInPaths','-p','CapabilityBoundingSet')
+    value=dict(line.split('=',1) for line in raw.splitlines())
+    assert value['ActiveState']=='active' and int(value['MainPID'])>0
+    assert value['FragmentPath']=='/etc/systemd/system/'+UNIT and not value['DropInPaths']
+    assert set(value['CapabilityBoundingSet'].split())=={'cap_net_admin','cap_net_raw','cap_net_bind_service'}
+    return value
+
+
+def network():
+    def table(number):
+        p=cmd(['ip','-n','ud_r','-j','route','show','table',str(number)],check=False)
+        if p.returncode and 'FIB table does not exist' not in p.stderr:
+            raise RuntimeError('route readback failed')
+        return json.loads(p.stdout or '[]')
+    return dict(data_routes=table(41103),probe_routes=table(41101),
+                addresses=json.loads(ip('ud_r','-j','-4','addr','show','dev','wan0').stdout),
+                rules=json.loads(ip('ud_r','-j','rule','show').stdout))
 
 
 def run():
@@ -180,37 +200,91 @@ def run():
     wait(healthy);assert client()['ok']
     case('wire_address_change',dict(before=old,current=changed),began)
     assert command('systemctl','show',UNIT,'-p','InvocationID','--value').strip()==initial_invocation
-    began=time.monotonic();old=state();pid=child_pid()
-    # Capture a legitimate old executor event, then replace the actual service.
-    q=dict(session=old['session'],boot=old['boot'],revision=old['revision'],at=ns('ud_r',['python3','-c','import time;print(time.clock_gettime(time.CLOCK_BOOTTIME))']).stdout.strip(),reason='deconfig',lease=None)
-    q['at']=float(q['at'])
+    began=time.monotonic();old=state();old_service=identity()
     command('systemctl','kill','--kill-whom=main','--signal=SIGKILL',UNIT)
-    wait(lambda: (t:=state())['session']!=old['session'],timeout=15)
-    fresh=state();q['revision']=fresh['revision'];q['at']=float(ns('ud_r',['python3','-c','import time;print(time.clock_gettime(time.CLOCK_BOOTTIME))']).stdout)
-    rejected=ns('ud_r',['python3','-c',"import sys;sys.path.insert(0,'/opt/uplinkstead-dhcp/source');from tools.dhcp_guest import state;state("+repr(q)+")"],check=False)
-    assert rejected.returncode!=0
+    wait(lambda: state()['session']!=old['session'],timeout=15)
     current=wait(healthy);assert current['current']['ip']=='192.0.2.3'
-    case('service_sigkill_restart_and_old_session_fenced',dict(old_session_rejected=True,new_session=current['session']!=old['session'],state=current),began)
+    new_service=identity()
+    assert new_service['InvocationID']!=old_service['InvocationID'] and new_service['MainPID']!=old_service['MainPID']
+    # Everything but the retired session is current, so rejection cannot be
+    # explained by old time/revision/boot or a broken environment.
+    q=dict(session=old['session'],boot=current['boot'],revision=current['revision'],
+           at=float(ns('ud_r',['python3','-c','import time;print(time.clock_gettime(time.CLOCK_BOOTTIME))']).stdout),reason='deconfig',lease=None)
+    before_network=network()
+    code="""import sys,json
+sys.path.insert(0,'/opt/uplinkstead-dhcp/source')
+from uplinkstead.dhcp_service import request
+from pathlib import Path
+try:request(Path('/opt/uplinkstead-dhcp/run/events.sock'),EVENT)
+except RuntimeError as exc:
+ if str(exc)!='RetiredSession':raise
+ print(json.dumps(dict(rejected=True,error=str(exc))))
+else:raise RuntimeError('retired session was accepted')
+""".replace('EVENT',repr(q))
+    rejection=json.loads(ns('ud_r',['python3','-c',code]).stdout)
+    after=state();after_network=network()
+    assert after==current and before_network==after_network
+    case('service_sigkill_restart_and_old_session_fenced',dict(before=old,state=after,old_service=old_service,
+         new_service=new_service,event=q,rejection=rejection,before_network=before_network,after_network=after_network),began)
+    began=time.monotonic();before_state=state();before_network=network();before_service=identity()
+    bad=dict(session=before_state['session'],boot=before_state['boot'],revision=before_state['revision'],
+             at=float(ns('ud_r',['python3','-c','import time;print(time.clock_gettime(time.CLOCK_BOOTTIME))']).stdout),
+             reason='renew',lease=dict(ip='192.0.2.4',subnet='255.255.255.0',router='198.51.100.1',lease='120'))
+    rejected=state(bad);after_network=network();after_service=identity()
+    assert rejected['lease_rejected'] and rejected['current'] is None and not rejected['healthy']
+    assert not after_network['data_routes'] and not after_network['probe_routes'] and not after_network['addresses']
+    assert before_service==after_service and not client()['ok']
+    # Controlled restoration uses only the remaining lifetime of the last real
+    # wire lease. Then inject a newer but too-late callback, not an old revision.
+    at=float(ns('ud_r',['python3','-c','import time;print(time.clock_gettime(time.CLOCK_BOOTTIME))']).stdout)
+    remaining=int(before_state['expires']-at);assert remaining>10
+    v=before_state['current']
+    restore=dict(session=rejected['session'],boot=rejected['boot'],revision=rejected['revision'],at=at,reason='bound',
+                 lease=dict(ip=v['ip'],subnet=v['prefix'].split('/')[1],router=v['gateway'],lease=str(remaining)))
+    restored=state(restore);wait(healthy);time.sleep(4.2)
+    late_before=state();late_network=network()
+    late_at=float(ns('ud_r',['python3','-c','import time;print(time.clock_gettime(time.CLOCK_BOOTTIME))']).stdout)-3.5
+    assert late_at>restore['at']
+    late_event=dict(session=late_before['session'],boot=late_before['boot'],revision=late_before['revision'],at=late_at,
+                    reason='renew',lease=dict(ip='192.0.2.4',subnet='255.255.255.0',router='192.0.2.5',lease='60'))
+    late_reply=state(late_event);late_after=network()
+    assert late_reply['event_expired'] and late_reply['current'] is None and not late_reply['healthy']
+    assert not late_after['data_routes'] and not late_after['probe_routes'] and not late_after['addresses']
+    assert identity()==before_service and not client()['ok']
+    late=dict(restore_event=restore,restored=restored,before=late_before,before_network=late_network,event=late_event,
+              reply=late_reply,after_network=late_after,
+              observed=float(ns('ud_r',['python3','-c','import time;print(time.clock_gettime(time.CLOCK_BOOTTIME))']).stdout))
+    case('unsupported_current_renew_withdraws_old_lease',dict(before=before_state,before_network=before_network,
+         reply=rejected,after_network=after_network,service_before=before_service,service_after=after_service,late=late),began)
+    # Explicit fixture restart obtains a new real lease after synthetic invalid
+    # option injection; this is not passed off as a wire-issued bad DHCP offer.
+    command('systemctl','restart',UNIT);wait(healthy)
     began=time.monotonic()
     # Demonstrate backup reachability independently using the router's main route.
     backup=ns('ud_r',['python3','-c',"import socket;s=socket.create_connection(('203.0.113.2',8443),timeout=1);s.close()"])
-    assert backup.returncode==0 and counter()>0
+    backup_warmup_packets=counter()
+    assert backup.returncode==0 and backup_warmup_packets>0
     nft('ud_b','flush chain ip observe f\nadd rule ip observe f ip daddr 203.0.113.2 counter\n')
     before=counter()
     nft('ud_a','add table ip hole\nadd chain ip hole f { type filter hook forward priority -50; policy accept; }\nadd rule ip hole f drop\n')
     wait(lambda: not state()['healthy']);r=client();assert not r['ok'];assert counter()==before
-    case('blackhole_no_false_health_or_backup_borrow',dict(request=r,backup_packets_before=before,backup_packets_after=counter()),began)
+    case('blackhole_no_false_health_or_backup_borrow',dict(state=state(),service=identity(),request=r,backup_warmup_packets=backup_warmup_packets,backup_packets_before=before,backup_packets_after=counter()),began)
+    # Expiry must withdraw a genuinely active route, not one already removed by
+    # failed health. Restore the path and record successful forwarding first.
+    nft('ud_a','delete table ip hole\n');active=wait(healthy);active_network=network();active_request=client()
+    assert active_request['ok'] and active_request['response']['peer']=='10.99.1.1'
+    assert any(r.get('dst')=='default' for r in active_network['data_routes'])
     began=time.monotonic();serverpid=int((ROOT/'dnsmasq.pid').read_text());os.kill(serverpid,signal.SIGSTOP)
     # Stall callbacks too: only the formal daemon's persisted lease deadline
     # may withdraw this real wire-acquired lease, not an early client deconfig.
     os.kill(child_pid(),signal.SIGSTOP)
-    expiry=state()['expires']
+    expiry=active['expires']
     wait(lambda: state()['current'] is None,timeout=140)
     observed=float(ns('ud_r',['python3','-c','import time;print(time.clock_gettime(time.CLOCK_BOOTTIME))']).stdout)
     assert observed>=expiry
     r=client();assert not r['ok'];assert counter()==before
-    case('lease_deadline_with_stalled_client',dict(current=state(),request=r,deadline=expiry,observed=observed,client_stalled=True,backup_packets=counter()),began)
-    pid=int(command('systemctl','show',UNIT,'-p','MainPID','--value'))
+    case('lease_deadline_with_stalled_client',dict(before=active,before_network=active_network,before_request=active_request,current=state(),after_network=network(),request=r,deadline=expiry,observed=observed,client_stalled=True,backup_packets=counter()),began)
+    rss_identity=identity();pid=int(rss_identity['MainPID'])
     rss=next(l for l in Path('/proc',str(pid),'status').read_text().splitlines() if l.startswith('VmRSS:'))
     began=time.monotonic()
     command('systemctl','stop',UNIT)
@@ -248,9 +322,9 @@ with Lifecycle(c,'/opt/uplinkstead-dhcp/state') as w:
     details=json.loads(ns('ud_r',['python3','-c',code]).stdout)
     assert not client()['ok'] and counter()==before
     case('formal_backend_partial_write_recovery',details,began)
-    result.update(passed=True,rss_snapshot=rss,db_bytes=(ROOT/'state/journal.sqlite').stat().st_size,
+    result.update(passed=True,rss_snapshot=rss,rss_service=rss_identity,db_bytes=(ROOT/'state/journal.sqlite').stat().st_size,
                   service_source_sha256=hashlib.sha256((ROOT/'source/deploy/uplinkstead-dhcp.service').read_bytes()).hexdigest(),
-                  installed_unit_sha256=hashlib.sha256((ROOT/'installed-unit').read_bytes()).hexdigest(),
+                  installed_unit_sha256=hashlib.sha256(Path('/etc/systemd/system',UNIT).read_bytes()).hexdigest(),
                   environment=dict(kernel=command('uname','-r').strip(),python=sys.version.split()[0],
                       systemd=command('systemctl','--version').splitlines()[0],
                       busybox=version('busybox','--help'),dnsmasq=command('dnsmasq','--version').splitlines()[0]),

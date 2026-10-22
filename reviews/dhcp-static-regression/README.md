@@ -1,4 +1,4 @@
-# Static dual-uplink regression after the DHCP slice
+# Historical static regression after the DHCP slice
 
 Run `1d722bbdd25827be`, source fingerprint
 `b4bc56ad24c52e3f9d02ec3f0e223f40df54c3d3c5d09930d5fbaf9195b0ad2f`.
@@ -21,6 +21,6 @@ from one run, not a speedup, capacity claim or recovery guarantee. The orderly V
 restart here tests the **static dual-uplink mode**, not the new DHCP service.
 No sudden power-loss or physical ISP claim is made.
 
-```sh
-.venv/bin/python -m tools.report reviews/dhcp-static-regression
-```
+This historical receipt belongs to commit `da9f29034864d96f5e53beff4750df37c23ddc69`.
+Use its original source/verifier to replay it. The
+[current regression](../dhcp-audit-static/README.md) covers the reviewed source.

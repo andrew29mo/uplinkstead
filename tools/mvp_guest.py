@@ -119,6 +119,68 @@ def run_mvp():
                     retained_route_while_stopped=True,stale_epoch_denied=True,restarted_mode=restored['mode'],epoch_changed=True,main_unchanged=True)
     yield 'mvp_safe_lifecycle_and_resume',lifecycle
 
+    def oversized_peer():
+        wait_status(lambda s:all(v=='HEALTHY' for v in s['health'].values()))
+        cli('pause');cli('select',target='A');cli('resume',target='A',ack='reset-budget')
+        original=props(UNIT)['InvocationID'];bad=ROOT/'bad-body';bad.write_text('large-peer')
+        def sample_event():
+            with sqlite3.connect(STATE/'journal.sqlite') as c:
+                row=c.execute("SELECT value FROM events WHERE json_extract(value,'$.name')='service_sample' ORDER BY id DESC LIMIT 1").fetchone()
+            return json.loads(row[0]) if row else None
+        fault=False
+        try:
+            deadline=time.monotonic()+10
+            while time.monotonic()<deadline:
+                event=sample_event()
+                if event and all(event['probes'][k]['successes']==2 for k in ('A','B')):break
+                time.sleep(.1)
+            else:raise TimeoutError('Oversized peer quorum sample missing')
+            assert all(event['probes'][k]['results'][0]['ok'] is False and event['probes'][k]['results'][0]['infrastructure'] is False for k in ('A','B'))
+            assert len(json.dumps(event).encode())<32768
+            holes('A');fault=True
+            state=wait_status(lambda s:s['selected']=='B' and s['health']['B']=='HEALTHY')
+            request=client(port=8444);assert request['ok'] and request['result']['peer']=='10.99.2.1'
+            assert props(UNIT)['InvocationID']==original
+        finally:
+            if fault:holes('A',False)
+            bad.unlink(missing_ok=True)
+        return dict(quorum_event=event,selected=state['selected'],request=request,
+                    invocation_unchanged=True,optional_peer_bytes=12000,wire_body_under_limit=True)
+    yield 'mvp_oversized_peer_quorum',oversized_peer
+
+    def delayed_resume():
+        wait_status(lambda s:all(v=='HEALTHY' for v in s['health'].values()))
+        cli('pause');system(UNIT,'stop')
+        from tools.guest import remote
+        result=remote("""from pathlib import Path
+import json,time
+from uplinkstead.config import load
+from uplinkstead.writer import Writer,now
+from uplinkstead.control import Controller,dispatch
+c=load(Path('/opt/uplinkstead/config.json'));state='/opt/uplinkstead/state'
+with Writer(c,state) as w:
+ ctl=Controller(w,65534)
+ for _ in range(3):ctl.sample();time.sleep(.9)
+ target=w.s['selected'];assert target=='B' and w.s['mode']=='PAUSED'
+ proof=ctl.policy.proof(target,now());actual=w.save
+ def slow_save():actual();time.sleep(2.1)
+ w.save=slow_save
+ q=dict(op='resume',epoch=w.s['epoch'],revision=w.s['revision'],target=target,ack='reset-budget')
+ try:dispatch(ctl,q,0)
+ except ValueError:
+  assert now()>proof['expires_at'] and w.s['mode']=='PAUSED' and w.backend.selected()==target
+  observed=dict(blocked_at=now(),proof=proof,mode=w.s['mode'],selected=target,pending=w.s['pending'])
+ else:raise AssertionError('Expired same-selected resume enabled automation')
+with Writer(c,state) as w:
+ assert w.s['mode']=='PAUSED' and w.backend.selected()=='B'
+ observed.update(durable_mode=w.s['mode'],reopened_selected=w.s['selected'])
+print(json.dumps(observed))
+""")
+        start_service();wait_status(lambda s:all(v=='HEALTHY' for v in s['health'].values()))
+        cli('resume',target='B',ack='reset-budget')
+        return result
+    yield 'mvp_delayed_same_selected_resume',delayed_resume
+
     def bounded_storage():
         # Use the formal Writer on the service's actual DB while both units stop.
         system(UNIT,'stop')
@@ -236,7 +298,9 @@ print(json.dumps(dict(disable_write_failure_recovered=True,partial_enable_recove
             if cli('status')['mode']=='ENABLED':cli('pause')
             cli('select',target='A');cli('resume',target='A',ack='reset-budget')
             if not automatic:cli('pause')
-            began=time.monotonic();rows=[];fault=False
+            processes_before={k:proc(unit) for k,unit in [('writer',UNIT),('worker',WORKER)]}
+            journal_before=(STATE/'journal.sqlite').stat().st_size
+            began=time.monotonic();rows=[];fault=False;fault_window=None
             def arrival(i,offset):
                 started=time.monotonic()-began;r=client();finished=time.monotonic()-began
                 return dict(index=i,scheduled=offset,started=started,finished=finished,
@@ -247,11 +311,17 @@ print(json.dumps(dict(disable_write_failure_recovered=True,partial_enable_recove
                     futures=[]
                     for i in range(20):
                         offset=i*.5;time.sleep(max(0,began+offset-time.monotonic()))
-                        if i==4:holes('A');fault=True
+                        if i==4:
+                            fault_start=time.monotonic()-began;holes('A');fault=True
+                            fault_window=dict(started=fault_start,finished=time.monotonic()-began)
                         futures.append(pool.submit(arrival,i,offset))
                     rows=[f.result() for f in futures]
                 elapsed=time.monotonic()-began
-                final=cli('status');memory=dict(writer=proc(UNIT)['rss_kib'],worker=proc(WORKER)['rss_kib'])
+                final=cli('status');processes_after={k:proc(unit) for k,unit in [('writer',UNIT),('worker',WORKER)]}
+                memory={k:p['rss_kib'] for k,p in processes_after.items()}
+                assert all(processes_before[k]['pid']==processes_after[k]['pid'] and processes_before[k]['invocation']==processes_after[k]['invocation'] for k in processes_before)
+                assert all(r['ok'] and r['peer']=='10.99.1.1' for r in rows[:4])
+                assert all(r['peer']==('10.99.2.1' if automatic and r['index']>=4 else '10.99.1.1') for r in rows if r['ok'])
                 assert final['selected']==('B' if automatic else 'A')
                 if automatic:assert any(r['ok'] and r['peer']=='10.99.2.1' for r in rows)
                 else:assert all(not r['ok'] for r in rows[4:])
@@ -260,6 +330,7 @@ print(json.dumps(dict(disable_write_failure_recovered=True,partial_enable_recove
             modes.append(dict(mode='automatic' if automatic else 'fixed_primary',rows=rows,elapsed=elapsed,
                               successes=sum(r['ok'] for r in rows),failures=sum(not r['ok'] for r in rows),
                               throughput=sum(r['ok'] for r in rows)/elapsed,rss_kib=memory,
+                              fault_window=fault_window,processes_before=processes_before,processes_after=processes_after,journal_bytes_before=journal_before,
                               journal_bytes=(STATE/'journal.sqlite').stat().st_size,final_selected=final['selected']))
         assert [r['scheduled'] for r in modes[0]['rows']]==[r['scheduled'] for r in modes[1]['rows']]
         # Leave a durable latch for the original reboot qualification. This is an

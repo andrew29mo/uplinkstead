@@ -10,7 +10,9 @@ The service does not create those external prerequisites or edit firewall tools.
 
 Each configured probe endpoint must accept a new verified TLS connection and a
 `GET /<nonce>` HTTP/1.0 request, returning HTTP/1.0 200 with a JSON object containing
-`ok: true` and the matching `nonce`. Optional `peer` must be a string or null.
+`ok: true` and the matching `nonce`. Optional `peer` must be null or a string of at most 64 UTF-8 bytes.
+An oversized peer is one failed target, so it cannot inflate a complete sample
+past event/RPC capacity and suppress the other two targets.
 This is a controlled reachability protocol, not an arbitrary HTTPS website check.
 The three endpoints should reflect the deployment's failure domains. The VM uses
 three ports on one server and does not establish independent ISP availability.
@@ -75,7 +77,11 @@ status before each command. `resume` requires newly collected consecutive health
 observations for its explicit target and records a deliberate budget reset. It can
 clear a latch but cannot authorize an UNKNOWN/unhealthy/expired destination.
 `select` also requires PAUSED and fresh writer-observed health, and respects the
-remaining budget. Stale process epochs and same-process revisions are rejected.
+remaining time-window budget; a persistent latch still requires guarded resume.
+Resume rechecks health after budget persistence, immediately before deciding to
+enable automation even when the selected route is unchanged. This is a decision-
+time freshness check, not a guarantee that evidence is still fresh when the reply
+arrives. Stale process epochs and same-process revisions are rejected.
 
 PAUSED retains selection, probes and owned-route maintenance, while preventing
 automatic selection. It does not freeze every kernel write. DISABLED removes only

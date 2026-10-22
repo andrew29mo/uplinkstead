@@ -10,7 +10,10 @@ p=argparse.ArgumentParser();p.add_argument('cert');p.add_argument('key');p.add_a
 class Handler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         data=json.dumps(dict(ok=True,nonce=self.path[1:],peer=self.client_address[0],server=a.address)).encode()
-        if a.address=='203.0.113.2' and self.server.server_port==8443 and Path('/opt/uplinkstead/bad-body').exists():data=b'null'
+        bad=Path('/opt/uplinkstead/bad-body')
+        if a.address=='203.0.113.2' and self.server.server_port==8443 and bad.exists():
+            data=(json.dumps(dict(ok=True,nonce=self.path[1:],peer='中'*4000),ensure_ascii=False).encode()
+                  if bad.read_text()=='large-peer' else b'null')
         self.send_response(200);self.send_header('Content-Length',str(len(data)));self.end_headers();self.wfile.write(data)
     def log_message(self,*_):pass
 servers=[]

@@ -29,7 +29,7 @@ External system tools retain their original licenses.
 
 [Architecture](docs/ARCHITECTURE.md) · [Operations](docs/OPERATIONS.md)
 · [MVP acceptance](docs/MVP_ACCEPTANCE.md) · [Validation](docs/VALIDATION.md)
-· [Review corrections](docs/AUDIT.md) · [Research](docs/RESEARCH.md)
+· [MVP review](docs/MVP_REVIEW.md) · [Earlier review](docs/AUDIT.md) · [Research](docs/RESEARCH.md)
 
 ## Reproduce
 

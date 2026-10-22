@@ -113,10 +113,14 @@ class Controller:
                 self.policy.history=[];self.policy.latched=False
                 w.s.update(history=[],latched=False,revision=w.s['revision']+1);w.save()
                 w.event('operator_budget_reset',uid=uid,target=q['target'])
-            elif self.policy.latched or len(self.policy.history)>=self.policy.s.budget:
+            elif self.policy.latched or len(self.policy.recent(now()))>=self.policy.s.budget:
                 raise Blocked('Budget latched; use guarded resume')
             if w.s['selected']!=q['target']:self.select(q['target'])
-            if op=='resume':w.s['mode']='ENABLED'
+            if op=='resume':
+                # Budget persistence/readback may have consumed freshness even
+                # when the selected route did not need a new kernel write.
+                self.policy.proof(q['target'],now())
+                w.s['mode']='ENABLED'
             w.s['revision']+=1;w.save();w.event('operator_'+op,uid=uid,target=q['target'])
         return self.snapshot()
 

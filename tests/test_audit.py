@@ -53,6 +53,12 @@ class ProbeBodyTests(unittest.TestCase):
     def test_deeply_nested_json_is_target_failure(self):
         result=self.response(b'['*1200+b'0'+b']'*1200,encoded=True)
         self.assertFalse(result['ok']);self.assertFalse(result['infrastructure'])
+    def test_peer_limit_is_utf8_bytes_not_json_wire_or_character_count(self):
+        for peer in ('x'*65,'中'*22,'中'*4000):
+            result=self.response(dict(nonce='nonce',ok=True,peer=peer))
+            self.assertFalse(result['ok']);self.assertFalse(result['infrastructure'])
+        self.assertTrue(self.response(dict(nonce='nonce',ok=True,peer='x'*64))['ok'])
+        self.assertTrue(self.response(dict(nonce='nonce',ok=True,peer='中'*21))['ok'])
     def test_valid_object_still_successful(self):
         self.assertTrue(self.response(dict(nonce='nonce',ok=True,peer='fixture'))['ok'])
     def test_two_healthy_targets_retain_quorum(self):

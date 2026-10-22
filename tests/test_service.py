@@ -75,6 +75,40 @@ class ServiceTests(unittest.TestCase):
         for round_id in (self.ctl.rid-1,self.ctl.rid):
             with self.assertRaises(Blocked):self.op('automatic',uid=1234,round=round_id,target='B')
         self.assertEqual(FakeLinux.route,'A')
+    def test_manual_selection_ignores_expired_history_but_preserves_latch(self):
+        self.enable();self.healthy();self.op('resume',target='A',ack='reset-budget');self.op('pause')
+        self.clock=100;self.healthy()
+        old=[dict(boot='boot',at=x) for x in (10,11,12)]
+        self.ctl.policy.history=old;self.w.s['history']=copy.deepcopy(old);self.w.save()
+        self.assertEqual(self.op('select',target='B')['selected'],'B')
+        self.assertEqual(len(self.w.s['history']),1)
+        self.ctl.policy.latched=True;self.w.s['latched']=True;self.w.save()
+        with self.assertRaises(Blocked):self.op('select',target='A')
+    def test_same_selected_resume_rechecks_health_after_budget_persistence(self):
+        self.enable();self.healthy();self.op('resume',target='A',ack='reset-budget');self.op('pause')
+        actual=self.w.save
+        def delayed():actual();self.clock+=3
+        q=dict(op='resume',epoch=self.w.s['epoch'],revision=self.w.s['revision'],target='A',ack='reset-budget')
+        with patch.object(self.w,'save',side_effect=delayed):
+            with self.assertRaises(ValueError):dispatch(self.ctl,q,0)
+        self.assertEqual(self.w.s['mode'],'PAUSED');self.assertEqual(FakeLinux.route,'A')
+        self.w.__exit__();self.w=Writer(self.c,self.d.name).__enter__();self.addCleanup(self.w.__exit__)
+        self.assertEqual(self.w.s['mode'],'PAUSED')
+    def test_one_oversized_peer_does_not_block_formal_controller_sample(self):
+        from tests.test_audit import ProbeBodyTests
+        from uplinkstead.probe import round as actual_round
+        response=ProbeBodyTests().response
+        wire=json.dumps(dict(nonce='nonce',ok=True,peer='中'*4000),ensure_ascii=False).encode()
+        self.assertLess(len(wire),16384)
+        bad=response(wire,encoded=True)
+        good=response(dict(nonce='nonce',ok=True,peer='fixture'))
+        self.enable()
+        with patch('uplinkstead.control.probe_round',side_effect=actual_round),patch('uplinkstead.probe.one',side_effect=lambda c,k,t:dict(bad if t['port']==8443 else good,link=k)):
+            for _ in range(3):
+                self.clock+=1;result=dispatch(self.ctl,dict(op='sample'),1234)
+                self.assertTrue(result['ok']);self.assertLess(len(json.dumps(result).encode()),32768)
+                self.assertTrue(all(p['successes']==2 for p in result['result']['probes'].values()))
+        self.assertEqual(result['result']['status']['health'],dict(A='HEALTHY',B='HEALTHY'))
     def test_probe_rate_bounded(self):
         self.enable();self.op('sample',uid=1234)
         with self.assertRaises(Blocked):self.op('sample',uid=1234)

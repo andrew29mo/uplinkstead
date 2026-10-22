@@ -9,7 +9,7 @@ from .evidence import ROOT, manifest, fingerprint
 from uplinkstead.policy import Policy,Settings
 import hashlib
 import re
-CASES = {'pinned_healthy_probes', 'probe_blackhole_missing_route_link_down', 'binding_error_unknown', 'lan_scope_new_tls_and_internal_exclusion', 'external_rpdb_conflict_and_preservation', 'output_success_does_not_prove_forwarding', 'strict_rp_filter_contract', 'routed_without_nat_and_provisioned_return_path', 'delayed_old_operation_rejected', 'live_old_writer_blocks_takeover', 'inherited_mutation_helper_lock', 'sigkill_intent_route_and_receipt_boundaries', 'real_probe_failover_flapping_and_budget', 'single_real_target_failure', 'link_down_owned_route_reconstruction','inverted_rpdb_rules_rejected','missing_local_lookup_rejected','expired_health_before_mutation','malformed_target_quorum','mvp_privilege_boundary','mvp_safe_lifecycle_and_resume','mvp_storage_bounds','mvp_lifecycle_failure_recovery','mvp_identical_schedule_benchmark','mvp_bounded_restart'}
+CASES = {'pinned_healthy_probes', 'probe_blackhole_missing_route_link_down', 'binding_error_unknown', 'lan_scope_new_tls_and_internal_exclusion', 'external_rpdb_conflict_and_preservation', 'output_success_does_not_prove_forwarding', 'strict_rp_filter_contract', 'routed_without_nat_and_provisioned_return_path', 'delayed_old_operation_rejected', 'live_old_writer_blocks_takeover', 'inherited_mutation_helper_lock', 'sigkill_intent_route_and_receipt_boundaries', 'real_probe_failover_flapping_and_budget', 'single_real_target_failure', 'link_down_owned_route_reconstruction','inverted_rpdb_rules_rejected','missing_local_lookup_rejected','expired_health_before_mutation','malformed_target_quorum','mvp_privilege_boundary','mvp_safe_lifecycle_and_resume','mvp_storage_bounds','mvp_lifecycle_failure_recovery','mvp_identical_schedule_benchmark','mvp_bounded_restart','mvp_oversized_peer_quorum','mvp_delayed_same_selected_resume'}
 
 def require(condition, message='Evidence validation failed'):
     if not condition:
@@ -82,19 +82,43 @@ def verify_mvp(d):
     require(len(restart['invocations'])==len(set(restart['invocations']))==3 and restart['failed_result'] in ('signal','start-limit-hit'))
     require(restart['limit_message_observed'] is True and len(restart['no_writer_samples'])==8 and all(x is True for x in restart['no_writer_samples']))
     require(restart['no_live_writer'] is True and restart['manual_reset_recovered'] is True)
-    bench=d['mvp_identical_schedule_benchmark']
+    large=d['mvp_oversized_peer_quorum']
+    require(large['invocation_unchanged'] is True and large['optional_peer_bytes']==12000 and large['wire_body_under_limit'] is True)
+    require(large['selected']=='B' and large['request']['ok'] is True and large['request']['result']['peer']=='10.99.2.1')
+    event=large['quorum_event'];require(event['name']=='service_sample' and len(json.dumps(event).encode())<32768)
+    for link in ('A','B'):
+        observation=event['probes'][link];samples=observation['results']
+        require(observation['successes']==2 and len(samples)==3 and sum(r['ok'] for r in samples)==2)
+        require(samples[0]['ok'] is False and samples[0]['infrastructure'] is False and samples[0]['error']=='ValueError')
+    delayed=d['mvp_delayed_same_selected_resume']
+    require(delayed['blocked_at']>delayed['proof']['expires_at'])
+    require(delayed['mode']==delayed['durable_mode']=='PAUSED' and delayed['selected']==delayed['reopened_selected']=='B' and delayed['pending'] is None)
+    verify_benchmark(d['mvp_identical_schedule_benchmark'])
+
+
+def verify_benchmark(bench):
     require(bench['vm_only'] is True and bench['repeated_trials'] is False)
     require(bench['schedule']==dict(requests=20,interval=.5,blackhole_from_index=4))
     require([m['mode'] for m in bench['modes']]==['fixed_primary','automatic'])
     for m in bench['modes']:
+        before,after=m['processes_before'],m['processes_after']
+        require(set(before)==set(after)=={'writer','worker'})
+        for role in before:
+            require(before[role]['pid']==after[role]['pid']>0 and before[role]['invocation']==after[role]['invocation'] and re.fullmatch('[0-9a-f]{32}',before[role]['invocation']) is not None)
+            require(m['rss_kib'][role]==after[role]['rss_kib']>0)
+        fault=m['fault_window'];require(2<=fault['started']<=fault['finished']<=m['elapsed'])
+        require(0<m['journal_bytes_before']<=8388608)
         rows=m['rows'];require(len(rows)==20 and [r['index'] for r in rows]==list(range(20)))
         require([r['scheduled'] for r in rows]==[i*.5 for i in range(20)])
         require(all(0<=r['scheduled']<=r['started']<=r['finished']<=m['elapsed'] for r in rows))
+        require(all(r['ok'] is True and r['peer']=='10.99.1.1' for r in rows[:4]))
+        require(all(r['started']>=fault['finished'] for r in rows[4:]))
         for r in rows:
             require(abs(r['latency']-(r['finished']-r['started']))<1e-8)
             require(abs(r['end_to_end']-(r['finished']-r['scheduled']))<1e-8)
             require(r['late']==(r['started']-r['scheduled']>.1) and type(r['ok']) is bool)
-            require(r['peer'] in ('10.99.1.1','10.99.2.1') if r['ok'] else r['peer'] is None)
+            expected_peer='10.99.2.1' if m['mode']=='automatic' and r['index']>=4 else '10.99.1.1'
+            require(r['peer']==expected_peer if r['ok'] else r['peer'] is None)
         require(m['successes']==sum(r['ok'] for r in rows) and m['failures']==20-m['successes'])
         require(abs(m['throughput']-m['successes']/m['elapsed'])<1e-8)
         require(all(v>0 for v in m['rss_kib'].values()) and 0<m['journal_bytes']<=8388608)
@@ -102,6 +126,32 @@ def verify_mvp(d):
     require(fixed['final_selected']=='A' and all(not r['ok'] for r in fixed['rows'][4:]))
     require(auto['final_selected']=='B' and any(r['ok'] and r['peer']=='10.99.2.1' for r in auto['rows']))
 
+
+def verify_restart(restart):
+    require(restart['passed'] is True and restart['orderly_vm_restart'] is True and (restart['power_loss_tested'] is False))
+    require(restart['before']['before_boot'] != restart['after']['boot'] == restart['pre_agent_journal']['boot'])
+    require(restart['before']['pending'] == restart['pre_agent_journal']['pending'])
+    require(restart['before']['selected_receipt']==restart['pre_agent_journal']['selected']==restart['before']['pending']['before']=='A')
+    require(restart['before']['latched_before'] is restart['pre_agent_journal']['latched'] is True)
+    require(restart['before']['mode_before']==restart['pre_agent_journal']['mode']==restart['after']['mode']=='ENABLED')
+    require(type(restart['before']['epoch_before']) is int and restart['before']['epoch_before']>0 and restart['pre_agent_journal']['epoch']==restart['before']['epoch_before'])
+    require(type(restart['after']['epoch']) is int and restart['after']['epoch']>restart['before']['epoch_before'])
+    defaults=[r for r in restart['before']['actual_route'] if r['dst']=='default']
+    require(len(defaults)==1 and defaults[0]['gateway']=='192.0.2.5' and defaults[0]['dev']=='wanB' and defaults[0]['metric']==100)
+    require(restart['pre_agent_journal']['pending']['target'] == 'B')
+    require(restart['after']['selected'] == 'B' and restart['after']['pending'] is None and (restart['after']['latched'] is True))
+    require(restart['after']['request']['ok'] is True and restart['after']['request']['result']['peer'] == '10.99.2.1')
+    require(restart['after']['first_tick']['health'] == {'A': 'RECOVERING', 'B': 'RECOVERING'})
+    units=[restart['before']['process_restart_before'],restart['before']['process_restart_after'],restart['after']['unit']]
+    ids=[]
+    for index,text in enumerate(units):
+        rows=[x.split('=',1) for x in text.splitlines() if '=' in x]
+        require(len(rows)==len({x[0] for x in rows}))
+        props=dict(rows);require(int(props['MainPID'])>0 and re.fullmatch('[0-9a-f]{32}',props['InvocationID']) is not None)
+        if index:require(props['ActiveState']=='active')
+        ids.append(props['InvocationID'])
+    require(len(set(ids))==3)
+    require(restart['after']['first_tick']['boot']==restart['after']['boot'])
 
 def verify(v, source=None, ids=None):
     expected = fingerprint(source) if source is not None else v['source_sha256']
@@ -173,14 +223,7 @@ def verify(v, source=None, ids=None):
     require(flap['uses_agent_cycle'] is True)
     require(verify_cycle_trace(flap['rounds'])==flap['transitions'])
     verify_mvp(d)
-    restart = v['reboot']
-    require(restart['passed'] is True and restart['orderly_vm_restart'] is True and (restart['power_loss_tested'] is False))
-    require(restart['before']['before_boot'] != restart['after']['boot'] == restart['pre_agent_journal']['boot'])
-    require(restart['before']['pending'] == restart['pre_agent_journal']['pending'])
-    require(restart['pre_agent_journal']['pending']['target'] == 'B')
-    require(restart['after']['selected'] == 'B' and restart['after']['pending'] is None and (restart['after']['latched'] is True))
-    require(restart['after']['request']['ok'] is True and restart['after']['request']['result']['peer'] == '10.99.2.1')
-    require(restart['after']['first_tick']['health'] == {'A': 'RECOVERING', 'B': 'RECOVERING'})
+    verify_restart(v['reboot'])
     require(all((v['cleanup'][k] is True for k in ('passed', 'root_network_unchanged', 'namespaces_removed', 'units_removed'))))
     require(guest['service_source_sha256'] == v['source']['deploy/uplinkstead.service'])
     text=(ROOT/'deploy/uplinkstead.service').read_text().replace('/etc/uplinkstead/config.json','/opt/uplinkstead/config.json').replace('/var/lib/uplinkstead','/opt/uplinkstead/state')
@@ -189,13 +232,10 @@ def verify(v, source=None, ids=None):
     require(guest['installed_unit_sha256']==hashlib.sha256(text.encode()).hexdigest())
     worker=(ROOT/'deploy/uplinkstead-policy.service').read_text().replace('[Service]','[Service]\nWorkingDirectory=/opt/uplinkstead/source')
     require(guest['policy_unit_sha256']==hashlib.sha256(worker.encode()).hexdigest())
+    restart=v['reboot']
     require(re.fullmatch(r'VmRSS:\s+[1-9][0-9]* kB',restart['after']['rss_snapshot']) is not None)
     require(restart['after']['first_tick']['boot']==restart['after']['boot'])
     require(v['cleanup']['root_before_sha256'] == v['cleanup']['root_after_sha256'])
-    restart_props = lambda text: dict((x.split('=', 1) for x in text.splitlines() if '=' in x))
-    old = restart_props(restart['before']['process_restart_before'])
-    new = restart_props(restart['before']['process_restart_after'])
-    require(old['InvocationID'] != new['InvocationID'] and int(old['MainPID']) > 0 and (int(new['MainPID']) > 0))
     recovery = d['link_down_owned_route_reconstruction']
     require(recovery['actual_route_loss_reconciled'] is True and recovery['probe_after_link_up'][0] == 3)
     require(recovery['backup_request']['ok'] is True and recovery['selection_remains_B'] is True)
@@ -221,6 +261,15 @@ def controls(v, source, ids):
       ('hidden_request_failure',lambda x:details(x,'mvp_identical_schedule_benchmark')['modes'][0]['rows'].pop()),
       ('changed_arrival_schedule',lambda x:details(x,'mvp_identical_schedule_benchmark')['modes'][1]['rows'][3].update(scheduled=0)),
       ('false_storage_recovery',lambda x:details(x,'mvp_lifecycle_failure_recovery').update(sqlite_write_failure_no_mutation=False)),
+      ('reboot_service_dead',lambda x:x['reboot']['after'].update(unit='MainPID=0\nActiveState=failed\nInvocationID=\n')),
+      ('pre_agent_receipt_changed',lambda x:x['reboot']['pre_agent_journal'].update(selected='B')),
+      ('latch_not_preserved',lambda x:x['reboot']['before'].update(latched_before=False)),
+      ('fixed_baseline_wrong_path',lambda x:details(x,'mvp_identical_schedule_benchmark')['modes'][0]['rows'][0].update(peer='10.99.2.1')),
+      ('automatic_before_fault_wrong_path',lambda x:details(x,'mvp_identical_schedule_benchmark')['modes'][1]['rows'][0].update(peer='10.99.2.1')),
+      ('rss_from_replacement_process',lambda x:details(x,'mvp_identical_schedule_benchmark')['modes'][0]['processes_after']['writer'].update(pid=1)),
+      ('fault_after_request',lambda x:details(x,'mvp_identical_schedule_benchmark')['modes'][0]['fault_window'].update(finished=9)),
+      ('large_peer_blocks_quorum',lambda x:details(x,'mvp_oversized_peer_quorum')['quorum_event']['probes']['B'].update(successes=0)),
+      ('expired_same_target_enabled',lambda x:details(x,'mvp_delayed_same_selected_resume').update(durable_mode='ENABLED')),
       ('wrong_installed_unit',lambda x:x['guest'].update(installed_unit_sha256='bad'))]
     rejected = []
     for (name, change) in mutations:

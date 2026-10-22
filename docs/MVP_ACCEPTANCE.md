@@ -12,7 +12,10 @@ A passing portable test is separate from real Linux installed-service evidence.
    distinct evidence. No existing-flow migration or Internet-wide health is implied.
 4. Unknown outcomes retain exclusive ownership until helper retirement/readback.
    Old process epochs, same-process revisions and old observation rounds cannot
-   authorize a newer selection. Recovery does not replay stale health decisions.
+   authorize a newer selection. Same-boot recovery reconciles actual before/after
+   without replaying a past health decision. After boot, it reconstructs persisted
+   owned layout/selection or pending intent, then collects new health; restoring
+   the recorded route does not assert that destination is currently reachable.
 5. Default no preference failback; alternating failures consume a persistent budget.
    Reboot/restart cannot clear a latch or replenish unknown cross-boot budget age.
 6. Automatic dispatch rechecks fresh writer-owned health. An unprivileged client
@@ -24,7 +27,10 @@ A passing portable test is separate from real Linux installed-service evidence.
    budget acknowledgement. Disable durably hands off to existing main routing.
 9. Stop retains routes; restart retains mode/latch and rebuilds health. Partial
    enable/disable is reconciled by the next exclusive writer, never guessed complete.
-10. Protocol/config/events/history/database are bounded. Low disk/SQLite write
+10. One oversized optional target field is only one failed quorum vote; it cannot
+    prevent complete sampling. Manual selection counts only relevant time-window
+    history while preserving an actual persistent latch.
+11. Protocol/config/events/history/database are bounded. Low disk/SQLite write
     failures cannot be reported as successful route changes.
 
 ## Required evidence

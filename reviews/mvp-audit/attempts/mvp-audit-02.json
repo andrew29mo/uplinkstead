@@ -1,0 +1,5144 @@
+{
+  "passed": true,
+  "source_changed": false,
+  "run_id": "6e56cd23e1a93f1d",
+  "recorded_at_utc": "2026-10-22T03:43:07.613130+00:00",
+  "source": {
+    "deploy/config.example.json": "d9dc6fa53d192485ac01409a0c142c415a8a0a9af228868ad76a580b54ee3a9d",
+    "deploy/uplinkstead-policy.service": "a133d411cdca7e60c6ac3434ffbab88f38c531e6d3ad536e9fb4a0137b2c7452",
+    "deploy/uplinkstead.conf": "13c8d4f05436258043b94c378cb67b10e7e647539ef04fbbc12421750992636d",
+    "deploy/uplinkstead.service": "b94108e7b6187a9a7161f23762a535f220656cea20b084346c0ee70eb8d2dd8f",
+    "pyproject.toml": "5d2fc8556a2777430940af1680b3f531c7ba9519a703d7fd8c9f309c8b28acd6",
+    "tests/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tests/fixtures/ip-rules-linux68.json": "2d08b8328c3c3cb53e716e12241d29ed32b1be2820ce42549dd9204bc9d3013b",
+    "tests/test_audit.py": "f0f6701455f008af676c558814df34e4fdafbc1a573e7716515d9f55cccfe779",
+    "tests/test_core.py": "c601101d064557d199080c741406f86eb2781f9e8bdb31687adbcd9fc200b6fb",
+    "tests/test_netproof.py": "67417884f476e95ec5dcb91b9b2c1b9517291538b65f70e480f342bc11652d02",
+    "tests/test_policy.py": "2fc4d8f10081a8596c6121720c62a6358f9891dd54da449ebf4154cef8676c0c",
+    "tests/test_report_review.py": "3c11a2baa76b63cfb6db930e7dd2402dfbd08269bce815ad85c362f2f33cce45",
+    "tests/test_service.py": "c9b99749bade4a0de39cecca4e40a9b2bc7e339f5ae6aaa3c5749765a7d3dfb7",
+    "tools/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "tools/drive.py": "030cdc8a91c8e9d1f7fecf96ca21673ccc65676d39bc0cc9db6556bd35afbdce",
+    "tools/evidence.py": "26e6d3f935dfdd48cc01bbaea74b36b81d9169d6410ba0ea2ef66e98dd3b56a9",
+    "tools/fault.py": "0580e7d429cc8cb828451bfdea94b3f6f194f0de0364ff417ec6b2aca8dfeafd",
+    "tools/guest.py": "923c23705d9021c40285146e77f91a2ed554d0b3b06d48705d15d9f3e6ccd30a",
+    "tools/mvp_guest.py": "bdbb3ca45ec89a18c208eaecdb06156fc0d97992dc3e4fafc927864fff177805",
+    "tools/netproof.py": "1186a5080336d1434cc7ff36aa1479af10a37dff9d78617147c30e52fb764b8a",
+    "tools/report.py": "0790a9b26556164fed1b63fcb6001502a340428cac4f8d694083fb79e607861c",
+    "tools/server.py": "7c123ee05f915050fda293f762300be940f78be9cbec28cd258e3fd6d019ced2",
+    "tools/unit.py": "5fa4d7303908a7d9d27f5101478fcc3de7358d7d20cdd57134d712b4bdcf0a36",
+    "tools/validate.py": "00903e85fa7bde4ff589825051dc6b90e7c759ddb29c0dc2787d82672ef3bdbc",
+    "uplinkstead/__init__.py": "cb644b7273fc92cbe35a017c687d64ed5d39fb9388a9b5a98bda0fe0a1c18d62",
+    "uplinkstead/agent.py": "7fc1b865b33d67f52ad62b352edcb4a82529f5efa948edb008db83eba2903ed1",
+    "uplinkstead/cli.py": "6f4f2f48dfc71c13ca542900f884c792ae001460e87a14ae2e6d423124ab58f9",
+    "uplinkstead/config.py": "056c9a6c985f26bddf52835eed239d6bbec43745b22d0028c1b7e42c1410e08d",
+    "uplinkstead/control.py": "07aad9887782b774d61b1018ff0ae2d8f32526e4c8171cfa9df0d97e99ef6383",
+    "uplinkstead/daemon.py": "6ba4c3a5b9b3b9601304c4cb9967cdef6886c94957e2e6ca5ee44c6a00adefd4",
+    "uplinkstead/linux.py": "e163c800a1f77c48da6dedd71cf0f7696453e937f56e7e8df7ca02ab172b4da8",
+    "uplinkstead/policy.py": "d9a30ddf55ca1e84da224b4acdd912019b26a60c85887fc0d1383e5e6beb2947",
+    "uplinkstead/probe.py": "62f72a13dd3c02bd72319e545017862d220745791c187e541d8205c62c8f9187",
+    "uplinkstead/worker.py": "11de67689689b4b88c46e017452643e1bde7ba3a8745c6ca4bc34d92045e66cc",
+    "uplinkstead/writer.py": "811cd9d3ab589a864513bf748d746e1df48029014802aa91f49054bf4b3b8c0d"
+  },
+  "source_sha256": "e3a3da9f938e0915e4b4ab49985878a1cb1ce3ebf65311ab7b2a776cb66f21a3",
+  "stages": [
+    {
+      "name": "native-unit",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.5334978749888251
+    },
+    {
+      "name": "vm-initial",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.2535274580004625
+    },
+    {
+      "name": "vm-start",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 8.605121957996744
+    },
+    {
+      "name": "upload-preflight",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.4576849159930134
+    },
+    {
+      "name": "upload",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.32490920899726916
+    },
+    {
+      "name": "setup",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 1.0841307920054533
+    },
+    {
+      "name": "linux-unit",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 1.0812222919921624
+    },
+    {
+      "name": "linux-unit-read",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.21559679199708626
+    },
+    {
+      "name": "cases",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 110.94056445799652
+    },
+    {
+      "name": "prepare",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 4.959761874997639
+    },
+    {
+      "name": "vm-orderly-stop",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 2.588832542009186
+    },
+    {
+      "name": "vm-between",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.20146583300083876
+    },
+    {
+      "name": "vm-restart",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 8.776201375003438
+    },
+    {
+      "name": "after",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.2869965420104563
+    },
+    {
+      "name": "cleanup",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 1.1513259170023957
+    },
+    {
+      "name": "remove",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.3614133749942994
+    },
+    {
+      "name": "vm-stop",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 2.5156729579903185
+    },
+    {
+      "name": "vm-final",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.17994316699332558
+    }
+  ],
+  "native_unit": {
+    "passed": true,
+    "tests": [
+      "test_audit.OptimizedValidationTests.test_report_rejects_failure_under_optimization",
+      "test_audit.OptimizedValidationTests.test_unit_runner_refuses_optimized_validation",
+      "test_audit.PreflightTests.test_duplicate_builtin_rejected",
+      "test_audit.PreflightTests.test_inverted_disjoint_lookup_rejected",
+      "test_audit.PreflightTests.test_inverted_disjoint_prohibit_rejected",
+      "test_audit.PreflightTests.test_missing_local_rejected",
+      "test_audit.PreflightTests.test_plain_disjoint_lookup_still_accepted",
+      "test_audit.PreflightTests.test_unknown_disjoint_selector_rejected",
+      "test_audit.ProbeBodyTests.test_deeply_nested_json_is_target_failure",
+      "test_audit.ProbeBodyTests.test_nonfinite_and_invalid_peer_are_target_failures",
+      "test_audit.ProbeBodyTests.test_peer_limit_is_utf8_bytes_not_json_wire_or_character_count",
+      "test_audit.ProbeBodyTests.test_two_healthy_targets_retain_quorum",
+      "test_audit.ProbeBodyTests.test_valid_json_nonobjects_are_target_failures",
+      "test_audit.ProbeBodyTests.test_valid_object_still_successful",
+      "test_core.ConfigTests.test_duplicate_target_rejected",
+      "test_core.ConfigTests.test_exclusions_bounded",
+      "test_core.ConfigTests.test_hash_stable",
+      "test_core.ConfigTests.test_invalid_source_rejected",
+      "test_core.ConfigTests.test_overlapping_interfaces_rejected",
+      "test_core.ConfigTests.test_unknown_key_rejected",
+      "test_core.RoutingShapeTests.test_every_lookup_has_matching_terminal_guard",
+      "test_core.RoutingShapeTests.test_forward_selector_not_host_source_alone",
+      "test_core.RoutingShapeTests.test_internal_lookup_suppresses_main_default",
+      "test_core.RoutingShapeTests.test_probe_is_local_and_marked",
+      "test_core.RoutingShapeTests.test_real_iproute2_rule_output_normalization",
+      "test_core.WriterTests.test_actual_new_route_reconciles_incomplete_receipt",
+      "test_core.WriterTests.test_actual_old_route_reconciles_pending_without_replay",
+      "test_core.WriterTests.test_automatic_admission_requires_proof",
+      "test_core.WriterTests.test_generation_rejects_stale_after_reopen",
+      "test_core.WriterTests.test_health_expired_after_intent_cannot_dispatch",
+      "test_core.WriterTests.test_health_expired_during_preflight_cannot_write",
+      "test_core.WriterTests.test_invalid_journal_rejected",
+      "test_core.WriterTests.test_lock_contention_blocks",
+      "test_core.WriterTests.test_symlink_lock_rejected",
+      "test_core.WriterTests.test_unexpected_route_blocks",
+      "test_core.WriterTests.test_wrong_boot_config_and_round_proof_rejected",
+      "test_netproof.NetworkProofTests.test_meaningful_bytes_operand_not_ignored",
+      "test_netproof.NetworkProofTests.test_only_nft_counter_values_and_handles_ignored",
+      "test_netproof.NetworkProofTests.test_rule_order_preserved",
+      "test_netproof.NetworkProofTests.test_xt_counters_and_timestamp_comments_only",
+      "test_netproof.NetworkProofTests.test_xt_rule_comment_not_mistaken_for_counter",
+      "test_policy.PolicyTests.test_auto_failback_requires_continuous_stability",
+      "test_policy.PolicyTests.test_budget_latches_and_restart_retains_latch",
+      "test_policy.PolicyTests.test_cross_boot_budget_not_replenished_by_reboot",
+      "test_policy.PolicyTests.test_default_never_preference_failback",
+      "test_policy.PolicyTests.test_expired_result_breaks_streak",
+      "test_policy.PolicyTests.test_failover_threshold",
+      "test_policy.PolicyTests.test_history_expires_same_boot_without_process_reset",
+      "test_policy.PolicyTests.test_initial_success_requires_multiple_rounds",
+      "test_policy.PolicyTests.test_invalid_settings",
+      "test_policy.PolicyTests.test_missing_round_expires_health",
+      "test_policy.PolicyTests.test_one_target_failure_not_link_failure",
+      "test_policy.PolicyTests.test_reordered_round_rejected",
+      "test_policy.PolicyTests.test_stability_gap_resets_recovery",
+      "test_policy.PolicyTests.test_stale_wrong_boot_and_wrong_config_rejected",
+      "test_policy.PolicyTests.test_unknown_current_does_not_trigger_speculative_switch",
+      "test_policy.PolicyTests.test_unknown_not_destination",
+      "test_report_review.ReportReviewTests.test_benchmark_path_fault_and_process_identity_are_required",
+      "test_report_review.ReportReviewTests.test_reboot_correspondence_rejects_independent_counterexamples",
+      "test_service.ServiceTests.test_actual_sqlite_capacity_error_is_not_success",
+      "test_service.ServiceTests.test_clean_rejection_keeps_serving_but_partial_state_retires_owner",
+      "test_service.ServiceTests.test_detached_corrupt_attached_intent_rejected",
+      "test_service.ServiceTests.test_disable_explicit_handoff_and_reenable_has_no_stale_health",
+      "test_service.ServiceTests.test_disabled_pause_does_not_switch_and_restart_retains_mode",
+      "test_service.ServiceTests.test_event_retention_and_database_capacity",
+      "test_service.ServiceTests.test_failed_disable_is_durable_and_restarts_to_disabled",
+      "test_service.ServiceTests.test_failed_enable_is_durable_and_restarts_to_paused",
+      "test_service.ServiceTests.test_first_start_detached_then_enable_paused",
+      "test_service.ServiceTests.test_forged_automatic_target_and_old_round_rejected",
+      "test_service.ServiceTests.test_low_disk_blocks_before_route_write",
+      "test_service.ServiceTests.test_manual_selection_ignores_expired_history_but_preserves_latch",
+      "test_service.ServiceTests.test_no_arbitrary_commands_or_caller_health_proofs",
+      "test_service.ServiceTests.test_old_revision_rejected_after_pause_and_same_process_resume",
+      "test_service.ServiceTests.test_one_oversized_peer_does_not_block_formal_controller_sample",
+      "test_service.ServiceTests.test_parser_rejects_oversize_duplicate_and_nonobject",
+      "test_service.ServiceTests.test_probe_rate_bounded",
+      "test_service.ServiceTests.test_resume_needs_fresh_writer_health_and_ack",
+      "test_service.ServiceTests.test_same_selected_resume_rechecks_health_after_budget_persistence",
+      "test_service.ServiceTests.test_state_write_failure_precedes_lifecycle_mutation",
+      "test_service.ServiceTests.test_uncertain_command_does_not_keep_serving_even_without_pending",
+      "test_service.ServiceTests.test_untrusted_peer_and_worker_operator_denied"
+    ],
+    "count": 81,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "source_sha256": "e3a3da9f938e0915e4b4ab49985878a1cb1ce3ebf65311ab7b2a776cb66f21a3",
+    "platform": "Darwin",
+    "python": "3.12.14"
+  },
+  "vm_initial": "Stopped",
+  "linux_unit": {
+    "passed": true,
+    "tests": [
+      "test_audit.OptimizedValidationTests.test_report_rejects_failure_under_optimization",
+      "test_audit.OptimizedValidationTests.test_unit_runner_refuses_optimized_validation",
+      "test_audit.PreflightTests.test_duplicate_builtin_rejected",
+      "test_audit.PreflightTests.test_inverted_disjoint_lookup_rejected",
+      "test_audit.PreflightTests.test_inverted_disjoint_prohibit_rejected",
+      "test_audit.PreflightTests.test_missing_local_rejected",
+      "test_audit.PreflightTests.test_plain_disjoint_lookup_still_accepted",
+      "test_audit.PreflightTests.test_unknown_disjoint_selector_rejected",
+      "test_audit.ProbeBodyTests.test_deeply_nested_json_is_target_failure",
+      "test_audit.ProbeBodyTests.test_nonfinite_and_invalid_peer_are_target_failures",
+      "test_audit.ProbeBodyTests.test_peer_limit_is_utf8_bytes_not_json_wire_or_character_count",
+      "test_audit.ProbeBodyTests.test_two_healthy_targets_retain_quorum",
+      "test_audit.ProbeBodyTests.test_valid_json_nonobjects_are_target_failures",
+      "test_audit.ProbeBodyTests.test_valid_object_still_successful",
+      "test_core.ConfigTests.test_duplicate_target_rejected",
+      "test_core.ConfigTests.test_exclusions_bounded",
+      "test_core.ConfigTests.test_hash_stable",
+      "test_core.ConfigTests.test_invalid_source_rejected",
+      "test_core.ConfigTests.test_overlapping_interfaces_rejected",
+      "test_core.ConfigTests.test_unknown_key_rejected",
+      "test_core.RoutingShapeTests.test_every_lookup_has_matching_terminal_guard",
+      "test_core.RoutingShapeTests.test_forward_selector_not_host_source_alone",
+      "test_core.RoutingShapeTests.test_internal_lookup_suppresses_main_default",
+      "test_core.RoutingShapeTests.test_probe_is_local_and_marked",
+      "test_core.RoutingShapeTests.test_real_iproute2_rule_output_normalization",
+      "test_core.WriterTests.test_actual_new_route_reconciles_incomplete_receipt",
+      "test_core.WriterTests.test_actual_old_route_reconciles_pending_without_replay",
+      "test_core.WriterTests.test_automatic_admission_requires_proof",
+      "test_core.WriterTests.test_generation_rejects_stale_after_reopen",
+      "test_core.WriterTests.test_health_expired_after_intent_cannot_dispatch",
+      "test_core.WriterTests.test_health_expired_during_preflight_cannot_write",
+      "test_core.WriterTests.test_invalid_journal_rejected",
+      "test_core.WriterTests.test_lock_contention_blocks",
+      "test_core.WriterTests.test_symlink_lock_rejected",
+      "test_core.WriterTests.test_unexpected_route_blocks",
+      "test_core.WriterTests.test_wrong_boot_config_and_round_proof_rejected",
+      "test_netproof.NetworkProofTests.test_meaningful_bytes_operand_not_ignored",
+      "test_netproof.NetworkProofTests.test_only_nft_counter_values_and_handles_ignored",
+      "test_netproof.NetworkProofTests.test_rule_order_preserved",
+      "test_netproof.NetworkProofTests.test_xt_counters_and_timestamp_comments_only",
+      "test_netproof.NetworkProofTests.test_xt_rule_comment_not_mistaken_for_counter",
+      "test_policy.PolicyTests.test_auto_failback_requires_continuous_stability",
+      "test_policy.PolicyTests.test_budget_latches_and_restart_retains_latch",
+      "test_policy.PolicyTests.test_cross_boot_budget_not_replenished_by_reboot",
+      "test_policy.PolicyTests.test_default_never_preference_failback",
+      "test_policy.PolicyTests.test_expired_result_breaks_streak",
+      "test_policy.PolicyTests.test_failover_threshold",
+      "test_policy.PolicyTests.test_history_expires_same_boot_without_process_reset",
+      "test_policy.PolicyTests.test_initial_success_requires_multiple_rounds",
+      "test_policy.PolicyTests.test_invalid_settings",
+      "test_policy.PolicyTests.test_missing_round_expires_health",
+      "test_policy.PolicyTests.test_one_target_failure_not_link_failure",
+      "test_policy.PolicyTests.test_reordered_round_rejected",
+      "test_policy.PolicyTests.test_stability_gap_resets_recovery",
+      "test_policy.PolicyTests.test_stale_wrong_boot_and_wrong_config_rejected",
+      "test_policy.PolicyTests.test_unknown_current_does_not_trigger_speculative_switch",
+      "test_policy.PolicyTests.test_unknown_not_destination",
+      "test_report_review.ReportReviewTests.test_benchmark_path_fault_and_process_identity_are_required",
+      "test_report_review.ReportReviewTests.test_reboot_correspondence_rejects_independent_counterexamples",
+      "test_service.ServiceTests.test_actual_sqlite_capacity_error_is_not_success",
+      "test_service.ServiceTests.test_clean_rejection_keeps_serving_but_partial_state_retires_owner",
+      "test_service.ServiceTests.test_detached_corrupt_attached_intent_rejected",
+      "test_service.ServiceTests.test_disable_explicit_handoff_and_reenable_has_no_stale_health",
+      "test_service.ServiceTests.test_disabled_pause_does_not_switch_and_restart_retains_mode",
+      "test_service.ServiceTests.test_event_retention_and_database_capacity",
+      "test_service.ServiceTests.test_failed_disable_is_durable_and_restarts_to_disabled",
+      "test_service.ServiceTests.test_failed_enable_is_durable_and_restarts_to_paused",
+      "test_service.ServiceTests.test_first_start_detached_then_enable_paused",
+      "test_service.ServiceTests.test_forged_automatic_target_and_old_round_rejected",
+      "test_service.ServiceTests.test_low_disk_blocks_before_route_write",
+      "test_service.ServiceTests.test_manual_selection_ignores_expired_history_but_preserves_latch",
+      "test_service.ServiceTests.test_no_arbitrary_commands_or_caller_health_proofs",
+      "test_service.ServiceTests.test_old_revision_rejected_after_pause_and_same_process_resume",
+      "test_service.ServiceTests.test_one_oversized_peer_does_not_block_formal_controller_sample",
+      "test_service.ServiceTests.test_parser_rejects_oversize_duplicate_and_nonobject",
+      "test_service.ServiceTests.test_probe_rate_bounded",
+      "test_service.ServiceTests.test_resume_needs_fresh_writer_health_and_ack",
+      "test_service.ServiceTests.test_same_selected_resume_rechecks_health_after_budget_persistence",
+      "test_service.ServiceTests.test_state_write_failure_precedes_lifecycle_mutation",
+      "test_service.ServiceTests.test_uncertain_command_does_not_keep_serving_even_without_pending",
+      "test_service.ServiceTests.test_untrusted_peer_and_worker_operator_denied"
+    ],
+    "count": 81,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "source_sha256": "e3a3da9f938e0915e4b4ab49985878a1cb1ce3ebf65311ab7b2a776cb66f21a3",
+    "platform": "Linux",
+    "python": "3.12.3"
+  },
+  "guest": {
+    "passed": true,
+    "source_sha256": "e3a3da9f938e0915e4b4ab49985878a1cb1ce3ebf65311ab7b2a776cb66f21a3",
+    "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+    "cases": [
+      {
+        "name": "pinned_healthy_probes",
+        "passed": true,
+        "seconds": 0.05980183299999986,
+        "details": {
+          "A": [
+            3,
+            [
+              {
+                "ok": true,
+                "infrastructure": false,
+                "seconds": 0.005179124999999729,
+                "peer_observed": "10.99.1.1",
+                "link": "A"
+              },
+              {
+                "ok": true,
+                "infrastructure": false,
+                "seconds": 0.004910000000000636,
+                "peer_observed": "10.99.1.1",
+                "link": "A"
+              },
+              {
+                "ok": true,
+                "infrastructure": false,
+                "seconds": 0.005087542000000056,
+                "peer_observed": "10.99.1.1",
+                "link": "A"
+              }
+            ]
+          ],
+          "B": [
+            3,
+            [
+              {
+                "ok": true,
+                "infrastructure": false,
+                "seconds": 0.001962416999999661,
+                "peer_observed": "10.99.2.1",
+                "link": "B"
+              },
+              {
+                "ok": true,
+                "infrastructure": false,
+                "seconds": 0.001447750000000525,
+                "peer_observed": "10.99.2.1",
+                "link": "B"
+              },
+              {
+                "ok": true,
+                "infrastructure": false,
+                "seconds": 0.0016566669999988903,
+                "peer_observed": "10.99.2.1",
+                "link": "B"
+              }
+            ]
+          ]
+        }
+      },
+      {
+        "name": "probe_blackhole_missing_route_link_down",
+        "passed": true,
+        "seconds": 2.786982043,
+        "details": [
+          {
+            "link": "A",
+            "blackhole": [
+              0,
+              [
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5058820829999995,
+                  "link": "A"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5029317509999984,
+                  "link": "A"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5018573750000002,
+                  "link": "A"
+                }
+              ]
+            ],
+            "other": [
+              3,
+              [
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.007715667000001147,
+                  "peer_observed": "10.99.2.1",
+                  "link": "B"
+                },
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.008028458000000072,
+                  "peer_observed": "10.99.2.1",
+                  "link": "B"
+                },
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.009279707999999331,
+                  "peer_observed": "10.99.2.1",
+                  "link": "B"
+                }
+              ]
+            ],
+            "missing_route": [
+              0,
+              [
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5017112920000013,
+                  "link": "A"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5017852090000012,
+                  "link": "A"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5016199589999992,
+                  "link": "A"
+                }
+              ]
+            ],
+            "link_down": [
+              0,
+              [
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "OSError",
+                  "seconds": 0.003202249999999296,
+                  "link": "A"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "OSError",
+                  "seconds": 0.0016100419999993676,
+                  "link": "A"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "OSError",
+                  "seconds": 0.0016046250000005813,
+                  "link": "A"
+                }
+              ]
+            ],
+            "wrong_egress_packets": 0,
+            "terminal_lookup_rejected": true
+          },
+          {
+            "link": "B",
+            "blackhole": [
+              0,
+              [
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5026761670000006,
+                  "link": "B"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5024560840000003,
+                  "link": "B"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5020080839999999,
+                  "link": "B"
+                }
+              ]
+            ],
+            "other": [
+              3,
+              [
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.003616292000000243,
+                  "peer_observed": "10.99.1.1",
+                  "link": "A"
+                },
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.0033440840000000804,
+                  "peer_observed": "10.99.1.1",
+                  "link": "A"
+                },
+                {
+                  "ok": true,
+                  "infrastructure": false,
+                  "seconds": 0.003494958999999298,
+                  "peer_observed": "10.99.1.1",
+                  "link": "A"
+                }
+              ]
+            ],
+            "missing_route": [
+              0,
+              [
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.502805458000001,
+                  "link": "B"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5028438749999999,
+                  "link": "B"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "TimeoutError",
+                  "seconds": 0.5028334169999997,
+                  "link": "B"
+                }
+              ]
+            ],
+            "link_down": [
+              0,
+              [
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "OSError",
+                  "seconds": 0.0005084160000006221,
+                  "link": "B"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "OSError",
+                  "seconds": 0.0002725830000009921,
+                  "link": "B"
+                },
+                {
+                  "ok": false,
+                  "infrastructure": false,
+                  "error": "OSError",
+                  "seconds": 0.00014816699999897764,
+                  "link": "B"
+                }
+              ]
+            ],
+            "wrong_egress_packets": 0,
+            "terminal_lookup_rejected": true
+          }
+        ]
+      },
+      {
+        "name": "binding_error_unknown",
+        "passed": true,
+        "seconds": 0.02519466599999909,
+        "details": [
+          null,
+          [
+            {
+              "ok": false,
+              "infrastructure": true,
+              "error": "OSError",
+              "seconds": 0.00019399999999869522,
+              "link": "A"
+            },
+            {
+              "ok": false,
+              "infrastructure": true,
+              "error": "OSError",
+              "seconds": 4.8540999999957535e-05,
+              "link": "A"
+            },
+            {
+              "ok": false,
+              "infrastructure": true,
+              "error": "OSError",
+              "seconds": 1.5792000001013662e-05,
+              "link": "A"
+            }
+          ]
+        ]
+      },
+      {
+        "name": "lan_scope_new_tls_and_internal_exclusion",
+        "passed": true,
+        "seconds": 0.4176139170000006,
+        "details": {
+          "lan_A": {
+            "ok": true,
+            "result": {
+              "ok": true,
+              "nonce": "03242d7633206a871b446bf6",
+              "peer": "10.99.1.1",
+              "server": "203.0.113.2"
+            },
+            "error": null
+          },
+          "lan_B": {
+            "ok": true,
+            "result": {
+              "ok": true,
+              "nonce": "484f0a4ff269599ac5a79ff3",
+              "peer": "10.99.2.1",
+              "server": "203.0.113.2"
+            },
+            "error": null
+          },
+          "host_before": {
+            "ok": true,
+            "result": {
+              "ok": true,
+              "nonce": "41d8b3cd71e7dabb9e493e43",
+              "peer": "10.99.1.1",
+              "server": "203.0.113.2"
+            },
+            "error": null
+          },
+          "host_after": {
+            "ok": true,
+            "result": {
+              "ok": true,
+              "nonce": "d8f2050ae219221d883459a3",
+              "peer": "10.99.1.1",
+              "server": "203.0.113.2"
+            },
+            "error": null
+          },
+          "other_before": {
+            "ok": true,
+            "result": {
+              "ok": true,
+              "nonce": "bcfa4c36419b960601d6e70b",
+              "peer": "10.99.1.1",
+              "server": "203.0.113.2"
+            },
+            "error": null
+          },
+          "other_after": {
+            "ok": true,
+            "result": {
+              "ok": true,
+              "nonce": "b7182ddf4aedfca7fcd88155",
+              "peer": "10.99.1.1",
+              "server": "203.0.113.2"
+            },
+            "error": null
+          },
+          "main_unchanged": true,
+          "internal_route": [
+            {
+              "dst": "198.18.0.1",
+              "from": "10.77.0.2",
+              "gateway": "192.0.2.1",
+              "dev": "wanA",
+              "flags": [],
+              "cache": [],
+              "iif": "lan0"
+            }
+          ],
+          "local_before": {
+            "ok": true,
+            "result": {
+              "ok": true,
+              "nonce": "4e0a5d51194308798becf684",
+              "peer": "10.77.0.2",
+              "server": "10.77.0.1"
+            },
+            "error": null
+          },
+          "local_after": {
+            "ok": true,
+            "result": {
+              "ok": true,
+              "nonce": "8de46e1d90977d66ef09c193",
+              "peer": "10.77.0.2",
+              "server": "10.77.0.1"
+            },
+            "error": null
+          }
+        }
+      },
+      {
+        "name": "external_rpdb_conflict_and_preservation",
+        "passed": true,
+        "seconds": 0.07817291699999984,
+        "details": {
+          "intersecting_rejected": true,
+          "no_changes_on_rejection": true,
+          "disjoint_preserved": true
+        }
+      },
+      {
+        "name": "output_success_does_not_prove_forwarding",
+        "passed": true,
+        "seconds": 1.1384166680000014,
+        "details": {
+          "exit_probe_successes": 3,
+          "lan_request": {
+            "ok": false,
+            "result": null,
+            "error": "request_failed"
+          },
+          "not_counted_as_recovery": true
+        }
+      },
+      {
+        "name": "strict_rp_filter_contract",
+        "passed": true,
+        "seconds": 0.08572799999999958,
+        "details": {
+          "strict_all_rejected": true,
+          "external_setting_not_rewritten": true
+        }
+      },
+      {
+        "name": "routed_without_nat_and_provisioned_return_path",
+        "passed": true,
+        "seconds": 0.145359749999999,
+        "details": {
+          "requests": [
+            {
+              "ok": true,
+              "result": {
+                "ok": true,
+                "nonce": "261fa82fc3c81e92b8317d10",
+                "peer": "10.77.0.2",
+                "server": "203.0.113.2"
+              },
+              "error": null
+            },
+            {
+              "ok": true,
+              "result": {
+                "ok": true,
+                "nonce": "4371bf96fd868c0c1c481637",
+                "peer": "10.77.0.2",
+                "server": "203.0.113.2"
+              },
+              "error": null
+            }
+          ],
+          "return_routes_explicitly_provisioned_by_fixture": true
+        }
+      },
+      {
+        "name": "link_down_owned_route_reconstruction",
+        "passed": true,
+        "seconds": 0.244801292,
+        "details": {
+          "actual_route_loss_reconciled": true,
+          "backup_request": {
+            "ok": true,
+            "result": {
+              "ok": true,
+              "nonce": "a43be7e7ebcc94a2b457b363",
+              "peer": "10.99.2.1",
+              "server": "203.0.113.2"
+            },
+            "error": null
+          },
+          "probe_after_link_up": [
+            3,
+            [
+              {
+                "ok": true,
+                "infrastructure": false,
+                "seconds": 0.004213500000000536,
+                "peer_observed": "10.99.1.1",
+                "link": "A"
+              },
+              {
+                "ok": true,
+                "infrastructure": false,
+                "seconds": 0.0037715420000008493,
+                "peer_observed": "10.99.1.1",
+                "link": "A"
+              },
+              {
+                "ok": true,
+                "infrastructure": false,
+                "seconds": 0.0037362919999992528,
+                "peer_observed": "10.99.1.1",
+                "link": "A"
+              }
+            ]
+          ],
+          "selection_remains_B": true
+        }
+      },
+      {
+        "name": "delayed_old_operation_rejected",
+        "passed": true,
+        "seconds": 0.18121258400000073,
+        "details": {
+          "stale_epoch": 15,
+          "rejected_exit": 1,
+          "selected": "B"
+        }
+      },
+      {
+        "name": "live_old_writer_blocks_takeover",
+        "passed": true,
+        "seconds": 0.11579420800000051,
+        "details": {
+          "successor_blocked_while_owner_alive": true,
+          "successor_after_retirement": "B"
+        }
+      },
+      {
+        "name": "inherited_mutation_helper_lock",
+        "passed": true,
+        "seconds": 0.21739712499999975,
+        "details": {
+          "parent_killed": true,
+          "live_mutation_child_blocks_successor": true,
+          "child_retired_before_successor": true
+        }
+      },
+      {
+        "name": "sigkill_intent_route_and_receipt_boundaries",
+        "passed": true,
+        "seconds": 0.41794420799999976,
+        "details": [
+          {
+            "boundary": "before-route",
+            "pending_before": {
+              "before": "A",
+              "target": "B",
+              "token": "36600fb6861d40d982991befc10f2d81"
+            },
+            "routes_before": [
+              {
+                "dst": "default",
+                "gateway": "192.0.2.1",
+                "dev": "wanA",
+                "metric": 100,
+                "flags": []
+              },
+              {
+                "dst": "192.0.2.0/30",
+                "dev": "wanA",
+                "scope": "link",
+                "flags": []
+              },
+              {
+                "dst": "192.0.2.4/30",
+                "dev": "wanB",
+                "scope": "link",
+                "flags": []
+              }
+            ],
+            "recovered_selected": "A",
+            "epoch_before": 25,
+            "epoch_after": 26
+          },
+          {
+            "boundary": "after-route",
+            "pending_before": {
+              "before": "A",
+              "target": "B",
+              "token": "c1a60d50cea7414ca96af34c730fc1ae"
+            },
+            "routes_before": [
+              {
+                "dst": "default",
+                "gateway": "192.0.2.5",
+                "dev": "wanB",
+                "metric": 100,
+                "flags": []
+              },
+              {
+                "dst": "192.0.2.0/30",
+                "dev": "wanA",
+                "scope": "link",
+                "flags": []
+              },
+              {
+                "dst": "192.0.2.4/30",
+                "dev": "wanB",
+                "scope": "link",
+                "flags": []
+              }
+            ],
+            "recovered_selected": "B",
+            "epoch_before": 28,
+            "epoch_after": 29
+          },
+          {
+            "boundary": "before-complete",
+            "pending_before": {
+              "before": "A",
+              "target": "B",
+              "token": "927042afa8d24f4bb73429d689a3c349"
+            },
+            "routes_before": [
+              {
+                "dst": "default",
+                "gateway": "192.0.2.5",
+                "dev": "wanB",
+                "metric": 100,
+                "flags": []
+              },
+              {
+                "dst": "192.0.2.0/30",
+                "dev": "wanA",
+                "scope": "link",
+                "flags": []
+              },
+              {
+                "dst": "192.0.2.4/30",
+                "dev": "wanB",
+                "scope": "link",
+                "flags": []
+              }
+            ],
+            "recovered_selected": "B",
+            "epoch_before": 31,
+            "epoch_after": 32
+          }
+        ]
+      },
+      {
+        "name": "inverted_rpdb_rules_rejected",
+        "passed": true,
+        "seconds": 0.05854174999999984,
+        "details": [
+          {
+            "rule": {
+              "priority": 9990,
+              "not": null,
+              "src": "all",
+              "iif": "other0",
+              "table": "main"
+            },
+            "rejected": true,
+            "no_mutation": true
+          },
+          {
+            "rule": {
+              "priority": 9990,
+              "not": null,
+              "src": "all",
+              "iif": "other0",
+              "action": "prohibit"
+            },
+            "rejected": true,
+            "no_mutation": true
+          }
+        ]
+      },
+      {
+        "name": "missing_local_lookup_rejected",
+        "passed": true,
+        "seconds": 0.24557591700000003,
+        "details": {
+          "rejected": true,
+          "no_mutation": true,
+          "local_request_after_fixture_restore": {
+            "ok": true,
+            "result": {
+              "ok": true,
+              "nonce": "8a69e6d1d12d57f1b41ae508",
+              "peer": "10.77.0.2",
+              "server": "10.77.0.1"
+            },
+            "error": null
+          }
+        }
+      },
+      {
+        "name": "expired_health_before_mutation",
+        "passed": true,
+        "seconds": 3.8152019600000013,
+        "details": {
+          "rejected": true,
+          "selected": "A",
+          "pending": null,
+          "proof": {
+            "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+            "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+            "target": "B",
+            "round": 2,
+            "observed_at": 17.335907549,
+            "expires_at": 19.335907549
+          },
+          "blocked_at": 19.446491508,
+          "pre_intent": true,
+          "uses_agent_cycle": true,
+          "prior_rounds": [
+            {
+              "state": "NO_HEALTHY_UPLINK",
+              "selected": "A",
+              "before": "A",
+              "target": null,
+              "health": {
+                "A": "SUSPECT",
+                "B": "RECOVERING"
+              },
+              "round": 0,
+              "probes": {
+                "A": {
+                  "started": 15.764032465,
+                  "finished": 16.265973715,
+                  "successes": 0,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5013114999999999,
+                      "link": "A"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5009725419999995,
+                      "link": "A"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.501122208,
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 16.271203049,
+                  "finished": 16.277516549,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.005979499999998694,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0050861669999981984,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.004743833000002695,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 16.280441007,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [],
+              "latched": false
+            },
+            {
+              "state": "NO_HEALTHY_UPLINK",
+              "selected": "A",
+              "before": "A",
+              "target": null,
+              "health": {
+                "A": "SUSPECT",
+                "B": "RECOVERING"
+              },
+              "round": 1,
+              "probes": {
+                "A": {
+                  "started": 16.296487424,
+                  "finished": 16.799660966,
+                  "successes": 0,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5029092500000019,
+                      "link": "A"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5027332079999987,
+                      "link": "A"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5027049169999991,
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 16.804211424000002,
+                  "finished": 16.807900799,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.003130125000001982,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.003266625000001966,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.002747750000001048,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 16.809343174,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [],
+              "latched": false
+            }
+          ]
+        }
+      },
+      {
+        "name": "malformed_target_quorum",
+        "passed": true,
+        "seconds": 0.16980612500000092,
+        "details": {
+          "rounds": [
+            {
+              "state": "NO_HEALTHY_UPLINK",
+              "selected": "A",
+              "before": "A",
+              "target": null,
+              "health": {
+                "A": "RECOVERING",
+                "B": "RECOVERING"
+              },
+              "round": 0,
+              "probes": {
+                "A": {
+                  "started": 19.583535884,
+                  "finished": 19.587822717,
+                  "successes": 2,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "ValueError",
+                      "seconds": 0.004088458999998323,
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.003849541000001011,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.003194499999999323,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 19.588607675,
+                  "finished": 19.590806092,
+                  "successes": 2,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "ValueError",
+                      "seconds": 0.0017105419999978722,
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0020145829999975717,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.001872124999998448,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 19.591936009,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [],
+              "latched": false
+            },
+            {
+              "state": "NO_HEALTHY_UPLINK",
+              "selected": "A",
+              "before": "A",
+              "target": null,
+              "health": {
+                "A": "RECOVERING",
+                "B": "RECOVERING"
+              },
+              "round": 1,
+              "probes": {
+                "A": {
+                  "started": 19.601749092,
+                  "finished": 19.603994925,
+                  "successes": 2,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "ValueError",
+                      "seconds": 0.0020842090000030566,
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0015867499999977497,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0016348750000005907,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 19.60496955,
+                  "finished": 19.606909634,
+                  "successes": 2,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "ValueError",
+                      "seconds": 0.0013085000000003788,
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0016464999999996621,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0016019579999984046,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 19.607771884,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [],
+              "latched": false
+            },
+            {
+              "state": "RUNNING",
+              "selected": "A",
+              "before": "A",
+              "target": null,
+              "health": {
+                "A": "HEALTHY",
+                "B": "HEALTHY"
+              },
+              "round": 2,
+              "probes": {
+                "A": {
+                  "started": 19.616983009,
+                  "finished": 19.619217134,
+                  "successes": 2,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "ValueError",
+                      "seconds": 0.0016362920000005943,
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.001157958000000292,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0011857089999978143,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 19.620058884,
+                  "finished": 19.621635759,
+                  "successes": 2,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "ValueError",
+                      "seconds": 0.0012232499999988988,
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0013527089999989528,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0013298339999998632,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 19.622347134,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [],
+              "latched": false
+            },
+            {
+              "state": "RUNNING",
+              "selected": "A",
+              "before": "A",
+              "target": null,
+              "health": {
+                "A": "HEALTHY",
+                "B": "HEALTHY"
+              },
+              "round": 3,
+              "probes": {
+                "A": {
+                  "started": 19.631036509,
+                  "finished": 19.633338175,
+                  "successes": 2,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "ValueError",
+                      "seconds": 0.0021599999999999397,
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0018914589999994291,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0017756670000004249,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 19.635603759,
+                  "finished": 19.637620259,
+                  "successes": 2,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "ValueError",
+                      "seconds": 0.00161225000000087,
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0018111249999996915,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0016369169999990163,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 19.638545509,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [],
+              "latched": false
+            }
+          ],
+          "agent_survived": true,
+          "uses_agent_cycle": true,
+          "lan_request": {
+            "ok": true,
+            "result": {
+              "ok": true,
+              "nonce": "274af3efb373585482467904",
+              "peer": "10.99.1.1",
+              "server": "203.0.113.2"
+            },
+            "error": null
+          }
+        }
+      },
+      {
+        "name": "real_probe_failover_flapping_and_budget",
+        "passed": true,
+        "seconds": 21.738348118999998,
+        "details": {
+          "transitions": [
+            {
+              "stage": "A_down",
+              "selected": "B"
+            },
+            {
+              "stage": "B_down",
+              "selected": "A"
+            },
+            {
+              "stage": "A_down_again",
+              "selected": "B"
+            }
+          ],
+          "rounds": [
+            {
+              "state": "NO_HEALTHY_UPLINK",
+              "selected": "A",
+              "before": "A",
+              "target": null,
+              "health": {
+                "A": "RECOVERING",
+                "B": "RECOVERING"
+              },
+              "round": 0,
+              "probes": {
+                "A": {
+                  "started": 19.745451425,
+                  "finished": 19.749282425,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.003507667000000936,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0028106669999985456,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0028782079999984944,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 19.7511228,
+                  "finished": 19.753279259,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0017054170000001534,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0019519159999994429,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0017364579999998853,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 19.75566655,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [],
+              "latched": false,
+              "stage": "healthy",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "dbc01330682026ecda2a4381",
+                  "peer": "10.99.1.1",
+                  "server": "203.0.113.2"
+                },
+                "error": null
+              }
+            },
+            {
+              "state": "NO_HEALTHY_UPLINK",
+              "selected": "A",
+              "before": "A",
+              "target": null,
+              "health": {
+                "A": "RECOVERING",
+                "B": "RECOVERING"
+              },
+              "round": 1,
+              "probes": {
+                "A": {
+                  "started": 19.78134655,
+                  "finished": 19.783656509,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.002064292000000023,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0018364160000032825,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.002062916999999942,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 19.784601884,
+                  "finished": 19.786645967,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0018947909999980084,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0015503330000008475,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0016352500000031966,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 19.78737455,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [],
+              "latched": false,
+              "stage": "healthy",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "5134bcd5eba8240140c3c126",
+                  "peer": "10.99.1.1",
+                  "server": "203.0.113.2"
+                },
+                "error": null
+              }
+            },
+            {
+              "state": "RUNNING",
+              "selected": "A",
+              "before": "A",
+              "target": null,
+              "health": {
+                "A": "HEALTHY",
+                "B": "HEALTHY"
+              },
+              "round": 2,
+              "probes": {
+                "A": {
+                  "started": 19.813051342,
+                  "finished": 19.815459884,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0021047500000008768,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0021763749999976767,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0017060839999984978,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 19.816358675,
+                  "finished": 19.818794384,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.002142584000001335,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0022016249999978754,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0019146250000012799,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 19.819677175,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [],
+              "latched": false,
+              "stage": "healthy",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "1f44ac96811eb8a3fc24c75d",
+                  "peer": "10.99.1.1",
+                  "server": "203.0.113.2"
+                },
+                "error": null
+              }
+            },
+            {
+              "state": "RUNNING",
+              "selected": "A",
+              "before": "A",
+              "target": null,
+              "health": {
+                "A": "HEALTHY",
+                "B": "HEALTHY"
+              },
+              "round": 3,
+              "probes": {
+                "A": {
+                  "started": 19.844570009,
+                  "finished": 19.846896509,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.002119708999998693,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0019441249999978538,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0016695830000017509,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 19.84826955,
+                  "finished": 19.850594592,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0018873749999990252,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.00210945799999962,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0019062499999975557,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 19.851439967,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [],
+              "latched": false,
+              "stage": "healthy",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "4a4d46ea0846bef90ed4b47c",
+                  "peer": "10.99.1.1",
+                  "server": "203.0.113.2"
+                },
+                "error": null
+              }
+            },
+            {
+              "state": "RUNNING",
+              "selected": "A",
+              "before": "A",
+              "target": null,
+              "health": {
+                "A": "HEALTHY",
+                "B": "HEALTHY"
+              },
+              "round": 4,
+              "probes": {
+                "A": {
+                  "started": 19.877619842,
+                  "finished": 20.378857676,
+                  "successes": 2,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5006346260000001,
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0018193340000003388,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.001568500000001194,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 20.384503884,
+                  "finished": 20.388993509,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0027997499999976583,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.003162249999999034,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0024809159999996666,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 20.392491301,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [],
+              "latched": false,
+              "stage": "single_target",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "f5b18f68ea61634aa6c511f7",
+                  "peer": "10.99.1.1",
+                  "server": "203.0.113.2"
+                },
+                "error": null
+              }
+            },
+            {
+              "state": "RUNNING",
+              "selected": "A",
+              "before": "A",
+              "target": null,
+              "health": {
+                "A": "HEALTHY",
+                "B": "HEALTHY"
+              },
+              "round": 5,
+              "probes": {
+                "A": {
+                  "started": 20.483918426,
+                  "finished": 20.986318509,
+                  "successes": 2,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5019178750000002,
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0029547089999972798,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0028768749999983356,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 20.991167009,
+                  "finished": 20.996964176,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.004610165999999083,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.004695250000001039,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.004921625000001484,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 20.998634176,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [],
+              "latched": false,
+              "stage": "single_target",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "2f9e982ca261a11a0d4954b3",
+                  "peer": "10.99.1.1",
+                  "server": "203.0.113.2"
+                },
+                "error": null
+              }
+            },
+            {
+              "state": "RUNNING",
+              "selected": "A",
+              "before": "A",
+              "target": null,
+              "health": {
+                "A": "HEALTHY",
+                "B": "HEALTHY"
+              },
+              "round": 6,
+              "probes": {
+                "A": {
+                  "started": 21.033859093,
+                  "finished": 21.536252509,
+                  "successes": 2,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5017006669999979,
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.00216862499999948,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.001840624999999818,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 21.542669384,
+                  "finished": 21.547768843,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.00429979200000119,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.003912041999999616,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.004052542000000159,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 21.549761884,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [],
+              "latched": false,
+              "stage": "single_target",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "d8461ea74a9468e314262217",
+                  "peer": "10.99.1.1",
+                  "server": "203.0.113.2"
+                },
+                "error": null
+              }
+            },
+            {
+              "state": "RUNNING",
+              "selected": "A",
+              "before": "A",
+              "target": null,
+              "health": {
+                "A": "HEALTHY",
+                "B": "HEALTHY"
+              },
+              "round": 7,
+              "probes": {
+                "A": {
+                  "started": 21.588357176,
+                  "finished": 22.094936385,
+                  "successes": 2,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5058444169999987,
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0017051250000008622,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0018426670000017964,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 22.101551343,
+                  "finished": 22.108382468,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.005906458000001891,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.006183040999999889,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.005596332999999731,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 22.11048626,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [],
+              "latched": false,
+              "stage": "single_target",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "5a425f6c9041845cb194fe6c",
+                  "peer": "10.99.1.1",
+                  "server": "203.0.113.2"
+                },
+                "error": null
+              }
+            },
+            {
+              "state": "RUNNING",
+              "selected": "A",
+              "before": "A",
+              "target": null,
+              "health": {
+                "A": "SUSPECT",
+                "B": "HEALTHY"
+              },
+              "round": 8,
+              "probes": {
+                "A": {
+                  "started": 22.16154676,
+                  "finished": 22.665918302,
+                  "successes": 0,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.503836917000001,
+                      "link": "A"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5035274170000008,
+                      "link": "A"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5038180009999991,
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 22.671965593,
+                  "finished": 22.677854677,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.004466457999999562,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.004837750000000085,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.005054666999999569,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 22.680058677,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [],
+              "latched": false,
+              "stage": "A_down",
+              "lan_request": {
+                "ok": false,
+                "result": null,
+                "error": "request_failed"
+              }
+            },
+            {
+              "state": "RUNNING",
+              "selected": "A",
+              "before": "A",
+              "target": null,
+              "health": {
+                "A": "SUSPECT",
+                "B": "HEALTHY"
+              },
+              "round": 9,
+              "probes": {
+                "A": {
+                  "started": 23.731476302,
+                  "finished": 24.235166552,
+                  "successes": 0,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5030597919999984,
+                      "link": "A"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5028557920000019,
+                      "link": "A"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5029404999999976,
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 24.241214844,
+                  "finished": 24.246396886,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.004544333000001899,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0037770829999992372,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.003970750000000578,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 24.247953636,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [],
+              "latched": false,
+              "stage": "A_down",
+              "lan_request": {
+                "ok": false,
+                "result": null,
+                "error": "request_failed"
+              }
+            },
+            {
+              "state": "SWITCHING",
+              "selected": "B",
+              "before": "A",
+              "target": "B",
+              "health": {
+                "A": "DOWN",
+                "B": "HEALTHY"
+              },
+              "round": 10,
+              "probes": {
+                "A": {
+                  "started": 25.296626803,
+                  "finished": 25.801985011,
+                  "successes": 0,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5024572909999989,
+                      "link": "A"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5025066659999986,
+                      "link": "A"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5047531670000005,
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 25.807214136,
+                  "finished": 25.813964887,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.005610458999999679,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.005790792000002654,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0054505829999982325,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 25.817218678,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": {
+                "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+                "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                "target": "B",
+                "round": 10,
+                "observed_at": 25.813964887,
+                "expires_at": 27.813964887
+              },
+              "history": [
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 25.817231803
+                }
+              ],
+              "latched": false,
+              "stage": "A_down",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "edc9811639f4f53d393d8b2e",
+                  "peer": "10.99.2.1",
+                  "server": "203.0.113.2"
+                },
+                "error": null
+              }
+            },
+            {
+              "state": "RUNNING",
+              "selected": "B",
+              "before": "B",
+              "target": null,
+              "health": {
+                "A": "DOWN",
+                "B": "HEALTHY"
+              },
+              "round": 11,
+              "probes": {
+                "A": {
+                  "started": 25.862146595,
+                  "finished": 26.365240303,
+                  "successes": 0,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.502123375,
+                      "link": "A"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5022707080000011,
+                      "link": "A"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5020820420000014,
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 26.372134553,
+                  "finished": 26.377337928,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.003886250000000757,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.004408084000001367,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.003358999999999668,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 26.380273637,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 25.817231803
+                }
+              ],
+              "latched": false,
+              "stage": "A_down",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "e7ae81b971eb13012f062ed3",
+                  "peer": "10.99.2.1",
+                  "server": "203.0.113.2"
+                },
+                "error": null
+              }
+            },
+            {
+              "state": "RUNNING",
+              "selected": "B",
+              "before": "B",
+              "target": null,
+              "health": {
+                "A": "RECOVERING",
+                "B": "HEALTHY"
+              },
+              "round": 12,
+              "probes": {
+                "A": {
+                  "started": 26.44038397,
+                  "finished": 26.444081637,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.002693416999999698,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.002075417000000357,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0027053340000016135,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 26.446412637,
+                  "finished": 26.448630845,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.001781999999998618,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.001963458000002305,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0017589579999999216,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 26.44977447,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 25.817231803
+                }
+              ],
+              "latched": false,
+              "stage": "A_recovers",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "3789c0a8ebf5f46c7e48d325",
+                  "peer": "10.99.2.1",
+                  "server": "203.0.113.2"
+                },
+                "error": null
+              }
+            },
+            {
+              "state": "RUNNING",
+              "selected": "B",
+              "before": "B",
+              "target": null,
+              "health": {
+                "A": "RECOVERING",
+                "B": "HEALTHY"
+              },
+              "round": 13,
+              "probes": {
+                "A": {
+                  "started": 26.479883595,
+                  "finished": 26.482985887,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.002570916999999895,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0021610000000009677,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0027338330000006295,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 26.484017928,
+                  "finished": 26.486955845,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0018270830000020055,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0018479579999990392,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.002578165999999271,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 26.487943887,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 25.817231803
+                }
+              ],
+              "latched": false,
+              "stage": "A_recovers",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "c15427a16b9881edb148e9fa",
+                  "peer": "10.99.2.1",
+                  "server": "203.0.113.2"
+                },
+                "error": null
+              }
+            },
+            {
+              "state": "RUNNING",
+              "selected": "B",
+              "before": "B",
+              "target": null,
+              "health": {
+                "A": "HEALTHY",
+                "B": "HEALTHY"
+              },
+              "round": 14,
+              "probes": {
+                "A": {
+                  "started": 26.516059679,
+                  "finished": 26.518765054,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.002271332999999487,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0023112920000016857,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0023531249999990678,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 26.519735512,
+                  "finished": 26.522100887,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0022013749999985066,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.001663957999998189,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0018412920000017152,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 26.523514262,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 25.817231803
+                }
+              ],
+              "latched": false,
+              "stage": "A_recovers",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "70a7631465a410db8021346a",
+                  "peer": "10.99.2.1",
+                  "server": "203.0.113.2"
+                },
+                "error": null
+              }
+            },
+            {
+              "state": "RUNNING",
+              "selected": "B",
+              "before": "B",
+              "target": null,
+              "health": {
+                "A": "HEALTHY",
+                "B": "HEALTHY"
+              },
+              "round": 15,
+              "probes": {
+                "A": {
+                  "started": 26.549384304,
+                  "finished": 26.551901054,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0023211250000017003,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0022096249999989936,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0021181670000025576,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 26.553828637,
+                  "finished": 26.556179179,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0017129169999989813,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0020640420000006543,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0018957500000027494,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 26.557302262,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 25.817231803
+                }
+              ],
+              "latched": false,
+              "stage": "A_recovers",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "acd041488a02767d2a55a01f",
+                  "peer": "10.99.2.1",
+                  "server": "203.0.113.2"
+                },
+                "error": null
+              }
+            },
+            {
+              "state": "RUNNING",
+              "selected": "B",
+              "before": "B",
+              "target": null,
+              "health": {
+                "A": "HEALTHY",
+                "B": "SUSPECT"
+              },
+              "round": 16,
+              "probes": {
+                "A": {
+                  "started": 26.587449304,
+                  "finished": 26.589784179,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.001928374999998539,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0019571670000004815,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0020144169999980477,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 26.590874804,
+                  "finished": 27.095598845,
+                  "successes": 0,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5008412089999972,
+                      "link": "B"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5040663750000007,
+                      "link": "B"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5007246670000001,
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 27.102599054,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 25.817231803
+                }
+              ],
+              "latched": false,
+              "stage": "B_down",
+              "lan_request": {
+                "ok": false,
+                "result": null,
+                "error": "request_failed"
+              }
+            },
+            {
+              "state": "RUNNING",
+              "selected": "B",
+              "before": "B",
+              "target": null,
+              "health": {
+                "A": "HEALTHY",
+                "B": "SUSPECT"
+              },
+              "round": 17,
+              "probes": {
+                "A": {
+                  "started": 28.153679221,
+                  "finished": 28.157933013,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.003935374999997521,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.003543000000000518,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0033073330000021883,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 28.159327471,
+                  "finished": 28.661167013,
+                  "successes": 0,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5012482919999997,
+                      "link": "B"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5010767919999992,
+                      "link": "B"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5011472920000024,
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 28.664514846,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 25.817231803
+                }
+              ],
+              "latched": false,
+              "stage": "B_down",
+              "lan_request": {
+                "ok": false,
+                "result": null,
+                "error": "request_failed"
+              }
+            },
+            {
+              "state": "SWITCHING",
+              "selected": "A",
+              "before": "B",
+              "target": "A",
+              "health": {
+                "A": "HEALTHY",
+                "B": "DOWN"
+              },
+              "round": 18,
+              "probes": {
+                "A": {
+                  "started": 29.721422888,
+                  "finished": 29.72524343,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.003569541999997483,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0033280829999995376,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0030908750000016028,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 29.72753968,
+                  "finished": 30.229675305,
+                  "successes": 0,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5014480419999998,
+                      "link": "B"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5011062919999993,
+                      "link": "B"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5014510009999995,
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 30.234974764,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": {
+                "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+                "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                "target": "A",
+                "round": 18,
+                "observed_at": 29.72524343,
+                "expires_at": 31.72524343
+              },
+              "history": [
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 25.817231803
+                },
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 30.235017097
+                }
+              ],
+              "latched": false,
+              "stage": "B_down",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "3e70222e47b7f66e1bfc1ee2",
+                  "peer": "10.99.1.1",
+                  "server": "203.0.113.2"
+                },
+                "error": null
+              }
+            },
+            {
+              "state": "RUNNING",
+              "selected": "A",
+              "before": "A",
+              "target": null,
+              "health": {
+                "A": "HEALTHY",
+                "B": "DOWN"
+              },
+              "round": 19,
+              "probes": {
+                "A": {
+                  "started": 30.283041222,
+                  "finished": 30.286197472,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0024772079999983987,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0028728749999977765,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0025163329999990935,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 30.287470972,
+                  "finished": 30.791124806,
+                  "successes": 0,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5033754580000007,
+                      "link": "B"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.503286708000001,
+                      "link": "B"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5031210000000002,
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 30.796941681,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 25.817231803
+                },
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 30.235017097
+                }
+              ],
+              "latched": false,
+              "stage": "B_down",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "1cf854e056fe905094f42bd3",
+                  "peer": "10.99.1.1",
+                  "server": "203.0.113.2"
+                },
+                "error": null
+              }
+            },
+            {
+              "state": "NO_HEALTHY_UPLINK",
+              "selected": "A",
+              "before": "A",
+              "target": null,
+              "health": {
+                "A": "SUSPECT",
+                "B": "RECOVERING"
+              },
+              "round": 20,
+              "probes": {
+                "A": {
+                  "started": 30.838347389,
+                  "finished": 31.344964097,
+                  "successes": 0,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5059163750000018,
+                      "link": "A"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5059315420000026,
+                      "link": "A"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5058834999999995,
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 31.348438889,
+                  "finished": 31.355419681,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.004548290999998983,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0038519999999984122,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.004940958000002382,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 31.360292056,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 25.817231803
+                },
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 30.235017097
+                }
+              ],
+              "latched": false,
+              "stage": "A_down_again",
+              "lan_request": {
+                "ok": false,
+                "result": null,
+                "error": "request_failed"
+              }
+            },
+            {
+              "state": "NO_HEALTHY_UPLINK",
+              "selected": "A",
+              "before": "A",
+              "target": null,
+              "health": {
+                "A": "SUSPECT",
+                "B": "RECOVERING"
+              },
+              "round": 21,
+              "probes": {
+                "A": {
+                  "started": 32.450994181,
+                  "finished": 32.953603932,
+                  "successes": 0,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5016030840000028,
+                      "link": "A"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.501930999999999,
+                      "link": "A"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5015789170000033,
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 32.96045439,
+                  "finished": 32.96701914,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.005484625000001131,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.005929708000003586,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.005637708000001851,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 32.969745682,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 25.817231803
+                },
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 30.235017097
+                }
+              ],
+              "latched": false,
+              "stage": "A_down_again",
+              "lan_request": {
+                "ok": false,
+                "result": null,
+                "error": "request_failed"
+              }
+            },
+            {
+              "state": "SWITCHING",
+              "selected": "B",
+              "before": "A",
+              "target": "B",
+              "health": {
+                "A": "DOWN",
+                "B": "HEALTHY"
+              },
+              "round": 22,
+              "probes": {
+                "A": {
+                  "started": 34.015872538,
+                  "finished": 34.519397928000004,
+                  "successes": 0,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5018352949999993,
+                      "link": "A"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.501074476999996,
+                      "link": "A"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5027653650000019,
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 34.524153959,
+                  "finished": 34.530396899,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.005653377000001569,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.00452655000000135,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0052147839999960865,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 34.532735409,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": {
+                "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+                "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                "target": "B",
+                "round": 22,
+                "observed_at": 34.530396899,
+                "expires_at": 36.530396899
+              },
+              "history": [
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 25.817231803
+                },
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 30.235017097
+                },
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 34.532745092
+                }
+              ],
+              "latched": false,
+              "stage": "A_down_again",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "591d55a5e2bf9741cf479f79",
+                  "peer": "10.99.2.1",
+                  "server": "203.0.113.2"
+                },
+                "error": null
+              }
+            },
+            {
+              "state": "RUNNING",
+              "selected": "B",
+              "before": "B",
+              "target": null,
+              "health": {
+                "A": "DOWN",
+                "B": "HEALTHY"
+              },
+              "round": 23,
+              "probes": {
+                "A": {
+                  "started": 34.581071688,
+                  "finished": 35.084965568,
+                  "successes": 0,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5031632680000016,
+                      "link": "A"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5029281679999968,
+                      "link": "A"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5031727659999987,
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 35.088436623,
+                  "finished": 35.094086467,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.005158002999998246,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.00469449999999938,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.004351233999997817,
+                      "peer_observed": "10.99.2.1",
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 35.096345094,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 25.817231803
+                },
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 30.235017097
+                },
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 34.532745092
+                }
+              ],
+              "latched": false,
+              "stage": "A_down_again",
+              "lan_request": {
+                "ok": true,
+                "result": {
+                  "ok": true,
+                  "nonce": "ffdd1756ec596f3f77b806e2",
+                  "peer": "10.99.2.1",
+                  "server": "203.0.113.2"
+                },
+                "error": null
+              }
+            },
+            {
+              "state": "NO_HEALTHY_UPLINK",
+              "selected": "B",
+              "before": "B",
+              "target": null,
+              "health": {
+                "A": "RECOVERING",
+                "B": "SUSPECT"
+              },
+              "round": 24,
+              "probes": {
+                "A": {
+                  "started": 35.143062978,
+                  "finished": 35.147116144,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.002306705000002296,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.002642041000001427,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0035146669999974733,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 35.148256914,
+                  "finished": 35.650313404,
+                  "successes": 0,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5014241710000036,
+                      "link": "B"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5015629799999957,
+                      "link": "B"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5016133949999997,
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 35.653186112,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 25.817231803
+                },
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 30.235017097
+                },
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 34.532745092
+                }
+              ],
+              "latched": false,
+              "stage": "B_down_again",
+              "lan_request": {
+                "ok": false,
+                "result": null,
+                "error": "request_failed"
+              }
+            },
+            {
+              "state": "NO_HEALTHY_UPLINK",
+              "selected": "B",
+              "before": "B",
+              "target": null,
+              "health": {
+                "A": "RECOVERING",
+                "B": "SUSPECT"
+              },
+              "round": 25,
+              "probes": {
+                "A": {
+                  "started": 36.703928228,
+                  "finished": 36.707641133,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0034194569999996816,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.002746181999995656,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.003182596999998566,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 36.708889492,
+                  "finished": 37.213240183,
+                  "successes": 0,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5039835760000031,
+                      "link": "B"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5040031389999982,
+                      "link": "B"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5039486350000004,
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 37.21475205,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 25.817231803
+                },
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 30.235017097
+                },
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 34.532745092
+                }
+              ],
+              "latched": false,
+              "stage": "B_down_again",
+              "lan_request": {
+                "ok": false,
+                "result": null,
+                "error": "request_failed"
+              }
+            },
+            {
+              "state": "DEGRADED_LATCHED",
+              "selected": "B",
+              "before": "B",
+              "target": null,
+              "health": {
+                "A": "HEALTHY",
+                "B": "DOWN"
+              },
+              "round": 26,
+              "probes": {
+                "A": {
+                  "started": 38.253048645,
+                  "finished": 38.256552586,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.003246638000000246,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0022705390000012926,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.0028095119999989038,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 38.258075625000004,
+                  "finished": 38.761383977,
+                  "successes": 0,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5030232209999994,
+                      "link": "B"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5028662189999977,
+                      "link": "B"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5028642580000025,
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 38.765398978,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 25.817231803
+                },
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 30.235017097
+                },
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 34.532745092
+                }
+              ],
+              "latched": true,
+              "stage": "B_down_again",
+              "lan_request": {
+                "ok": false,
+                "result": null,
+                "error": "request_failed"
+              }
+            },
+            {
+              "state": "DEGRADED_LATCHED",
+              "selected": "B",
+              "before": "B",
+              "target": null,
+              "health": {
+                "A": "HEALTHY",
+                "B": "DOWN"
+              },
+              "round": 27,
+              "probes": {
+                "A": {
+                  "started": 39.808745557,
+                  "finished": 39.812764226,
+                  "successes": 3,
+                  "results": [
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.003738693000002513,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.003105314999999109,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    },
+                    {
+                      "ok": true,
+                      "infrastructure": false,
+                      "seconds": 0.003290755999998396,
+                      "peer_observed": "10.99.1.1",
+                      "link": "A"
+                    }
+                  ]
+                },
+                "B": {
+                  "started": 39.81470245,
+                  "finished": 40.31712273,
+                  "successes": 0,
+                  "results": [
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5013177249999998,
+                      "link": "B"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5014777839999951,
+                      "link": "B"
+                    },
+                    {
+                      "ok": false,
+                      "infrastructure": false,
+                      "error": "TimeoutError",
+                      "seconds": 0.5018218860000019,
+                      "link": "B"
+                    }
+                  ]
+                }
+              },
+              "decision_at": 40.322700335,
+              "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+              "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+              "proof": null,
+              "history": [
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 25.817231803
+                },
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 30.235017097
+                },
+                {
+                  "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+                  "at": 34.532745092
+                }
+              ],
+              "latched": true,
+              "stage": "B_down_again",
+              "lan_request": {
+                "ok": false,
+                "result": null,
+                "error": "request_failed"
+              }
+            }
+          ],
+          "latched": true,
+          "uses_agent_cycle": true
+        }
+      },
+      {
+        "name": "single_real_target_failure",
+        "passed": true,
+        "seconds": 0.5731499790000001,
+        "details": [
+          2,
+          [
+            {
+              "ok": false,
+              "infrastructure": false,
+              "error": "TimeoutError",
+              "seconds": 0.5065773160000049,
+              "link": "A"
+            },
+            {
+              "ok": true,
+              "infrastructure": false,
+              "seconds": 0.005321037000001638,
+              "peer_observed": "10.99.1.1",
+              "link": "A"
+            },
+            {
+              "ok": true,
+              "infrastructure": false,
+              "seconds": 0.005968002000003025,
+              "peer_observed": "10.99.1.1",
+              "link": "A"
+            }
+          ]
+        ]
+      },
+      {
+        "name": "mvp_privilege_boundary",
+        "passed": true,
+        "seconds": 2.5432362999999967,
+        "details": {
+          "initial_mode": "DISABLED",
+          "protocol_rejections": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "idle_peer_survived": true,
+          "writer": {
+            "uid": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "cap_eff": "0000000000003000",
+            "no_new_privs": "1",
+            "rss_kib": 21856,
+            "invocation": "c9964c01cccf4d4781e3acb43a8529fd",
+            "pid": 4428
+          },
+          "worker": {
+            "uid": [
+              990,
+              990,
+              990,
+              990
+            ],
+            "cap_eff": "0000000000000000",
+            "no_new_privs": "1",
+            "rss_kib": 20868,
+            "invocation": "361867e6f1564a0d93cbcb0a4f445058",
+            "pid": 4429
+          },
+          "worker_operator_denied": true,
+          "foreign_peer_denied": true,
+          "state_read_denied": true,
+          "direct_mutation_denied": true,
+          "main_unchanged": true
+        }
+      },
+      {
+        "name": "mvp_safe_lifecycle_and_resume",
+        "passed": true,
+        "seconds": 7.885227053999998,
+        "details": {
+          "disabled_mode": "DISABLED",
+          "enabled_mode": "PAUSED",
+          "premature_resume_denied": true,
+          "paused_selected": "A",
+          "manual_selected": "B",
+          "stale_revision_denied": true,
+          "retained_route_while_stopped": true,
+          "stale_epoch_denied": true,
+          "restarted_mode": "ENABLED",
+          "epoch_changed": true,
+          "main_unchanged": true
+        }
+      },
+      {
+        "name": "mvp_oversized_peer_quorum",
+        "passed": true,
+        "seconds": 7.5528855040000025,
+        "details": {
+          "quorum_event": {
+            "name": "service_sample",
+            "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+            "at": 56.306548089,
+            "round": 3,
+            "probes": {
+              "A": {
+                "started": 56.293847429,
+                "finished": 56.298114719,
+                "successes": 2,
+                "results": [
+                  {
+                    "ok": false,
+                    "infrastructure": false,
+                    "error": "ValueError",
+                    "seconds": 0.003810180999998636,
+                    "link": "A"
+                  },
+                  {
+                    "ok": true,
+                    "infrastructure": false,
+                    "seconds": 0.0030126800000047638,
+                    "peer_observed": "10.99.1.1",
+                    "link": "A"
+                  },
+                  {
+                    "ok": true,
+                    "infrastructure": false,
+                    "seconds": 0.003630815000001064,
+                    "peer_observed": "10.99.1.1",
+                    "link": "A"
+                  }
+                ]
+              },
+              "B": {
+                "started": 56.298168825,
+                "finished": 56.302091261,
+                "successes": 2,
+                "results": [
+                  {
+                    "ok": false,
+                    "infrastructure": false,
+                    "error": "ValueError",
+                    "seconds": 0.0036344829999990225,
+                    "link": "B"
+                  },
+                  {
+                    "ok": true,
+                    "infrastructure": false,
+                    "seconds": 0.002679123999996591,
+                    "peer_observed": "10.99.2.1",
+                    "link": "B"
+                  },
+                  {
+                    "ok": true,
+                    "infrastructure": false,
+                    "seconds": 0.002967286000000513,
+                    "peer_observed": "10.99.2.1",
+                    "link": "B"
+                  }
+                ]
+              }
+            },
+            "proposal": null,
+            "state": "RUNNING"
+          },
+          "selected": "B",
+          "request": {
+            "ok": true,
+            "result": {
+              "ok": true,
+              "nonce": "c8c642ac5ffab90f61a14e97",
+              "peer": "10.99.2.1",
+              "server": "203.0.113.2"
+            },
+            "error": null
+          },
+          "invocation_unchanged": true,
+          "optional_peer_bytes": 12000,
+          "wire_body_under_limit": true
+        }
+      },
+      {
+        "name": "mvp_delayed_same_selected_resume",
+        "passed": true,
+        "seconds": 11.096577727000003,
+        "details": {
+          "blocked_at": 67.883812202,
+          "proof": {
+            "config_hash": "316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81",
+            "boot": "75fe8152-983e-4db7-b304-f544441961ad",
+            "target": "B",
+            "round": 2,
+            "observed_at": 64.857012095,
+            "expires_at": 66.857012095
+          },
+          "mode": "PAUSED",
+          "selected": "B",
+          "pending": null,
+          "durable_mode": "PAUSED",
+          "reopened_selected": "B"
+        }
+      },
+      {
+        "name": "mvp_storage_bounds",
+        "passed": true,
+        "seconds": 1.0829867400000097,
+        "details": {
+          "events": 128,
+          "page_count": 14,
+          "max_pages": 2048,
+          "page_size": 4096,
+          "low_space_blocked": true,
+          "selected_unchanged": true
+        }
+      },
+      {
+        "name": "mvp_lifecycle_failure_recovery",
+        "passed": true,
+        "seconds": 7.844896771000009,
+        "details": {
+          "disable_write_failure_recovered": true,
+          "partial_enable_recovered_paused": true,
+          "real_helper_timeout_reaped": true,
+          "sqlite_write_failure_no_mutation": true
+        }
+      },
+      {
+        "name": "mvp_bounded_restart",
+        "passed": true,
+        "seconds": 13.888902310999995,
+        "details": {
+          "invocations": [
+            "74717a71a39f47ad9723a04612414b2f",
+            "3a8e10fae84a48deae44cf917331db81",
+            "2373eae338634edb8f9e20b5a4ad05c7"
+          ],
+          "failed_result": "signal",
+          "limit_message_observed": true,
+          "no_writer_samples": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true,
+            true
+          ],
+          "no_live_writer": true,
+          "manual_reset_recovered": true
+        }
+      },
+      {
+        "name": "mvp_identical_schedule_benchmark",
+        "passed": true,
+        "seconds": 26.243188235999995,
+        "details": {
+          "schedule": {
+            "requests": 20,
+            "interval": 0.5,
+            "blackhole_from_index": 4
+          },
+          "modes": [
+            {
+              "mode": "fixed_primary",
+              "rows": [
+                {
+                  "index": 0,
+                  "scheduled": 0.0,
+                  "started": 0.0004134289999910834,
+                  "finished": 0.014976195999992115,
+                  "latency": 0.014562767000001031,
+                  "end_to_end": 0.014976195999992115,
+                  "late": false,
+                  "ok": true,
+                  "peer": "10.99.1.1"
+                },
+                {
+                  "index": 1,
+                  "scheduled": 0.5,
+                  "started": 0.5021535059999991,
+                  "finished": 0.5339843709999883,
+                  "latency": 0.03183086499998922,
+                  "end_to_end": 0.0339843709999883,
+                  "late": false,
+                  "ok": true,
+                  "peer": "10.99.1.1"
+                },
+                {
+                  "index": 2,
+                  "scheduled": 1.0,
+                  "started": 1.0022650309999932,
+                  "finished": 1.033693368999991,
+                  "latency": 0.03142833799999778,
+                  "end_to_end": 0.03369336899999098,
+                  "late": false,
+                  "ok": true,
+                  "peer": "10.99.1.1"
+                },
+                {
+                  "index": 3,
+                  "scheduled": 1.5,
+                  "started": 1.5046507419999955,
+                  "finished": 1.5195989409999981,
+                  "latency": 0.01494819900000266,
+                  "end_to_end": 0.01959894099999815,
+                  "late": false,
+                  "ok": true,
+                  "peer": "10.99.1.1"
+                },
+                {
+                  "index": 4,
+                  "scheduled": 2.0,
+                  "started": 2.003620861999991,
+                  "finished": 3.020721709,
+                  "latency": 1.017100847000009,
+                  "end_to_end": 1.020721709,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                },
+                {
+                  "index": 5,
+                  "scheduled": 2.5,
+                  "started": 2.500845081999998,
+                  "finished": 3.5322763189999904,
+                  "latency": 1.0314312369999925,
+                  "end_to_end": 1.0322763189999904,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                },
+                {
+                  "index": 6,
+                  "scheduled": 3.0,
+                  "started": 3.0024131790000013,
+                  "finished": 4.030375114999998,
+                  "latency": 1.027961935999997,
+                  "end_to_end": 1.0303751149999982,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                },
+                {
+                  "index": 7,
+                  "scheduled": 3.5,
+                  "started": 3.502491655,
+                  "finished": 4.530639382999993,
+                  "latency": 1.0281477279999933,
+                  "end_to_end": 1.0306393829999934,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                },
+                {
+                  "index": 8,
+                  "scheduled": 4.0,
+                  "started": 4.002255167000001,
+                  "finished": 5.036982323999993,
+                  "latency": 1.0347271569999918,
+                  "end_to_end": 1.0369823239999931,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                },
+                {
+                  "index": 9,
+                  "scheduled": 4.5,
+                  "started": 4.505339825999997,
+                  "finished": 5.529718150999997,
+                  "latency": 1.0243783250000007,
+                  "end_to_end": 1.0297181509999973,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                },
+                {
+                  "index": 10,
+                  "scheduled": 5.0,
+                  "started": 5.001023360999994,
+                  "finished": 6.031704673999997,
+                  "latency": 1.0306813130000023,
+                  "end_to_end": 1.0317046739999967,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                },
+                {
+                  "index": 11,
+                  "scheduled": 5.5,
+                  "started": 5.503850129999989,
+                  "finished": 6.537918676999993,
+                  "latency": 1.034068547000004,
+                  "end_to_end": 1.0379186769999933,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                },
+                {
+                  "index": 12,
+                  "scheduled": 6.0,
+                  "started": 6.001673486000001,
+                  "finished": 7.0314208140000005,
+                  "latency": 1.0297473279999991,
+                  "end_to_end": 1.0314208140000005,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                },
+                {
+                  "index": 13,
+                  "scheduled": 6.5,
+                  "started": 6.504908385999997,
+                  "finished": 7.5380372009999945,
+                  "latency": 1.0331288149999978,
+                  "end_to_end": 1.0380372009999945,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                },
+                {
+                  "index": 14,
+                  "scheduled": 7.0,
+                  "started": 7.003655147999993,
+                  "finished": 8.031109314999995,
+                  "latency": 1.027454167000002,
+                  "end_to_end": 1.0311093149999948,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                },
+                {
+                  "index": 15,
+                  "scheduled": 7.5,
+                  "started": 7.504974304000001,
+                  "finished": 8.525612095,
+                  "latency": 1.0206377909999986,
+                  "end_to_end": 1.0256120949999996,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                },
+                {
+                  "index": 16,
+                  "scheduled": 8.0,
+                  "started": 8.005191595,
+                  "finished": 9.037101840999995,
+                  "latency": 1.0319102459999954,
+                  "end_to_end": 1.0371018409999948,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                },
+                {
+                  "index": 17,
+                  "scheduled": 8.5,
+                  "started": 8.504197664999992,
+                  "finished": 9.539518870999999,
+                  "latency": 1.035321206000006,
+                  "end_to_end": 1.0395188709999985,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                },
+                {
+                  "index": 18,
+                  "scheduled": 9.0,
+                  "started": 9.003718550999992,
+                  "finished": 10.038089368000001,
+                  "latency": 1.0343708170000099,
+                  "end_to_end": 1.0380893680000014,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                },
+                {
+                  "index": 19,
+                  "scheduled": 9.5,
+                  "started": 9.502485348999997,
+                  "finished": 10.542003968999992,
+                  "latency": 1.0395186199999955,
+                  "end_to_end": 1.0420039689999925,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                }
+              ],
+              "elapsed": 10.542421230000002,
+              "successes": 4,
+              "failures": 16,
+              "throughput": 0.3794194817996282,
+              "rss_kib": {
+                "writer": 23932,
+                "worker": 20884
+              },
+              "fault_window": {
+                "started": 2.001416109999994,
+                "finished": 2.003580360000001
+              },
+              "processes_before": {
+                "writer": {
+                  "uid": [
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "cap_eff": "0000000000003000",
+                  "no_new_privs": "1",
+                  "rss_kib": 23864,
+                  "invocation": "e2020d95d8c8418ab5c951c54edfba31",
+                  "pid": 7366
+                },
+                "worker": {
+                  "uid": [
+                    990,
+                    990,
+                    990,
+                    990
+                  ],
+                  "cap_eff": "0000000000000000",
+                  "no_new_privs": "1",
+                  "rss_kib": 20884,
+                  "invocation": "cfc7e2250ebe4c3dab6d0713c4aaff94",
+                  "pid": 7367
+                }
+              },
+              "processes_after": {
+                "writer": {
+                  "uid": [
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "cap_eff": "0000000000003000",
+                  "no_new_privs": "1",
+                  "rss_kib": 23932,
+                  "invocation": "e2020d95d8c8418ab5c951c54edfba31",
+                  "pid": 7366
+                },
+                "worker": {
+                  "uid": [
+                    990,
+                    990,
+                    990,
+                    990
+                  ],
+                  "cap_eff": "0000000000000000",
+                  "no_new_privs": "1",
+                  "rss_kib": 20884,
+                  "invocation": "cfc7e2250ebe4c3dab6d0713c4aaff94",
+                  "pid": 7367
+                }
+              },
+              "journal_bytes_before": 57344,
+              "journal_bytes": 57344,
+              "final_selected": "A"
+            },
+            {
+              "mode": "automatic",
+              "rows": [
+                {
+                  "index": 0,
+                  "scheduled": 0.0,
+                  "started": 0.00023162200000115263,
+                  "finished": 0.01479860199999905,
+                  "latency": 0.014566979999997898,
+                  "end_to_end": 0.01479860199999905,
+                  "late": false,
+                  "ok": true,
+                  "peer": "10.99.1.1"
+                },
+                {
+                  "index": 1,
+                  "scheduled": 0.5,
+                  "started": 0.5037596730000047,
+                  "finished": 0.5351807450000052,
+                  "latency": 0.03142107200000055,
+                  "end_to_end": 0.03518074500000523,
+                  "late": false,
+                  "ok": true,
+                  "peer": "10.99.1.1"
+                },
+                {
+                  "index": 2,
+                  "scheduled": 1.0,
+                  "started": 1.0041262609999961,
+                  "finished": 1.0255273610000017,
+                  "latency": 0.021401100000005613,
+                  "end_to_end": 0.025527361000001747,
+                  "late": false,
+                  "ok": true,
+                  "peer": "10.99.1.1"
+                },
+                {
+                  "index": 3,
+                  "scheduled": 1.5,
+                  "started": 1.5003000720000017,
+                  "finished": 1.530866660000001,
+                  "latency": 0.03056658799999923,
+                  "end_to_end": 0.030866660000000934,
+                  "late": false,
+                  "ok": true,
+                  "peer": "10.99.1.1"
+                },
+                {
+                  "index": 4,
+                  "scheduled": 2.0,
+                  "started": 2.003667415999999,
+                  "finished": 3.0214130690000047,
+                  "latency": 1.0177456530000057,
+                  "end_to_end": 1.0214130690000047,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                },
+                {
+                  "index": 5,
+                  "scheduled": 2.5,
+                  "started": 2.5011066179999943,
+                  "finished": 3.527228797999996,
+                  "latency": 1.0261221800000015,
+                  "end_to_end": 1.027228797999996,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                },
+                {
+                  "index": 6,
+                  "scheduled": 3.0,
+                  "started": 3.0053646470000075,
+                  "finished": 4.0310435049999995,
+                  "latency": 1.025678857999992,
+                  "end_to_end": 1.0310435049999995,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                },
+                {
+                  "index": 7,
+                  "scheduled": 3.5,
+                  "started": 3.501081088999996,
+                  "finished": 4.528316007000001,
+                  "latency": 1.0272349180000049,
+                  "end_to_end": 1.0283160070000008,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                },
+                {
+                  "index": 8,
+                  "scheduled": 4.0,
+                  "started": 4.004458628999998,
+                  "finished": 5.024551613,
+                  "latency": 1.0200929840000015,
+                  "end_to_end": 1.0245516129999999,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                },
+                {
+                  "index": 9,
+                  "scheduled": 4.5,
+                  "started": 4.5051339129999945,
+                  "finished": 5.532393389000006,
+                  "latency": 1.0272594760000118,
+                  "end_to_end": 1.0323933890000063,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                },
+                {
+                  "index": 10,
+                  "scheduled": 5.0,
+                  "started": 5.001543134000002,
+                  "finished": 6.024457835999996,
+                  "latency": 1.0229147019999942,
+                  "end_to_end": 1.0244578359999963,
+                  "late": false,
+                  "ok": false,
+                  "peer": null
+                },
+                {
+                  "index": 11,
+                  "scheduled": 5.5,
+                  "started": 5.505107467000002,
+                  "finished": 5.525986212999996,
+                  "latency": 0.020878745999993953,
+                  "end_to_end": 0.025986212999995928,
+                  "late": false,
+                  "ok": true,
+                  "peer": "10.99.2.1"
+                },
+                {
+                  "index": 12,
+                  "scheduled": 6.0,
+                  "started": 6.000843240999998,
+                  "finished": 6.021451827000007,
+                  "latency": 0.0206085860000087,
+                  "end_to_end": 0.02145182700000703,
+                  "late": false,
+                  "ok": true,
+                  "peer": "10.99.2.1"
+                },
+                {
+                  "index": 13,
+                  "scheduled": 6.5,
+                  "started": 6.505266035000005,
+                  "finished": 6.536476305000008,
+                  "latency": 0.031210270000002538,
+                  "end_to_end": 0.03647630500000787,
+                  "late": false,
+                  "ok": true,
+                  "peer": "10.99.2.1"
+                },
+                {
+                  "index": 14,
+                  "scheduled": 7.0,
+                  "started": 7.004072316999995,
+                  "finished": 7.025804926000006,
+                  "latency": 0.021732609000011394,
+                  "end_to_end": 0.02580492600000639,
+                  "late": false,
+                  "ok": true,
+                  "peer": "10.99.2.1"
+                },
+                {
+                  "index": 15,
+                  "scheduled": 7.5,
+                  "started": 7.503991936000006,
+                  "finished": 7.531429212999996,
+                  "latency": 0.02743727699998999,
+                  "end_to_end": 0.03142921299999557,
+                  "late": false,
+                  "ok": true,
+                  "peer": "10.99.2.1"
+                },
+                {
+                  "index": 16,
+                  "scheduled": 8.0,
+                  "started": 8.002299093999994,
+                  "finished": 8.025072054999995,
+                  "latency": 0.022772961000001146,
+                  "end_to_end": 0.02507205499999543,
+                  "late": false,
+                  "ok": true,
+                  "peer": "10.99.2.1"
+                },
+                {
+                  "index": 17,
+                  "scheduled": 8.5,
+                  "started": 8.505242785000007,
+                  "finished": 8.529049692000001,
+                  "latency": 0.02380690699999377,
+                  "end_to_end": 0.02904969200000096,
+                  "late": false,
+                  "ok": true,
+                  "peer": "10.99.2.1"
+                },
+                {
+                  "index": 18,
+                  "scheduled": 9.0,
+                  "started": 9.002721585000003,
+                  "finished": 9.023299569000002,
+                  "latency": 0.020577983999999105,
+                  "end_to_end": 0.023299569000002407,
+                  "late": false,
+                  "ok": true,
+                  "peer": "10.99.2.1"
+                },
+                {
+                  "index": 19,
+                  "scheduled": 9.5,
+                  "started": 9.502574343999996,
+                  "finished": 9.525199637,
+                  "latency": 0.022625293000004376,
+                  "end_to_end": 0.025199637000000052,
+                  "late": false,
+                  "ok": true,
+                  "peer": "10.99.2.1"
+                }
+              ],
+              "elapsed": 9.525361296,
+              "successes": 13,
+              "failures": 7,
+              "throughput": 1.3647776284831432,
+              "rss_kib": {
+                "writer": 23964,
+                "worker": 20884
+              },
+              "fault_window": {
+                "started": 2.001483457000006,
+                "finished": 2.003628192000008
+              },
+              "processes_before": {
+                "writer": {
+                  "uid": [
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "cap_eff": "0000000000003000",
+                  "no_new_privs": "1",
+                  "rss_kib": 23948,
+                  "invocation": "e2020d95d8c8418ab5c951c54edfba31",
+                  "pid": 7366
+                },
+                "worker": {
+                  "uid": [
+                    990,
+                    990,
+                    990,
+                    990
+                  ],
+                  "cap_eff": "0000000000000000",
+                  "no_new_privs": "1",
+                  "rss_kib": 20884,
+                  "invocation": "cfc7e2250ebe4c3dab6d0713c4aaff94",
+                  "pid": 7367
+                }
+              },
+              "processes_after": {
+                "writer": {
+                  "uid": [
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "cap_eff": "0000000000003000",
+                  "no_new_privs": "1",
+                  "rss_kib": 23964,
+                  "invocation": "e2020d95d8c8418ab5c951c54edfba31",
+                  "pid": 7366
+                },
+                "worker": {
+                  "uid": [
+                    990,
+                    990,
+                    990,
+                    990
+                  ],
+                  "cap_eff": "0000000000000000",
+                  "no_new_privs": "1",
+                  "rss_kib": 20884,
+                  "invocation": "cfc7e2250ebe4c3dab6d0713c4aaff94",
+                  "pid": 7367
+                }
+              },
+              "journal_bytes_before": 57344,
+              "journal_bytes": 65536,
+              "final_selected": "B"
+            }
+          ],
+          "vm_only": true,
+          "repeated_trials": false,
+          "load_generator": "open-loop scheduled arrivals, eight workers; all lateness retained"
+        }
+      }
+    ],
+    "environment": {
+      "kernel": "6.8.0-117-generic",
+      "python": "3.12.3",
+      "systemd": "systemd 255 (255.4-1ubuntu8.15)"
+    },
+    "service_source_sha256": "b94108e7b6187a9a7161f23762a535f220656cea20b084346c0ee70eb8d2dd8f",
+    "policy_unit_sha256": "2fbe5e40845433ddb161ed3faab4424babe8a24d87fc28361e5ed2bba6d9902d",
+    "installed_unit_sha256": "ebf6c83c9c4f928078c924c2e67ebd6246a930cf8baed4e62a21146c1216defd"
+  },
+  "reboot_before": {
+    "before_boot": "75fe8152-983e-4db7-b304-f544441961ad",
+    "pending": {
+      "before": "A",
+      "target": "B",
+      "token": "814c0ddef7aa42119b50d59af7e5eefe"
+    },
+    "selected_receipt": "A",
+    "actual_route": [
+      {
+        "dst": "default",
+        "gateway": "192.0.2.5",
+        "dev": "wanB",
+        "metric": 100,
+        "flags": []
+      },
+      {
+        "dst": "192.0.2.0/30",
+        "dev": "wanA",
+        "scope": "link",
+        "flags": []
+      },
+      {
+        "dst": "192.0.2.4/30",
+        "dev": "wanB",
+        "scope": "link",
+        "flags": []
+      }
+    ],
+    "process_restart_before": "MainPID=8872\nInvocationID=5ce740186dc640829cea2e2d5eccbb96\n",
+    "process_restart_after": "MainPID=8907\nActiveState=active\nInvocationID=a035f745d47c46b38fea34507d4532cf\n",
+    "latched_before": true,
+    "mode_before": "ENABLED",
+    "epoch_before": 18
+  },
+  "reboot": {
+    "passed": true,
+    "orderly_vm_restart": true,
+    "power_loss_tested": false,
+    "before": {
+      "before_boot": "75fe8152-983e-4db7-b304-f544441961ad",
+      "pending": {
+        "before": "A",
+        "target": "B",
+        "token": "814c0ddef7aa42119b50d59af7e5eefe"
+      },
+      "selected_receipt": "A",
+      "actual_route": [
+        {
+          "dst": "default",
+          "gateway": "192.0.2.5",
+          "dev": "wanB",
+          "metric": 100,
+          "flags": []
+        },
+        {
+          "dst": "192.0.2.0/30",
+          "dev": "wanA",
+          "scope": "link",
+          "flags": []
+        },
+        {
+          "dst": "192.0.2.4/30",
+          "dev": "wanB",
+          "scope": "link",
+          "flags": []
+        }
+      ],
+      "process_restart_before": "MainPID=8872\nInvocationID=5ce740186dc640829cea2e2d5eccbb96\n",
+      "process_restart_after": "MainPID=8907\nActiveState=active\nInvocationID=a035f745d47c46b38fea34507d4532cf\n",
+      "latched_before": true,
+      "mode_before": "ENABLED",
+      "epoch_before": 18
+    },
+    "pre_agent_journal": {
+      "boot": "e397c480-ed51-4112-8641-03775c35b852",
+      "pending": {
+        "before": "A",
+        "target": "B",
+        "token": "814c0ddef7aa42119b50d59af7e5eefe"
+      },
+      "selected": "A",
+      "latched": true,
+      "mode": "ENABLED",
+      "epoch": 18
+    },
+    "after": {
+      "boot": "e397c480-ed51-4112-8641-03775c35b852",
+      "selected": "B",
+      "pending": null,
+      "latched": true,
+      "mode": "ENABLED",
+      "epoch": 19,
+      "unit": "MainPID=731\nActiveState=active\nInvocationID=5dc176f5a4ff4b14abdf35d736f1a2a3\n",
+      "request": {
+        "ok": true,
+        "result": {
+          "ok": true,
+          "nonce": "45387bdaa11004d78c16938e",
+          "peer": "10.99.2.1",
+          "server": "203.0.113.2"
+        },
+        "error": null
+      },
+      "first_tick": {
+        "name": "tick",
+        "boot": "e397c480-ed51-4112-8641-03775c35b852",
+        "at": 3.773280542,
+        "round": 0,
+        "health": {
+          "A": "RECOVERING",
+          "B": "RECOVERING"
+        },
+        "selected": "B"
+      },
+      "rss_snapshot": "VmRSS:\t   23816 kB"
+    }
+  },
+  "cleanup": {
+    "passed": true,
+    "root_network_unchanged": true,
+    "namespaces_removed": true,
+    "units_removed": true,
+    "root_before_sha256": "e8cf25d9a0a9bfc08b9e8ba4d235a1a02b6cc95915324932e234a62a519f4bc5",
+    "root_after_sha256": "e8cf25d9a0a9bfc08b9e8ba4d235a1a02b6cc95915324932e234a62a519f4bc5",
+    "ignored_fields": [
+      "nft_handles",
+      "nft_counter_values",
+      "xt_chain_counters",
+      "xt_generated_comments"
+    ]
+  },
+  "snapshot_removed": true,
+  "vm_final": "Stopped",
+  "controls": [
+    "failed_stage",
+    "timeout",
+    "missing_case",
+    "missing_test",
+    "source_mismatch",
+    "fake_reboot",
+    "shutdown_rollback",
+    "cleanup_failed",
+    "vm_running",
+    "power_loss_claim",
+    "false_healthy_probes",
+    "internal_route_escape",
+    "duplicate_borrow_link",
+    "local_service_escape",
+    "inverted_rule_accepted",
+    "expired_health_mutated",
+    "malformed_target_crash",
+    "fabricated_probe_time",
+    "fake_budget_transition",
+    "unbounded_restart",
+    "worker_has_netadmin",
+    "unsafe_resume",
+    "unbounded_events",
+    "hidden_request_failure",
+    "changed_arrival_schedule",
+    "false_storage_recovery",
+    "reboot_service_dead",
+    "pre_agent_receipt_changed",
+    "latch_not_preserved",
+    "fixed_baseline_wrong_path",
+    "automatic_before_fault_wrong_path",
+    "rss_from_replacement_process",
+    "fault_after_request",
+    "large_peer_blocks_quorum",
+    "expired_same_target_enabled",
+    "wrong_installed_unit"
+  ]
+}

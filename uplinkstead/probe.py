@@ -7,6 +7,7 @@ import ssl
 import time
 
 MARK = {'A': 0x5101, 'B': 0x5102}
+MAX_PEER_BYTES = 64
 
 
 def one(config, link, target, timeout=0.5):
@@ -49,8 +50,9 @@ def one(config, link, target, timeout=0.5):
                     raise ValueError('Excessive JSON nesting') from exc
                 if not isinstance(result,dict):
                     raise ValueError('Probe JSON must be an object')
-                if result.get('peer') is not None and not isinstance(result['peer'],str):
-                    raise ValueError('Invalid peer observation')
+                peer=result.get('peer')
+                if peer is not None and (not isinstance(peer,str) or len(peer.encode('utf-8'))>MAX_PEER_BYTES):
+                    raise ValueError('Invalid or oversized peer observation')
                 if not head.startswith(b'HTTP/1.0 200 ') or result.get('nonce') != nonce or result.get('ok') is not True:
                     raise ValueError('Invalid probe response')
                 return {'ok': True, 'infrastructure': False, 'seconds': time.monotonic()-began,

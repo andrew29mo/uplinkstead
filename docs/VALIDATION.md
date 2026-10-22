@@ -1,22 +1,24 @@
-# First MVP validation
+# Audited MVP validation
 
-Run **5f8e4f7a4027c930**, source fingerprint
-`2a8ef69d31cfb697e7c71591128c06ae6d48d3f609b9c9bdd4e6adf1d76431f2`.
+Run **6e56cd23e1a93f1d**, source fingerprint
+`e3a3da9f938e0915e4b4ab49985878a1cb1ce3ebf65311ab7b2a776cb66f21a3`.
 
-[JSON](../reviews/mvp/evidence.json) · [HTML](../reviews/mvp/report.html)
-· [macOS](../reviews/mvp/native-unit.json) · [Linux](../reviews/mvp/linux-unit.json)
-· [MVP attempts](../reviews/mvp/attempts.json)
+[JSON](../reviews/mvp-audit/evidence.json) · [HTML](../reviews/mvp-audit/report.html)
+· [macOS](../reviews/mvp-audit/native-unit.json) · [Linux](../reviews/mvp-audit/linux-unit.json)
+· [Audit attempts](../reviews/mvp-audit/attempts.json)
 
 ## Observed qualification
 
-- **75/75 portable tests on both macOS and Linux**, identical test IDs and source
+- **81/81 portable tests on both macOS and Linux**, identical test IDs and source
   manifest, no skips/failures/errors. Native macOS does not run a routing backend.
-- **25 actual Linux namespace scenarios**: the 19 reviewed core exploration scenarios
+- **27 actual Linux namespace scenarios**: the 19 reviewed core exploration scenarios
   plus installed-service privilege, safe lifecycle, storage bounds, lifecycle write
-  failure recovery, bounded systemd restart and identical-schedule benchmark.
-- **27 report corruption controls rejected**, including privilege escalation,
+  failure recovery, bounded systemd restart, identical-schedule benchmark, a large
+  optional peer response and delayed same-selected resume.
+- **36 report corruption controls rejected**, including privilege escalation,
   unsafe resume, missing attempts, altered arrival schedule, failed persistence and
-  absent restart-limiter evidence. The report also verifies under Python `-O`;
+  absent restart-limiter evidence, dead reboot service, receipt/latch contradictions,
+  incorrect baseline path, replacement measurement process and late fault insertion. The report also verifies under Python `-O`;
   assertion-based validation runners explicitly refuse optimized execution.
 - Shipped root writer and capability-free dedicated policy service are installed.
   Their source hashes and deterministic fixture transformations are checked.
@@ -31,7 +33,8 @@ Run **5f8e4f7a4027c930**, source fingerprint
 
 The original core fault driver remains a separate test of shared Writer/Policy/
 Linux logic. It does not pretend to be the unprivileged installed policy worker.
-New MVP cases exercise the actual two services. The benchmark leaves a fixture-set
+MVP service cases exercise the installed units; bounded storage, lifecycle I/O
+faults and delayed-resume cases invoke the formal core directly, as detailed below. The benchmark leaves a fixture-set
 latch for the final reboot test; that write is explicitly not evidence of budget
 exhaustion. Actual exhaustion is independently observed in the alternating-fault
 core case, with complete timings/history and all failed LAN requests retained.
@@ -40,15 +43,15 @@ core case, with complete timings/history and all failed LAN requests retained.
 
 Both modes start from healthy A and replay 20 intended arrival offsets at 0.5-second
 intervals. A forwarding blackhole is installed before request index 4 at offset
-2 seconds and retained through that mode's completion. Eight worker slots submit
+an intended 2 seconds and retained through that mode's completion. Eight worker slots submit
 open-loop scheduled TLS requests; actual start/end offsets and lateness are kept,
 including failed and deadline-expired requests. This is low-load fault recovery,
 not a saturated router-throughput benchmark.
 
 | Mode | Successful / attempted | Failed | Useful requests/s | All-attempt E2E p95 ms | Writer / policy RSS KiB | Main DB bytes |
 |---|---:|---:|---:|---:|---:|---:|
-| fixed_primary | 4/20 | 16 | 0.379 | 1051.0 | 23920 / 20872 | 49152 |
-| automatic | 13/20 | 7 | 1.364 | 1033.0 | 23972 / 20872 | 65536 |
+| fixed_primary | 4/20 | 16 | 0.379 | 1039.5 | 23932 / 20884 | 57344 |
+| automatic | 13/20 | 7 | 1.365 | 1031.0 | 23964 / 20884 | 65536 |
 
 Useful requests/s divides all successes by actual complete-trial duration; failed
 requests remain in the denominator's elapsed window. End-to-end latency starts at
@@ -57,6 +60,11 @@ failure timeout. p95 uses nearest rank over all 20 attempts, including failures.
 RSS is an after-trial `/proc` snapshot for each service, not peak/PSS/whole-VM memory.
 DB bytes refer only to the SQLite main file, not rollback journal, filesystem or VM.
 Raw observations support rechecking these calculations; no speedup ratio is claimed.
+The collector also records actual fault insertion offsets and verifies each
+writer/policy PID and InvocationID remains the same across its trial. Both modes
+require pre-fault successful A traffic; fixed successes stay A, and automatic
+post-fault successes must use B. These checks qualify this controlled fixture, not
+all future traffic or proof against a malicious producer.
 The trial is single, fixed order and small; warm-up/order effects and run-to-run
 variation are not controlled enough for general performance conclusions.
 
@@ -85,18 +93,36 @@ variation are not controlled enough for general performance conclusions.
   recovers. Other scenarios reset fixture counters between planned manual starts;
   this does not remove the deployed restart limit.
 
+## Additional review evidence
+
+- One target returns a valid ~12-KiB UTF-8 JSON body with a 12,000-byte optional
+  peer field. The installed services retain two-vote quorum on both links; A's
+  subsequent blackhole causes a successful new LAN request over B without replacing
+  the writer. Oversize is a target failure, not a complete-sample failure.
+- Delayed same-selected resume stops the services and uses the formal Controller,
+  Writer, real probes and backend. Delaying an actual durable save past freshness
+  rejects mode activation; reopen confirms PAUSED and unchanged B. This is direct
+  core fault injection, not a fault sent through an installed RPC service.
+- Manual budget expiry and cross-boot accounting are portable tests; no actual VM
+  clock change or long idle interval is claimed. A persistent latch remains binding.
+- Native verifier fixtures independently challenge dead-unit, changed receipt/latch,
+  wrong path, replacement process and late-fault contradictions. They are synthetic
+  check tests, not runtime measurements.
+
 ## Environment, history and limits
 
 Colima VZ Linux ARM64, four CPUs/6 GiB configured, Linux 6.8.0-117-generic,
 Python 3.12.3 and systemd 255. All six namespaces share one kernel/failure domain.
 The three TLS target ports share one fixture server. No independent ISP claim.
-The post-reboot writer RSS snapshot was `VmRSS:	   23808 kB`.
+The post-reboot writer RSS snapshot was `VmRSS:	   23816 kB`.
 
-Initial exploration attempts and earlier audited evidence remain historical, using
-older source and verifier schemas. Four MVP attempts failed, the fifth passed its
-then-current source and was superseded; the final run matches this source. Source
-mutation during attempt two was correctly rejected even though VM stages passed.
-Some intermediate revisions are hashes only, limiting historical source replay.
+Initial exploration and first-MVP evidence remain historical, using their original
+source and verifier schemas. [MVP_REVIEW.md](MVP_REVIEW.md) records the reproduced
+review defects and the distinction between missing verifier checks and the original
+consistent raw observations. Both audit runs passed; the first is superseded only
+by a more precise UTF-8 native fixture, followed by a full same-source rerun. Earlier
+failed MVP attempts remain failed. Some intermediate old revisions are hashes only,
+limiting historical source replay.
 
 Untested: physical NIC/ISP failures, IPv6/dynamic addresses, optional live preference
 failback, sustained/saturated load, production deployment images, whole-VM memory

@@ -34,7 +34,8 @@ invalidate health. Results are bound to the config hash, boot ID and round ID.
 Three configured TLS endpoints use 2-of-3 quorum. Three consecutive good/bad rounds
 establish initial health/failure. These values are policy, not measured optimality.
 Malformed JSON objects, non-object bodies, excessive nesting and non-finite
-constants are target failures, not a reason to terminate the agent.
+constants and optional peer strings exceeding 64 UTF-8 bytes are target failures,
+not a reason to reject the complete sample or terminate the agent.
 A target set can fail together and does not prove Internet-wide availability.
 
 Selected route (A/B/none) is separate from automation status. Unknown is never a
@@ -100,7 +101,8 @@ Service mode is independent from selected route and health:
 - Enable intent -> install/complete layout -> PAUSED, without selecting a WAN.
 - PAUSED: probe and maintain owned layout, but do not select automatically.
 - Resume: require fresh healthy explicit target and root acknowledgement of a
-  recorded budget reset; select if needed, then enter ENABLED.
+  recorded budget reset; select if needed, recheck freshness after persistence,
+  then decide to enter ENABLED. The reply itself has no freshness deadline.
 - ENABLED: admit healthy automatic proposals within the persistent budget.
 - Disable intent -> remove validated owned objects -> DISABLED. The operator
   explicitly acknowledges handoff to the preexisting main policy.

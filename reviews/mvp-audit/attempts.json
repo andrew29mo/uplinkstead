@@ -1,0 +1,36 @@
+[
+  {
+    "attempt": "mvp-audit-01",
+    "run_id": "d1fb71a4e9450f07",
+    "source_sha256": "b80ab1f0185fd4d4b916de102e2b626ac7f7711f09b8314b0b30b5b09515841a",
+    "passed": true,
+    "source_changed": false,
+    "native_tests": 81,
+    "linux_tests": 81,
+    "vm_cases": 27,
+    "controls": 36,
+    "cleanup_passed": true,
+    "snapshot_removed": true,
+    "vm_final": "Stopped",
+    "superseded": true,
+    "diagnosis": "Passed then superseded only to make the UTF-8 native regression test precisely match the original under-wire-limit counterexample.",
+    "receipt": "attempts/mvp-audit-01.json"
+  },
+  {
+    "attempt": "mvp-audit-02",
+    "run_id": "6e56cd23e1a93f1d",
+    "source_sha256": "e3a3da9f938e0915e4b4ab49985878a1cb1ce3ebf65311ab7b2a776cb66f21a3",
+    "passed": true,
+    "source_changed": false,
+    "native_tests": 81,
+    "linux_tests": 81,
+    "vm_cases": 27,
+    "controls": 36,
+    "cleanup_passed": true,
+    "snapshot_removed": true,
+    "vm_final": "Stopped",
+    "superseded": false,
+    "diagnosis": "Final source-matching audited MVP run.",
+    "receipt": "attempts/mvp-audit-02.json"
+  }
+]

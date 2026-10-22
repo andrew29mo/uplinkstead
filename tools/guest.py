@@ -137,7 +137,7 @@ def topology():
     existing={line.split()[0] for line in cmd(['ip','netns','list']).stdout.splitlines() if line}
     if existing.intersection(NAMES):raise RuntimeError('Preexisting namespace')
     # On reboot capture pending journal BEFORE reconstructing namespaces/services.
-    before=dict(boot=boot_id(),pending=db().get('pending'),selected=db().get('selected')) if (STATE/'journal.sqlite').exists() else None
+    before=dict(boot=boot_id(),pending=db().get('pending'),selected=db().get('selected'),latched=db().get('latched'),mode=db().get('mode'),epoch=db().get('epoch')) if (STATE/'journal.sqlite').exists() else None
     if before:(ROOT/'prestart.json').write_text(json.dumps(before))
     ledger=ROOT/'namespace-owner.json'
     if ledger.exists():
@@ -531,7 +531,7 @@ def prepare_reboot():
     if link.exists() or link.is_symlink():raise RuntimeError('Foreign enablement')
     link.symlink_to('../'+UNIT)
     value=dict(before_boot=boot_id(),pending=pending['pending'],selected_receipt=pending['selected'],actual_route=routes(),
-               process_restart_before=before,process_restart_after=after,latched_before=pending['latched'])
+               process_restart_before=before,process_restart_after=after,latched_before=pending['latched'],mode_before=pending['mode'],epoch_before=pending['epoch'])
     (ROOT/'reboot-before.json').write_text(json.dumps(value))
     print(json.dumps(value))
 
@@ -540,6 +540,7 @@ def after_reboot():
     before=json.loads((ROOT/'reboot-before.json').read_text());pre=json.loads((ROOT/'prestart.json').read_text())
     assert before['before_boot']!=boot_id()==pre['boot']
     assert pre['pending']==before['pending'] and pre['selected']==before['selected_receipt']
+    assert pre['latched']==before['latched_before'] is True and pre['mode']==before['mode_before']=='ENABLED' and pre['epoch']==before['epoch_before']
     assert db()['pending'] is None and db()['selected']=='B' and db()['latched'] is True
     request=client();assert request['ok'] and request['result']['peer']=='10.99.2.1'
     unit=cmd(['systemctl','show',UNIT,'-p','InvocationID','-p','MainPID','-p','ActiveState']).stdout;assert 'ActiveState=active' in unit
@@ -554,7 +555,7 @@ def after_reboot():
     pid=int(cmd(['systemctl','show',UNIT,'-p','MainPID','--value']).stdout)
     rss=next(x for x in Path('/proc',str(pid),'status').read_text().splitlines() if x.startswith('VmRSS:'))
     result=dict(passed=True,orderly_vm_restart=True,power_loss_tested=False,before=before,pre_agent_journal=pre,
-                after=dict(boot=boot_id(),selected=db()['selected'],pending=db()['pending'],latched=db()['latched'],
+                after=dict(boot=boot_id(),selected=db()['selected'],pending=db()['pending'],latched=db()['latched'],mode=db()['mode'],epoch=db()['epoch'],
                            unit=unit,request=request,first_tick=new_probes[0],rss_snapshot=rss))
     (ROOT/'reboot.json').write_text(json.dumps(result,indent=2));print(json.dumps(result))
 

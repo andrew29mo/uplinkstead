@@ -80,6 +80,11 @@ class Policy:
             h.state, h.good, h.bad, h.since, h.last = 'UNKNOWN', 0, 0, None, None
         return h.state
 
+    def recent(self, now):
+        return [e for e in self.history if
+                (e['boot']==self.boot and now-e['at']<=self.s.window) or
+                (e['boot']!=self.boot and now<=self.s.window)]
+
     def candidate(self, selected, now):
         a, b = self.fresh('A', now), self.fresh('B', now)
         if self.latched:
@@ -97,9 +102,7 @@ class Policy:
             return None, ('NO_HEALTHY_UPLINK' if a != 'HEALTHY' and b != 'HEALTHY' else 'RUNNING')
         # Cross-boot event ages are unknown; count them until an entire new window
         # has elapsed in this boot. Process restart does not reset CLOCK_BOOTTIME.
-        recent = [e for e in self.history if
-                  (e['boot'] == self.boot and now - e['at'] <= self.s.window) or
-                  (e['boot'] != self.boot and now <= self.s.window)]
+        recent = self.recent(now)
         if len(recent) >= self.s.budget:
             self.latched = True
             return None, 'DEGRADED_LATCHED'
@@ -107,7 +110,7 @@ class Policy:
 
     def admit(self, now):
         e = {'boot': self.boot, 'at': now}
-        self.history=[x for x in self.history if (x['boot']==self.boot and now-x['at']<=self.s.window) or (x['boot']!=self.boot and now<=self.s.window)]
+        self.history=self.recent(now)
         self.history.append(e)
         return e
 

@@ -1,5 +1,10 @@
 # Dual-DHCP technical explorations
 
+Historical exploration scope; the newer [formal stage-one service](DHCP_STAGE1.md)
+replaces fixture event scheduling for its own separately recorded validation.
+The hook-time approximation below applies to the historical adapter, not the
+new runtime's conservative wire-derived deadline.
+
 This is a bounded integration of the formal `DualLifecycle` core and Linux
 `Backend`, not a shipped dual-DHCP daemon. The static dual-uplink and single-DHCP
 services keep their existing semantics. The exploration driver owns orchestration;

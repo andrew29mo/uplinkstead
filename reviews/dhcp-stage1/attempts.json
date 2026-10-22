@@ -1,0 +1,33 @@
+[
+  {
+    "run_id": "f92f668bc919cdf8",
+    "passed": false,
+    "source_sha256": "a8f0a73054da834efdc83febec0bc0a4d58ea8abbbbcdf6a8fc9c56f5cf7c078",
+    "source_changed": false,
+    "failed_stages": [
+      "cases"
+    ],
+    "vm_final": "Stopped",
+    "explanation": "Rejected initial acquisition timeout. First attempt had insufficient packet diagnostics; switching capture to ETH_P_ALL subsequently observed outgoing REQUESTs plus incoming ACKs. No original missing-packet counter is claimed."
+  },
+  {
+    "run_id": "9bbcfda0df47a1e1",
+    "passed": false,
+    "source_sha256": "0fba3f781ff965c01f317032cba6cfb8a175ac3c1fecbf1ca62e8962f682e3df",
+    "source_changed": false,
+    "failed_stages": [
+      "cases"
+    ],
+    "vm_final": "Stopped",
+    "explanation": "Rejected concurrent flood due pre-send AF_UNIX connect EAGAIN. Corrected transport classification without retries or event rebasing; first six runtime scenarios passed only at that development source."
+  },
+  {
+    "run_id": "9be982d1bb5c73cb",
+    "passed": true,
+    "source_sha256": "77c25555d367983fabf4db77c1c99336a00f61b6ea1de5829accfea1b15b80ac",
+    "source_changed": false,
+    "failed_stages": [],
+    "vm_final": "Stopped",
+    "explanation": "All then-defined tests and VM scenarios passed, but superseded after independent review found a two-ACK queue ordering gap. Added per-proof versions, sticky pending observation and stale-proof rejection plus two targeted counterexamples; this earlier pass does not qualify that gap."
+  }
+]

@@ -1,4 +1,26 @@
-# Current dual-DHCP technical explorations
+# Current formal dual-DHCP stage one
+
+[Formal service JSON/HTML and reproduction](../reviews/dhcp-stage1/README.md),
+run `8ab8a09f428b2276`, source fingerprint
+`c769cb0544513033b4e783f462bb14d40b733204fae676a4b892af6238980e59`.
+
+- **193 same-source tests per platform**, matching IDs and zero skips.
+- **Nine actual foreground-service VM scenarios**: real leases/data, independent
+  B supervision, slow-probe/event overlap, real backlog REQUEST-based deadline,
+  stale authority, absent wire proof, separate transport/server flood rejection,
+  observed finite queue overflow and actual lease expiry with stopped clients.
+- **19 report corruption controls** reject normally and under optimized Python;
+  JSON/HTML agree. Owned cleanup/root preservation/source removal/stopped VM pass.
+- Service RSS snapshot **23,992 KiB**, clients **1,356 KiB each**; VM-only snapshots,
+  excluding kernel/fixture/whole-VM overhead. No performance superiority claimed.
+
+Two-ACK ordering counterexamples are formal portable tests, not live VM two-ACK
+injection. Foreground service is not installed systemd/boot qualification or
+automatic failover. Naturally timed T1/T2, full writer-death process-tree recovery,
+physical WANs, hard deadlines, power loss and zero-gap remain unqualified. Older
+receipts below keep their own source identities and are not new service regressions.
+
+# Historical dual-DHCP technical explorations
 
 [Retained JSON/HTML and procedure](../reviews/dual-dhcp-explorations/README.md),
 run `55936aa4724bd1de`, source fingerprint

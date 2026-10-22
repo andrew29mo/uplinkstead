@@ -53,7 +53,7 @@ class DualLifecycle(Writer):
 
     @staticmethod
     def empty():
-        return dict(current=None, generation=0, revision=0, session=secrets.token_hex(24), last_event=0., expires=0.)
+        return dict(current=None, generation=0, revision=0, session=secrets.token_hex(24), event_sequence=0, last_event=0., expires=0.)
 
     def __enter__(self):
         self.directory.mkdir(mode=0o700, parents=True, exist_ok=True)
@@ -77,6 +77,11 @@ class DualLifecycle(Writer):
             self.db.execute('CREATE TABLE IF NOT EXISTS state (id INTEGER PRIMARY KEY CHECK(id=1), value TEXT NOT NULL)')
             row = self.db.execute('SELECT value FROM state WHERE id=1').fetchone()
             self.s = json.loads(row[0]) if row else dict(config_hash=self.c['_hash'], boot=self.boot(), epoch=0, revision=0, history=[], latched=False, paused=False, phase='RECOVERING', links={k:self.empty() for k in LINKS}, active=None, pending=None)
+            # Explicit additive migration of the historical exploration schema.
+            # Existing unknown fields are still rejected by validate().
+            for row in self.s.get('links', {}).values():
+                if isinstance(row, dict) and set(row) == {'current','generation','revision','session','last_event','expires'}:
+                    row['event_sequence'] = 0
             self.validate()
             self.backend = self.factory(self.cfg, self.fd)
             self.health = {k:dict(state='WAITING', good=0, bad=0, round=-1, until=0.) for k in LINKS}
@@ -102,7 +107,7 @@ class DualLifecycle(Writer):
         if not isinstance(s['history'], list) or len(s['history']) > 64 or any(set(h) != {'boot','at'} or not isinstance(h['boot'],str) or not self.number(h['at']) for h in s['history']):
             raise Blocked('Invalid budget history')
         for k, row in s['links'].items():
-            if set(row) != {'current','generation','revision','session','last_event','expires'} or any(type(row[n]) is not int or row[n] < 0 for n in ('generation','revision')) or not isinstance(row['session'],str) or not re.fullmatch('[0-9a-f]{48}',row['session']) or any(not self.number(row[n]) for n in ('last_event','expires')):
+            if set(row) != {'current','generation','revision','session','event_sequence','last_event','expires'} or any(type(row[n]) is not int or row[n] < 0 for n in ('generation','revision','event_sequence')) or not isinstance(row['session'],str) or not re.fullmatch('[0-9a-f]{48}',row['session']) or any(not self.number(row[n]) for n in ('last_event','expires')):
                 raise Blocked('Invalid link journal')
             self.validate_value(row['current'])
         self.validate_active(s['active'])
@@ -197,7 +202,43 @@ class DualLifecycle(Writer):
             self.s['active'] = after
         self.mutate(p, lambda:self.backend.link(k,self.allowed(),value,after),finish)
 
+    def wire_callback(self, link, session, boot, sequence, at, reason, lease=None,
+                      request_at=None, observed_at=None, options=None):
+        """Runtime entry: immutable intake authority and conservative wire origin.
+
+        Unlike the historical exploration callback, processing never looks up a
+        newer revision or starts a lease at hook time. Missing current-session
+        wire evidence withdraws only that link; stale authority is read-only.
+        """
+        self.ready()
+        if link not in LINKS:
+            raise Blocked('Unknown link')
+        row = self.s['links'][link]
+        if session != row['session'] or boot != self.s['boot'] or type(sequence) is not int or sequence <= row['event_sequence'] or not self.number(at) or not row['last_event'] <= at <= self.clock():
+            raise Blocked('Stale DHCP wire event')
+        if reason not in ('bound','renew','deconfig','nak','leasefail') or (reason not in ('bound','renew') and lease is not None):
+            raise Blocked('Invalid DHCP reason/payload')
+        value, expires, rejected = None, 0., False
+        if reason in ('bound','renew'):
+            try:
+                if options or not self.number(request_at) or not self.number(observed_at) or not request_at <= observed_at <= at:
+                    raise ValueError('Missing or unsupported wire proof')
+                value = parse_lease(self.cfg, lease)
+                expires = request_at + value['seconds']
+                if expires <= self.clock():
+                    raise ValueError('Wire lease already expired')
+                other = 'B' if link == 'A' else 'A'
+                if any(v and ipaddress.IPv4Network(value['prefix']).overlaps(ipaddress.IPv4Network(v['prefix'])) for v in self.allowed()[other]):
+                    raise ValueError('Cross-link lease conflict')
+            except (ValueError,TypeError,KeyError,OverflowError):
+                value, expires, rejected = None, 0., True
+        row.update(event_sequence=sequence, last_event=at)
+        self.transition(link, value, expires)
+        self.tick()
+        return dict(self.snapshot(), lease_rejected=rejected)
+
     def callback(self, link, session, boot, revision, at, reason, lease=None, options=None):
+        """Historical exploration adapter; hook-time approximation, not runtime."""
         self.ready()
         if link not in LINKS:
             raise Blocked('Unknown link')
@@ -313,7 +354,7 @@ class DualLifecycle(Writer):
         if link not in LINKS:
             raise Blocked('Unknown link')
         self.transition(link,None,0.)
-        self.s['links'][link].update(session=secrets.token_hex(24),last_event=0.)
+        self.s['links'][link].update(session=secrets.token_hex(24),event_sequence=0,last_event=0.)
         self.save()
         return self.snapshot()
 

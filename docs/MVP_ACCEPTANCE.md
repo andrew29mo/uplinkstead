@@ -105,3 +105,20 @@ Future dual service acceptance additionally requires:
    throughput, outage or failover advantage claim.
 
 No successful exploration may silently stand in for one of these untested gates.
+
+### Stage-one service acceptance
+
+The [stage-one contract](DHCP_STAGE1.md) adds a real foreground dual runtime.
+Acceptance requires actual wire acquisition through its own clients, B-only crash
+replacement preserving A, real renewal applied during an outstanding slow probe,
+and deliberately backlogged wire renewal retaining its original conservative
+REQUEST deadline. Retired-authority requests cannot extend leases. Current-authority
+claims without ACK proof retire only that link. Both server and transport overload
+are retained distinctly; actual queue overflow must be observed, bounded and
+link-local. Real lease expiry must occur with clients stopped and servers offline,
+not be explained by a client deconfig callback. Portable tests separately challenge
+fully expired queued events, capture backlog lower bounds and revoked unread events.
+
+These results do not complete automatic selection, root recovery/reset, natural
+timer T1/T2, installed systemd/boot qualification or same-schedule traffic comparison.
+Previously collected exploration reboot evidence is not new service boot evidence.

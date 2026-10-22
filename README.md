@@ -58,10 +58,19 @@ The [retained exploration receipt](reviews/dual-dhcp-explorations/README.md)
 records 151 matching-source portable tests per platform, 12 Linux VM scenarios
 and a separate orderly VM restart; no general performance advantage is claimed.
 
-This is **not an installed dual-DHCP service or automatic failover MVP**. Bounded
-production intake, client supervision, exact lease-time origin, natural T2 and
-operator recovery remain explicit [MVP gates](docs/MVP_ACCEPTANCE.md). Existing
-static and single-DHCP installed services are unchanged.
+The [formal stage-one dual-DHCP service](docs/DHCP_STAGE1.md) now adds finite
+per-link event capacity, immutable client authority, independent client
+supervision, asynchronous probes and conservative wire-derived lease deadlines.
+The historical exploration receipt above does not establish these new results.
+This is **not an installed dual-DHCP automatic-failover MVP**. Automatic selection,
+operator recovery, natural timer qualification and deployment remain explicit
+[MVP gates](docs/MVP_ACCEPTANCE.md). Existing static and single-DHCP installed
+services are unchanged.
+The [stage-one service receipt](reviews/dhcp-stage1/README.md) records **193 tests
+per platform** and **nine formal-service Linux VM scenarios**, including real
+backlogged renewal and expiry with stopped clients. Its lease deadline uses a
+conservative REQUEST observation bound, not hook/processing time. Systemd/boot,
+natural timer and automatic-failover qualification remain separate work.
 
 ## Reproduce
 

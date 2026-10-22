@@ -74,6 +74,76 @@ class DualDHCPTests(unittest.TestCase):
     def choose(self,k):
         return self.w.choose(k,self.w.s['epoch'],self.w.s['revision'])
 
+    def wire_event(self, k, sequence=1, **changes):
+        row = self.w.s['links'][k]
+        data = dict(link=k,session=row['session'],boot=self.boot,sequence=sequence,
+                    at=self.time,reason='bound',request_at=self.time-5,
+                    observed_at=self.time-1,
+                    lease=dict(ip='192.0.2.2' if k=='A' else '198.51.100.2',
+                               subnet='24',router='192.0.2.1' if k=='A' else '198.51.100.1',lease='60'))
+        data.update(changes)
+        return data
+
+    def test_wire_origin_not_hook_or_processing_time_determines_deadline(self):
+        event = self.wire_event('A')
+        self.time += 20
+        result = self.w.wire_callback(**event)
+        self.assertEqual(result['links']['A']['expires'],155.)
+        self.assertEqual(result['links']['A']['event_sequence'],1)
+        self.time = 155.; self.w.tick()
+        self.assertIsNone(self.w.s['links']['A']['current'])
+
+    def test_wire_backlog_expired_current_event_withdraws_only_its_link(self):
+        self.bind('A'); self.healthy('A'); self.choose('A'); self.bind('B')
+        a = self.w.snapshot()['links']['A']
+        result = self.w.wire_callback(**self.wire_event('B',request_at=self.time-61))
+        self.assertTrue(result['lease_rejected'])
+        self.assertIsNone(result['links']['B']['current'])
+        self.assertEqual(result['links']['A'],a)
+        self.assertEqual(result['active']['link'],'A')
+
+    def test_wire_stale_sequence_session_and_boot_are_readonly(self):
+        event = self.wire_event('B'); self.w.wire_callback(**event)
+        for changes in ({},{'sequence':0},{'sequence':2,'session':'retired'},{'sequence':2,'boot':'old'}):
+            before = self.w.snapshot(); calls = copy.deepcopy(self.w.backend.calls)
+            with self.assertRaises(Blocked): self.w.wire_callback(**dict(event,**changes))
+            self.assertEqual(before,self.w.snapshot()); self.assertEqual(calls,self.w.backend.calls)
+
+    def test_wire_missing_proof_and_unsupported_options_withdraw_current(self):
+        for changes in ({'request_at':None},{'observed_at':self.time+1},{'options':['121']}):
+            self.bind('B')
+            event = self.wire_event('B',sequence=self.w.s['links']['B']['event_sequence']+1,**changes)
+            result = self.w.wire_callback(**event)
+            self.assertTrue(result['lease_rejected'])
+            self.assertIsNone(result['links']['B']['current'])
+
+    def test_wire_sequence_is_durable_and_client_restart_rotates_authority(self):
+        event = self.wire_event('B',sequence=7); self.w.wire_callback(**event)
+        with sqlite3.connect(Path(self.tmp.name)/'journal.sqlite') as db:
+            saved = json.loads(db.execute('SELECT value FROM state').fetchone()[0])
+        self.assertEqual(saved['links']['B']['event_sequence'],7)
+        self.w.restart_client('B')
+        self.assertEqual(self.w.s['links']['B']['event_sequence'],0)
+        before = self.w.snapshot()
+        with self.assertRaises(Blocked): self.w.wire_callback(**dict(event,sequence=8))
+        self.assertEqual(before,self.w.snapshot())
+
+    def test_historical_journal_migration_is_explicit_and_validated(self):
+        self.bind('A'); self.w.__exit__()
+        with sqlite3.connect(Path(self.tmp.name)/'journal.sqlite') as db:
+            state = json.loads(db.execute('SELECT value FROM state').fetchone()[0])
+            for row in state['links'].values(): del row['event_sequence']
+            db.execute('UPDATE state SET value=?',(json.dumps(state),))
+        self.w = self.open()
+        self.assertTrue(all(row['event_sequence']==0 for row in self.w.s['links'].values()))
+        self.w.__exit__()
+        with sqlite3.connect(Path(self.tmp.name)/'journal.sqlite') as db:
+            state = json.loads(db.execute('SELECT value FROM state').fetchone()[0])
+            state['links']['A']['event_sequence'] = True
+            db.execute('UPDATE state SET value=?',(json.dumps(state),))
+        with self.assertRaises(Blocked): self.open()
+        # Keep cleanup idempotent after deliberately invalid on-disk journal.
+
     def test_inactive_renew_preserves_active_identity_and_proof(self):
         self.bind('A'); self.healthy('A'); self.choose('A'); self.bind('B')
         before = self.w.snapshot()

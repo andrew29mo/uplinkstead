@@ -162,3 +162,22 @@ own authority; the fixture orchestrates that restart, not a shipped supervisor.
 Before a dual service MVP, bounded event intake, actual per-client supervision,
 exact lease-time origin, automatic non-preemptive selection and operator recovery
 must pass the additional gates in [the exploration contract](DUAL_DHCP.md).
+
+## Formal dual-DHCP stage-one runtime
+
+[Stage one](DHCP_STAGE1.md) adds root-local bounded intake and actual independent
+BusyBox supervision around that core/backend. Probe rounds run off the writer
+thread and remain generation/time bound. DHCP hook authority/time is fixed before
+queuing; per-session intake sequence is durable and is never replaced with a
+newer core revision at delivery. Each link has reserved finite queue slots.
+Overflow/missing current wire evidence causes link-local retirement, not presumed
+health or retries with newer identity. Root may explicitly choose a healthy link;
+no automatic selection loop is present.
+
+An AF_PACKET observer establishes a conservative original-REQUEST time lower
+bound from the last proven-empty receive queue and matches ACK to hook allocation.
+Queued events keep that bound; processing cannot add a full lease at delivery.
+Unclaimed new allocation evidence invalidates prior health. This can shorten
+availability and is not exact packet timing or a hard cleanup deadline. Clients,
+listener, probe workers and writer share the trusted root runtime; this is not
+the static service's separate unprivileged policy-worker design.

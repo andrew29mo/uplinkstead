@@ -1,11 +1,16 @@
-# Audited MVP validation
+# MIT-licensed MVP validation
 
-Run **6e56cd23e1a93f1d**, source fingerprint
-`e3a3da9f938e0915e4b4ab49985878a1cb1ce3ebf65311ab7b2a776cb66f21a3`.
+Run **ebff911bee98054a**, source fingerprint
+`8d888c2acccf3e46af48f855b0d8b61d59ca03dd16d4bfef13cb0bbf798117b3`.
 
-[JSON](../reviews/mvp-audit/evidence.json) · [HTML](../reviews/mvp-audit/report.html)
-· [macOS](../reviews/mvp-audit/native-unit.json) · [Linux](../reviews/mvp-audit/linux-unit.json)
-· [Audit attempts](../reviews/mvp-audit/attempts.json)
+[JSON](../reviews/licensing/evidence.json) · [HTML](../reviews/licensing/report.html)
+· [macOS](../reviews/licensing/native-unit.json) · [Linux](../reviews/licensing/linux-unit.json)
+· [License/package review](../reviews/licensing/review.json)
+· [Earlier audit attempts](../reviews/mvp-audit/attempts.json)
+
+LICENSE and package license metadata are part of this source manifest. The
+11 runtime modules match the pre-license package byte for byte; the matrix was
+rerun so the retained snapshot and metadata also match the current MIT source.
 
 ## Observed qualification
 
@@ -50,8 +55,8 @@ not a saturated router-throughput benchmark.
 
 | Mode | Successful / attempted | Failed | Useful requests/s | All-attempt E2E p95 ms | Writer / policy RSS KiB | Main DB bytes |
 |---|---:|---:|---:|---:|---:|---:|
-| fixed_primary | 4/20 | 16 | 0.379 | 1039.5 | 23932 / 20884 | 57344 |
-| automatic | 13/20 | 7 | 1.365 | 1031.0 | 23964 / 20884 | 65536 |
+| fixed_primary | 4/20 | 16 | 0.379 | 1047.2 | 23912 / 20880 | 57344 |
+| automatic | 13/20 | 7 | 1.364 | 1034.2 | 23948 / 20880 | 65536 |
 
 Useful requests/s divides all successes by actual complete-trial duration; failed
 requests remain in the denominator's elapsed window. End-to-end latency starts at
@@ -114,7 +119,7 @@ variation are not controlled enough for general performance conclusions.
 Colima VZ Linux ARM64, four CPUs/6 GiB configured, Linux 6.8.0-117-generic,
 Python 3.12.3 and systemd 255. All six namespaces share one kernel/failure domain.
 The three TLS target ports share one fixture server. No independent ISP claim.
-The post-reboot writer RSS snapshot was `VmRSS:	   23816 kB`.
+The post-reboot writer RSS snapshot was `VmRSS:	   23828 kB`.
 
 Initial exploration and first-MVP evidence remain historical, using their original
 source and verifier schemas. [MVP_REVIEW.md](MVP_REVIEW.md) records the reproduced
@@ -122,7 +127,9 @@ review defects and the distinction between missing verifier checks and the origi
 consistent raw observations. Both audit runs passed; the first is superseded only
 by a more precise UTF-8 native fixture, followed by a full same-source rerun. Earlier
 failed MVP attempts remain failed. Some intermediate old revisions are hashes only,
-limiting historical source replay.
+limiting historical source replay. MIT adoption then reran the same matrix with
+the license and metadata included in the source identity. Pre-license receipts
+remain unchanged and are labeled historical.
 
 Untested: physical NIC/ISP failures, IPv6/dynamic addresses, optional live preference
 failback, sustained/saturated load, production deployment images, whole-VM memory

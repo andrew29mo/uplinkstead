@@ -1,4 +1,4 @@
-# Current audited MVP evidence
+# Historical pre-license audited MVP evidence
 
 Run `6e56cd23e1a93f1d`, source fingerprint
 `e3a3da9f938e0915e4b4ab49985878a1cb1ce3ebf65311ab7b2a776cb66f21a3`.
@@ -10,9 +10,8 @@ Run `6e56cd23e1a93f1d`, source fingerprint
 36 rejected report corruptions, actual systemd process restart and
 orderly VM stop/start. Counts are distinct evidence categories, not summed.
 
-```sh
-.venv/bin/python -m tools.report reviews/mvp-audit
-```
+Use the verifier at commit `faf339b` for this pre-license manifest.
+[Current MIT verification](../licensing/README.md) includes LICENSE and updated metadata.
 
 See [review corrections](../../docs/MVP_REVIEW.md) and
 [measurement scope](../../docs/VALIDATION.md). The first audit pass is preserved

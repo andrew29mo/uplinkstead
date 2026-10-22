@@ -28,4 +28,6 @@ The following primary sources support the mechanisms, not Uplinkstead test claim
 The installed VM versions and actual observations are recorded in the receipts.
 Documentation for newer software is not a substitute for those observations.
 Runtime Python imports are first-party/standard library. No external system binary,
-VM image or TLS private key is distributed. No project license has been selected.
+VM image or TLS private key is distributed. First-party project files are covered
+by the [MIT License](../LICENSE); separately installed dependencies retain their
+own terms as recorded in [THIRD_PARTY.md](THIRD_PARTY.md).

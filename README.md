@@ -8,8 +8,11 @@ The kernel forwards traffic; Python handles control decisions and operations.
 The first MVP adds a separate unprivileged policy worker, a narrow privileged
 writer interface, local root operator controls, recoverable enable/disable and
 bounded state storage. It is **not a general-purpose router or a production
-qualification**. The repository remains **Private** and no project license is set.
-External system tools retain their original licenses.
+qualification**. The repository remains **Private**.
+
+Licensed under the [MIT License](LICENSE), copyright 2026 Andrew Yuan.
+Separately installed system tools and build dependencies retain their own licenses;
+see [third-party scope](docs/THIRD_PARTY.md).
 
 ## What it does
 

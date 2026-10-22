@@ -1,4 +1,9 @@
-# Pre-publication review
+# Historical pre-publication review
+
+This records the review at commit `2b54871`, before MIT adoption. Its source and
+package receipts intentionally preserve the then-unset license status. The current
+license is [MIT](../LICENSE); see [third-party scope](THIRD_PARTY.md) and the
+[current license/verification receipt](../reviews/licensing/README.md).
 
 Reviewed implementation: commit `faf339bb8f7663d1718a7be54966e26a281cc588`.
 Source fingerprint: `e3a3da9f938e0915e4b4ab49985878a1cb1ce3ebf65311ab7b2a776cb66f21a3`.
@@ -61,11 +66,12 @@ credentials. This is a scoped pattern/content review, not a proof of no possible
 secret. Generated wheel/install files and build logs stay under ignored results;
 only sanitized receipts are retained. Earlier raw evidence was not rewritten.
 
-The repository remains **Private**, with the owner as its only collaborator.
-There is no project LICENSE/COPYING file, SPDX license declaration or package
-license metadata. README agrees. This review does not choose a license, publish
-a package, change repository visibility or declare the project open source.
+At that reviewed commit the repository was **Private**, with only the owner as
+collaborator. There was no project LICENSE/COPYING file, SPDX declaration or
+package license metadata, consistent with the README at that time. That review
+did not choose a license or change visibility. MIT was adopted subsequently, as
+linked above; the old receipts preserve the earlier observations.
 
 No new claim is made for sudden power loss, storage-corruption repair, boot-zero-gap,
 physical hardware/ISP operation, sustained load, HA or production SLA. Publication
-and project licensing remain separate user decisions.
+remains a separate user decision; subsequent MIT adoption does not publish the repository.

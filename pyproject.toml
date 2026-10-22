@@ -8,6 +8,8 @@ version = "0.1.0"
 description = "Local Linux IPv4 dual-uplink failover service"
 requires-python = ">=3.12"
 dependencies = []
+license = "MIT"
+license-files = ["LICENSE"]
 
 [project.scripts]
 uplinkstead = "uplinkstead.cli:main"

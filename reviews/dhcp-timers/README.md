@@ -1,4 +1,10 @@
-# Absolute DHCP T1/T2 client integration evidence
+# Historical absolute DHCP T1/T2 client integration evidence
+
+This receipt describes commit `8bae55a`. Its verifier did not bind the first
+writer withdrawal publication to the writer deadline, and did not force the
+ACK/quarantine ordering. It establishes its original scoped observations, not
+those later review gates. Use that revision for historical reproduction; see the
+[current reviewed evidence](../dhcp-timer-review/README.md).
 
 Run `d2969a97bc45cafa`, matching-source fingerprint
 `2dc9122815eca8bce9ec11c2b4a6efd43ff5b1ef5fe1f572f41487a3882d8c16`.
@@ -13,8 +19,8 @@ Run `d2969a97bc45cafa`, matching-source fingerprint
   errors or skips. Native macOS and Linux compile the exact first-party C timer
   functions embedded in the external client; only the Linux VM runs networking.
 - **Six formal-service VM scenarios passed.** The runner builds complete BusyBox
-  1.36.1 from the verified external source archive, verifies transformed source,
-  config, compiler and binary hashes, then launches that binary through the formal
+  1.36.1 from the verified external source archive, verifies transformed source and binary hashes and records
+  config hash and compiler version, then launches that binary through the formal
   foreground service and shipped hook. It does not manufacture lease callbacks.
 - A 120-second lease with options 58/59 actually absent uses **T1=60, T2=105**.
   Explicit **T1=10, T2=25** produces two subsequent natural renewals. A separate

@@ -6,7 +6,7 @@ from tools.dhcp_p0_report import packet,stable
 from tools.dhcp_client_build import TARBALL_SHA256,UPSTREAM_DHCPC_SHA256,PATCHED_DHCPC_SHA256
 from uplinkstead.dhcp_timing import timer_values
 
-CASES={'default_T1_and_independent_A','explicit_T1_two_natural_rounds','partial_option_default_T2','invalid_options_do_not_extend_or_replace','natural_T2_rebind_and_delayed_real_ACK','no_early_loss_expiry_withdrawal_and_reacquisition'}
+CASES={'raw_filter_same_burst_socket_contrast','ACK_received_after_address_quarantine','default_T1_and_independent_A','explicit_T1_two_natural_rounds','partial_option_default_T2','invalid_options_do_not_extend_or_replace','natural_T2_rebind_and_delayed_real_ACK','no_early_loss_expiry_withdrawal_and_reacquisition'}
 
 def transaction(t):
     req,ack,r,d,s=(t[k] for k in ('request','ack','runtime_record','timer','status'));row=s['state']['links'][r['link']]
@@ -42,8 +42,12 @@ def verify(v):
     for c in g['cases']:require(c['passed'] is True and math.isfinite(c['seconds']) and c['seconds']>=0,'Scenario failed')
     for c in (g['cleanup'],v['cleanup']):require(all(c[k] is True for k in ('namespaces_removed','root_network_unchanged','owned_children_reaped')),'Cleanup failed')
     require(v['snapshot_removed'] is True and v['vm_final']=='Stopped','VM not cleaned')
-    b=g['client_build'];require(b['source_tar_sha256']==TARBALL_SHA256 and b['upstream_dhcpc_sha256']==UPSTREAM_DHCPC_SHA256 and b['patched_dhcpc_sha256']==PATCHED_DHCPC_SHA256 and b['recipe_sha256']==v['source']['tools/dhcp_client_build.py'] and g['client_binary_sha256']==b['binary_sha256'],'Client provenance mismatch')
+    b=g['client_build'];require(b['source_tar_sha256']==TARBALL_SHA256 and b['upstream_dhcpc_sha256']==UPSTREAM_DHCPC_SHA256 and b['patched_dhcpc_sha256']==PATCHED_DHCPC_SHA256 and b['recipe_sha256']==v['source']['tools/dhcp_client_build.py'] and g['client_binary_sha256']==b['binary_sha256'] and g['client_config_sha256']==b['config_sha256'] and all(isinstance(b[k],str) and re.fullmatch('[0-9a-f]{64}',b[k]) for k in ('binary_sha256','config_sha256')) and isinstance(b['compiler'],str) and b['compiler'].startswith('gcc '),'Client provenance mismatch')
     d={c['name']:c['details'] for c in g['cases']}
+    c=d['raw_filter_same_burst_socket_contrast'];f,u=c['sockets']['filtered'],c['sockets']['unfiltered']
+    from tools.dhcp_timer_patch import C_FILTER
+    import hashlib
+    require(c['filter_source_sha256']==hashlib.sha256(C_FILTER.encode()).hexdigest() and c['noise_frames']==2000 and c['ack_frames']==1 and f['rcvbuf']==u['rcvbuf'] and f['ack_received'] is True and u['ack_received'] is False and f['drops']==0 and u['drops']>0,'No same-burst production-filter socket contrast')
     c=d['default_T1_and_independent_A'];natural(c['baseline'],c['renewed']);natural(c['A_baseline'],c['A_renewed'])
     require(c['baseline']['ack']['timer58'] is None and c['baseline']['ack']['timer59'] is None and c['client']['ok'] is True,'Defaults not exercised')
     require(c['rss_kib']['service']>0 and all(c['rss_kib']['clients'][k]>0 for k in ('A','B')),'RSS missing')
@@ -61,6 +65,20 @@ def verify(v):
         rejected=e['client_rejection'];before=e['before'];old=before['state']['links']['B']
         record=next(r for r in reversed(before['runtime']['recent']) if r['link']=='B' and r['sequence']==old['event_sequence'])
         require(rejected['event']=='reject' and rejected['interface']=='wanB' and rejected['xid']==e['received']['xid'] and rejected['pid']==before['runtime']['children']['B'] and rejected['origin']==record['client_origin_ns'] and rejected['expiry']==rejected['origin']+old['current']['seconds']*10**9 and rejected['at']/1e9>=before['runtime']['as_of'],'Client rejection detached from live schedule')
+    c=d['ACK_received_after_address_quarantine'];transaction(c['baseline']);transaction(c['admitted'])
+    q=c['quarantined'];pid=c['pid'];r=c['admitted']['runtime_record']
+    packet(c['request'],3);packet(c['reply'],5,c['request']['chaddr'])
+    require(c['request']['at']>=c['baseline']['timer']['t1']/1e9 and c['request']['destination']=='198.51.100.1' and c['request']['xid']==c['reply']['xid']==r['xid'] and c['reply']['frame_sha256']==c['admitted']['ack']['frame_sha256'],'Race request/reply detached')
+    require(c['paused_state']=='T' and c['request']['at']<=c['paused_at']<=c['stopped_at']<=c['reply']['at']<=q['runtime']['as_of']<=c['resumed_at']<=r['hook_at'] and c['admitted']['timer']['at']/1e9>=c['resumed_at'],'No forced client/quarantine ordering')
+    require(q['state']['links']['B']['current'] is None and q['state']['active'] is None and q['runtime']['capture']['B']['pending'] is True and q['runtime']['children']['B']==pid==c['admitted']['status']['runtime']['children']['B'] and c['baseline']['status']['state']['links']['B']['session']==c['admitted']['status']['state']['links']['B']['session'],'Client restarted or no quarantine')
+    rules=[entry['rule'] for entry in c['udp_drop']['nftables'] if 'rule' in entry]
+    require(len(rules)==1 and rules[0]['family']=='ip' and rules[0]['table']=='timer_ack_race' and rules[0]['chain']=='prerouting' and any('drop' in e for e in rules[0]['expr']) and sum(e['counter']['packets'] for e in rules[0]['expr'] if 'counter' in e)>0,'UDP delivery was not blocked')
+    chains=[entry['chain'] for entry in c['udp_drop']['nftables'] if 'chain' in entry]
+    matches=[e['match'] for e in rules[0]['expr'] if 'match' in e]
+    required=[dict(op='==',left={'meta':{'key':'iifname'}},right='wanB'),dict(op='==',left={'payload':{'protocol':'udp','field':'sport'}},right=67),dict(op='==',left={'payload':{'protocol':'udp','field':'dport'}},right=68)]
+    require(len(chains)==1 and all(chains[0].get(k)==value for k,value in dict(family='ip',table='timer_ack_race',name='prerouting',type='filter',hook='prerouting',prio=-300,policy='accept').items()) and all(m in matches for m in required),'Wrong ACK UDP drop scope/hook')
+    require(any(x['frame_sha256']==c['reply']['frame_sha256'] for x in q['runtime']['capture']['B']['seen_frames']),'Actual race ACK missing from formal capture')
+    require(not any(a.get('local')=='198.51.100.2' for link in c['network']['addresses'] for a in link.get('addr_info',[])) and c['client']['ok'] is True,'Old address not removed before ACK admission')
     c=d['natural_T2_rebind_and_delayed_real_ACK'];transaction(c['baseline']);transaction(c['rebound']);fence(c['rejected'])
     require(c['broadcast']['destination']=='255.255.255.255' and c['broadcast']['at']>=c['baseline']['timer']['t2']/1e9 and c['unicast']['at']>=c['baseline']['timer']['t1']/1e9 and c['unicast']['destination']=='198.51.100.1','No natural T1/T2')
     require(c['broadcast']['xid']==c['rebound']['ack']['xid']!=c['unicast']['xid'] and c['rejected']['received']['xid']==c['unicast']['xid'] and c['rejected']['received']['at']>=c['broadcast']['at'] and c['held_origin']['delayed'] is True and c['held_origin']['frame_sha256']==c['rejected']['received']['frame_sha256'] and c['held_origin']['request_at']<c['broadcast']['at'] and c['client']['ok'] is True,'Delayed actual ACK not proved')
@@ -69,6 +87,13 @@ def verify(v):
     broadcasts=[p for p in c['expiry_requests'] if p['destination']=='255.255.255.255' and p['ciaddr']!='0.0.0.0' and p['at']<=c['checkpoint']['runtime']['as_of']]
     require(len(broadcasts)>=3 and len({p['xid'] for p in broadcasts})==1 and broadcasts[0]['at']>=c['baseline']['timer']['t2']/1e9,'Three real broadcast attempts missing')
     require(diag['event']=='rebind' and diag['attempts']>=3 and diag['at']<deadline and c['checkpoint']['runtime']['as_of']<deadline/1e9 and row['current'] and c['live']['ok'] is True,'No proof of retaining lease after three attempts')
+    writer_deadline=c['baseline']['status']['state']['links']['B']['expires'];samples=c['retention_samples']
+    require(len(samples)>=2 and samples[0]['observed_at']<c['baseline']['timer']['t1']/1e9 and samples[-1]['present'] is False and samples[-1]['as_of']==c['expired']['runtime']['as_of']>=writer_deadline,'Expiry publication detached from writer deadline')
+    for index,p in enumerate(samples):
+        require(math.isfinite(p['observed_at']) and p['as_of']<=p['observed_at'] and p['session']==c['baseline']['status']['state']['links']['B']['session'] and p['pid']==c['baseline']['status']['runtime']['children']['B'],'Retention authority changed')
+        if index:
+            require(0<=p['observed_at']-samples[index-1]['observed_at']<=2 and p['as_of']>=samples[index-1]['as_of'],'Retention observation gap exceeds two seconds')
+        if index<len(samples)-1:require(p['present'] is True and p['expires']==writer_deadline and p['sequence']==c['baseline']['runtime_record']['sequence'],'Lease lost before first expiry publication')
     require(c['expiration']['event']=='expire' and c['expiration']['at']>=deadline and c['expiration']['expiry']==deadline and c['expired']['state']['links']['B']['current'] is None and c['expired']['state']['active'] is None and c['blocked']['ok'] is False,'True expiry withdrawal missing')
     require(not any(a.get('local')=='198.51.100.2' for link in c['network']['addresses'] for a in link.get('addr_info',[])) and not any(str(r.get('table')) in ('41202','41203') for r in c['network']['routes']),'Expired address/route retained')
     require(c['reacquired']['ack']['ip']=='198.51.100.3' and c['client_A']['ok'] is True and c['client_B']['ok'] is True,'Reacquisition/isolation failed')
@@ -84,6 +109,18 @@ def controls(v):
         alter('no_early_loss_expiry_withdrawal_and_reacquisition',lambda d:d['network']['addresses'][0].setdefault('addr_info',[]).append(dict(local='198.51.100.2'))),
         alter('invalid_options_do_not_extend_or_replace',lambda d:d['attempts'][0]['client_rejection'].update(event='ack')),
         alter('invalid_options_do_not_extend_or_replace',lambda d:d['attempts'][1].update(options=d['attempts'][0]['options']))]
+    changes += [alter('no_early_loss_expiry_withdrawal_and_reacquisition',lambda d:d['expired']['runtime'].update(as_of=d['checkpoint']['runtime']['as_of']+1)),
+        alter('no_early_loss_expiry_withdrawal_and_reacquisition',lambda d:d['retention_samples'][1].update(present=False)),
+        alter('no_early_loss_expiry_withdrawal_and_reacquisition',lambda d:d.update(retention_samples=[d['retention_samples'][0],d['retention_samples'][-1]])),
+        alter('ACK_received_after_address_quarantine',lambda d:d.update(paused_state='R')),
+        alter('ACK_received_after_address_quarantine',lambda d:d.update(resumed_at=d['reply']['at']-1)),
+        alter('ACK_received_after_address_quarantine',lambda d:d['quarantined']['state']['links']['B'].update(current=d['baseline']['status']['state']['links']['B']['current'])),
+        alter('ACK_received_after_address_quarantine',lambda d:d['network']['addresses'][0].setdefault('addr_info',[]).append(dict(local='198.51.100.2')))]
+    changes += [lambda x:x['guest']['client_build'].pop('compiler'),lambda x:x['guest']['client_build'].update(config_sha256='0'*64)]
+    changes += [alter('ACK_received_after_address_quarantine',lambda d:d.update(udp_drop={'nftables':[]}))]
+    changes += [alter('ACK_received_after_address_quarantine',lambda d:d['udp_drop'].update(nftables=[r for r in d['udp_drop']['nftables'] if 'chain' not in r])),
+        alter('ACK_received_after_address_quarantine',lambda d:next(e['match'] for r in d['udp_drop']['nftables'] if 'rule' in r for e in r['rule']['expr'] if 'match' in e and e['match']['right']=='wanB').update(right='wanA'))]
+    changes += [alter('raw_filter_same_burst_socket_contrast',lambda d:d['sockets']['unfiltered'].update(ack_received=True)),alter('raw_filter_same_burst_socket_contrast',lambda d:d['sockets']['unfiltered'].update(drops=0)),alter('raw_filter_same_burst_socket_contrast',lambda d:d.update(filter_source_sha256='0'*64))]
     for change in changes:
         broken=copy.deepcopy(v);change(broken)
         try:verify(broken)

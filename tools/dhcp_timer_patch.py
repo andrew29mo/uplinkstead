@@ -81,6 +81,30 @@ static void ul_export(uint64_t origin) {
 }
 '''
 
+# SOCK_DGRAM packet sockets expose the IPv4 header at offset zero. This
+# supported-profile filter prevents unrelated IPv4 traffic consuming DHCP queue.
+C_FILTER = r'''
+static void ul_attach_filter(int fd) {
+    static const struct sock_filter instructions[] = {
+        BPF_STMT(BPF_LD|BPF_B|BPF_ABS,0),
+        BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K,0x45,0,9),
+        BPF_STMT(BPF_LD|BPF_B|BPF_ABS,9),
+        BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K,17,0,7),
+        BPF_STMT(BPF_LD|BPF_H|BPF_ABS,6),
+        BPF_JUMP(BPF_JMP|BPF_JSET|BPF_K,0x3fff,5,0),
+        BPF_STMT(BPF_LD|BPF_H|BPF_ABS,20),
+        BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K,67,0,3),
+        BPF_STMT(BPF_LD|BPF_H|BPF_ABS,22),
+        BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K,68,0,1),
+        BPF_STMT(BPF_RET|BPF_K,65535),
+        BPF_STMT(BPF_RET|BPF_K,0),
+    };
+    struct sock_fprog program = {sizeof(instructions)/sizeof(instructions[0]),(struct sock_filter *)instructions};
+    if (setsockopt(fd,SOL_SOCKET,SO_ATTACH_FILTER,&program,sizeof(program)))
+        bb_simple_perror_msg_and_die("DHCP receive filter");
+}
+'''
+
 LOOP = r'''
         if (ul.active) {
             uint64_t current=ul_now();
@@ -136,7 +160,7 @@ def replace_once(text, old, new):
 
 
 def apply(source):
-    source=replace_once(source,'static ALWAYS_INLINE uint32_t random_xid(void)',C_TIMERS+C_LINUX+'\nstatic ALWAYS_INLINE uint32_t random_xid(void)')
+    source=replace_once(source,'static ALWAYS_INLINE uint32_t random_xid(void)',C_TIMERS+C_LINUX+C_FILTER+'\nstatic ALWAYS_INLINE uint32_t random_xid(void)')
     source=replace_once(source,'\tint lease_remaining; /* must be signed */','\tint lease_remaining; /* must be signed */\n    struct ul_timers ul={0};\n    uint64_t ul_request_origin=0;\n    uint32_t ul_request_xid=0;\n    int ul_have_request=0;')
     source=replace_once(source,'\t\tudhcp_sp_fd_set(pfds, client_data.sockfd);',LOOP+'\n\t\tudhcp_sp_fd_set(pfds, client_data.sockfd);')
     source=replace_once(source,'if (timeout > 0) {','if (timeout > 0 || ul.active) {')
@@ -158,4 +182,5 @@ def apply(source):
     source=replace_once(source,'\t\t\t\tclient_data.state = BOUND;','\t\t\t\tclient_data.state = BOUND; ul_log("bound",&ul);')
     source=replace_once(source,'\t\t\t\tclient_data.xid = random_xid(); /* Uplinkstead transaction boundary */','\t\t\t\t/* xid advances on the next absolute timer phase transition */')
     source=replace_once(source,'\t\t\t\tbb_info_msg("received %s", "DHCP NAK");','\t\t\t\tbb_info_msg("received %s", "DHCP NAK");\n                ul.active=0;')
+    source=replace_once(source,'\treturn fd;\n}\n\nstatic void change_listen_mode','\tul_attach_filter(fd);\n\treturn fd;\n}\n\nstatic void change_listen_mode')
     return source

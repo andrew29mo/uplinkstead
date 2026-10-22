@@ -16,7 +16,7 @@ from tools.dhcp_timer_patch import apply as timer_transform
 TARBALL_SHA256='b8cc24c9574d809e7279c3be349795c5d5ceb6fdf19ca709f80cde50e47de314'
 URL='https://busybox.net/downloads/busybox-1.36.1.tar.bz2'
 UPSTREAM_DHCPC_SHA256='4c2f9169dd2ecc4083e0dd31e79437c43fb5bbe24db42c5322e94fc3d8e0b5cc'
-PATCHED_DHCPC_SHA256='73aab8fee8347f3fdc733c95f6d1477d95cc7739fd6e10b8950ae45189dd4fcf'
+PATCHED_DHCPC_SHA256='5b076dac374d483d31f79a27043a06b05032c144de2c973d0ea9d31e8c8d4ac6'
 OLD='''static ALWAYS_INLINE uint32_t random_xid(void)
 {
 \treturn rand();

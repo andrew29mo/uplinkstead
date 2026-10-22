@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "optimized": false,
+  "run_id": "ecdc78be86e0313b",
+  "source_sha256": "60c1bec34fde86d7da2195f7481a38d6d56a8db3c1460bd13122c714aea2fa99",
+  "verifier_sha256": "23de313f7b2c3bd8fed1b41a12fd321c0c26df1b8cb180439199cf2e83230d12",
+  "rejected": [
+    {
+      "name": "coupled_early_writer_with_later_client_expiry",
+      "reason": "Expiry publication detached from writer deadline"
+    },
+    {
+      "name": "positive_drop_counter_wrong_interface",
+      "reason": "Wrong ACK UDP drop scope/hook"
+    }
+  ]
+}

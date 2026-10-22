@@ -81,6 +81,7 @@ def serve(interface,profile_path,log_path):
                 held=(reply,at);continue
             if renewing and broadcast and held and profile.get('release_held',False):
                 emit(held[0],held[1],True);held=None;time.sleep(2)
+            if renewing and profile.get('delay_ack',False):time.sleep(2)
             emit(reply,at)
 
 

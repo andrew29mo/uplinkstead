@@ -17,7 +17,7 @@ def run(root,source):
     import platform
     result=dict(passed=False,kind='formal_absolute_dhcp_timers',source_sha256=fingerprint(manifest()),cases=[],
         environment=dict(kernel=platform.release(),machine=platform.machine(),python=platform.python_version()),
-        client_build=json.loads((root/'client/build.json').read_text()),client_binary_sha256=digest(root/'client/busybox-1.36.1/busybox'),
+        client_build=json.loads((root/'client/build.json').read_text()),client_binary_sha256=digest(root/'client/busybox-1.36.1/busybox'),client_config_sha256=digest(root/'client/busybox-1.36.1/.config'),
         limitations=['Controlled Ethernet IPv4 fixture, not full DHCP/RFC/server interoperability qualification',
         'No random timer fuzz; finite 1..86400 second leases only; invalid timer ACK ignored',
         'Foreground service/manual selection, not automatic failover/systemd/reboot/power-loss/boot-zero-gap qualification',
@@ -35,6 +35,8 @@ def run(root,source):
         setprofile()
         f.spawn('dd_b',['python3',str(source/'tools/dhcp_timer_server.py'),'--interface','edge','--profile',str(profile),'--log',str(root/'server.jsonl')],'timer-server')
         wait(lambda:profile.with_suffix('.ready').exists(),10)
+        started=time.monotonic();contrast=json.loads(ns('dd_r',['python3',str(source/'tools/dhcp_filter_probe.py'),str(root)]).stdout)
+        case('raw_filter_same_burst_socket_contrast',started,**contrast)
         for k in LINKS:
             path=root/('wire-'+k+'.jsonl');f.spawn('dd_r',['python3',str(source/'tools/dhcp_p0_wire.py'),'--interface',LINKS[k]['interface'],'--output',str(path)],'wire-'+k)
             wait(lambda p=path:p.with_suffix('.ready').exists(),10)
@@ -115,6 +117,30 @@ def run(root,source):
             invalid.append(dict(options=opts,client_rejection=rejection,**evidence))
             bootstrap(**{'58':10,'59':25})
         case('invalid_options_do_not_extend_or_replace',start,attempts=invalid)
+        start=time.monotonic();base=bootstrap(**{'58':10,'59':25});select('B')
+        # AF_PACKET sees the actual ACK, but the kernel UDP path cannot
+        # enqueue it. SIGSTOP alone would not prevent an already queued UDP ACK.
+        nft('dd_r','add table ip timer_ack_race\nadd chain ip timer_ack_race prerouting { type filter hook prerouting priority -300; policy accept; }\nadd rule ip timer_ack_race prerouting iifname "wanB" udp sport 67 udp dport 68 counter drop\n')
+        setprofile(**{'58':10,'59':25,'delay_ack':True})
+        request=wait(lambda:next((p for p in wire(root,'B') if p['type']==3 and p['at']>=base['timer']['t1']/1e9 and p['ciaddr']!='0.0.0.0' and p['destination']=='198.51.100.1'),None),20)
+        pid=status()['runtime']['children']['B'];paused_at=now();os.kill(pid,signal.SIGSTOP)
+        try:
+            wait(lambda:Path('/proc',str(pid),'stat').read_text().split(') ',1)[1].split()[0]=='T',3)
+            stopped_at=now()
+            reply=wait(lambda:next((p for p in wire(root,'B') if p['type']==5 and p['xid']==request['xid']),None),5)
+            quarantined=wait(lambda:(lambda s:s if row(s)['current'] is None and s['runtime']['capture']['B']['pending'] and s['runtime']['as_of']>=reply['at'] else None)(status()),5)
+            net=owned_network();paused_state=Path('/proc',str(pid),'stat').read_text().split(') ',1)[1].split()[0]
+            assert paused_state=='T' and not any(a.get('local')=='198.51.100.2' for link in net['addresses'] for a in link.get('addr_info',[]))
+            assert quarantined['runtime']['children']['B']==pid and paused_at<=stopped_at<=reply['at']
+            udp_drop=json.loads(ns('dd_r',['nft','-j','list','table','ip','timer_ack_race']).stdout)
+            dropped=sum(e['counter']['packets'] for entry in udp_drop['nftables'] if 'rule' in entry for e in entry['rule']['expr'] if 'counter' in e)
+            assert dropped>0,'No evidence that UDP delivery was blocked'
+            nft('dd_r','delete table ip timer_ack_race\n')
+            resumed_at=now()
+        finally:os.kill(pid,signal.SIGCONT)
+        admitted=tx(changed(base['status'],timeout=5));setprofile(**{'58':10,'59':25})
+        assert admitted['ack']['frame_sha256']==reply['frame_sha256'] and admitted['timer']['at']/1e9>=resumed_at
+        case('ACK_received_after_address_quarantine',start,baseline=base,request=summary(request),reply=summary(reply),pid=pid,paused_at=paused_at,stopped_at=stopped_at,paused_state=paused_state,quarantined=quarantined,network=net,udp_drop=udp_drop,resumed_at=resumed_at,admitted=admitted,client=select('B'))
         start=time.monotonic();base=bootstrap(**{'58':10,'59':25});setprofile(**{'58':10,'59':25,'hold_unicast':True,'release_held':True})
         unicast=wait(lambda:next((p for p in wire(root,'B') if p['type']==3 and p['ciaddr']!='0.0.0.0' and p['destination']=='198.51.100.1' and p['at']>=base['timer']['t1']/1e9),None),20)
         before= status()
@@ -126,10 +152,24 @@ def run(root,source):
         held_origin=next(x for x in server if x['delayed'] and x['frame_sha256']==held['frame_sha256'])
         case('natural_T2_rebind_and_delayed_real_ACK',start,baseline=base,unicast=summary(unicast),broadcast=summary(broadcast),held_origin=held_origin,rejected=rejected,rebound=rebound,client=select('B'))
         start=time.monotonic();base=bootstrap(lease=240,**{'58':10,'59':25});select('B');setprofile(lease=240,reply=False)
-        d=wait(lambda:next((d for d in reversed(diag()) if d['interface']=='wanB' and d['event']=='rebind' and d['attempts']>=3 and d['origin']==base['timer']['origin']),None),220)
-        checkpoint=status();assert row(checkpoint)['current'] and now()<base['timer']['expiry']/1e9
-        live= f.client();assert live['ok']
-        expired=wait(lambda:(lambda s:s if row(s)['current'] is None and s['state']['active'] is None else None)(status()),70)
+        samples=[];d=None;checkpoint=None;live=None
+        writer_deadline=row(base['status'])['expires'];observation_end=writer_deadline+10
+        while True:
+            sample=status();observed_at=now();r=row(sample)
+            samples.append(dict(observed_at=observed_at,as_of=sample['runtime']['as_of'],present=r['current'] is not None,expires=r['expires'],sequence=r['event_sequence'],session=r['session'],pid=sample['runtime']['children']['B']))
+            if r['current'] is None:
+                assert sample['runtime']['as_of']>=writer_deadline,'Writer withdrew before its admitted deadline'
+                assert sample['state']['active'] is None
+                expired=sample;break
+            assert immutable_link(r)==immutable_link(row(base['status']))
+            assert r['event_sequence']==row(base['status'])['event_sequence']
+            if d is None:
+                d=next((d for d in reversed(diag()) if d['interface']=='wanB' and d['event']=='rebind' and d['attempts']>=3 and d['origin']==base['timer']['origin']),None)
+                if d is not None:
+                    checkpoint=sample;live=f.client();assert live['ok']
+            if observed_at>=observation_end:raise TimeoutError('Lease withdrawal not observed')
+            time.sleep(.1)
+        assert d and checkpoint and live
         expiration=wait(lambda:next((d for d in reversed(diag()) if d['event']=='expire' and d['interface']=='wanB' and d['origin']==base['timer']['origin']),None),5)
         assert expiration['at']>=expiration['expiry']
         network=owned_network();blocked=f.client();assert blocked['ok'] is False
@@ -138,7 +178,7 @@ def run(root,source):
         reacquired=tx(recovered);data_b=select('B')
         before=status();sent=now();p=root/'replay-private.json';p.write_text(json.dumps(old_ack));ns('dd_b',['python3',str(source/'tools/dhcp_p0_wire.py'),'--interface','edge','--replay',str(p)])
         received=wait(lambda:next((p for p in wire(root,'B') if p['at']>=sent and p['frame_sha256']==old_ack['frame_sha256']),None),3);replay=fence(received,before)
-        case('no_early_loss_expiry_withdrawal_and_reacquisition',start,baseline=base,third_retry=d,checkpoint=checkpoint,expiry_requests=[summary(p) for p in wire(root,'B') if p['type']==3 and p['at']>=base['timer']['origin']/1e9 and p['at']<=expiration['at']/1e9],live=live,expired=expired,expiration=expiration,network=network,blocked=blocked,client_A=data_a,reacquired=reacquired,client_B=data_b,replay=replay)
+        case('no_early_loss_expiry_withdrawal_and_reacquisition',start,baseline=base,third_retry=d,checkpoint=checkpoint,retention_samples=samples,expiry_requests=[summary(p) for p in wire(root,'B') if p['type']==3 and p['at']>=base['timer']['origin']/1e9 and p['at']<=expiration['at']/1e9],live=live,expired=expired,expiration=expiration,network=network,blocked=blocked,client_A=data_a,reacquired=reacquired,client_B=data_b,replay=replay)
         result['wire_counters']=f.counters();assert all(result['wire_counters'][k]['wrong_dhcp']==0 for k in LINKS)
         result['final']=status();result['passed']=True
     except BaseException as exc:

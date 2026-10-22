@@ -229,3 +229,11 @@ stateDiagram-v2
 Invalid timer ACKs do not reset the schedule; superseded ACKs cannot reopen an
 older transaction. Restart starts a new authority and requires acquisition and
 fresh health; this diagram does not establish reboot or power-loss qualification.
+
+The explicit timer client attaches a mandatory narrow cBPF receive filter to its
+packet socket. Its supported IPv4/IHL5, unfragmented UDP 67→68 profile excludes
+unrelated IPv4 traffic before queueing; attach failure exits. The Linux review
+compares equal-buffer filtered/unfiltered sockets on one actual burst, and
+separately tests the real client processing a delayed ACK after quarantine while
+the ordinary kernel UDP path is blocked. This is not protection against arbitrary
+DHCP floods or a proof of every receive interleaving.

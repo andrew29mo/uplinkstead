@@ -1,0 +1,10 @@
+{
+  "kind": "deliberately_corrupted_offline_counterexample_not_VM_result",
+  "historical_commit": "8bae55a",
+  "historical_run_id": "d2969a97bc45cafa",
+  "field": "guest.cases[no_early_loss_expiry_withdrawal_and_reacquisition].details.expired.runtime.as_of",
+  "original_value": 377.581400074,
+  "corrupted_value": 331.127295928,
+  "writer_deadline": 377.53452582700004,
+  "historical_verifier_accepted": true
+}

@@ -89,9 +89,11 @@ and are not bundled in this MIT Python project.
 The [timer adapter](docs/DHCP_TIMERS.md) replaces retry-count-driven early loss
 with REQUEST-origin absolute T1/T2/expiry deadlines. It handles explicit or absent
 options 58/59, retains valid leases across unanswered retries, and rejects invalid
-timer ACKs. The [new receipt](reviews/dhcp-timers/README.md) separates compiled C
+timer ACKs. The [reviewed receipt](reviews/dhcp-timer-review/README.md) separates compiled C
 portable tests from formal-client Linux VM packet evidence, including natural
-renewal/rebinding, true expiry withdrawal and old ACK protection. The distro
+renewal/rebinding, sampled retention through expiry, forced ACK/quarantine ordering and old ACK
+protection. A mandatory DHCP socket filter excludes unrelated IPv4 traffic from
+the receive queue. The distro
 client remains the default; this is not full RFC/server interoperability or
 installed automatic dual-DHCP failover qualification.
 

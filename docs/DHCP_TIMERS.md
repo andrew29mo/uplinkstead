@@ -56,7 +56,17 @@ Wire capture deliberately invalidates the prior allocation/health before a new
 ACK hook authorizes its replacement. An ordinary UDP receive socket could lose
 that ACK if the writer removed its local destination address first. The client
 therefore uses its existing raw DHCP receive path during both renewal and
-rebinding. This preserves receipt across quarantine; it does not bypass the
+rebinding. A mandatory classic BPF filter admits only the supported IPv4/IHL5,
+unfragmented UDP 67→68 receive profile, preventing unrelated IPv4 traffic from
+consuming this raw socket's queue. Attachment failure exits the client; it does
+not silently fall back to unfiltered receipt. A same-burst Linux socket contrast
+uses the exact production attachment code, equal buffers and kernel packet-drop
+statistics. The formal-client regression separately blocks kernel UDP delivery,
+stops the real client before a delayed actual ACK, observes address quarantine,
+then resumes that same process and checks the same frame's admission. SIGSTOP
+alone would not rule out a pre-enqueued UDP ACK.
+
+This supports the tested receipt ordering; it does not bypass the
 matching wire proof, session authority or fresh-health requirements. DHCP unicast
 transmission is still addressed to the selected link's server; T2 is broadcast.
 
@@ -85,10 +95,14 @@ or modify the product's routing policy.
 SIGUSR1 is used only to bootstrap each new server profile. Natural T1/T2 evidence
 comes from subsequent unsignalled client timer transitions. The 240-second silent
 server test deliberately passes three broadcast retries while time remains, then
-waits for the actual deadline. Reacquisition uses a changed address. Old ACKs are
+samples the original allocation from before T1 through the first withdrawal
+publication (maximum accepted observation gap: two seconds). A withdrawal
+publication before the writer's conservative deadline fails immediately; a later
+client expiry log cannot excuse it. This is sampled runtime evidence, not an
+exact kernel-removal timestamp or a zero-gap guarantee. Reacquisition uses a changed address. Old ACKs are
 transmitted on the isolated segment, not fed directly into a test parser.
 
-[Retained JSON/HTML and results](../reviews/dhcp-timers/README.md).
+[Retained JSON/HTML and results](../reviews/dhcp-timer-review/README.md).
 The runner fails on nonzero exit, timeout, source drift, missing observations or
 cleanup failure. Raw frames, generated certificates, external source and binary
 stay private/ignored; only sanitized summaries and hashes are exported.
@@ -98,7 +112,9 @@ stay private/ignored; only sanitized summaries and hashes are exported.
 These are controlled Ethernet IPv4 observations with finite leases, not complete
 RFC 2131/2132 or DHCP server interoperability certification. Random timer fuzz,
 infinite leases, option overload, alternate L2 encapsulations, hostile servers,
-capture loss and arbitrary packet reordering are not qualified. Xids correlate
+capture loss and arbitrary packet reordering are not qualified. The receive
+filter does not prevent DHCP-shaped floods or guarantee loss-free receipt under
+arbitrary CPU/network load. Xids correlate
 transactions; they do not authenticate DHCP. The bounded 64-xid history still
 requires session replacement on saturation under the restart limiter.
 

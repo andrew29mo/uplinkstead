@@ -159,8 +159,15 @@ hook; source reasoning alone is not equivalent to observing that branch.
 ## DHCP absolute-timer integration gate
 
 See [DHCP_TIMERS.md](DHCP_TIMERS.md) for the bounded client timer profile and
-[matching-source evidence](../reviews/dhcp-timers/README.md). This integration
+[matching-source evidence](../reviews/dhcp-timer-review/README.md). This integration
 requires natural T1 unicast, T2 broadcast, no retry-count early withdrawal, true
 expiry removal, changed-address reacquisition and fenced old ACK rejection.
 Passing those checks does not qualify complete server interoperability, random
 fuzz, infinite leases, installed automatic failover or reboot/power-loss behavior.
+
+Timer review gates additionally require sampled retention until the first writer
+withdrawal publication at/after its conservative deadline, without using a later
+client-expire log to justify an earlier withdrawal. Require same-burst/equal-buffer
+real socket filter contrast with kernel drops, plus actual-client ACK processing
+after quarantine with the kernel UDP delivery path proven blocked. The report
+must bind that drop rule to wanB, UDP 67→68 and the actual prerouting hook.

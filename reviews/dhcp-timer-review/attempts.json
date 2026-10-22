@@ -1,0 +1,171 @@
+[
+  {
+    "run_id": "8b1c21dcc5036984",
+    "source_sha256": "a8bbe9878853ea33b91ef064f19406b1ee76c0ba2839956594543221469767c8",
+    "passed": false,
+    "source_changed": true,
+    "selected": false,
+    "reason": "Forced ACK/quarantine case timed out with unfiltered client; verifier scope was concurrently tightened. No successful qualification.",
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "cases",
+        "exit_code": 1,
+        "timed_out": false
+      },
+      {
+        "name": "diagnose",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false
+      }
+    ],
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true
+    },
+    "vm_final": "Stopped"
+  },
+  {
+    "run_id": "ecdc78be86e0313b",
+    "source_sha256": "60c1bec34fde86d7da2195f7481a38d6d56a8db3c1460bd13122c714aea2fa99",
+    "passed": true,
+    "source_changed": false,
+    "selected": true,
+    "reason": "Final same-source run with mandatory DHCP filter, socket contrast, forced quarantine, retention sampling and strict evidence checks.",
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "cases",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false
+      }
+    ],
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true
+    },
+    "vm_final": "Stopped"
+  }
+]

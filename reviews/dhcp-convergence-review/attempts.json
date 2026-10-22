@@ -1,0 +1,186 @@
+[
+  {
+    "run_id": "4a70c673c4b95d19",
+    "source_sha256": "7cf165fc3e8352061e20237b5b083bf8578aedc2139da4af070deab268ae9d13",
+    "passed": true,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.241135167016182
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2654716249962803
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 9.187061208998784
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.23789158300496638
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.4044950829993468
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.639930250006728
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.771964833023958
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.22710116699454375
+      },
+      {
+        "name": "cases",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 54.31746400002157
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3864707080065273
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2775471670029219
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.8262417080113664
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2668257499753963
+      }
+    ],
+    "controls": {
+      "passed": true,
+      "rejected": 39
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped"
+  },
+  {
+    "run_id": "2f504b56d43798e4",
+    "source_sha256": "cda25b091d735188b006710755458097394e410be20ae44d2e29ee3e293166a0",
+    "passed": true,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.652692209027009
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.32549712498439476
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 9.560470374999568
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.32914300000993535
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.5183756249898579
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.114499792020069
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.7303114169917535
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.24458258302183822
+      },
+      {
+        "name": "cases",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 54.037983042013366
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3248509999830276
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2698699589818716
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.5611065840057563
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.18869358298252337
+      }
+    ],
+    "controls": {
+      "passed": true,
+      "rejected": 39
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped"
+  }
+]

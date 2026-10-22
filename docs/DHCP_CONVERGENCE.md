@@ -94,12 +94,17 @@ Acceptance requires:
   new generations and fresh quorum. The two-entry global history remains unchanged
   even though the configured global budget is already fully consumed.
 - Changed address/gateway cannot restore while B TLS probes are blackholed, even
-  with A healthy and a forbidden fallback usable. Unblocking permits fresh B
+  with A healthy and a forbidden main fallback usable. In that same failure
+  window an unmarked router-local TLS request bound to the LAN gateway address
+  succeeds through A, while the forwarded LAN request fails. Neither test removes
+  the production RPDB guards. Unblocking permits fresh B
   health and automatic B traffic; gateway-only change is independently exercised.
 - Expiry removes B's address, probe and LAN routes without selecting A. Sampled
   first withdrawal cannot predate the conservative writer deadline. Changed-address
   reacquisition restores B automatically; a received/processed old ACK cannot
   overwrite it. This is sampled publication evidence, not exact kernel timing.
+  An A/main TLS witness still succeeds in the expiry window while forwarded LAN
+  traffic fails, excluding an unusable fallback as the explanation for failure.
 - Another manual WAN choice exhausts/latches the budget. A later healthy B renewal
   remains withdrawn while latched. Safety cleanup still applies.
 - Same-source macOS/Linux unit IDs, actual build readback, corruption controls,
@@ -107,10 +112,20 @@ Acceptance requires:
   is recorded separately; scenario durations include intentional lease waits and
   are not speedup, throughput or failover SLO measurements.
 
-See [matching-source evidence](../reviews/dhcp-convergence/README.md). Rate limiting,
+See [reviewed matching-source evidence](../reviews/dhcp-convergence-review/README.md).
+The [original run](../reviews/dhcp-convergence/README.md) remains historical;
+its B/main fallback did not provide an independent viable path during B faults.
+Rate limiting,
 old health/tokens, same-generation retry rejection, journal migration and
 writer-reopen disarming additionally have portable formal-core/runtime tests;
 these must not be labelled separate VM fault injections.
+
+The VM checks current post-admission health and routed traffic; it does not
+continuously observe every state between ACK receipt and the final DOWN state.
+Capture invalidation is checked at runtime steps and before restoration, not as
+an atomic transaction with every backend command. A new ACK arriving during that
+write has not been race-injected here. No absence of all transient stale-routing
+windows or continuous-forwarding guarantee follows from these results.
 
 ## Remaining work
 

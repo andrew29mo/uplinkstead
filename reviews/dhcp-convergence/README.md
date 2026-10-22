@@ -1,5 +1,13 @@
 # P0 selected-WAN DHCP convergence evidence
 
+**Historical run, superseded by the [convergence review](../dhcp-convergence-review/README.md).**
+Its source/build receipts remain intact, but the original B/main fallback was not
+independently viable during B blackhole/expiry. The original report also lacked
+inactive-B renewal and transaction time/link/reason checks. The new run corrects
+these evidence gaps; the claims below describe the original interpretation and
+must be read with this qualification. Raw JSON/HTML are preserved, not rewritten
+to imply the original run exercised the new checks.
+
 Run `319ce0a3f44a1c2c`, matching-source fingerprint
 `bfdc4a2ca68b1fec8211402cbae4c584b226b61744d1c1fd9afa36b2e1cb191e`.
 

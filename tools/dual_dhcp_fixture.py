@@ -205,10 +205,10 @@ class Fixture:
                        for e in r['rule']['expr'] if 'counter' in e}
         return out
 
-    def client(self, namespace='dd_c'):
+    def client(self, namespace='dd_c', source=None):
         code='''import socket,ssl,json,secrets
 n=secrets.token_hex(12);c=ssl.create_default_context(cafile=CA)
-with socket.create_connection(('203.0.113.2',8443),timeout=.7) as r:
+with socket.create_connection(('203.0.113.2',8443),timeout=.7,source_address=(SOURCE,0) if SOURCE else None) as r:
  with c.wrap_socket(r,server_hostname='probe.test') as s:
   s.sendall(('GET /'+n+' HTTP/1.0\\r\\nHost: probe.test\\r\\n\\r\\n').encode());b=b''
   while True:
@@ -216,7 +216,7 @@ with socket.create_connection(('203.0.113.2',8443),timeout=.7) as r:
    if not x:break
    b+=x
   v=json.loads(b.split(b'\\r\\n\\r\\n')[1]);assert v['nonce']==n and v['ok'];print(json.dumps(v))
-'''.replace('CA',repr(str(self.root/'ca.crt')))
+'''.replace('CA',repr(str(self.root/'ca.crt'))).replace('SOURCE',repr(source))
         p=ns(namespace,['python3','-c',code],check=False,timeout=3)
         return dict(ok=p.returncode==0,response=json.loads(p.stdout) if p.returncode==0 else None)
 

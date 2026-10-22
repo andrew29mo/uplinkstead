@@ -105,7 +105,7 @@ address/gateway change and reacquisition. It retains conservative quarantine;
 renewal may interrupt traffic. Automatic same-WAN restoration does not spend
 manual switching budget, has a separate bounded rate and cannot restore an older
 lease generation or choose the other WAN. It starts disarmed after writer restart.
-[Evidence](reviews/dhcp-convergence/README.md) separates formal VM cases from
+[Reviewed evidence](reviews/dhcp-convergence-review/README.md) separates formal VM cases from
 portable fault tests. This remains a foreground integration, not automatic
 cross-WAN failover or a deployed dual-DHCP MVP.
 

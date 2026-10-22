@@ -34,17 +34,17 @@ Run **6e56cd23e1a93f1d**, source fingerprint
 The original core fault driver remains a separate test of shared Writer/Policy/
 Linux logic. It does not pretend to be the unprivileged installed policy worker.
 MVP service cases exercise the installed units; bounded storage, lifecycle I/O
-faults and delayed-resume cases invoke the formal core directly, as detailed below. The benchmark leaves a fixture-set
-latch for the final reboot test; that write is explicitly not evidence of budget
-exhaustion. Actual exhaustion is independently observed in the alternating-fault
+faults and delayed-resume cases invoke the formal core directly, as detailed below.
+The benchmark leaves a fixture-set latch for the final reboot test; that write is
+explicitly not evidence of budget exhaustion. Actual exhaustion is independently observed in the alternating-fault
 core case, with complete timings/history and all failed LAN requests retained.
 
 ## Controlled traffic trial
 
 Both modes start from healthy A and replay 20 intended arrival offsets at 0.5-second
-intervals. A forwarding blackhole is installed before request index 4 at offset
-an intended 2 seconds and retained through that mode's completion. Eight worker slots submit
-open-loop scheduled TLS requests; actual start/end offsets and lateness are kept,
+intervals. A forwarding blackhole is installed before request index 4 at an
+intended offset of 2 seconds and retained through that mode's completion. Eight
+worker slots submit open-loop scheduled TLS requests; actual start/end offsets and lateness are kept,
 including failed and deadline-expired requests. This is low-load fault recovery,
 not a saturated router-throughput benchmark.
 

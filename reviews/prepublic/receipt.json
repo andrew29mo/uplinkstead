@@ -1,0 +1,30 @@
+{
+  "recorded_at_utc": "2026-10-22T03:54:38.521633+00:00",
+  "reviewed_commit": "faf339bb8f7663d1718a7be54966e26a281cc588",
+  "source_sha256": "e3a3da9f938e0915e4b4ab49985878a1cb1ce3ebf65311ab7b2a776cb66f21a3",
+  "source_matches_retained_vm": true,
+  "retained_run": "6e56cd23e1a93f1d",
+  "native_tests_rerun": 81,
+  "retained_linux_tests": 81,
+  "retained_vm_cases": 27,
+  "report_corruption_controls": 36,
+  "report_optimized_check_passed": true,
+  "vm_rerun_for_this_review": false,
+  "vm_current_status": "Stopped",
+  "repository_visibility": "PRIVATE",
+  "project_license": null,
+  "only_owner_collaborator": true,
+  "history_text_blobs_scanned": 135,
+  "history_secret_pattern_findings": 0,
+  "author_email_kind": "GitHub noreply",
+  "runtime_nonstdlib_imports": [],
+  "packaging_receipt": "package.json",
+  "runtime_source_changed": false,
+  "limits": [
+    "Pattern-based text/history scan, not a formal security certification",
+    "Retained matching-source Linux/VM evidence reverified; no new VM run",
+    "Wheel installation/import/console smoke is native macOS only",
+    "No new performance trial or production/hardware/power-loss claim"
+  ],
+  "pending_collaborator_invitations": 0
+}

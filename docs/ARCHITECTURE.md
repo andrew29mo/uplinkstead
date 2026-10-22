@@ -3,8 +3,9 @@
 ## Supported topology and ownership
 
 One static routed IPv4 LAN, two different WAN subnets and a local management CLI.
-The Linux kernel forwards packets. The agent probes and decides; packets do not
-flow through Python. No host-wide route, NAT or firewall is taken over.
+The Linux kernel forwards packets. The privileged writer probes and checks
+admission; the unprivileged worker proposes selections. Packets do not flow
+through Python. No host-wide route, NAT or firewall is taken over.
 
 Two fixed probe tables (41001/41002) and one active LAN table (41003) are reserved.
 Local marked probes use explicit source/device bindings. Each probe lookup has a
@@ -44,8 +45,9 @@ unknown current-link status alone does not trigger speculative switching.
 Default failback is manual/non-preemptive. Optional automatic failback requires
 continuous stable evidence. The admission budget allows three automatic selections
 in 60 seconds, including initial admission; excess latches DEGRADED_LATCHED.
-The latch preserves selection, keeps probing and requires an explicit future
-operator workflow. It deliberately trades some availability for bounded mutation.
+The latch preserves selection and keeps probing. Clearing it requires the
+implemented root-only guarded resume with fresh health and an explicit budget
+reset acknowledgement. It deliberately trades some availability for bounded mutation.
 
 Freshness uses boot-relative time. Process restart rebuilds health and retains the
 history/latch. Cross-boot events count conservatively until a full budget window
@@ -88,7 +90,10 @@ external fault wrappers pause real Writer boundaries and are not the shipped age
 The privileged daemon owns Writer and observations, with a bounded SOCK_SEQPACKET
 UNIX socket. SO_PEERCRED accepts only root and the dedicated policy UID. Root-only
 operator commands are separate from sample/automatic proposal operations. Every
-mutation checks a process epoch and a same-process revision. Automatic proposals
+operator change and automatic selection is checked against a process epoch and
+a same-process revision. Startup recovery and owned-route maintenance instead operate under the
+exclusive writer and reconcile checks; they do not accept a caller-selected target.
+Automatic proposals
 also carry the latest round; the writer independently recomputes admission from
 its own observations. This keeps health forgery out of the unprivileged boundary.
 The capability-free worker computes policy and proposes selections; it cannot

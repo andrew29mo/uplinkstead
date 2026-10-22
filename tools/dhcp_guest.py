@@ -101,6 +101,11 @@ def setup():
     (ROOT/'root-before.json').write_text(json.dumps(root_snapshot()))
     # Ledger is created before any owned object; cleanup can handle partial setup.
     (ROOT/'owner-names.json').write_text(json.dumps(NAMES))
+    topology()
+    provision_service()
+
+
+def topology():
     for n in NAMES:
         command('ip','netns','add',n);ip(n,'link','set','lo','up')
     pairs=[('ud_r','lan0','10.77.0.1/24','ud_c','eth0','10.77.0.2/24'),
@@ -127,6 +132,9 @@ def setup():
     ip('ud_s','route','add','192.0.2.0/24','via','10.99.1.1')
     ip('ud_s','route','add','198.51.100.0/30','via','10.99.2.1')
     nft('ud_b','add table ip observe\nadd chain ip observe f { type filter hook forward priority -100; policy accept; }\nadd rule ip observe f ip daddr 203.0.113.2 counter\n')
+
+
+def provision_service():
     command('openssl','req','-x509','-newkey','rsa:2048','-nodes','-keyout',ROOT/'server.key','-out',ROOT/'ca.crt','-days','2','-subj','/CN=probe.test','-addext','subjectAltName=DNS:probe.test')
     c=json.loads((ROOT/'source/deploy/dhcp.example.json').read_text());c['ca']=str(ROOT/'ca.crt')
     (ROOT/'config.json').write_text(json.dumps(c))
@@ -137,11 +145,15 @@ def setup():
     (ROOT/'source/deploy/uplinkstead-udhcpc.py').chmod(0o755)
     # Explicit private paths rather than relying on the example unit's directories.
     (ROOT/'state').mkdir(mode=0o700);(ROOT/'run').mkdir(mode=0o700)
+    start_tls()
+    command('systemctl','daemon-reload');server()
+    command('systemctl','start',UNIT)
+
+
+def start_tls():
     log=(ROOT/'server-private.log').open('a')
     p=subprocess.Popen(['ip','netns','exec','ud_s','python3',str(ROOT/'source/tools/server.py'),str(ROOT/'ca.crt'),str(ROOT/'server.key')],stdout=log,stderr=log)
     (ROOT/'server.pid').write_text(str(p.pid));log.close()
-    command('systemctl','daemon-reload');server()
-    command('systemctl','start',UNIT)
 
 
 def counter():
@@ -162,7 +174,9 @@ def identity():
 def network():
     def table(number):
         p=cmd(['ip','-n','ud_r','-j','route','show','table',str(number)],check=False)
-        if p.returncode and 'FIB table does not exist' not in p.stderr:
+        if p.returncode:
+            if 'FIB table does not exist' in p.stderr:
+                return []  # ip -j can leave an incomplete '[' for an absent table.
             raise RuntimeError('route readback failed')
         return json.loads(p.stdout or '[]')
     return dict(data_routes=table(41103),probe_routes=table(41101),
@@ -328,7 +342,7 @@ with Lifecycle(c,'/opt/uplinkstead-dhcp/state') as w:
                   environment=dict(kernel=command('uname','-r').strip(),python=sys.version.split()[0],
                       systemd=command('systemctl','--version').splitlines()[0],
                       busybox=version('busybox','--help'),dnsmasq=command('dnsmasq','--version').splitlines()[0]),
-                  orderly_vm_restart_tested=False,power_loss_tested=False)
+                  vm_restart_in_this_phase=False,power_loss_tested=False)
     (ROOT/'guest.json').write_text(json.dumps(result,indent=2));return result
 
 

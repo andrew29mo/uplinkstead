@@ -45,6 +45,7 @@ def main():
         match=[x for x in rows if x['name']=='relay'];assert len(match)==1
         return match[0]['status']
     started=uploaded=False
+    reboot=['sudo','python3','/opt/uplinkstead-dhcp/source/tools/dhcp_reboot.py']
     guest=['sudo','python3','/opt/uplinkstead-dhcp/source/tools/dhcp_guest.py']
     try:
         run('native',[sys.executable,'-m','tools.unit','--output',out/'native-unit.json'])
@@ -62,12 +63,19 @@ def main():
         ssh('linux',['sudo','sh','-c','cd /opt/uplinkstead-dhcp/source && python3 -m tools.unit --output /opt/uplinkstead-dhcp/linux.json'])
         v['linux_unit']=json.loads(ssh('linux-read',['sudo','cat','/opt/uplinkstead-dhcp/linux.json']))
         v['guest']=json.loads(ssh('cases',guest+['run'],timeout=240))
+        v['reboot_before']=json.loads(ssh('reboot-prepare',reboot+['prepare'],timeout=40))
+        run('reboot-stop',[colima,'stop','relay'],timeout=120)
+        assert status('reboot-between')=='Stopped'
+        run('reboot-start',[colima,'start','relay','--activate=false','--ssh-config=false'],timeout=180)
+        v['reboot']=json.loads(ssh('reboot-after',reboot+['after'],timeout=70))
         v['passed']=True
     except BaseException as exc:
         v['error']=type(exc).__name__+': '+str(exc).replace(str(ROOT),'<checkout>')
         if uploaded:
             try:
                 ssh('diagnose',['sudo','journalctl','-u','uplinkstead-dhcp.service','--no-pager','-n','40','-b'])
+                ssh('diagnose-fixture',['sudo','journalctl','-u','uplinkstead-dhcp-fixture.service','--no-pager','-n','40','-b'])
+                ssh('diagnose-reboot-journal',['sudo','cat','/opt/uplinkstead-dhcp/reboot-journal-observed.json'])
                 ssh('diagnose-state',['sudo','ip','netns','exec','ud_r','python3','-c',"import sys,json;sys.path.insert(0,'/opt/uplinkstead-dhcp/source');from tools.dhcp_guest import state;from uplinkstead.dhcp import config;from pathlib import Path;from uplinkstead.probe import round; s=state();print(json.dumps(s));c=config(Path('/opt/uplinkstead-dhcp/config.json'));c['links']={'A':{'interface':c['interface'],'source':s['current']['ip']}};print(round(c,'A'))"])
                 ssh('diagnose-routes',['sudo','ip','-n','ud_r','route','show','table','all'])
                 ssh('diagnose-server',['sudo','cat','/opt/uplinkstead-dhcp/server-private.log'])
@@ -75,6 +83,7 @@ def main():
     finally:
         if uploaded:
             try:
+                v['reboot_cleanup']=json.loads(ssh('reboot-cleanup',reboot+['cleanup']))
                 v['cleanup']=json.loads(ssh('cleanup',guest+['cleanup']))
                 code="import pathlib,sys,shutil;p=pathlib.Path('/opt/uplinkstead-dhcp');assert (p/'owner').read_text()==sys.argv[1];shutil.rmtree(p)"
                 ssh('remove',['sudo','python3','-c',code,v['run_id']]);v['snapshot_removed']=True

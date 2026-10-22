@@ -16,7 +16,8 @@ CASES = ['wire_bound_and_pinned_tls', 'wire_renew', 'wire_gateway_change', 'wire
          'blackhole_no_false_health_or_backup_borrow',
          'lease_deadline_with_stalled_client', 'formal_backend_partial_write_recovery']
 STAGES = ['native', 'initial', 'start', 'preflight', 'upload', 'linux', 'linux-read',
-          'cases', 'cleanup', 'remove', 'stop', 'final']
+          'cases', 'reboot-prepare', 'reboot-stop', 'reboot-between', 'reboot-start',
+          'reboot-after', 'reboot-cleanup', 'cleanup', 'remove', 'stop', 'final']
 
 
 def require(value, message):
@@ -73,6 +74,51 @@ def deadline(d):
     no_forwarding(d['after_network'])
 
 
+def reboot(d, before, source):
+    require(d['passed'] is True and d['orderly_vm_restart_tested'] is True and
+            d['power_loss_tested'] is False and d['before']==before, 'reboot scope/receipt')
+    pre=d['prestart'];old=before['state'];new=d['fresh'];service(before['service']);service(d['service'])
+    require(before['boot']==old['boot'] and d['boot']==pre['boot']==new['boot'] and d['boot']!=before['boot'] and
+            old['healthy'] is True and before['service_frozen'] is True and before['request']['ok'] is True and
+            before['request']['response']['peer']=='10.99.1.1', 'reboot identity/before health')
+    require(any(r.get('dst')=='default' for r in before['network']['data_routes']), 'reboot started without active route')
+    require(before['shutdown_fault']==dict(KillSignal='9',DropInPaths='/run/systemd/system/uplinkstead-dhcp.service.d/reboot-fault.conf'), 'shutdown fault not observed')
+    j=before['journal']
+    require(pre['journal']==j and j['current']==old['current'] and j['current'] is not None and j['intent'] is None and
+            j['boot']==before['boot'] and j['session']==old['session'] and j['revision']==old['revision'] and
+            j['expires']==old['expires'] and j['expires']>0, 'journal cleared before boot')
+    require(before['source_sha256']==pre['source_sha256']==d['source_sha256']==source and
+            d['service']['InvocationID']!=before['service']['InvocationID'] and
+            new['session']!=old['session'] and new['revision']>old['revision'], 'new boot authority/source')
+    require(not pre['network']['data_routes'] and not pre['network']['probe_routes'] and
+            not any(r['addr_info'] for r in pre['network']['addresses']), 'fixture replayed lease')
+    from .dhcp_reboot import fixture
+    require(before['fixture_sha256']==d['fixture_sha256']==hashlib.sha256(fixture().encode()).hexdigest(), 'boot fixture mismatch')
+    require(d['dhcp_server_absent_while_waiting'] is True and d['backup_warmup_packets']>0 and d['backup_packets']==0 and len(d['waiting'])>=3, 'backup not tested')
+    for observation in d['waiting']:
+        w=observation['state']
+        require(w['boot']==d['boot'] and w['session']==new['session'] and w['current'] is None and
+                w['expires']==0 and w['healthy'] is False and observation['request']['ok'] is False and
+                observation['backup_packets']==0, 'old lease/health or borrowing before reacquisition')
+        no_forwarding(observation['network'])
+    u=d['unverified'];uv=u['state']
+    require(uv['current']['ip']=='192.0.2.4' and uv['current']['gateway']=='192.0.2.5' and
+            uv['healthy'] is False and not u['network']['data_routes'] and u['request']['ok'] is False and
+            new['current']==uv['current'] and new['healthy'] is True and uv['session']==new['session'] and
+            d['request']['ok'] is True and d['request']['response']['peer']=='10.99.1.1', 'new wire lease/fresh health')
+    stale=d['stale'];q0=stale['state_before']
+    require(q0==stale['state_after']==new and stale['network_before']==stale['network_after'] and
+            len(stale['events'])==3, 'stale changed configuration')
+    for i,entry in enumerate(stale['events']):
+        q=entry['event'];error=('RetiredSession','Blocked','Blocked')[i]
+        require(entry['rejection']==dict(rejected=True,error=error) and q['reason']=='renew' and
+                q['lease']['ip']=='192.0.2.2' and q['at']>0 and
+                q['session']==(old['session'] if i==0 else new['session']) and
+                q['boot']==(before['boot'] if i==1 else new['boot']) and
+                q['revision']==(old['revision'] if i==2 else new['revision']), 'stale authority not isolated')
+    require(re.fullmatch(r'VmRSS:\s+[1-9][0-9]* kB',d['rss_snapshot']) and d['seconds']>=0, 'reboot measurement')
+
+
 def verify(v):
     require(v['passed'] is True and v['source_changed'] is False, 'run failed/source changed')
     require(v['source_sha256'] == fingerprint(v['source']), 'source fingerprint')
@@ -120,7 +166,10 @@ def verify(v):
     service(g['rss_service']);require(g['rss_service']==hole['service'], 'RSS replacement process')
     require(re.fullmatch(r'VmRSS:\s+[1-9][0-9]* kB',g['rss_snapshot']) and
             type(g['db_bytes']) is int and 0<g['db_bytes']<=8*1024*1024, 'memory/disk observation')
-    require(g['power_loss_tested'] is False and g['orderly_vm_restart_tested'] is False, 'untested restart claim')
+    require(g['power_loss_tested'] is False and g['vm_restart_in_this_phase'] is False, 'pre-reboot phase claim')
+    reboot(v['reboot'],v['reboot_before'],v['source_sha256'])
+    installed(g['service_source_sha256'],v['reboot']['installed_unit_sha256'])
+    require(v['reboot_cleanup']==dict(passed=True,fixture_removed=True),'boot fixture cleanup')
     require(all(v['cleanup'].get(k) is True for k in ('passed','root_network_unchanged','namespaces_removed','unit_removed')) and
             v['snapshot_removed'] is True and v['vm_final']=='Stopped', 'cleanup')
 
@@ -144,12 +193,27 @@ def controls(v):
              lambda x:x['guest']['cases'][5]['details']['reply'].update(healthy=True),
              lambda x:x['guest']['cases'][5]['details']['late']['reply'].update(healthy=True),
              lambda x:x['guest']['rss_service'].update(MainPID='999999'),
-             lambda x:x['stages'].pop(1)]
-    for change in changes:
+             lambda x:x['stages'].pop(1),
+             lambda x:x['reboot'].update(boot=x['reboot_before']['boot']),
+             lambda x:x['reboot']['prestart']['journal'].update(current=None),
+             lambda x:x['reboot']['waiting'][0]['state'].update(healthy=True),
+             lambda x:x['reboot']['waiting'][0]['state'].update(current={'ip':'192.0.2.3'}),
+             lambda x:x['reboot']['waiting'][0].update(backup_packets=1),
+             lambda x:x['reboot']['waiting'][0]['network'].update(rules=[r for r in x['reboot']['waiting'][0]['network']['rules'] if r['priority']!=10213]),
+             lambda x:x['reboot']['unverified']['state'].update(healthy=True),
+             lambda x:x['reboot']['stale']['state_after'].update(current=None),
+             lambda x:x['reboot']['stale']['events'][0]['rejection'].update(error='Blocked'),
+             lambda x:x['reboot'].update(power_loss_tested=True),
+             lambda x:x['reboot_cleanup'].update(fixture_removed=False),
+             lambda x:x['reboot'].update(installed_unit_sha256='0'*64),
+             lambda x:x['reboot'].update(fixture_sha256='0'*64),
+             lambda x:x['reboot_before']['shutdown_fault'].update(KillSignal='15'),
+             lambda x:x['reboot'].update(dhcp_server_absent_while_waiting=False)]
+    for index,change in enumerate(changes):
         bad=copy.deepcopy(v);change(bad)
         try:verify(bad)
         except (ValueError,KeyError,TypeError):continue
-        raise ValueError('Verifier accepted corrupted evidence')
+        raise ValueError('Verifier accepted corrupted evidence at index '+str(index))
     return len(changes)
 
 
@@ -161,10 +225,13 @@ def render(v):
             '<style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere}td,th{padding:8px;border-bottom:1px solid #ddd;text-align:left}</style>'
             '<h1>Single DHCP uplink lifecycle</h1><p>Controlled Linux VM; real DHCP and installed service. '
             'Case times include fixture waits and DHCP protocol timers; not failover SLOs. RSS is a process snapshot, '
-            'not peak or whole-VM memory. No VM reboot, power-loss or physical ISP claim.</p>'
+            'not peak or whole-VM memory. Includes orderly VM stop/start with a frozen service and explicit shutdown-only SIGKILL override; '
+            'no sudden power-loss or physical ISP claim.</p>'
             '<p>Run: '+html.escape(v['run_id'])+'; overall passed: '+str(v['passed'])+'</p>'
             '<p>Writer RSS snapshot: '+html.escape(g.get('rss_snapshot','not collected'))+
             '; SQLite main file bytes: '+str(g.get('db_bytes','not collected'))+'</p>'
+            '<p>DHCP orderly VM restart: '+str(v.get('reboot',{}).get('passed','not collected'))+
+            '; post-boot service RSS snapshot: '+html.escape(v.get('reboot',{}).get('rss_snapshot','not collected'))+'</p>'+
             '<table><tr><th>Scenario</th><th>Passed</th><th>Elapsed seconds</th></tr>'+rows+'</table>'
             '<details><summary>Full JSON evidence</summary><pre>'+html.escape(json.dumps(v,indent=2,allow_nan=False))+'</pre></details>')
 

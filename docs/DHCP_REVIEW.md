@@ -58,12 +58,19 @@ Historical receipts are preserved, not rewritten as evidence for the corrections
 
 Current receipts and counts are linked from [Validation](VALIDATION.md). They
 separate installed-service/wire/IPC scenarios, direct core/backend injection and
-synthetic portable verifier tests. The DHCP and static regressions use the same
-manifest-listed implementation/tools/tests/deployment snapshot.
+synthetic portable verifier tests. The original DHCP and static audit pair used the same
+manifest-listed implementation/tools/tests/deployment snapshot. The new DHCP
+reboot receipt has its own newer source identity; older static receipts are not
+represented as reruns of that snapshot.
 
-DHCP process replacement was tested; DHCP VM reboot, physical ISP, sudden power
-loss and long-running natural T1/T2 scheduling remain untested. Static-mode VM
-reboot results do not establish DHCP reboot behavior. Timings include fixture and
+The original audit tested DHCP process replacement, not VM reboot. A subsequent
+[DHCP-mode VM restart check](DHCP_REBOOT.md) now preserves a real live journal
+with an explicit shutdown-only process fault and tests production service startup
+after orderly VM stop/start. Its [new receipt](../reviews/dhcp-reboot/README.md)
+requires independent pre-service journal readback, server-off waiting guards,
+new wire acquisition/fresh health and separately fenced old authorities. It does
+not derive DHCP behavior from the static-mode reboot result. Physical ISP, sudden
+power loss and long-running natural T1/T2 scheduling remain untested. Timings include fixture and
 polling work; RSS is a single writer-process snapshot excluding client/kernel/VM.
 No forwarding-capacity, peak-memory, hard-expiry or production-recovery guarantee
 is derived from these runs.

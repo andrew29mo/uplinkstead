@@ -124,6 +124,38 @@ class DHCPTests(unittest.TestCase):
                 self.assertEqual(w.s['boot'], 'boot2')
                 with self.assertRaises(Blocked):w.event(old)
 
+    def test_new_boot_requires_new_lease_and_fresh_quorum_then_fences_old_authorities(self):
+        with self.open() as w:
+            w.event(self.event(w));w.tick();w.tick()
+            old=copy.deepcopy(w.s)
+            self.assertTrue(w.snapshot()['healthy'])
+        # Monotonic time resets; a large saved deadline must not be reused.
+        with patch('uplinkstead.dhcp.boot_id', return_value='boot2'):
+            self.clock=1
+            with self.open() as w:
+                self.assertIsNone(w.snapshot()['current'])
+                self.assertEqual(w.s['expires'],0)
+                self.assertNotEqual(old['session'],w.s['session'])
+                self.assertEqual(w.backend.calls[0],('recover',[old['current']]))
+                for _ in range(3):
+                    self.assertFalse(w.tick()['healthy'])
+                    self.assertFalse(w.backend.active)
+                self.probes.assert_called()  # Only previous boot supplied probes.
+                self.probes.reset_mock()
+                self.assertFalse(w.tick()['healthy']);self.probes.assert_not_called()
+                q=self.event(w,value=self.value('192.0.3.2','192.0.3.1'));q['boot']='boot2'
+                w.event(q)
+                self.assertFalse(w.snapshot()['healthy'])
+                w.tick();self.assertFalse(w.backend.active)
+                w.tick();self.assertTrue(w.snapshot()['healthy'])
+                current=copy.deepcopy(w.s);calls=copy.deepcopy(w.backend.calls)
+                for changes in ({'session':old['session']},{'boot':old['boot']},{'revision':old['revision']}):
+                    event=dict(q,at=self.clock+.01,revision=w.s['revision'])
+                    event.update(changes);self.clock+=.02
+                    with self.assertRaises(Blocked):w.event(event)
+                    self.assertEqual(w.s,current);self.assertEqual(w.backend.calls,calls)
+                    self.assertTrue(w.snapshot()['healthy'])
+
     def test_actual_sqlite_save_failure_cannot_mutate_backend(self):
         import sqlite3
         with self.open() as w:

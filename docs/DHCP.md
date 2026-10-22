@@ -38,7 +38,9 @@ lease; health is not persisted or replayed across restart.
 The writer's exclusive lock is inherited by command helpers. Recovery quarantines
 both old and intended addresses/routes rather than replaying a pre-restart lease.
 Every service start creates a new session and requires a fresh DHCP exchange and
-fresh health. A retired callback returns the distinct `RetiredSession` error,
+fresh health. [DHCP-mode VM restart validation](DHCP_REBOOT.md) checks this
+through the installed service across an actual orderly VM stop/start, including
+a pre-service read of a retained old lease and a server-off waiting period. A retired callback returns the distinct `RetiredSession` error,
 separate from stale time/revision checks. An incomplete write retires the service; it cannot keep serving as
 though the change succeeded. Corrupt state rejects rather than claiming repair.
 
@@ -119,7 +121,15 @@ core tests separately inject write failures; those are not physical disk failure
 The VM also injects an exception after a real backend command successfully changes
 the address/probe route, then opens the formal lifecycle again to prove both old
 and intended allocations are quarantined. This is a command-boundary fault, not
-a physical I/O failure. A service SIGKILL is not a VM reboot or sudden power loss.
+a physical I/O failure. A service SIGKILL is not a VM reboot or sudden power loss. The driver now also
+runs a distinct DHCP-mode orderly VM stop/start. A shutdown-only runtime drop-in
+uses SIGKILL to retain the live journal; new boot runs the original transformed
+service without that drop-in. The topology fixture reads the unchanged old journal
+before service startup and leaves the DHCP server offline. Guard/address/route
+readback, negative LAN TLS checks and a viable alternate-path positive control
+verify waiting behavior. A different real wire allocation then remains unverified
+under a controlled blackhole, obtains fresh health afterward, and is challenged
+with old session/boot/revision events. See [the procedure and boundaries](DHCP_REBOOT.md).
 
 JSON and escaped HTML retain all cases, writer-process RSS snapshot (excluding the separate client), main-file bytes,
 stage exits/timeouts, source identities and cleanup. Case times include setup,
@@ -128,8 +138,10 @@ comparisons. No forwarding throughput, peak RSS or physical ISP result is claime
 Failed runs remain failed. Cleanup must remove owned units/namespaces/source,
 preserve the VM root network and stop the VM. Private fixture keys/logs stay local.
 
-Retained results: [DHCP JSON/HTML and measured scope](../reviews/dhcp-audit/README.md),
-plus [same-source static regression](../reviews/dhcp-audit-static/README.md).
+Current result: [DHCP lifecycle and VM restart JSON/HTML](../reviews/dhcp-reboot/README.md).
+Earlier [DHCP audit](../reviews/dhcp-audit/README.md) and its
+[same-source static regression](../reviews/dhcp-audit-static/README.md) remain historical;
+the current runner/verifier requires the added reboot evidence.
 
 See [the lifecycle/evidence review](DHCP_REVIEW.md) for corrected findings and
 what the historical baseline did not establish.

@@ -1,5 +1,9 @@
 # DHCP lifecycle review and corrected evidence
 
+Historical receipt at commit `5fcd66b`. Replay with the tools/tests at that
+revision; the current DHCP verifier additionally requires VM restart evidence.
+See [the newer DHCP restart receipt](../dhcp-reboot/README.md).
+
 Run `52181356e66119f7`, source fingerprint
 `18b9518ae1cbaaa8598c996bf73d3c4e8576508c02a6ede7745c1237cc652caf`.
 

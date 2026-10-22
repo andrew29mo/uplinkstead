@@ -1,0 +1,416 @@
+{
+  "failed_attempts": [
+    {
+      "run_id": "529862c38c238512",
+      "passed": false,
+      "source_sha256": "2dca264f17d5cf57e2082f32878e39a7cad41e7928642445ddbbfb7c8bdbe643",
+      "error": "RuntimeError: reboot-after failed or timed out",
+      "diagnosis": "SIGSTOP alone did not preserve the lease: systemd resumed the service during graceful SIGTERM shutdown.",
+      "stages": [
+        {
+          "name": "native",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.7034632090071682
+        },
+        {
+          "name": "initial",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.37860420800279826
+        },
+        {
+          "name": "start",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 9.35480341600487
+        },
+        {
+          "name": "preflight",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.22904608398675919
+        },
+        {
+          "name": "upload",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.2923170829890296
+        },
+        {
+          "name": "linux",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 1.491306291980436
+        },
+        {
+          "name": "linux-read",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.23330983298365027
+        },
+        {
+          "name": "cases",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 153.26966750001884
+        },
+        {
+          "name": "reboot-prepare",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 4.874300458992366
+        },
+        {
+          "name": "reboot-stop",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 2.543308457999956
+        },
+        {
+          "name": "reboot-between",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.1944945419963915
+        },
+        {
+          "name": "reboot-start",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 9.579508666007314
+        },
+        {
+          "name": "reboot-after",
+          "exit_code": 1,
+          "timed_out": false,
+          "seconds": 0.40497295901877806
+        },
+        {
+          "name": "diagnose",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.3545712499762885
+        },
+        {
+          "name": "diagnose-state",
+          "exit_code": 1,
+          "timed_out": false,
+          "seconds": 0.22730650001903996
+        },
+        {
+          "name": "reboot-cleanup",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.3453497080190573
+        },
+        {
+          "name": "cleanup",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.3532390000182204
+        },
+        {
+          "name": "remove",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.24092629199731164
+        },
+        {
+          "name": "stop",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 2.427638958004536
+        },
+        {
+          "name": "final",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.1904366250091698
+        }
+      ],
+      "cleanup": {
+        "passed": true,
+        "root_network_unchanged": true,
+        "namespaces_removed": true,
+        "unit_removed": true
+      },
+      "snapshot_removed": true,
+      "vm_final": "Stopped"
+    },
+    {
+      "run_id": "97c9ac08355989c9",
+      "passed": false,
+      "source_sha256": "8bc02908f699db6f407bdc7defe1e61c81c59ada4668713911115e686598e752",
+      "error": "RuntimeError: reboot-after failed or timed out",
+      "diagnosis": "Pre-service journal equality passed, but the fixture route observer could not parse partial JSON for a missing FIB table.",
+      "stages": [
+        {
+          "name": "native",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.629478291986743
+        },
+        {
+          "name": "initial",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.3170884160208516
+        },
+        {
+          "name": "start",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 9.7803307500144
+        },
+        {
+          "name": "preflight",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.32478383398847654
+        },
+        {
+          "name": "upload",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.372624707990326
+        },
+        {
+          "name": "linux",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 1.4219035420101136
+        },
+        {
+          "name": "linux-read",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.23033762502018362
+        },
+        {
+          "name": "cases",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 153.58270595798967
+        },
+        {
+          "name": "reboot-prepare",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 5.986893249995774
+        },
+        {
+          "name": "reboot-stop",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 3.246815833990695
+        },
+        {
+          "name": "reboot-between",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.19388741700095125
+        },
+        {
+          "name": "reboot-start",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 9.391913041006774
+        },
+        {
+          "name": "reboot-after",
+          "exit_code": 1,
+          "timed_out": false,
+          "seconds": 0.36333791600191034
+        },
+        {
+          "name": "diagnose",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.34257879201322794
+        },
+        {
+          "name": "diagnose-fixture",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.35527387500042096
+        },
+        {
+          "name": "diagnose-reboot-journal",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.2247137499798555
+        },
+        {
+          "name": "diagnose-state",
+          "exit_code": 1,
+          "timed_out": false,
+          "seconds": 0.27684187502018176
+        },
+        {
+          "name": "reboot-cleanup",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.33916820798185654
+        },
+        {
+          "name": "cleanup",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.3599252499989234
+        },
+        {
+          "name": "remove",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.2435904589947313
+        },
+        {
+          "name": "stop",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 2.520235584001057
+        },
+        {
+          "name": "final",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.2581885840045288
+        }
+      ],
+      "cleanup": {
+        "passed": true,
+        "root_network_unchanged": true,
+        "namespaces_removed": true,
+        "unit_removed": true
+      },
+      "snapshot_removed": true,
+      "vm_final": "Stopped"
+    },
+    {
+      "run_id": "3d015bc428d89a75",
+      "passed": false,
+      "source_sha256": "742132dbec0fb30e9610755dfb0ade05319298d60ba0f2204fbf15afdd80c950",
+      "verification_error": "Verifier accepted corrupted evidence",
+      "diagnosis": "All VM phases passed, but corruption control 28 removed the last raw rule (a builtin default lookup), not an owned terminal guard. Corrected to explicitly remove priority 10213; the failed run remains failed.",
+      "stages": [
+        {
+          "name": "native",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.6173421660205349
+        },
+        {
+          "name": "initial",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.20394079200923443
+        },
+        {
+          "name": "start",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 9.387402791006025
+        },
+        {
+          "name": "preflight",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.2566285409848206
+        },
+        {
+          "name": "upload",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.2433699169778265
+        },
+        {
+          "name": "linux",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 1.4647889170155395
+        },
+        {
+          "name": "linux-read",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.24047916702693328
+        },
+        {
+          "name": "cases",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 153.3989530839899
+        },
+        {
+          "name": "reboot-prepare",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 5.9630492919823155
+        },
+        {
+          "name": "reboot-stop",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 2.6877662079932634
+        },
+        {
+          "name": "reboot-between",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.18775204199482687
+        },
+        {
+          "name": "reboot-start",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 11.48208529202384
+        },
+        {
+          "name": "reboot-after",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 10.871015209006146
+        },
+        {
+          "name": "reboot-cleanup",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.3818590419832617
+        },
+        {
+          "name": "cleanup",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.381125832995167
+        },
+        {
+          "name": "remove",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.30081137499655597
+        },
+        {
+          "name": "stop",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 2.4595649160037283
+        },
+        {
+          "name": "final",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.19379029198898934
+        }
+      ],
+      "cleanup": {
+        "passed": true,
+        "root_network_unchanged": true,
+        "namespaces_removed": true,
+        "unit_removed": true
+      },
+      "snapshot_removed": true,
+      "vm_final": "Stopped"
+    }
+  ],
+  "note": "Failed development runs are not counted as passes. Private logs and fixture secrets remain local; their uncommitted snapshots are not complete replayable releases."
+}

@@ -1,6 +1,41 @@
-# Current validation
+# Current DHCP validation
 
-The reviewed DHCP lifecycle and existing static dual-uplink controller were checked
+[DHCP lifecycle and VM restart receipt](../reviews/dhcp-reboot/README.md), run
+`e9764f00ec645c79`, source fingerprint
+`114835a344600925392a78640c9d464006f63ff9a3317219ea277e4299a251ae`.
+
+- macOS and Linux: **108 portable tests each**, same source/test IDs, zero skips.
+- **Nine lifecycle scenarios** plus **one actual DHCP-mode orderly VM restart**
+  passed. A shutdown-only forced-process-termination fixture retained a live lease;
+  pre-service journal equality excludes graceful pre-shutdown withdrawal as the
+  explanation. New boot uses the original transformed shipped service without
+  the runtime fault drop-in. See [the procedure](DHCP_REBOOT.md).
+- With the DHCP server offline, three post-service observations showed no old
+  allocation/health, empty owned routes and retained terminal guards. A usable
+  alternate path was positively established; LAN failures did not borrow it.
+  A different real wire lease required new health before forwarding. Old session,
+  boot identity and revision requests left the new configuration unchanged.
+- **38 report corruption controls** reject, with normal and optimized verification
+  passing. JSON/HTML correspond. The VM root network was preserved, owned objects
+  and source removed, and the VM stopped. Failed development attempts remain failed.
+- Post-start verification routine: **12.82 s**, including intentional waits,
+  negative requests and reacquisition; VM stop/start is separately recorded. This
+  is not an outage measurement or recovery SLO. Writer RSS snapshots were
+  **23,844 KiB** in the lifecycle phase and **23,728 KiB** post-restart, excluding
+  client/kernel/VM and without a peak or reduction claim. Lifecycle-phase SQLite
+  main file: **8,192 bytes**, excluding temporary journal/filesystem overhead.
+
+DHCP remains separate single-uplink mode. Sudden power loss, torn writes, disk
+corruption, pre-service boot protection, physical ISP behavior and long-running
+natural T1/T2 renewal are untested. No hard scheduling/lease-expiry or uninterrupted
+connection guarantee follows. Latest-delayed callback tests use synthetic past
+timestamps; old-authority VM requests use synthetic IPC replay, not live old-boot
+callbacks. Older static-mode VM results below are historical and do not stand in
+for DHCP-mode reboot evidence or a new static regression at this source revision.
+
+# Historical DHCP audit and static regression
+
+At commit `5fcd66b`, the reviewed DHCP lifecycle and existing static dual-uplink controller were checked
 against the exact same source manifest, fingerprint
 `18b9518ae1cbaaa8598c996bf73d3c4e8576508c02a6ede7745c1237cc652caf`.
 
@@ -23,9 +58,9 @@ against the exact same source manifest, fingerprint
   Earlier DHCP receipts did not establish active-route expiry and are superseded
   for that claim; their original JSON/HTML are preserved.
 
-DHCP remains a separate **single-uplink** mode. Its VM reboot and sudden power-loss
-recovery were not tested; only process restart and portable changed-boot logic are
-covered. Latest-delayed callback tests inject past timestamps; they do not measure
+At that revision DHCP remained a separate **single-uplink** mode. Its VM reboot
+and sudden power-loss recovery were not tested; only process restart and portable
+changed-boot logic were covered. Latest-delayed callback tests inject past timestamps; they do not measure
 real scheduler stalls. Static-mode VM reboot cannot establish DHCP reboot behavior.
 Neither run establishes physical-ISP reliability, transparent TCP migration,
 sustained throughput, hard expiry scheduling or a production SLA. Read

@@ -1,5 +1,9 @@
 # Static dual-uplink regression after DHCP review
 
+Historical receipt at commit `5fcd66b`. Replay with the tools/tests at that
+revision; the current DHCP verifier additionally requires VM restart evidence.
+See [the newer DHCP restart receipt](../dhcp-reboot/README.md).
+
 Run `887f7604f7979e60`, source fingerprint
 `18b9518ae1cbaaa8598c996bf73d3c4e8576508c02a6ede7745c1237cc652caf`.
 The [reviewed DHCP run](../dhcp-audit/README.md) uses the exact same source manifest.

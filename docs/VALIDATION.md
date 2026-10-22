@@ -1,33 +1,36 @@
 # Four-exploration validation
 
-Final run: **0d654962a2900a8b**. Source fingerprint:
-`c1de7e81770bd87a427209b087f478aebf8496e5db8ca376478de79190769a0b`.
+Final run: **0a60c943b1429c7f**. Source fingerprint:
+`2d59b046105fdbcebb5903e0c906fc5de17bd2c30f8135e2ac11ae4969b9dba0`.
 The manifest covers product, tools, tests/fixture JSON, shipping service and package
 metadata. Documentation and retained receipts are outside that manifest.
 
-[JSON](../reviews/exploration/evidence.json) · [HTML](../reviews/exploration/report.html)
-· [macOS](../reviews/exploration/native-unit.json) · [Linux](../reviews/exploration/linux-unit.json)
-· [Attempt ledger](../reviews/attempts.json)
+[JSON](../reviews/audit/evidence.json) · [HTML](../reviews/audit/report.html)
+· [macOS](../reviews/audit/native-unit.json) · [Linux](../reviews/audit/linux-unit.json)
+· [Initial attempt ledger](../reviews/attempts.json) · [Audit attempts](../reviews/audit/attempts.json)
 
 ## Observed outcomes
 
-- **39/39 portable tests on macOS and 39/39 on Linux**, identical test IDs and
+- **56/56 portable tests on macOS and 56/56 on Linux**, identical test IDs and
   source fingerprints, zero skips/failures/errors. Mocked writer unit tests are
   separate from actual backend execution in the VM.
-- **15 real Linux namespace scenarios** using the production probe, policy,
-  Writer and iproute2 backend. The fixture drives policy transitions with actual
-  TLS outcomes; this is not a claim that every case runs through the systemd loop.
+- **19 real Linux namespace scenarios** using the production probe, policy,
+  Writer and iproute2 backend. The fixture invokes the same formal agent cycle with actual
+  TLS outcomes and measured timestamps; this is not a claim that every case runs through the systemd loop.
 - Actual shipped agent service under systemd, SIGKILL restart with a different
   InvocationID, preserved latch, and an **orderly VM stop/start** with a new boot ID.
-- **10 report corruption controls** rejected: failed exit, timeout, missing case,
-  missing test, wrong source, unchanged reboot ID, shutdown-before-test rollback,
-  failed cleanup, still-running VM and an unsupported power-loss claim.
+- **20 report corruption controls** rejected, including failed stages/timeouts,
+  mismatched source/tests, reboot or cleanup contradictions, unsupported power-loss
+  claims, wrong probe peers/counts/links, escaped internal/local traffic, fabricated
+  probe timing or budget transitions, stale-health writes and wrong installed unit.
+  Explicit report checks also remain active under Python optimization; assertion-
+  based validation fixtures refuse optimized execution.
 - Private source snapshot removed, owned services/namespaces removed, VM stopped.
   Root routes/rules and nft/iptables/ip6tables semantics matched before/after.
 
 These are distinct evidence categories; do not add them into a single test count.
 
-## The fifteen scenarios
+## The nineteen scenarios
 
 | Scenario | Evidence |
 |---|---|
@@ -46,6 +49,11 @@ These are distinct evidence categories; do not add them into a single test count
 | Three SIGKILL boundaries | Before write restores actual A; after write and before receipt reconcile actual B; no blind stale replay |
 | Live probe/policy faults | Actual TLS outcomes drive formal policy through A/B alternating faults; exactly three admitted selections, no default failback, then persistent latch; every LAN result retained |
 | One target down | Actual upstream port block leaves 2/3 quorum successes |
+| Inverted RPDB | Real negated lookup/prohibit rules rejected, route/rule snapshots unchanged |
+| Missing local lookup | Missing priority-zero lookup rejected without mutation; restored fixture serves router-local TLS |
+| Expired health | Real cycle selects B, delayed preflight expires its proof, formal Writer rejects before route mutation |
+| Malformed target | One real TLS endpoint returns JSON null; formal cycle survives with 2/3 quorum |
+
 
 The helper test injects a stop at the subprocess boundary using an external wrapper;
 it does not claim a real hung kernel netlink operation. The other fault wrappers
@@ -67,7 +75,7 @@ The VM is Colima VZ Linux ARM64, four CPUs and 6 GiB configured memory, Linux
 All six namespaces share one kernel and VM failure domain. Three TLS target ports
 share one fixture server; they do not model independent Internet providers.
 
-After reboot the agent's `/proc/<pid>/status` VmRSS snapshot was **23,700 KiB**.
+After reboot the agent's `/proc/<pid>/status` VmRSS snapshot was **23,704 KiB**.
 It is not peak/PSS/whole-VM memory. Scenario `seconds` includes fixture actions,
 probes, failures and validation; it is not failover latency or an SLO. No throughput,
 speedup, physical-WAN, repeated-trial confidence or capacity claim is made.
@@ -101,7 +109,10 @@ JSON representation, link-route reconstruction, reverse-route and cleanup proble
 Attempt six reached all 14 then-existing scenarios and reboot but failed cleanup
 comparison; manual semantic verification/removal followed. Attempt seven additionally
 found a cleanup variable-shadowing error; its separate manual cleanup receipt is
-retained. Only attempt eight passed the full current source, cleanup and verifier.
+retained. Only initial attempt eight passed its then-current source, cleanup and verifier
+(commit db00f52; historical 39-test/15-case schema). Two audit runs subsequently
+passed, with the latest source adding the corrections in [AUDIT.md](AUDIT.md).
+The first audit pass is retained as superseded after the malformed-response follow-up.
 Private logs are local and excluded from Git. Intermediate source hashes are retained,
 but not every failed source revision is a Git commit; exact old-source replay is limited.
 

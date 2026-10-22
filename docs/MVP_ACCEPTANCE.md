@@ -13,7 +13,11 @@ an operational first MVP. Only outcomes linked by docs/VALIDATION.md are observe
    overlap a live privileged writer/helper. Stale epochs cannot mutate successors.
 5. The default is no preference-driven failback. Alternating faults consume a
    durable admission budget; excess latches automation without reboot reset.
-6. Within a boot, reconcile durable intent against actual kernel routes. After a
+6. Fresh automatic-admission proof is rechecked after preflight and immediately
+   before dispatch; malformed individual target responses do not crash the loop.
+7. Require unique built-in RPDB lookups and reject inversion/unknown selectors;
+   test real LAN-to-router traffic as well as forwarded and excluded destinations.
+8. Within a boot, reconcile durable intent against actual kernel routes. After a
    reboot, rebuild only the recorded owned layout/selection, then acquire new
    health evidence. Never infer health from an old success streak.
 
@@ -24,7 +28,7 @@ an operational first MVP. Only outcomes linked by docs/VALIDATION.md are observe
 | Pinned probes | Both directions: up-but-blackholed remote path, deleted default, down interface; opposite path stays healthy; forbidden-egress counter unchanged; binding error UNKNOWN |
 | Scope and round trip | Fresh LAN TLS flows select A/B; ordinary host and other-LAN flows stay on their route; main unchanged; declared internal lookup stays internal; unknown intersecting RPDB rejected; routed and NAT fixtures qualified |
 | Mutation ownership/recovery | Actual Writer/backend at before-write, after-write and before-receipt crash boundaries; old pre-lock request rejected; stopped lock holder blocks successor; mutation helper keeps lock after parent death |
-| Policy and restart | Formal policy consumes real probe outcomes through alternating faults; all LAN requests retained; bounded selections and no default failback; real systemd SIGKILL restart and actual orderly VM stop/start; pre-Agent journal still pending |
+| Policy and restart | The shared formal agent cycle consumes timed real probe outcomes through alternating faults; all LAN requests retained; bounded selections and no default failback; real systemd SIGKILL restart and actual orderly VM stop/start; pre-Agent journal still pending |
 
 Unit tests additionally challenge fresh/expired/old-config/old-boot/reordered results,
 consecutive success/failure gates, missed rounds, optional stable failback and

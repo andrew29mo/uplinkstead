@@ -1,5 +1,6 @@
 """All networking actions are confined to owned disposable namespaces in a dedicated VM."""
 import argparse
+from contextlib import contextmanager
 import hashlib
 import json
 import os
@@ -41,7 +42,7 @@ def system(name,*args):return cmd(['systemctl',*args,name])
 def db():
     with sqlite3.connect(STATE/'journal.sqlite') as c:return json.loads(c.execute('SELECT value FROM state').fetchone()[0])
 
-def client(name='us_c',port=8443):
+def client(name='us_c',port=8443,address='203.0.113.2'):
     # Real unmarked new TLS flow, using a fresh source port each invocation.
     code="""import socket,ssl,json,secrets
 n=secrets.token_hex(12)
@@ -55,7 +56,7 @@ with socket.create_connection(('203.0.113.2',8443),timeout=1) as r:
    b+=x
   h,j=b.split(b'\\r\\n\\r\\n',1);v=json.loads(j);assert v['nonce']==n and v['ok'];print(json.dumps(v))
 """
-    code=code.replace('8443',str(int(port)))
+    code=code.replace('8443',str(int(port))).replace('203.0.113.2',address)
     p=ns(name,['python3','-c',code],check=False,timeout=4)
     return dict(ok=p.returncode==0,result=json.loads(p.stdout) if p.returncode==0 else None,error=None if p.returncode==0 else 'request_failed')
 
@@ -68,6 +69,29 @@ def select(target):return remote("from pathlib import Path;from uplinkstead.conf
 def blocked(rule=False):
     code="from pathlib import Path;from uplinkstead.config import load;from uplinkstead.writer import Writer;from uplinkstead.linux import Blocked\ntry:\n with Writer(load(Path('/opt/uplinkstead/config.json')),'/opt/uplinkstead/state') as w: pass\nexcept (Blocked,BlockingIOError):print('true')\nelse:print('false')"
     return remote(code)
+
+def spawn_local_server():
+    p=subprocess.Popen(['ip','netns','exec','us_r','python3',str(ROOT/'source/tools/server.py'),str(ROOT/'ca.crt'),str(ROOT/'server.key'),'--address','10.77.0.1','--ports','9443'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+    time.sleep(.2)
+    if p.poll() is not None:raise RuntimeError('Local TLS fixture failed')
+    return p
+
+
+@contextmanager
+def drive():
+    with (ROOT/'driver-private.log').open('a') as err:
+        p=subprocess.Popen(['ip','netns','exec','us_r','python3',str(ROOT/'source/tools/drive.py'),str(CONF),str(STATE)],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=err,text=True,bufsize=1)
+        try:
+            ready=json.loads(p.stdout.readline());assert ready['ready'] is True
+            def tick():
+                p.stdin.write(json.dumps(dict(command='tick'))+'\n');p.stdin.flush()
+                return json.loads(p.stdout.readline())
+            yield tick
+            p.stdin.close();assert p.wait(timeout=5)==0
+        finally:
+            if p.poll() is None:kill(p)
+            p.stdout.close()
+
 
 def dump_rules():return json.loads(ip('us_r','-j','rule','show').stdout)
 def routes():return json.loads(ip('us_r','-j','route','show','table','41003').stdout)
@@ -246,11 +270,15 @@ def run_cases():
     case('binding_error_unknown',binding_error)
     def scope():
         main_before=json.loads(ip('us_r','-j','route','show','table','main').stdout)
-        select('A');a=client();host_a=client('us_r');other_a=client('us_o')
-        select('B');b=client();host_b=client('us_r');other_b=client('us_o')
+        local=spawn_local_server()
+        try:
+            select('A');a=client();host_a=client('us_r');other_a=client('us_o');local_a=client(port=9443,address='10.77.0.1')
+            select('B');b=client();host_b=client('us_r');other_b=client('us_o');local_b=client(port=9443,address='10.77.0.1')
+        finally:kill(local)
         assert a['ok'] and a['result']['peer']=='10.99.1.1'
         assert b['ok'] and b['result']['peer']=='10.99.2.1'
         assert all(x['ok'] and x['result']['peer']=='10.99.1.1' for x in (host_a,host_b,other_a,other_b))
+        assert all(r['ok'] and r['result']['server']=='10.77.0.1' and r['result']['peer']=='10.77.0.2' for r in (local_a,local_b))
         assert main_before==json.loads(ip('us_r','-j','route','show','table','main').stdout)
         internal=ip('us_r','-j','route','get','198.18.0.1','from','10.77.0.2','iif','lan0').stdout
         assert json.loads(internal)[0]['gateway']=='192.0.2.1'
@@ -258,7 +286,7 @@ def run_cases():
         # Not excluded -> active B is expected; only declared internal prefixes
         # are protected, not guessed global "private" routes.
         assert denied.returncode==0
-        return dict(lan_A=a,lan_B=b,host_before=host_a,host_after=host_b,other_before=other_a,other_after=other_b,main_unchanged=True,internal_route=json.loads(internal))
+        return dict(lan_A=a,lan_B=b,host_before=host_a,host_after=host_b,other_before=other_a,other_after=other_b,main_unchanged=True,internal_route=json.loads(internal),local_before=local_a,local_after=local_b)
     case('lan_scope_new_tls_and_internal_exclusion',scope)
     def rpdb_conflict():
         ip('us_r','rule','add','priority','9990','from','10.77.0.0/24','lookup','main')
@@ -350,42 +378,98 @@ def run_cases():
             rows.append(dict(boundary=mode,pending_before=before['pending'],routes_before=actual,recovered_selected=expected,epoch_before=before['epoch'],epoch_after=recovered['epoch']))
         return rows
     case('sigkill_intent_route_and_receipt_boundaries',crashes)
+    def inverted():
+        checks=[]
+        for action in (['lookup','main'],['prohibit']):
+            ip('us_r','rule','add','priority','9990','not','iif','other0',*action)
+            before=dump_rules();before_routes=routes()
+            try:
+                assert blocked();assert dump_rules()==before and routes()==before_routes
+                row=next(x for x in before if x['priority']==9990);assert 'not' in row
+                checks.append(dict(rule=row,rejected=True,no_mutation=True))
+            finally:ip('us_r','rule','del','priority','9990')
+        return checks
+    case('inverted_rpdb_rules_rejected',inverted)
+    def missing_local():
+        before_routes=routes();ip('us_r','rule','del','priority','0')
+        before=dump_rules()
+        try:assert blocked();assert dump_rules()==before and routes()==before_routes
+        finally:ip('us_r','rule','add','priority','0','lookup','local')
+        local=spawn_local_server()
+        try:request=client(port=9443,address='10.77.0.1')
+        finally:kill(local)
+        assert request['ok'] and request['result']['server']=='10.77.0.1'
+        return dict(rejected=True,no_mutation=True,local_request_after_fixture_restore=request)
+    case('missing_local_lookup_rejected',missing_local)
+    def expired_health():
+        select('A');holes('A')
+        try:
+            value=remote("""from pathlib import Path
+from uplinkstead.config import load
+from uplinkstead.writer import Writer,now,boot_id
+from uplinkstead.policy import Policy,Settings
+from uplinkstead.agent import cycle
+from uplinkstead.linux import Blocked
+import json,time
+c=load(Path('/opt/uplinkstead/config.json'))
+with Writer(c,'/opt/uplinkstead/state') as w:
+ p=Policy(Settings(**c['policy']),c['_hash'],boot_id(),w.s['history'],w.s['latched'])
+ rounds=[cycle(w,p,i) for i in (0,1)]
+ original=w.switch;original_preflight=w.backend.preflight;captured={}
+ def delayed(*args,**kw):
+  captured['proof']=args[3]
+  def slow():original_preflight();time.sleep(2.1)
+  w.backend.preflight=slow
+  return original(*args,**kw)
+ w.switch=delayed
+ try:cycle(w,p,2)
+ except Blocked as exc:
+  assert 'expired' in str(exc).lower()
+  assert w.backend.selected()=='A' and w.s['pending'] is None
+  assert p.fresh('B',now())=='UNKNOWN'
+  print(json.dumps(dict(rejected=True,selected='A',pending=None,proof=captured['proof'],blocked_at=now(),pre_intent=True,uses_agent_cycle=True,prior_rounds=rounds)))
+ else:raise AssertionError('Expired health dispatched mutation')
+""")
+        finally:holes('A',False)
+        assert client()['result']['peer']=='10.99.1.1'
+        return value
+    case('expired_health_before_mutation',expired_health)
+    def malformed_target():
+        select('A');bad=ROOT/'bad-body';bad.write_text('null')
+        try:
+            with drive() as tick:
+                rows=[tick() for _ in range(4)]
+                assert all(r['probes']['A']['successes']==2 and r['selected']=='A' for r in rows)
+                assert rows[-1]['health']['A']=='HEALTHY'
+                request=client(port=8444);assert request['ok']
+        finally:bad.unlink()
+        return dict(rounds=rows,agent_survived=True,uses_agent_cycle=True,lan_request=request)
+    case('malformed_target_quorum',malformed_target)
+
     def flapping():
-        c=load(CONF);settings=Settings(stable=3);policy=Policy(settings,c['_hash'],boot_id())
-        history=[];rid=0;select('A');selected='A';transitions=[]
-        for stage in ('healthy','single_target','A_down','A_recovers','B_down','A_down_again','B_down_again'):
-            if stage=='single_target':
-                nft('us_a','add table ip one_target\nadd chain ip one_target forward { type filter hook forward priority -50; policy accept; }\nadd rule ip one_target forward tcp dport 8443 drop\n')
-            if stage=='A_down':nft('us_a','delete table ip one_target\n')
-            if stage in ('A_down','A_down_again'):holes('A')
-            if stage=='A_recovers':holes('A',False)
-            if stage=='B_down':holes('B')
-            if stage=='A_down_again':holes('B',False)
-            if stage=='B_down_again':holes('A',False);holes('B')
-            # Four rounds cover three consecutive outcomes, including recovery.
-            for _ in range(4):
-                raw=remote("from pathlib import Path;from uplinkstead.config import load;from uplinkstead.probe import round;import json;c=load(Path('/opt/uplinkstead/config.json'));print(json.dumps({k:round(c,k)[0] for k in ('A','B')}))")
-                t=now()
-                for k in ('A','B'):policy.observe(k,rid,t,t,t,raw[k],c['_hash'],boot_id())
-                rid+=1;target,state=policy.candidate(selected,t)
-                if target:
-                    event=policy.admit(t)
-                    # Persist budget using the same Writer entry point, not only
-                    # the fixture's in-memory policy.
-                    remote("from pathlib import Path;from uplinkstead.config import load;from uplinkstead.writer import Writer;import json\nwith Writer(load(Path('/opt/uplinkstead/config.json')),'/opt/uplinkstead/state') as w:\n w.switch(w.s['epoch'],"+repr(target)+","+repr(event)+");print('true')")
-                    selected=target;transitions.append(dict(stage=stage,selected=selected))
-                request=client(port=8444 if stage=='single_target' else 8443)
-                if request['ok']:
-                    assert request['result']['peer']==('10.99.1.1' if selected=='A' else '10.99.2.1')
-                history.append(dict(stage=stage,round=rid,observed=raw,selected=selected,state=state,lan_request=request))
-            if stage=='A_recovers':assert selected=='B','Unexpected preference failback'
-        assert len(transitions)==3 and policy.latched
+        history=[];select('A');transitions=[]
+        with drive() as tick:
+            for stage in ('healthy','single_target','A_down','A_recovers','B_down','A_down_again','B_down_again'):
+                if stage=='single_target':
+                    nft('us_a','add table ip one_target\nadd chain ip one_target forward { type filter hook forward priority -50; policy accept; }\nadd rule ip one_target forward tcp dport 8443 drop\n')
+                if stage=='A_down':nft('us_a','delete table ip one_target\n')
+                if stage in ('A_down','A_down_again'):holes('A')
+                if stage=='A_recovers':holes('A',False)
+                if stage=='B_down':holes('B')
+                if stage=='A_down_again':holes('B',False)
+                if stage=='B_down_again':holes('A',False);holes('B')
+                for _ in range(4):
+                    row=tick();row['stage']=stage
+                    if row['target']:transitions.append(dict(stage=stage,selected=row['selected']))
+                    request=client(port=8444 if stage=='single_target' else 8443)
+                    if request['ok']:assert request['result']['peer']==('10.99.1.1' if row['selected']=='A' else '10.99.2.1')
+                    row['lan_request']=request;history.append(row)
+                if stage=='A_recovers':assert row['selected']=='B','Unexpected preference failback'
+            assert len(transitions)==3 and row['latched'] is True and db()['latched'] is True
         assert any(not r['lan_request']['ok'] for r in history if r['stage']=='A_down')
         assert any(r['lan_request']['ok'] and r['selected']=='B' for r in history if r['stage']=='A_down')
-        remote("from pathlib import Path;from uplinkstead.config import load;from uplinkstead.writer import Writer\nwith Writer(load(Path('/opt/uplinkstead/config.json')),'/opt/uplinkstead/state') as w:\n w.s['latched']=True;w.save();print('true')")
-        for k in ('A','B'):
-            ns('us_'+k.lower(),['nft','delete','table','ip','hole'],check=False)
-        return dict(transitions=transitions,rounds=history,latched=True)
+        for k in ('A','B'):ns('us_'+k.lower(),['nft','delete','table','ip','hole'],check=False)
+        return dict(transitions=transitions,rounds=history,latched=db()['latched'],uses_agent_cycle=True)
     case('real_probe_failover_flapping_and_budget',flapping)
     def single_target():
         nft('us_a','add table ip one_target\nadd chain ip one_target forward { type filter hook forward priority -50; policy accept; }\nadd rule ip one_target forward tcp dport 8443 drop\n')
@@ -506,5 +590,7 @@ def diagnose():
     print(json.dumps(value))
 
 if __name__=='__main__':
+    if not __debug__:
+        raise RuntimeError('Optimized execution is unsupported for validation')
     p=argparse.ArgumentParser();p.add_argument('action',choices=['setup','cases','topology','prepare','after','cleanup','diagnose']);a=p.parse_args()
     {'setup':setup,'cases':run_cases,'topology':topology,'prepare':prepare_reboot,'after':after_reboot,'cleanup':cleanup,'diagnose':diagnose}[a.action]()

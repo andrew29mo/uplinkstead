@@ -14,9 +14,9 @@ with Writer(load(Path(a.config)),a.state) as w:
     if a.mode=='holding-lock':os.kill(os.getpid(),signal.SIGSTOP)
     if a.mode in ('before-route','after-route'):
         actual=w.backend.select
-        def wrapped(target):
+        def wrapped(target,**kw):
             if a.mode=='before-route':os.kill(os.getpid(),signal.SIGSTOP)
-            actual(target)
+            actual(target,**kw)
             if a.mode=='after-route':os.kill(os.getpid(),signal.SIGSTOP)
         w.backend.select=wrapped
     if a.mode=='before-complete':

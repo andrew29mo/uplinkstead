@@ -19,6 +19,8 @@ from .report import verify,render,controls,test_ids
 
 
 def main():
+    if not __debug__:
+        raise RuntimeError('Optimized execution is unsupported for validation')
     p=argparse.ArgumentParser();p.add_argument('--colima-home',type=Path,required=True);p.add_argument('--toolchain',type=Path,required=True);p.add_argument('--output',type=Path,required=True);a=p.parse_args()
     out=a.output.resolve();out.mkdir(parents=True,exist_ok=True)
     if any(out.iterdir()):p.error('Output must be new and empty')

@@ -77,7 +77,9 @@ class FakeLinux:
     def layout(self):pass
     def refresh_probes(self):pass
     def selected(self):return type(self).route
-    def select(self,target):type(self).route=target
+    def select(self,target,guard=None,deadline=None):
+        if guard:guard()
+        type(self).route=target
 
 
 class WriterTests(unittest.TestCase):
@@ -86,6 +88,35 @@ class WriterTests(unittest.TestCase):
         self.c=config();self.c['_hash']='cfg';FakeLinux.route=None
         self.patches=[patch('uplinkstead.writer.Linux',FakeLinux),patch('uplinkstead.writer.boot_id',return_value='boot'),patch('uplinkstead.writer.now',return_value=1)]
         for p in self.patches:p.start();self.addCleanup(p.stop)
+    def proof(self,w):
+        return dict(config_hash='cfg',boot='boot',target='B',round=3,observed_at=1,expires_at=3)
+    def test_automatic_admission_requires_proof(self):
+        with Writer(self.c,self.d.name) as w:
+            with self.assertRaises(Blocked):w.switch(w.s['epoch'],'B',dict(boot='boot',at=1))
+            self.assertIsNone(FakeLinux.route)
+    def test_health_expired_during_preflight_cannot_write(self):
+        with Writer(self.c,self.d.name) as w:
+            w.switch(w.s['epoch'],'A')
+            with patch('uplinkstead.writer.now',return_value=1) as clock:
+                def delayed(**kw):clock.return_value=4
+                w.backend.preflight=delayed
+                with self.assertRaises(Blocked):w.switch(w.s['epoch'],'B',dict(boot='boot',at=1),self.proof(w))
+            self.assertEqual(FakeLinux.route,'A');self.assertIsNone(w.s['pending'])
+    def test_health_expired_after_intent_cannot_dispatch(self):
+        with Writer(self.c,self.d.name) as w:
+            w.switch(w.s['epoch'],'A');actual=w.save
+            with patch('uplinkstead.writer.now',return_value=1) as clock:
+                def slow_save():actual();clock.return_value=4
+                w.save=slow_save
+                with self.assertRaises(Blocked):w.switch(w.s['epoch'],'B',dict(boot='boot',at=1),self.proof(w))
+            self.assertEqual(FakeLinux.route,'A');self.assertEqual(w.s['pending']['target'],'B')
+        with Writer(self.c,self.d.name) as w:self.assertEqual(w.s['selected'],'A');self.assertIsNone(w.s['pending'])
+    def test_wrong_boot_config_and_round_proof_rejected(self):
+        with Writer(self.c,self.d.name) as w:
+            for change in ({'boot':'old'},{'config_hash':'old'},{'round':-1},{'expires_at':float('nan')}):
+                proof=self.proof(w);proof.update(change)
+                with self.assertRaises(Blocked):w.switch(w.s['epoch'],'B',dict(boot='boot',at=1),proof)
+            self.assertIsNone(FakeLinux.route)
     def test_generation_rejects_stale_after_reopen(self):
         with Writer(self.c,self.d.name) as w:old=w.s['epoch'];w.switch(old,'A')
         with Writer(self.c,self.d.name) as w:

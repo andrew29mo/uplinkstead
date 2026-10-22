@@ -8,6 +8,8 @@ from .evidence import manifest,fingerprint
 
 
 def main():
+    if not __debug__:
+        raise RuntimeError('Optimized execution is unsupported for validation')
     p=argparse.ArgumentParser();p.add_argument('--output',required=True);a=p.parse_args()
     suite=unittest.defaultTestLoader.discover('tests')
     def ids(t):

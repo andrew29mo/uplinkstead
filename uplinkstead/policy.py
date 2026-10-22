@@ -107,3 +107,10 @@ class Policy:
         e = {'boot': self.boot, 'at': now}
         self.history.append(e)
         return e
+
+    def proof(self, link, instant):
+        if self.fresh(link,instant) != 'HEALTHY':
+            raise ValueError('Destination lacks fresh health')
+        h=self.links[link]
+        return dict(config_hash=self.hash,boot=self.boot,target=link,round=h.round,
+                    observed_at=h.last,expires_at=h.last+self.s.freshness)

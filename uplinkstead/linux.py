@@ -3,6 +3,7 @@ import ipaddress
 import json
 import os
 import subprocess
+import time
 from .probe import MARK
 
 TABLE = {'A': 41001, 'B': 41002, 'LAN': 41003}
@@ -17,12 +18,16 @@ class Linux:
         self.c = config
         self.fd = lock_fd
 
-    def run(self, args, absent=False):
+    def run(self, args, absent=False, deadline=None):
+        def remaining():
+            return 4.0 if deadline is None else min(4.0, deadline-time.clock_gettime(time.CLOCK_BOOTTIME))
+        if remaining() <= 0:
+            raise Blocked('Health evidence expired before dispatch')
         p = subprocess.Popen(['/usr/sbin/ip', *map(str, args)], text=True,
                              stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                              pass_fds=() if self.fd is None else (self.fd,))
         try:
-            out, err = p.communicate(timeout=4)
+            out, err = p.communicate(timeout=max(0.0001,remaining()))
         except subprocess.TimeoutExpired:
             p.kill()
             p.communicate()  # Never relinquish writer ownership with a live helper.
@@ -96,9 +101,11 @@ class Linux:
         builtins = [{'priority': 0, 'src': 'all', 'table': 'local'},
                     {'priority': 32766, 'src': 'all', 'table': 'main'},
                     {'priority': 32767, 'src': 'all', 'table': 'default'}]
+        builtin_seen = []
         for raw in self.rules():
             r = self.normalized(raw)
             if r in builtins:
+                builtin_seen.append(r['priority'])
                 continue
             if r.get('priority') in expected and r == expected[r['priority']]:
                 if fresh or r['priority'] in seen:
@@ -107,9 +114,12 @@ class Linux:
                 continue
             # Only a plainly disjoint ingress selector is admitted. Generic
             # source/fwmark/goto/VRF rules cannot be proven disjoint here.
-            if r.get('iif') and r['iif'] not in ('lo', self.c['lan']['interface']) and r.get('priority', 0) > 0:
+            if (set(r) == {'priority','src','iif','table'} and r['src']=='all' and
+                    r['iif'] not in ('lo', self.c['lan']['interface']) and r['priority'] > 0):
                 continue
             raise Blocked('Unsupported/intersecting RPDB rule: '+repr(r))
+        if sorted(builtin_seen) != [0,32766,32767]:
+            raise Blocked('Required builtin RPDB rules missing or duplicated')
         if not fresh and not partial and seen != set(expected):
             raise Blocked('Owned policy rule missing: '+repr(sorted(set(expected)-seen)))
         for key, table in TABLE.items():
@@ -188,7 +198,9 @@ class Linux:
                 return k
         raise Blocked('Unknown selection')
 
-    def select(self, target):
+    def select(self, target, guard=None, deadline=None):
         v = self.c['links'][target]
+        if guard is not None:
+            guard()
         self.run(['route', 'replace', 'default', 'via', v['gateway'], 'dev', v['interface'],
-                  'table', TABLE['LAN'], 'metric', 100])
+                  'table', TABLE['LAN'], 'metric', 100], deadline=deadline)

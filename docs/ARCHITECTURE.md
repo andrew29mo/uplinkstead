@@ -20,8 +20,10 @@ return routes remain the network provisioner's responsibility.
 
 The backend rejects unknown/intersecting RPDB rules, duplicate/missing owned rules,
 reserved-table conflicts, unexpected route state, absent sources, disabled
-forwarding and unsupported effective strict reverse-path filtering. Clearly
-separate ingress-interface rules are left unchanged. Other root processes can
+forwarding and unsupported effective strict reverse-path filtering. Only plain positive lookup rules with exactly priority/source/ingress/table
+selectors and a disjoint non-loopback ingress are accepted unchanged. Inversion,
+unknown selectors and actions block entry; all three standard built-in lookup
+rules must exist uniquely. Other root processes can
 still modify these objects; exclusive deployment ownership is a trust assumption.
 
 ## Health and selection
@@ -31,6 +33,8 @@ SUSPECT -> DOWN. Infrastructure errors, missing/expired rounds and boot changes
 invalidate health. Results are bound to the config hash, boot ID and round ID.
 Three configured TLS endpoints use 2-of-3 quorum. Three consecutive good/bad rounds
 establish initial health/failure. These values are policy, not measured optimality.
+Malformed JSON objects, non-object bodies, excessive nesting and non-finite
+constants are target failures, not a reason to terminate the agent.
 A target set can fail together and does not prove Internet-wide availability.
 
 Selected route (A/B/none) is separate from automation status. Unknown is never a
@@ -46,6 +50,14 @@ Freshness uses boot-relative time. Process restart rebuilds health and retains t
 history/latch. Cross-boot events count conservatively until a full budget window
 has elapsed in the new boot; restart is not free switching credit. No wall clock
 is used for policy decisions. Thresholds are configurable through validated input.
+
+Automatic selection carries a config/boot/round-bound health proof. The Writer
+checks it after preflight/readback and again immediately before dispatch; helper
+waiting is bounded by the remaining evidence lifetime. This does not guarantee
+kernel completion before expiry or continued link health after dispatch. Recovery
+reconstructs recorded intent without requiring old health to become fresh again.
+The shipped agent and fault driver share the same `agent.cycle()`; the driver only
+supplies tick commands and retains actual probe timestamps and persistent state.
 
 ## Writer and recovery
 

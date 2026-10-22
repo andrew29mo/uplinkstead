@@ -1,6 +1,7 @@
 """Durable intent + serialized actual mutation; not an atomic DB/kernel transaction."""
 import fcntl
 import json
+import math
 import os
 from pathlib import Path
 import sqlite3
@@ -115,19 +116,39 @@ class Writer:
         self.save()
         self.event('reconciled', selected=actual, changed_boot=changed_boot)
 
-    def switch(self, epoch, target, admission=None):
+    def check_proof(self, proof, target, epoch):
+        if (not isinstance(proof,dict) or set(proof) != {'config_hash','boot','target','round','observed_at','expires_at'} or
+                proof['config_hash'] != self.c['_hash'] or proof['boot'] != boot_id() or
+                proof['target'] != target or epoch != self.s['epoch'] or
+                type(proof['round']) is not int or proof['round'] < 0):
+            raise Blocked('Invalid automatic health proof')
+        for key in ('observed_at','expires_at'):
+            if type(proof[key]) not in (float,int) or not math.isfinite(proof[key]):
+                raise Blocked('Invalid proof timestamp')
+        instant=now()
+        if not 0 <= proof['observed_at'] <= instant <= proof['expires_at']:
+            raise Blocked('Automatic health proof expired')
+
+    def switch(self, epoch, target, admission=None, proof=None):
         if epoch != self.s['epoch'] or target not in ('A','B') or self.s['pending']:
             raise Blocked('Stale or concurrent operation')
+        if admission is not None:
+            self.check_proof(proof,target,epoch)
         self.backend.preflight()
         if self.backend.selected() != self.s['selected']:
             raise Blocked('Route drift before mutation')
+        if admission is not None:
+            self.check_proof(proof,target,epoch)
         p = dict(token=uuid.uuid4().hex, target=target, before=self.s['selected'])
         self.s['pending'] = p
         if admission:
             self.s['history'].append(admission)
         self.save()
         self.event('intent', target=target, token=p['token'])
-        self.backend.select(target)
+        if admission is None:
+            self.backend.select(target)
+        else:
+            self.backend.select(target,guard=lambda:self.check_proof(proof,target,epoch),deadline=proof['expires_at'])
         if self.backend.selected() != target:
             raise Blocked('Selection readback mismatch')
         self.s['selected'], self.s['pending'] = target, None

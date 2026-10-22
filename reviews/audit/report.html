@@ -1,0 +1,4306 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Uplinkstead exploration evidence</title><style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:0 20px;color:#182536}table{border-collapse:collapse;width:100%}td,th{padding:8px;border-bottom:1px solid #ddd;text-align:left}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f1f4f7;padding:16px}h1{color:#224d62}</style><h1>Uplinkstead technical explorations</h1><p><b>PASS</b> · 0a60c943b1429c7f</p><p>Isolated Linux ARM64 VM. Scenario seconds include orchestration and validation; they are not failover latency. RSS is a process snapshot, not peak or whole-VM memory. Orderly stop/start only; sudden power loss, boot-zero-gap and physical uplinks are untested.</p><table><thead><tr><th>Scenario</th><th>Result</th><th>Orchestration seconds</th></tr></thead><tbody><tr><td>pinned_healthy_probes</td><td>PASS</td><td>0.063</td></tr><tr><td>probe_blackhole_missing_route_link_down</td><td>PASS</td><td>2.802</td></tr><tr><td>binding_error_unknown</td><td>PASS</td><td>0.024</td></tr><tr><td>lan_scope_new_tls_and_internal_exclusion</td><td>PASS</td><td>0.519</td></tr><tr><td>external_rpdb_conflict_and_preservation</td><td>PASS</td><td>0.086</td></tr><tr><td>output_success_does_not_prove_forwarding</td><td>PASS</td><td>1.134</td></tr><tr><td>strict_rp_filter_contract</td><td>PASS</td><td>0.092</td></tr><tr><td>routed_without_nat_and_provisioned_return_path</td><td>PASS</td><td>0.145</td></tr><tr><td>link_down_owned_route_reconstruction</td><td>PASS</td><td>0.236</td></tr><tr><td>delayed_old_operation_rejected</td><td>PASS</td><td>0.181</td></tr><tr><td>live_old_writer_blocks_takeover</td><td>PASS</td><td>0.109</td></tr><tr><td>inherited_mutation_helper_lock</td><td>PASS</td><td>0.207</td></tr><tr><td>sigkill_intent_route_and_receipt_boundaries</td><td>PASS</td><td>0.437</td></tr><tr><td>inverted_rpdb_rules_rejected</td><td>PASS</td><td>0.054</td></tr><tr><td>missing_local_lookup_rejected</td><td>PASS</td><td>0.245</td></tr><tr><td>expired_health_before_mutation</td><td>PASS</td><td>3.811</td></tr><tr><td>malformed_target_quorum</td><td>PASS</td><td>0.180</td></tr><tr><td>real_probe_failover_flapping_and_budget</td><td>PASS</td><td>21.611</td></tr><tr><td>single_real_target_failure</td><td>PASS</td><td>0.559</td></tr></tbody></table><h2>Complete retained evidence</h2><pre>{
+  &quot;passed&quot;: true,
+  &quot;source_changed&quot;: false,
+  &quot;run_id&quot;: &quot;0a60c943b1429c7f&quot;,
+  &quot;recorded_at_utc&quot;: &quot;2026-10-22T02:39:05.747096+00:00&quot;,
+  &quot;source&quot;: {
+    &quot;deploy/uplinkstead.service&quot;: &quot;d7e234c881fd227980d72fe7cf3166f99d52f21a3af17f58934edf5e2046d586&quot;,
+    &quot;pyproject.toml&quot;: &quot;051d38153c43394fdc9f28dc07ea246cb4c27c67e23479f23c247e49e3adafa7&quot;,
+    &quot;tests/__init__.py&quot;: &quot;e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855&quot;,
+    &quot;tests/fixtures/ip-rules-linux68.json&quot;: &quot;2d08b8328c3c3cb53e716e12241d29ed32b1be2820ce42549dd9204bc9d3013b&quot;,
+    &quot;tests/test_audit.py&quot;: &quot;71118fb72d5709ff2d411136d5d0fc51a3b1a9f4061b07f19ad70e51b1d684b9&quot;,
+    &quot;tests/test_core.py&quot;: &quot;c601101d064557d199080c741406f86eb2781f9e8bdb31687adbcd9fc200b6fb&quot;,
+    &quot;tests/test_netproof.py&quot;: &quot;67417884f476e95ec5dcb91b9b2c1b9517291538b65f70e480f342bc11652d02&quot;,
+    &quot;tests/test_policy.py&quot;: &quot;2fc4d8f10081a8596c6121720c62a6358f9891dd54da449ebf4154cef8676c0c&quot;,
+    &quot;tools/__init__.py&quot;: &quot;e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855&quot;,
+    &quot;tools/drive.py&quot;: &quot;cdb7650771252003afb2860c437ecf90b933739b5b956e96a9806707e13d1b62&quot;,
+    &quot;tools/evidence.py&quot;: &quot;a7afd75e562b0beb4149d5b3d311a32c1154855a86a945791477f85376885748&quot;,
+    &quot;tools/fault.py&quot;: &quot;0580e7d429cc8cb828451bfdea94b3f6f194f0de0364ff417ec6b2aca8dfeafd&quot;,
+    &quot;tools/guest.py&quot;: &quot;29e9c694b7b3525ba1b4273bc18dd1a4cd34d139ce0d65a4af8db8fd96570974&quot;,
+    &quot;tools/netproof.py&quot;: &quot;1186a5080336d1434cc7ff36aa1479af10a37dff9d78617147c30e52fb764b8a&quot;,
+    &quot;tools/report.py&quot;: &quot;1e0363ac66086c1e6d0c7e607f10f7a4f87b56696c5120f7972ea9e967790e0e&quot;,
+    &quot;tools/server.py&quot;: &quot;9400ce02ab3275eb4600731cd97eb5ae8c8a2a908ed59c637694937598d55253&quot;,
+    &quot;tools/unit.py&quot;: &quot;5fa4d7303908a7d9d27f5101478fcc3de7358d7d20cdd57134d712b4bdcf0a36&quot;,
+    &quot;tools/validate.py&quot;: &quot;00903e85fa7bde4ff589825051dc6b90e7c759ddb29c0dc2787d82672ef3bdbc&quot;,
+    &quot;uplinkstead/__init__.py&quot;: &quot;cb644b7273fc92cbe35a017c687d64ed5d39fb9388a9b5a98bda0fe0a1c18d62&quot;,
+    &quot;uplinkstead/agent.py&quot;: &quot;3f002a340d9d40458604904d19ff2348d36d4102605db9e9fa64f2ebd681284d&quot;,
+    &quot;uplinkstead/config.py&quot;: &quot;826aa8759d0a40034449f88473d46fde99744309b4187045106eb5fd0c2b9d03&quot;,
+    &quot;uplinkstead/linux.py&quot;: &quot;42affda29c08ddf8d47e96e7598aab754de8b1369aaa6670dc9acba1051ac1b5&quot;,
+    &quot;uplinkstead/policy.py&quot;: &quot;0e8a43911b6687e10553e8130a42c0180a8c8953585e488e11e0c5be8a84f648&quot;,
+    &quot;uplinkstead/probe.py&quot;: &quot;a060a43e2142d08b46862397638db8bde7f87684deaeee21bd1e81a812660fa2&quot;,
+    &quot;uplinkstead/writer.py&quot;: &quot;a10981b6973f76ebcca3e3cf113b1091fa5da4b395c3f92b51fb34bbde31f4ae&quot;
+  },
+  &quot;source_sha256&quot;: &quot;2d59b046105fdbcebb5903e0c906fc5de17bd2c30f8135e2ac11ae4969b9dba0&quot;,
+  &quot;stages&quot;: [
+    {
+      &quot;name&quot;: &quot;native-unit&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 0.248505750001641
+    },
+    {
+      &quot;name&quot;: &quot;vm-initial&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 0.30397004100086633
+    },
+    {
+      &quot;name&quot;: &quot;vm-start&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 9.790739417003351
+    },
+    {
+      &quot;name&quot;: &quot;upload-preflight&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 0.2687234999903012
+    },
+    {
+      &quot;name&quot;: &quot;upload&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 0.23947012500138953
+    },
+    {
+      &quot;name&quot;: &quot;setup&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 1.2910934579995228
+    },
+    {
+      &quot;name&quot;: &quot;linux-unit&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 0.4822926670021843
+    },
+    {
+      &quot;name&quot;: &quot;linux-unit-read&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 0.2443900000071153
+    },
+    {
+      &quot;name&quot;: &quot;cases&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 32.78398420898884
+    },
+    {
+      &quot;name&quot;: &quot;prepare&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 4.689676792011596
+    },
+    {
+      &quot;name&quot;: &quot;vm-orderly-stop&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 2.565253958993708
+    },
+    {
+      &quot;name&quot;: &quot;vm-between&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 0.261756374995457
+    },
+    {
+      &quot;name&quot;: &quot;vm-restart&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 8.738155458995607
+    },
+    {
+      &quot;name&quot;: &quot;after&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 0.2960962090000976
+    },
+    {
+      &quot;name&quot;: &quot;cleanup&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 0.8067813749948982
+    },
+    {
+      &quot;name&quot;: &quot;remove&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 0.3748503749957308
+    },
+    {
+      &quot;name&quot;: &quot;vm-stop&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 2.5322500829934143
+    },
+    {
+      &quot;name&quot;: &quot;vm-final&quot;,
+      &quot;exit_code&quot;: 0,
+      &quot;timed_out&quot;: false,
+      &quot;seconds&quot;: 0.20456408300378826
+    }
+  ],
+  &quot;native_unit&quot;: {
+    &quot;passed&quot;: true,
+    &quot;tests&quot;: [
+      &quot;test_audit.OptimizedValidationTests.test_report_rejects_failure_under_optimization&quot;,
+      &quot;test_audit.OptimizedValidationTests.test_unit_runner_refuses_optimized_validation&quot;,
+      &quot;test_audit.PreflightTests.test_duplicate_builtin_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_inverted_disjoint_lookup_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_inverted_disjoint_prohibit_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_missing_local_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_plain_disjoint_lookup_still_accepted&quot;,
+      &quot;test_audit.PreflightTests.test_unknown_disjoint_selector_rejected&quot;,
+      &quot;test_audit.ProbeBodyTests.test_deeply_nested_json_is_target_failure&quot;,
+      &quot;test_audit.ProbeBodyTests.test_nonfinite_and_invalid_peer_are_target_failures&quot;,
+      &quot;test_audit.ProbeBodyTests.test_two_healthy_targets_retain_quorum&quot;,
+      &quot;test_audit.ProbeBodyTests.test_valid_json_nonobjects_are_target_failures&quot;,
+      &quot;test_audit.ProbeBodyTests.test_valid_object_still_successful&quot;,
+      &quot;test_core.ConfigTests.test_duplicate_target_rejected&quot;,
+      &quot;test_core.ConfigTests.test_exclusions_bounded&quot;,
+      &quot;test_core.ConfigTests.test_hash_stable&quot;,
+      &quot;test_core.ConfigTests.test_invalid_source_rejected&quot;,
+      &quot;test_core.ConfigTests.test_overlapping_interfaces_rejected&quot;,
+      &quot;test_core.ConfigTests.test_unknown_key_rejected&quot;,
+      &quot;test_core.RoutingShapeTests.test_every_lookup_has_matching_terminal_guard&quot;,
+      &quot;test_core.RoutingShapeTests.test_forward_selector_not_host_source_alone&quot;,
+      &quot;test_core.RoutingShapeTests.test_internal_lookup_suppresses_main_default&quot;,
+      &quot;test_core.RoutingShapeTests.test_probe_is_local_and_marked&quot;,
+      &quot;test_core.RoutingShapeTests.test_real_iproute2_rule_output_normalization&quot;,
+      &quot;test_core.WriterTests.test_actual_new_route_reconciles_incomplete_receipt&quot;,
+      &quot;test_core.WriterTests.test_actual_old_route_reconciles_pending_without_replay&quot;,
+      &quot;test_core.WriterTests.test_automatic_admission_requires_proof&quot;,
+      &quot;test_core.WriterTests.test_generation_rejects_stale_after_reopen&quot;,
+      &quot;test_core.WriterTests.test_health_expired_after_intent_cannot_dispatch&quot;,
+      &quot;test_core.WriterTests.test_health_expired_during_preflight_cannot_write&quot;,
+      &quot;test_core.WriterTests.test_invalid_journal_rejected&quot;,
+      &quot;test_core.WriterTests.test_lock_contention_blocks&quot;,
+      &quot;test_core.WriterTests.test_symlink_lock_rejected&quot;,
+      &quot;test_core.WriterTests.test_unexpected_route_blocks&quot;,
+      &quot;test_core.WriterTests.test_wrong_boot_config_and_round_proof_rejected&quot;,
+      &quot;test_netproof.NetworkProofTests.test_meaningful_bytes_operand_not_ignored&quot;,
+      &quot;test_netproof.NetworkProofTests.test_only_nft_counter_values_and_handles_ignored&quot;,
+      &quot;test_netproof.NetworkProofTests.test_rule_order_preserved&quot;,
+      &quot;test_netproof.NetworkProofTests.test_xt_counters_and_timestamp_comments_only&quot;,
+      &quot;test_netproof.NetworkProofTests.test_xt_rule_comment_not_mistaken_for_counter&quot;,
+      &quot;test_policy.PolicyTests.test_auto_failback_requires_continuous_stability&quot;,
+      &quot;test_policy.PolicyTests.test_budget_latches_and_restart_retains_latch&quot;,
+      &quot;test_policy.PolicyTests.test_cross_boot_budget_not_replenished_by_reboot&quot;,
+      &quot;test_policy.PolicyTests.test_default_never_preference_failback&quot;,
+      &quot;test_policy.PolicyTests.test_expired_result_breaks_streak&quot;,
+      &quot;test_policy.PolicyTests.test_failover_threshold&quot;,
+      &quot;test_policy.PolicyTests.test_history_expires_same_boot_without_process_reset&quot;,
+      &quot;test_policy.PolicyTests.test_initial_success_requires_multiple_rounds&quot;,
+      &quot;test_policy.PolicyTests.test_invalid_settings&quot;,
+      &quot;test_policy.PolicyTests.test_missing_round_expires_health&quot;,
+      &quot;test_policy.PolicyTests.test_one_target_failure_not_link_failure&quot;,
+      &quot;test_policy.PolicyTests.test_reordered_round_rejected&quot;,
+      &quot;test_policy.PolicyTests.test_stability_gap_resets_recovery&quot;,
+      &quot;test_policy.PolicyTests.test_stale_wrong_boot_and_wrong_config_rejected&quot;,
+      &quot;test_policy.PolicyTests.test_unknown_current_does_not_trigger_speculative_switch&quot;,
+      &quot;test_policy.PolicyTests.test_unknown_not_destination&quot;
+    ],
+    &quot;count&quot;: 56,
+    &quot;failures&quot;: 0,
+    &quot;errors&quot;: 0,
+    &quot;skipped&quot;: 0,
+    &quot;source_sha256&quot;: &quot;2d59b046105fdbcebb5903e0c906fc5de17bd2c30f8135e2ac11ae4969b9dba0&quot;,
+    &quot;platform&quot;: &quot;Darwin&quot;,
+    &quot;python&quot;: &quot;3.12.14&quot;
+  },
+  &quot;vm_initial&quot;: &quot;Stopped&quot;,
+  &quot;linux_unit&quot;: {
+    &quot;passed&quot;: true,
+    &quot;tests&quot;: [
+      &quot;test_audit.OptimizedValidationTests.test_report_rejects_failure_under_optimization&quot;,
+      &quot;test_audit.OptimizedValidationTests.test_unit_runner_refuses_optimized_validation&quot;,
+      &quot;test_audit.PreflightTests.test_duplicate_builtin_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_inverted_disjoint_lookup_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_inverted_disjoint_prohibit_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_missing_local_rejected&quot;,
+      &quot;test_audit.PreflightTests.test_plain_disjoint_lookup_still_accepted&quot;,
+      &quot;test_audit.PreflightTests.test_unknown_disjoint_selector_rejected&quot;,
+      &quot;test_audit.ProbeBodyTests.test_deeply_nested_json_is_target_failure&quot;,
+      &quot;test_audit.ProbeBodyTests.test_nonfinite_and_invalid_peer_are_target_failures&quot;,
+      &quot;test_audit.ProbeBodyTests.test_two_healthy_targets_retain_quorum&quot;,
+      &quot;test_audit.ProbeBodyTests.test_valid_json_nonobjects_are_target_failures&quot;,
+      &quot;test_audit.ProbeBodyTests.test_valid_object_still_successful&quot;,
+      &quot;test_core.ConfigTests.test_duplicate_target_rejected&quot;,
+      &quot;test_core.ConfigTests.test_exclusions_bounded&quot;,
+      &quot;test_core.ConfigTests.test_hash_stable&quot;,
+      &quot;test_core.ConfigTests.test_invalid_source_rejected&quot;,
+      &quot;test_core.ConfigTests.test_overlapping_interfaces_rejected&quot;,
+      &quot;test_core.ConfigTests.test_unknown_key_rejected&quot;,
+      &quot;test_core.RoutingShapeTests.test_every_lookup_has_matching_terminal_guard&quot;,
+      &quot;test_core.RoutingShapeTests.test_forward_selector_not_host_source_alone&quot;,
+      &quot;test_core.RoutingShapeTests.test_internal_lookup_suppresses_main_default&quot;,
+      &quot;test_core.RoutingShapeTests.test_probe_is_local_and_marked&quot;,
+      &quot;test_core.RoutingShapeTests.test_real_iproute2_rule_output_normalization&quot;,
+      &quot;test_core.WriterTests.test_actual_new_route_reconciles_incomplete_receipt&quot;,
+      &quot;test_core.WriterTests.test_actual_old_route_reconciles_pending_without_replay&quot;,
+      &quot;test_core.WriterTests.test_automatic_admission_requires_proof&quot;,
+      &quot;test_core.WriterTests.test_generation_rejects_stale_after_reopen&quot;,
+      &quot;test_core.WriterTests.test_health_expired_after_intent_cannot_dispatch&quot;,
+      &quot;test_core.WriterTests.test_health_expired_during_preflight_cannot_write&quot;,
+      &quot;test_core.WriterTests.test_invalid_journal_rejected&quot;,
+      &quot;test_core.WriterTests.test_lock_contention_blocks&quot;,
+      &quot;test_core.WriterTests.test_symlink_lock_rejected&quot;,
+      &quot;test_core.WriterTests.test_unexpected_route_blocks&quot;,
+      &quot;test_core.WriterTests.test_wrong_boot_config_and_round_proof_rejected&quot;,
+      &quot;test_netproof.NetworkProofTests.test_meaningful_bytes_operand_not_ignored&quot;,
+      &quot;test_netproof.NetworkProofTests.test_only_nft_counter_values_and_handles_ignored&quot;,
+      &quot;test_netproof.NetworkProofTests.test_rule_order_preserved&quot;,
+      &quot;test_netproof.NetworkProofTests.test_xt_counters_and_timestamp_comments_only&quot;,
+      &quot;test_netproof.NetworkProofTests.test_xt_rule_comment_not_mistaken_for_counter&quot;,
+      &quot;test_policy.PolicyTests.test_auto_failback_requires_continuous_stability&quot;,
+      &quot;test_policy.PolicyTests.test_budget_latches_and_restart_retains_latch&quot;,
+      &quot;test_policy.PolicyTests.test_cross_boot_budget_not_replenished_by_reboot&quot;,
+      &quot;test_policy.PolicyTests.test_default_never_preference_failback&quot;,
+      &quot;test_policy.PolicyTests.test_expired_result_breaks_streak&quot;,
+      &quot;test_policy.PolicyTests.test_failover_threshold&quot;,
+      &quot;test_policy.PolicyTests.test_history_expires_same_boot_without_process_reset&quot;,
+      &quot;test_policy.PolicyTests.test_initial_success_requires_multiple_rounds&quot;,
+      &quot;test_policy.PolicyTests.test_invalid_settings&quot;,
+      &quot;test_policy.PolicyTests.test_missing_round_expires_health&quot;,
+      &quot;test_policy.PolicyTests.test_one_target_failure_not_link_failure&quot;,
+      &quot;test_policy.PolicyTests.test_reordered_round_rejected&quot;,
+      &quot;test_policy.PolicyTests.test_stability_gap_resets_recovery&quot;,
+      &quot;test_policy.PolicyTests.test_stale_wrong_boot_and_wrong_config_rejected&quot;,
+      &quot;test_policy.PolicyTests.test_unknown_current_does_not_trigger_speculative_switch&quot;,
+      &quot;test_policy.PolicyTests.test_unknown_not_destination&quot;
+    ],
+    &quot;count&quot;: 56,
+    &quot;failures&quot;: 0,
+    &quot;errors&quot;: 0,
+    &quot;skipped&quot;: 0,
+    &quot;source_sha256&quot;: &quot;2d59b046105fdbcebb5903e0c906fc5de17bd2c30f8135e2ac11ae4969b9dba0&quot;,
+    &quot;platform&quot;: &quot;Linux&quot;,
+    &quot;python&quot;: &quot;3.12.3&quot;
+  },
+  &quot;guest&quot;: {
+    &quot;passed&quot;: true,
+    &quot;source_sha256&quot;: &quot;2d59b046105fdbcebb5903e0c906fc5de17bd2c30f8135e2ac11ae4969b9dba0&quot;,
+    &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+    &quot;cases&quot;: [
+      {
+        &quot;name&quot;: &quot;pinned_healthy_probes&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 0.06273325000000085,
+        &quot;details&quot;: {
+          &quot;A&quot;: [
+            3,
+            [
+              {
+                &quot;ok&quot;: true,
+                &quot;infrastructure&quot;: false,
+                &quot;seconds&quot;: 0.005327957999998745,
+                &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                &quot;link&quot;: &quot;A&quot;
+              },
+              {
+                &quot;ok&quot;: true,
+                &quot;infrastructure&quot;: false,
+                &quot;seconds&quot;: 0.005092582999999706,
+                &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                &quot;link&quot;: &quot;A&quot;
+              },
+              {
+                &quot;ok&quot;: true,
+                &quot;infrastructure&quot;: false,
+                &quot;seconds&quot;: 0.005289624999999631,
+                &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                &quot;link&quot;: &quot;A&quot;
+              }
+            ]
+          ],
+          &quot;B&quot;: [
+            3,
+            [
+              {
+                &quot;ok&quot;: true,
+                &quot;infrastructure&quot;: false,
+                &quot;seconds&quot;: 0.0021374590000000637,
+                &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                &quot;link&quot;: &quot;B&quot;
+              },
+              {
+                &quot;ok&quot;: true,
+                &quot;infrastructure&quot;: false,
+                &quot;seconds&quot;: 0.0019215419999998318,
+                &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                &quot;link&quot;: &quot;B&quot;
+              },
+              {
+                &quot;ok&quot;: true,
+                &quot;infrastructure&quot;: false,
+                &quot;seconds&quot;: 0.0016702080000001729,
+                &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                &quot;link&quot;: &quot;B&quot;
+              }
+            ]
+          ]
+        }
+      },
+      {
+        &quot;name&quot;: &quot;probe_blackhole_missing_route_link_down&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 2.802154002,
+        &quot;details&quot;: [
+          {
+            &quot;link&quot;: &quot;A&quot;,
+            &quot;blackhole&quot;: [
+              0,
+              [
+                {
+                  &quot;ok&quot;: false,
+                  &quot;infrastructure&quot;: false,
+                  &quot;error&quot;: &quot;TimeoutError&quot;,
+                  &quot;seconds&quot;: 0.5020119580000006,
+                  &quot;link&quot;: &quot;A&quot;
+                },
+                {
+                  &quot;ok&quot;: false,
+                  &quot;infrastructure&quot;: false,
+                  &quot;error&quot;: &quot;TimeoutError&quot;,
+                  &quot;seconds&quot;: 0.5018387499999992,
+                  &quot;link&quot;: &quot;A&quot;
+                },
+                {
+                  &quot;ok&quot;: false,
+                  &quot;infrastructure&quot;: false,
+                  &quot;error&quot;: &quot;TimeoutError&quot;,
+                  &quot;seconds&quot;: 0.5008197919999997,
+                  &quot;link&quot;: &quot;A&quot;
+                }
+              ]
+            ],
+            &quot;other&quot;: [
+              3,
+              [
+                {
+                  &quot;ok&quot;: true,
+                  &quot;infrastructure&quot;: false,
+                  &quot;seconds&quot;: 0.009295459000000506,
+                  &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                  &quot;link&quot;: &quot;B&quot;
+                },
+                {
+                  &quot;ok&quot;: true,
+                  &quot;infrastructure&quot;: false,
+                  &quot;seconds&quot;: 0.008699583000000288,
+                  &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                  &quot;link&quot;: &quot;B&quot;
+                },
+                {
+                  &quot;ok&quot;: true,
+                  &quot;infrastructure&quot;: false,
+                  &quot;seconds&quot;: 0.008172249999999437,
+                  &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                  &quot;link&quot;: &quot;B&quot;
+                }
+              ]
+            ],
+            &quot;missing_route&quot;: [
+              0,
+              [
+                {
+                  &quot;ok&quot;: false,
+                  &quot;infrastructure&quot;: false,
+                  &quot;error&quot;: &quot;TimeoutError&quot;,
+                  &quot;seconds&quot;: 0.5038824999999996,
+                  &quot;link&quot;: &quot;A&quot;
+                },
+                {
+                  &quot;ok&quot;: false,
+                  &quot;infrastructure&quot;: false,
+                  &quot;error&quot;: &quot;TimeoutError&quot;,
+                  &quot;seconds&quot;: 0.503444334000001,
+                  &quot;link&quot;: &quot;A&quot;
+                },
+                {
+                  &quot;ok&quot;: false,
+                  &quot;infrastructure&quot;: false,
+                  &quot;error&quot;: &quot;TimeoutError&quot;,
+                  &quot;seconds&quot;: 0.5039184170000013,
+                  &quot;link&quot;: &quot;A&quot;
+                }
+              ]
+            ],
+            &quot;link_down&quot;: [
+              0,
+              [
+                {
+                  &quot;ok&quot;: false,
+                  &quot;infrastructure&quot;: false,
+                  &quot;error&quot;: &quot;OSError&quot;,
+                  &quot;seconds&quot;: 0.0008381670000012775,
+                  &quot;link&quot;: &quot;A&quot;
+                },
+                {
+                  &quot;ok&quot;: false,
+                  &quot;infrastructure&quot;: false,
+                  &quot;error&quot;: &quot;OSError&quot;,
+                  &quot;seconds&quot;: 0.0002579169999989972,
+                  &quot;link&quot;: &quot;A&quot;
+                },
+                {
+                  &quot;ok&quot;: false,
+                  &quot;infrastructure&quot;: false,
+                  &quot;error&quot;: &quot;OSError&quot;,
+                  &quot;seconds&quot;: 0.0001142079999993939,
+                  &quot;link&quot;: &quot;A&quot;
+                }
+              ]
+            ],
+            &quot;wrong_egress_packets&quot;: 0,
+            &quot;terminal_lookup_rejected&quot;: true
+          },
+          {
+            &quot;link&quot;: &quot;B&quot;,
+            &quot;blackhole&quot;: [
+              0,
+              [
+                {
+                  &quot;ok&quot;: false,
+                  &quot;infrastructure&quot;: false,
+                  &quot;error&quot;: &quot;TimeoutError&quot;,
+                  &quot;seconds&quot;: 0.5010936250000011,
+                  &quot;link&quot;: &quot;B&quot;
+                },
+                {
+                  &quot;ok&quot;: false,
+                  &quot;infrastructure&quot;: false,
+                  &quot;error&quot;: &quot;TimeoutError&quot;,
+                  &quot;seconds&quot;: 0.5006857499999988,
+                  &quot;link&quot;: &quot;B&quot;
+                },
+                {
+                  &quot;ok&quot;: false,
+                  &quot;infrastructure&quot;: false,
+                  &quot;error&quot;: &quot;TimeoutError&quot;,
+                  &quot;seconds&quot;: 0.5011486670000007,
+                  &quot;link&quot;: &quot;B&quot;
+                }
+              ]
+            ],
+            &quot;other&quot;: [
+              3,
+              [
+                {
+                  &quot;ok&quot;: true,
+                  &quot;infrastructure&quot;: false,
+                  &quot;seconds&quot;: 0.005071042000000858,
+                  &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                  &quot;link&quot;: &quot;A&quot;
+                },
+                {
+                  &quot;ok&quot;: true,
+                  &quot;infrastructure&quot;: false,
+                  &quot;seconds&quot;: 0.00285612499999921,
+                  &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                  &quot;link&quot;: &quot;A&quot;
+                },
+                {
+                  &quot;ok&quot;: true,
+                  &quot;infrastructure&quot;: false,
+                  &quot;seconds&quot;: 0.0026671250000003255,
+                  &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                  &quot;link&quot;: &quot;A&quot;
+                }
+              ]
+            ],
+            &quot;missing_route&quot;: [
+              0,
+              [
+                {
+                  &quot;ok&quot;: false,
+                  &quot;infrastructure&quot;: false,
+                  &quot;error&quot;: &quot;TimeoutError&quot;,
+                  &quot;seconds&quot;: 0.5051312499999998,
+                  &quot;link&quot;: &quot;B&quot;
+                },
+                {
+                  &quot;ok&quot;: false,
+                  &quot;infrastructure&quot;: false,
+                  &quot;error&quot;: &quot;TimeoutError&quot;,
+                  &quot;seconds&quot;: 0.5023269589999995,
+                  &quot;link&quot;: &quot;B&quot;
+                },
+                {
+                  &quot;ok&quot;: false,
+                  &quot;infrastructure&quot;: false,
+                  &quot;error&quot;: &quot;TimeoutError&quot;,
+                  &quot;seconds&quot;: 0.5050960010000001,
+                  &quot;link&quot;: &quot;B&quot;
+                }
+              ]
+            ],
+            &quot;link_down&quot;: [
+              0,
+              [
+                {
+                  &quot;ok&quot;: false,
+                  &quot;infrastructure&quot;: false,
+                  &quot;error&quot;: &quot;OSError&quot;,
+                  &quot;seconds&quot;: 0.0011741670000002813,
+                  &quot;link&quot;: &quot;B&quot;
+                },
+                {
+                  &quot;ok&quot;: false,
+                  &quot;infrastructure&quot;: false,
+                  &quot;error&quot;: &quot;OSError&quot;,
+                  &quot;seconds&quot;: 0.0009548749999996886,
+                  &quot;link&quot;: &quot;B&quot;
+                },
+                {
+                  &quot;ok&quot;: false,
+                  &quot;infrastructure&quot;: false,
+                  &quot;error&quot;: &quot;OSError&quot;,
+                  &quot;seconds&quot;: 0.00014437499999964132,
+                  &quot;link&quot;: &quot;B&quot;
+                }
+              ]
+            ],
+            &quot;wrong_egress_packets&quot;: 0,
+            &quot;terminal_lookup_rejected&quot;: true
+          }
+        ]
+      },
+      {
+        &quot;name&quot;: &quot;binding_error_unknown&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 0.024053458000000916,
+        &quot;details&quot;: [
+          null,
+          [
+            {
+              &quot;ok&quot;: false,
+              &quot;infrastructure&quot;: true,
+              &quot;error&quot;: &quot;OSError&quot;,
+              &quot;seconds&quot;: 0.0001218750000013813,
+              &quot;link&quot;: &quot;A&quot;
+            },
+            {
+              &quot;ok&quot;: false,
+              &quot;infrastructure&quot;: true,
+              &quot;error&quot;: &quot;OSError&quot;,
+              &quot;seconds&quot;: 0.00010829100000009362,
+              &quot;link&quot;: &quot;A&quot;
+            },
+            {
+              &quot;ok&quot;: false,
+              &quot;infrastructure&quot;: true,
+              &quot;error&quot;: &quot;OSError&quot;,
+              &quot;seconds&quot;: 1.98339999997188e-05,
+              &quot;link&quot;: &quot;A&quot;
+            }
+          ]
+        ]
+      },
+      {
+        &quot;name&quot;: &quot;lan_scope_new_tls_and_internal_exclusion&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 0.5187645419999996,
+        &quot;details&quot;: {
+          &quot;lan_A&quot;: {
+            &quot;ok&quot;: true,
+            &quot;result&quot;: {
+              &quot;ok&quot;: true,
+              &quot;nonce&quot;: &quot;ae7ac8abf02e4c2234302a7b&quot;,
+              &quot;peer&quot;: &quot;10.99.1.1&quot;,
+              &quot;server&quot;: &quot;203.0.113.2&quot;
+            },
+            &quot;error&quot;: null
+          },
+          &quot;lan_B&quot;: {
+            &quot;ok&quot;: true,
+            &quot;result&quot;: {
+              &quot;ok&quot;: true,
+              &quot;nonce&quot;: &quot;432e548827b982f0d815f185&quot;,
+              &quot;peer&quot;: &quot;10.99.2.1&quot;,
+              &quot;server&quot;: &quot;203.0.113.2&quot;
+            },
+            &quot;error&quot;: null
+          },
+          &quot;host_before&quot;: {
+            &quot;ok&quot;: true,
+            &quot;result&quot;: {
+              &quot;ok&quot;: true,
+              &quot;nonce&quot;: &quot;b3dc368d1433acfca20ee8aa&quot;,
+              &quot;peer&quot;: &quot;10.99.1.1&quot;,
+              &quot;server&quot;: &quot;203.0.113.2&quot;
+            },
+            &quot;error&quot;: null
+          },
+          &quot;host_after&quot;: {
+            &quot;ok&quot;: true,
+            &quot;result&quot;: {
+              &quot;ok&quot;: true,
+              &quot;nonce&quot;: &quot;3e4585dc62de9d5c6e01c192&quot;,
+              &quot;peer&quot;: &quot;10.99.1.1&quot;,
+              &quot;server&quot;: &quot;203.0.113.2&quot;
+            },
+            &quot;error&quot;: null
+          },
+          &quot;other_before&quot;: {
+            &quot;ok&quot;: true,
+            &quot;result&quot;: {
+              &quot;ok&quot;: true,
+              &quot;nonce&quot;: &quot;165ffefb86ab8d79344ec59e&quot;,
+              &quot;peer&quot;: &quot;10.99.1.1&quot;,
+              &quot;server&quot;: &quot;203.0.113.2&quot;
+            },
+            &quot;error&quot;: null
+          },
+          &quot;other_after&quot;: {
+            &quot;ok&quot;: true,
+            &quot;result&quot;: {
+              &quot;ok&quot;: true,
+              &quot;nonce&quot;: &quot;804b9322393cdf57d26cf9a0&quot;,
+              &quot;peer&quot;: &quot;10.99.1.1&quot;,
+              &quot;server&quot;: &quot;203.0.113.2&quot;
+            },
+            &quot;error&quot;: null
+          },
+          &quot;main_unchanged&quot;: true,
+          &quot;internal_route&quot;: [
+            {
+              &quot;dst&quot;: &quot;198.18.0.1&quot;,
+              &quot;from&quot;: &quot;10.77.0.2&quot;,
+              &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+              &quot;dev&quot;: &quot;wanA&quot;,
+              &quot;flags&quot;: [],
+              &quot;cache&quot;: [],
+              &quot;iif&quot;: &quot;lan0&quot;
+            }
+          ],
+          &quot;local_before&quot;: {
+            &quot;ok&quot;: true,
+            &quot;result&quot;: {
+              &quot;ok&quot;: true,
+              &quot;nonce&quot;: &quot;b90c31aa9c05d15e7bb51487&quot;,
+              &quot;peer&quot;: &quot;10.77.0.2&quot;,
+              &quot;server&quot;: &quot;10.77.0.1&quot;
+            },
+            &quot;error&quot;: null
+          },
+          &quot;local_after&quot;: {
+            &quot;ok&quot;: true,
+            &quot;result&quot;: {
+              &quot;ok&quot;: true,
+              &quot;nonce&quot;: &quot;f622c35caad24a19216fb58a&quot;,
+              &quot;peer&quot;: &quot;10.77.0.2&quot;,
+              &quot;server&quot;: &quot;10.77.0.1&quot;
+            },
+            &quot;error&quot;: null
+          }
+        }
+      },
+      {
+        &quot;name&quot;: &quot;external_rpdb_conflict_and_preservation&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 0.08643333400000053,
+        &quot;details&quot;: {
+          &quot;intersecting_rejected&quot;: true,
+          &quot;no_changes_on_rejection&quot;: true,
+          &quot;disjoint_preserved&quot;: true
+        }
+      },
+      {
+        &quot;name&quot;: &quot;output_success_does_not_prove_forwarding&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 1.1336090839999997,
+        &quot;details&quot;: {
+          &quot;exit_probe_successes&quot;: 3,
+          &quot;lan_request&quot;: {
+            &quot;ok&quot;: false,
+            &quot;result&quot;: null,
+            &quot;error&quot;: &quot;request_failed&quot;
+          },
+          &quot;not_counted_as_recovery&quot;: true
+        }
+      },
+      {
+        &quot;name&quot;: &quot;strict_rp_filter_contract&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 0.09150387500000079,
+        &quot;details&quot;: {
+          &quot;strict_all_rejected&quot;: true,
+          &quot;external_setting_not_rewritten&quot;: true
+        }
+      },
+      {
+        &quot;name&quot;: &quot;routed_without_nat_and_provisioned_return_path&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 0.1450882499999988,
+        &quot;details&quot;: {
+          &quot;requests&quot;: [
+            {
+              &quot;ok&quot;: true,
+              &quot;result&quot;: {
+                &quot;ok&quot;: true,
+                &quot;nonce&quot;: &quot;7a61c69cd72d57e5b29909bf&quot;,
+                &quot;peer&quot;: &quot;10.77.0.2&quot;,
+                &quot;server&quot;: &quot;203.0.113.2&quot;
+              },
+              &quot;error&quot;: null
+            },
+            {
+              &quot;ok&quot;: true,
+              &quot;result&quot;: {
+                &quot;ok&quot;: true,
+                &quot;nonce&quot;: &quot;165a5821326355d073434e7e&quot;,
+                &quot;peer&quot;: &quot;10.77.0.2&quot;,
+                &quot;server&quot;: &quot;203.0.113.2&quot;
+              },
+              &quot;error&quot;: null
+            }
+          ],
+          &quot;return_routes_explicitly_provisioned_by_fixture&quot;: true
+        }
+      },
+      {
+        &quot;name&quot;: &quot;link_down_owned_route_reconstruction&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 0.23623141699999906,
+        &quot;details&quot;: {
+          &quot;actual_route_loss_reconciled&quot;: true,
+          &quot;backup_request&quot;: {
+            &quot;ok&quot;: true,
+            &quot;result&quot;: {
+              &quot;ok&quot;: true,
+              &quot;nonce&quot;: &quot;4d9c22d56c9486327ba0e1d5&quot;,
+              &quot;peer&quot;: &quot;10.99.2.1&quot;,
+              &quot;server&quot;: &quot;203.0.113.2&quot;
+            },
+            &quot;error&quot;: null
+          },
+          &quot;probe_after_link_up&quot;: [
+            3,
+            [
+              {
+                &quot;ok&quot;: true,
+                &quot;infrastructure&quot;: false,
+                &quot;seconds&quot;: 0.0037691670000015165,
+                &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                &quot;link&quot;: &quot;A&quot;
+              },
+              {
+                &quot;ok&quot;: true,
+                &quot;infrastructure&quot;: false,
+                &quot;seconds&quot;: 0.003475374999998948,
+                &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                &quot;link&quot;: &quot;A&quot;
+              },
+              {
+                &quot;ok&quot;: true,
+                &quot;infrastructure&quot;: false,
+                &quot;seconds&quot;: 0.0036895829999998853,
+                &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                &quot;link&quot;: &quot;A&quot;
+              }
+            ]
+          ],
+          &quot;selection_remains_B&quot;: true
+        }
+      },
+      {
+        &quot;name&quot;: &quot;delayed_old_operation_rejected&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 0.18070129200000018,
+        &quot;details&quot;: {
+          &quot;stale_epoch&quot;: 15,
+          &quot;rejected_exit&quot;: 1,
+          &quot;selected&quot;: &quot;B&quot;
+        }
+      },
+      {
+        &quot;name&quot;: &quot;live_old_writer_blocks_takeover&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 0.1088569159999988,
+        &quot;details&quot;: {
+          &quot;successor_blocked_while_owner_alive&quot;: true,
+          &quot;successor_after_retirement&quot;: &quot;B&quot;
+        }
+      },
+      {
+        &quot;name&quot;: &quot;inherited_mutation_helper_lock&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 0.20727483399999969,
+        &quot;details&quot;: {
+          &quot;parent_killed&quot;: true,
+          &quot;live_mutation_child_blocks_successor&quot;: true,
+          &quot;child_retired_before_successor&quot;: true
+        }
+      },
+      {
+        &quot;name&quot;: &quot;sigkill_intent_route_and_receipt_boundaries&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 0.43716516699999985,
+        &quot;details&quot;: [
+          {
+            &quot;boundary&quot;: &quot;before-route&quot;,
+            &quot;pending_before&quot;: {
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: &quot;B&quot;,
+              &quot;token&quot;: &quot;7aca3e36c5ab4bf4bbf539b6e2bb8edc&quot;
+            },
+            &quot;routes_before&quot;: [
+              {
+                &quot;dst&quot;: &quot;default&quot;,
+                &quot;gateway&quot;: &quot;192.0.2.1&quot;,
+                &quot;dev&quot;: &quot;wanA&quot;,
+                &quot;metric&quot;: 100,
+                &quot;flags&quot;: []
+              },
+              {
+                &quot;dst&quot;: &quot;192.0.2.0/30&quot;,
+                &quot;dev&quot;: &quot;wanA&quot;,
+                &quot;scope&quot;: &quot;link&quot;,
+                &quot;flags&quot;: []
+              },
+              {
+                &quot;dst&quot;: &quot;192.0.2.4/30&quot;,
+                &quot;dev&quot;: &quot;wanB&quot;,
+                &quot;scope&quot;: &quot;link&quot;,
+                &quot;flags&quot;: []
+              }
+            ],
+            &quot;recovered_selected&quot;: &quot;A&quot;,
+            &quot;epoch_before&quot;: 25,
+            &quot;epoch_after&quot;: 26
+          },
+          {
+            &quot;boundary&quot;: &quot;after-route&quot;,
+            &quot;pending_before&quot;: {
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: &quot;B&quot;,
+              &quot;token&quot;: &quot;b111492012c543efbd10aecc1ab58862&quot;
+            },
+            &quot;routes_before&quot;: [
+              {
+                &quot;dst&quot;: &quot;default&quot;,
+                &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+                &quot;dev&quot;: &quot;wanB&quot;,
+                &quot;metric&quot;: 100,
+                &quot;flags&quot;: []
+              },
+              {
+                &quot;dst&quot;: &quot;192.0.2.0/30&quot;,
+                &quot;dev&quot;: &quot;wanA&quot;,
+                &quot;scope&quot;: &quot;link&quot;,
+                &quot;flags&quot;: []
+              },
+              {
+                &quot;dst&quot;: &quot;192.0.2.4/30&quot;,
+                &quot;dev&quot;: &quot;wanB&quot;,
+                &quot;scope&quot;: &quot;link&quot;,
+                &quot;flags&quot;: []
+              }
+            ],
+            &quot;recovered_selected&quot;: &quot;B&quot;,
+            &quot;epoch_before&quot;: 28,
+            &quot;epoch_after&quot;: 29
+          },
+          {
+            &quot;boundary&quot;: &quot;before-complete&quot;,
+            &quot;pending_before&quot;: {
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: &quot;B&quot;,
+              &quot;token&quot;: &quot;1064cb9cc94143c0a3a342b99f9f9f4b&quot;
+            },
+            &quot;routes_before&quot;: [
+              {
+                &quot;dst&quot;: &quot;default&quot;,
+                &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+                &quot;dev&quot;: &quot;wanB&quot;,
+                &quot;metric&quot;: 100,
+                &quot;flags&quot;: []
+              },
+              {
+                &quot;dst&quot;: &quot;192.0.2.0/30&quot;,
+                &quot;dev&quot;: &quot;wanA&quot;,
+                &quot;scope&quot;: &quot;link&quot;,
+                &quot;flags&quot;: []
+              },
+              {
+                &quot;dst&quot;: &quot;192.0.2.4/30&quot;,
+                &quot;dev&quot;: &quot;wanB&quot;,
+                &quot;scope&quot;: &quot;link&quot;,
+                &quot;flags&quot;: []
+              }
+            ],
+            &quot;recovered_selected&quot;: &quot;B&quot;,
+            &quot;epoch_before&quot;: 31,
+            &quot;epoch_after&quot;: 32
+          }
+        ]
+      },
+      {
+        &quot;name&quot;: &quot;inverted_rpdb_rules_rejected&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 0.054050000000000153,
+        &quot;details&quot;: [
+          {
+            &quot;rule&quot;: {
+              &quot;priority&quot;: 9990,
+              &quot;not&quot;: null,
+              &quot;src&quot;: &quot;all&quot;,
+              &quot;iif&quot;: &quot;other0&quot;,
+              &quot;table&quot;: &quot;main&quot;
+            },
+            &quot;rejected&quot;: true,
+            &quot;no_mutation&quot;: true
+          },
+          {
+            &quot;rule&quot;: {
+              &quot;priority&quot;: 9990,
+              &quot;not&quot;: null,
+              &quot;src&quot;: &quot;all&quot;,
+              &quot;iif&quot;: &quot;other0&quot;,
+              &quot;action&quot;: &quot;prohibit&quot;
+            },
+            &quot;rejected&quot;: true,
+            &quot;no_mutation&quot;: true
+          }
+        ]
+      },
+      {
+        &quot;name&quot;: &quot;missing_local_lookup_rejected&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 0.2446465410000016,
+        &quot;details&quot;: {
+          &quot;rejected&quot;: true,
+          &quot;no_mutation&quot;: true,
+          &quot;local_request_after_fixture_restore&quot;: {
+            &quot;ok&quot;: true,
+            &quot;result&quot;: {
+              &quot;ok&quot;: true,
+              &quot;nonce&quot;: &quot;0babf523eaa3d1db23d30402&quot;,
+              &quot;peer&quot;: &quot;10.77.0.2&quot;,
+              &quot;server&quot;: &quot;10.77.0.1&quot;
+            },
+            &quot;error&quot;: null
+          }
+        }
+      },
+      {
+        &quot;name&quot;: &quot;expired_health_before_mutation&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 3.811496377000001,
+        &quot;details&quot;: {
+          &quot;rejected&quot;: true,
+          &quot;selected&quot;: &quot;A&quot;,
+          &quot;pending&quot;: null,
+          &quot;proof&quot;: {
+            &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+            &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+            &quot;target&quot;: &quot;B&quot;,
+            &quot;round&quot;: 2,
+            &quot;observed_at&quot;: 17.658536174,
+            &quot;expires_at&quot;: 19.658536174
+          },
+          &quot;blocked_at&quot;: 19.772040425,
+          &quot;pre_intent&quot;: true,
+          &quot;uses_agent_cycle&quot;: true,
+          &quot;prior_rounds&quot;: [
+            {
+              &quot;state&quot;: &quot;NO_HEALTHY_UPLINK&quot;,
+              &quot;selected&quot;: &quot;A&quot;,
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;SUSPECT&quot;,
+                &quot;B&quot;: &quot;RECOVERING&quot;
+              },
+              &quot;round&quot;: 0,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 16.090313381,
+                  &quot;finished&quot;: 16.59142884,
+                  &quot;successes&quot;: 0,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5007632919999985,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5007909579999996,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5006409590000018,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 16.594573215,
+                  &quot;finished&quot;: 16.601405298,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.006611791999997507,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0061309170000001245,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.006185915999999736,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 16.602797507,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [],
+              &quot;latched&quot;: false
+            },
+            {
+              &quot;state&quot;: &quot;NO_HEALTHY_UPLINK&quot;,
+              &quot;selected&quot;: &quot;A&quot;,
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;SUSPECT&quot;,
+                &quot;B&quot;: &quot;RECOVERING&quot;
+              },
+              &quot;round&quot;: 1,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 16.615330173,
+                  &quot;finished&quot;: 17.119848924,
+                  &quot;successes&quot;: 0,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5012040420000012,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5041445420000024,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5011771260000017,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 17.121847757,
+                  &quot;finished&quot;: 17.127835007,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.005279916999999301,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0053274170000001675,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0052930000000017685,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 17.131327465,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [],
+              &quot;latched&quot;: false
+            }
+          ]
+        }
+      },
+      {
+        &quot;name&quot;: &quot;malformed_target_quorum&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 0.1800785420000004,
+        &quot;details&quot;: {
+          &quot;rounds&quot;: [
+            {
+              &quot;state&quot;: &quot;NO_HEALTHY_UPLINK&quot;,
+              &quot;selected&quot;: &quot;A&quot;,
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;RECOVERING&quot;,
+                &quot;B&quot;: &quot;RECOVERING&quot;
+              },
+              &quot;round&quot;: 0,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 19.916371758,
+                  &quot;finished&quot;: 19.921076883,
+                  &quot;successes&quot;: 2,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;ValueError&quot;,
+                      &quot;seconds&quot;: 0.004376875000001945,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0041843749999976865,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0038525410000005422,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 19.922155133,
+                  &quot;finished&quot;: 19.925298133,
+                  &quot;successes&quot;: 2,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;ValueError&quot;,
+                      &quot;seconds&quot;: 0.0017347500000006733,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.001748124999998879,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.002821125000000535,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 19.926517925,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [],
+              &quot;latched&quot;: false
+            },
+            {
+              &quot;state&quot;: &quot;NO_HEALTHY_UPLINK&quot;,
+              &quot;selected&quot;: &quot;A&quot;,
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;RECOVERING&quot;,
+                &quot;B&quot;: &quot;RECOVERING&quot;
+              },
+              &quot;round&quot;: 1,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 19.936444967,
+                  &quot;finished&quot;: 19.939083217,
+                  &quot;successes&quot;: 2,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;ValueError&quot;,
+                      &quot;seconds&quot;: 0.0018990420000015718,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0024322080000018786,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0018039170000001548,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 19.939956467000002,
+                  &quot;finished&quot;: 19.941723383,
+                  &quot;successes&quot;: 2,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;ValueError&quot;,
+                      &quot;seconds&quot;: 0.001633625000000194,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0014197080000002416,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0012707499999997651,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 19.9425338,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [],
+              &quot;latched&quot;: false
+            },
+            {
+              &quot;state&quot;: &quot;RUNNING&quot;,
+              &quot;selected&quot;: &quot;A&quot;,
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;HEALTHY&quot;,
+                &quot;B&quot;: &quot;HEALTHY&quot;
+              },
+              &quot;round&quot;: 2,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 19.952213925,
+                  &quot;finished&quot;: 19.95407055,
+                  &quot;successes&quot;: 2,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;ValueError&quot;,
+                      &quot;seconds&quot;: 0.0017040420000000722,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0015828750000004277,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.001233416999998127,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 19.954945592,
+                  &quot;finished&quot;: 19.956882425,
+                  &quot;successes&quot;: 2,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;ValueError&quot;,
+                      &quot;seconds&quot;: 0.0017947080000020321,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.001472457999998511,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.001320291999999057,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 19.957599758,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [],
+              &quot;latched&quot;: false
+            },
+            {
+              &quot;state&quot;: &quot;RUNNING&quot;,
+              &quot;selected&quot;: &quot;A&quot;,
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;HEALTHY&quot;,
+                &quot;B&quot;: &quot;HEALTHY&quot;
+              },
+              &quot;round&quot;: 3,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 19.965794675,
+                  &quot;finished&quot;: 19.968257758,
+                  &quot;successes&quot;: 2,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;ValueError&quot;,
+                      &quot;seconds&quot;: 0.002324790999999493,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.002179417000000683,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0018746659999990811,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 19.970040842,
+                  &quot;finished&quot;: 19.971981467,
+                  &quot;successes&quot;: 2,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;ValueError&quot;,
+                      &quot;seconds&quot;: 0.0018145000000018285,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0017082500000000778,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0014349170000009792,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 19.972724967,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [],
+              &quot;latched&quot;: false
+            }
+          ],
+          &quot;agent_survived&quot;: true,
+          &quot;uses_agent_cycle&quot;: true,
+          &quot;lan_request&quot;: {
+            &quot;ok&quot;: true,
+            &quot;result&quot;: {
+              &quot;ok&quot;: true,
+              &quot;nonce&quot;: &quot;497ed1a4bd7742dd7d17abb6&quot;,
+              &quot;peer&quot;: &quot;10.99.1.1&quot;,
+              &quot;server&quot;: &quot;203.0.113.2&quot;
+            },
+            &quot;error&quot;: null
+          }
+        }
+      },
+      {
+        &quot;name&quot;: &quot;real_probe_failover_flapping_and_budget&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 21.610659145000003,
+        &quot;details&quot;: {
+          &quot;transitions&quot;: [
+            {
+              &quot;stage&quot;: &quot;A_down&quot;,
+              &quot;selected&quot;: &quot;B&quot;
+            },
+            {
+              &quot;stage&quot;: &quot;B_down&quot;,
+              &quot;selected&quot;: &quot;A&quot;
+            },
+            {
+              &quot;stage&quot;: &quot;A_down_again&quot;,
+              &quot;selected&quot;: &quot;B&quot;
+            }
+          ],
+          &quot;rounds&quot;: [
+            {
+              &quot;state&quot;: &quot;NO_HEALTHY_UPLINK&quot;,
+              &quot;selected&quot;: &quot;A&quot;,
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;RECOVERING&quot;,
+                &quot;B&quot;: &quot;RECOVERING&quot;
+              },
+              &quot;round&quot;: 0,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 20.081905133,
+                  &quot;finished&quot;: 20.085820925,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.003397249999999019,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.003497332999998548,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.003480457999998521,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 20.0866708,
+                  &quot;finished&quot;: 20.088913425,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.001928540999998063,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.002013082999997806,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0016937500000011596,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 20.090162592,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;healthy&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: true,
+                &quot;result&quot;: {
+                  &quot;ok&quot;: true,
+                  &quot;nonce&quot;: &quot;ba9abd21fe88ca37225f43db&quot;,
+                  &quot;peer&quot;: &quot;10.99.1.1&quot;,
+                  &quot;server&quot;: &quot;203.0.113.2&quot;
+                },
+                &quot;error&quot;: null
+              }
+            },
+            {
+              &quot;state&quot;: &quot;NO_HEALTHY_UPLINK&quot;,
+              &quot;selected&quot;: &quot;A&quot;,
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;RECOVERING&quot;,
+                &quot;B&quot;: &quot;RECOVERING&quot;
+              },
+              &quot;round&quot;: 1,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 20.114499258,
+                  &quot;finished&quot;: 20.11673705,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0016890829999987034,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.001987415999998632,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0017490829999999846,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 20.11750305,
+                  &quot;finished&quot;: 20.119778342,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0018623340000019084,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0020366250000023456,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0020002499999982604,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 20.120609425,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;healthy&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: true,
+                &quot;result&quot;: {
+                  &quot;ok&quot;: true,
+                  &quot;nonce&quot;: &quot;4c02c37e98087f7a6e538a43&quot;,
+                  &quot;peer&quot;: &quot;10.99.1.1&quot;,
+                  &quot;server&quot;: &quot;203.0.113.2&quot;
+                },
+                &quot;error&quot;: null
+              }
+            },
+            {
+              &quot;state&quot;: &quot;RUNNING&quot;,
+              &quot;selected&quot;: &quot;A&quot;,
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;HEALTHY&quot;,
+                &quot;B&quot;: &quot;HEALTHY&quot;
+              },
+              &quot;round&quot;: 2,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 20.146155383,
+                  &quot;finished&quot;: 20.149142217,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.002484041999998965,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0019096249999996928,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0025905420000000845,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 20.150526133,
+                  &quot;finished&quot;: 20.15365805,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0021540830000006395,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.002720041999999978,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.00232549999999776,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 20.154772508,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;healthy&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: true,
+                &quot;result&quot;: {
+                  &quot;ok&quot;: true,
+                  &quot;nonce&quot;: &quot;88b83ad6b8bc3e38ce30e3c9&quot;,
+                  &quot;peer&quot;: &quot;10.99.1.1&quot;,
+                  &quot;server&quot;: &quot;203.0.113.2&quot;
+                },
+                &quot;error&quot;: null
+              }
+            },
+            {
+              &quot;state&quot;: &quot;RUNNING&quot;,
+              &quot;selected&quot;: &quot;A&quot;,
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;HEALTHY&quot;,
+                &quot;B&quot;: &quot;HEALTHY&quot;
+              },
+              &quot;round&quot;: 3,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 20.181858342,
+                  &quot;finished&quot;: 20.1839003,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0018652079999981197,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0014274169999985986,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0014612080000020455,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 20.185088092,
+                  &quot;finished&quot;: 20.186742008,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.001294749999999567,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0013424999999998022,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.001343042000002015,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 20.187679258,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;healthy&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: true,
+                &quot;result&quot;: {
+                  &quot;ok&quot;: true,
+                  &quot;nonce&quot;: &quot;50aaa82ed0ad2879e8cf2a6f&quot;,
+                  &quot;peer&quot;: &quot;10.99.1.1&quot;,
+                  &quot;server&quot;: &quot;203.0.113.2&quot;
+                },
+                &quot;error&quot;: null
+              }
+            },
+            {
+              &quot;state&quot;: &quot;RUNNING&quot;,
+              &quot;selected&quot;: &quot;A&quot;,
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;HEALTHY&quot;,
+                &quot;B&quot;: &quot;HEALTHY&quot;
+              },
+              &quot;round&quot;: 4,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 20.212469425,
+                  &quot;finished&quot;: 20.713236759,
+                  &quot;successes&quot;: 2,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5005260010000008,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0016248750000009693,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0015990419999987182,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 20.7162208,
+                  &quot;finished&quot;: 20.71884955,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.002309875000001682,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0023779170000004513,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0019123329999999328,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 20.720738259,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;single_target&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: true,
+                &quot;result&quot;: {
+                  &quot;ok&quot;: true,
+                  &quot;nonce&quot;: &quot;f88b01e8bddb52b369c504de&quot;,
+                  &quot;peer&quot;: &quot;10.99.1.1&quot;,
+                  &quot;server&quot;: &quot;203.0.113.2&quot;
+                },
+                &quot;error&quot;: null
+              }
+            },
+            {
+              &quot;state&quot;: &quot;RUNNING&quot;,
+              &quot;selected&quot;: &quot;A&quot;,
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;HEALTHY&quot;,
+                &quot;B&quot;: &quot;HEALTHY&quot;
+              },
+              &quot;round&quot;: 5,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 20.745278425,
+                  &quot;finished&quot;: 21.250188051,
+                  &quot;successes&quot;: 2,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5042641669999988,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0014026670000006902,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0015014579999999,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 21.255037551,
+                  &quot;finished&quot;: 21.259963467,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.004405667000000335,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.004339166000001171,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0036947090000012395,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 21.262075759,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;single_target&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: true,
+                &quot;result&quot;: {
+                  &quot;ok&quot;: true,
+                  &quot;nonce&quot;: &quot;2d15ea4d854ce59bb365459d&quot;,
+                  &quot;peer&quot;: &quot;10.99.1.1&quot;,
+                  &quot;server&quot;: &quot;203.0.113.2&quot;
+                },
+                &quot;error&quot;: null
+              }
+            },
+            {
+              &quot;state&quot;: &quot;RUNNING&quot;,
+              &quot;selected&quot;: &quot;A&quot;,
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;HEALTHY&quot;,
+                &quot;B&quot;: &quot;HEALTHY&quot;
+              },
+              &quot;round&quot;: 6,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 21.299293134,
+                  &quot;finished&quot;: 21.801662717,
+                  &quot;successes&quot;: 2,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5017074579999985,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.002246625000001501,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0023183339999981456,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 21.807204009,
+                  &quot;finished&quot;: 21.813982384,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.005609499999998491,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.005990625000002581,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.005418291999998104,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 21.815788842,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;single_target&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: true,
+                &quot;result&quot;: {
+                  &quot;ok&quot;: true,
+                  &quot;nonce&quot;: &quot;567a7a2da8fb474a3ba8f207&quot;,
+                  &quot;peer&quot;: &quot;10.99.1.1&quot;,
+                  &quot;server&quot;: &quot;203.0.113.2&quot;
+                },
+                &quot;error&quot;: null
+              }
+            },
+            {
+              &quot;state&quot;: &quot;RUNNING&quot;,
+              &quot;selected&quot;: &quot;A&quot;,
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;HEALTHY&quot;,
+                &quot;B&quot;: &quot;HEALTHY&quot;
+              },
+              &quot;round&quot;: 7,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 21.853109509,
+                  &quot;finished&quot;: 22.358922759,
+                  &quot;successes&quot;: 2,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5053362920000026,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0018838750000007565,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0019327079999982288,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 22.361116176,
+                  &quot;finished&quot;: 22.366722134,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.004629417000000302,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.004901541999998926,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.00409725000000094,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 22.370884801,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;single_target&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: true,
+                &quot;result&quot;: {
+                  &quot;ok&quot;: true,
+                  &quot;nonce&quot;: &quot;a6d5dc6e338df586682f9d06&quot;,
+                  &quot;peer&quot;: &quot;10.99.1.1&quot;,
+                  &quot;server&quot;: &quot;203.0.113.2&quot;
+                },
+                &quot;error&quot;: null
+              }
+            },
+            {
+              &quot;state&quot;: &quot;RUNNING&quot;,
+              &quot;selected&quot;: &quot;A&quot;,
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;SUSPECT&quot;,
+                &quot;B&quot;: &quot;HEALTHY&quot;
+              },
+              &quot;round&quot;: 8,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 22.411903801,
+                  &quot;finished&quot;: 22.917743051,
+                  &quot;successes&quot;: 0,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5052200420000013,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5036193759999996,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5050904169999981,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 22.922850718,
+                  &quot;finished&quot;: 22.930551301,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.007079374999999999,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.005633667000001452,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.005811874999999134,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 22.932573426,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;A_down&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: false,
+                &quot;result&quot;: null,
+                &quot;error&quot;: &quot;request_failed&quot;
+              }
+            },
+            {
+              &quot;state&quot;: &quot;RUNNING&quot;,
+              &quot;selected&quot;: &quot;A&quot;,
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;SUSPECT&quot;,
+                &quot;B&quot;: &quot;HEALTHY&quot;
+              },
+              &quot;round&quot;: 9,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 23.976941427,
+                  &quot;finished&quot;: 24.480589219,
+                  &quot;successes&quot;: 0,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5027020830000026,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5029678339999997,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5023440000000008,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 24.486725719,
+                  &quot;finished&quot;: 24.49199326,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.004574125000001317,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.004808750000002249,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.004297124999997237,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 24.494756969,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;A_down&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: false,
+                &quot;result&quot;: null,
+                &quot;error&quot;: &quot;request_failed&quot;
+              }
+            },
+            {
+              &quot;state&quot;: &quot;SWITCHING&quot;,
+              &quot;selected&quot;: &quot;B&quot;,
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: &quot;B&quot;,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;DOWN&quot;,
+                &quot;B&quot;: &quot;HEALTHY&quot;
+              },
+              &quot;round&quot;: 10,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 25.546675761,
+                  &quot;finished&quot;: 26.048819928,
+                  &quot;successes&quot;: 0,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5014511670000026,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.501625083999997,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5014233339999983,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 26.051585344,
+                  &quot;finished&quot;: 26.057032011,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0046388750000012635,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.004199041999999764,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0047296670000029906,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 26.059583303,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: {
+                &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+                &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                &quot;target&quot;: &quot;B&quot;,
+                &quot;round&quot;: 10,
+                &quot;observed_at&quot;: 26.057032011,
+                &quot;expires_at&quot;: 28.057032011
+              },
+              &quot;history&quot;: [
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 26.059612428
+                }
+              ],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;A_down&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: true,
+                &quot;result&quot;: {
+                  &quot;ok&quot;: true,
+                  &quot;nonce&quot;: &quot;c6140aee1eb8d686e19b4bdf&quot;,
+                  &quot;peer&quot;: &quot;10.99.2.1&quot;,
+                  &quot;server&quot;: &quot;203.0.113.2&quot;
+                },
+                &quot;error&quot;: null
+              }
+            },
+            {
+              &quot;state&quot;: &quot;RUNNING&quot;,
+              &quot;selected&quot;: &quot;B&quot;,
+              &quot;before&quot;: &quot;B&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;DOWN&quot;,
+                &quot;B&quot;: &quot;HEALTHY&quot;
+              },
+              &quot;round&quot;: 11,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 26.101713761,
+                  &quot;finished&quot;: 26.607846261,
+                  &quot;successes&quot;: 0,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5058351249999973,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.505802874999997,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5048271659999983,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 26.610543928,
+                  &quot;finished&quot;: 26.61356697,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0024875420000007864,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0026981249999984414,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.002346917000000559,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 26.614678636,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 26.059612428
+                }
+              ],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;A_down&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: true,
+                &quot;result&quot;: {
+                  &quot;ok&quot;: true,
+                  &quot;nonce&quot;: &quot;982f1f6d1491dfbebf0c23ed&quot;,
+                  &quot;peer&quot;: &quot;10.99.2.1&quot;,
+                  &quot;server&quot;: &quot;203.0.113.2&quot;
+                },
+                &quot;error&quot;: null
+              }
+            },
+            {
+              &quot;state&quot;: &quot;RUNNING&quot;,
+              &quot;selected&quot;: &quot;B&quot;,
+              &quot;before&quot;: &quot;B&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;RECOVERING&quot;,
+                &quot;B&quot;: &quot;HEALTHY&quot;
+              },
+              &quot;round&quot;: 12,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 26.650985678,
+                  &quot;finished&quot;: 26.653180595,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.001809999999998979,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0019249999999999545,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0013405420000012214,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 26.65405497,
+                  &quot;finished&quot;: 26.655937095,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0014122920000012584,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0015851250000018524,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.001584416000000033,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 26.656986345,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 26.059612428
+                }
+              ],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;A_recovers&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: true,
+                &quot;result&quot;: {
+                  &quot;ok&quot;: true,
+                  &quot;nonce&quot;: &quot;be60ddd2fb0acc5d2b7cb276&quot;,
+                  &quot;peer&quot;: &quot;10.99.2.1&quot;,
+                  &quot;server&quot;: &quot;203.0.113.2&quot;
+                },
+                &quot;error&quot;: null
+              }
+            },
+            {
+              &quot;state&quot;: &quot;RUNNING&quot;,
+              &quot;selected&quot;: &quot;B&quot;,
+              &quot;before&quot;: &quot;B&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;RECOVERING&quot;,
+                &quot;B&quot;: &quot;HEALTHY&quot;
+              },
+              &quot;round&quot;: 13,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 26.681291595,
+                  &quot;finished&quot;: 26.683252678,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0016173329999986663,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0017127919999992969,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0015982079999972143,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 26.68418947,
+                  &quot;finished&quot;: 26.68616872,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0016904579999987845,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0014723330000023793,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0013120829999984096,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 26.68727572,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 26.059612428
+                }
+              ],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;A_recovers&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: true,
+                &quot;result&quot;: {
+                  &quot;ok&quot;: true,
+                  &quot;nonce&quot;: &quot;f5d69ad590b9db8fb5c621b3&quot;,
+                  &quot;peer&quot;: &quot;10.99.2.1&quot;,
+                  &quot;server&quot;: &quot;203.0.113.2&quot;
+                },
+                &quot;error&quot;: null
+              }
+            },
+            {
+              &quot;state&quot;: &quot;RUNNING&quot;,
+              &quot;selected&quot;: &quot;B&quot;,
+              &quot;before&quot;: &quot;B&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;HEALTHY&quot;,
+                &quot;B&quot;: &quot;HEALTHY&quot;
+              },
+              &quot;round&quot;: 14,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 26.711287178,
+                  &quot;finished&quot;: 26.715144303,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.00329449999999909,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0030733749999996007,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0028669169999986366,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 26.717399011,
+                  &quot;finished&quot;: 26.719664136,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0019550000000023715,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0016534169999999904,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.001896416000001011,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 26.721050678,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 26.059612428
+                }
+              ],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;A_recovers&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: true,
+                &quot;result&quot;: {
+                  &quot;ok&quot;: true,
+                  &quot;nonce&quot;: &quot;f35475b4d363ee3b3edb88aa&quot;,
+                  &quot;peer&quot;: &quot;10.99.2.1&quot;,
+                  &quot;server&quot;: &quot;203.0.113.2&quot;
+                },
+                &quot;error&quot;: null
+              }
+            },
+            {
+              &quot;state&quot;: &quot;RUNNING&quot;,
+              &quot;selected&quot;: &quot;B&quot;,
+              &quot;before&quot;: &quot;B&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;HEALTHY&quot;,
+                &quot;B&quot;: &quot;HEALTHY&quot;
+              },
+              &quot;round&quot;: 15,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 26.748849595,
+                  &quot;finished&quot;: 26.751651928,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0025991669999996247,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.002263082999999,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0018269999999986908,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 26.754556095,
+                  &quot;finished&quot;: 26.756396845,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0015598750000016537,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0013971670000003655,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0015368750000028797,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 26.757233928,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 26.059612428
+                }
+              ],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;A_recovers&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: true,
+                &quot;result&quot;: {
+                  &quot;ok&quot;: true,
+                  &quot;nonce&quot;: &quot;7694344fb0ba5825f07deb30&quot;,
+                  &quot;peer&quot;: &quot;10.99.2.1&quot;,
+                  &quot;server&quot;: &quot;203.0.113.2&quot;
+                },
+                &quot;error&quot;: null
+              }
+            },
+            {
+              &quot;state&quot;: &quot;RUNNING&quot;,
+              &quot;selected&quot;: &quot;B&quot;,
+              &quot;before&quot;: &quot;B&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;HEALTHY&quot;,
+                &quot;B&quot;: &quot;SUSPECT&quot;
+              },
+              &quot;round&quot;: 16,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 26.782767678,
+                  &quot;finished&quot;: 26.785994261,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0024736670000002903,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0025417089999990594,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0020746249999987754,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 26.786860928,
+                  &quot;finished&quot;: 27.291090553,
+                  &quot;successes&quot;: 0,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5037133750000002,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5035881670000002,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5034362090000002,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 27.296960803,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 26.059612428
+                }
+              ],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;B_down&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: false,
+                &quot;result&quot;: null,
+                &quot;error&quot;: &quot;request_failed&quot;
+              }
+            },
+            {
+              &quot;state&quot;: &quot;RUNNING&quot;,
+              &quot;selected&quot;: &quot;B&quot;,
+              &quot;before&quot;: &quot;B&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;HEALTHY&quot;,
+                &quot;B&quot;: &quot;SUSPECT&quot;
+              },
+              &quot;round&quot;: 17,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 28.357966304,
+                  &quot;finished&quot;: 28.363062137,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.00429158299999699,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.004460334000000898,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0036189580000005606,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 28.364602762,
+                  &quot;finished&quot;: 28.869017054,
+                  &quot;successes&quot;: 0,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5014992079999985,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5015322500000003,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5035873339999988,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 28.875937262,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 26.059612428
+                }
+              ],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;B_down&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: false,
+                &quot;result&quot;: null,
+                &quot;error&quot;: &quot;request_failed&quot;
+              }
+            },
+            {
+              &quot;state&quot;: &quot;SWITCHING&quot;,
+              &quot;selected&quot;: &quot;A&quot;,
+              &quot;before&quot;: &quot;B&quot;,
+              &quot;target&quot;: &quot;A&quot;,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;HEALTHY&quot;,
+                &quot;B&quot;: &quot;DOWN&quot;
+              },
+              &quot;round&quot;: 18,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 29.93147118,
+                  &quot;finished&quot;: 29.934804305,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0030191250000015657,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0026061249999997926,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0025114580000007436,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 29.936727388,
+                  &quot;finished&quot;: 30.438799847,
+                  &quot;successes&quot;: 0,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5013917509999999,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5011040000000015,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5010824169999992,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 30.444072305,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: {
+                &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+                &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                &quot;target&quot;: &quot;A&quot;,
+                &quot;round&quot;: 18,
+                &quot;observed_at&quot;: 29.934804305,
+                &quot;expires_at&quot;: 31.934804305
+              },
+              &quot;history&quot;: [
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 26.059612428
+                },
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 30.444123555
+                }
+              ],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;B_down&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: true,
+                &quot;result&quot;: {
+                  &quot;ok&quot;: true,
+                  &quot;nonce&quot;: &quot;ab897cfc17cf56a8786c7739&quot;,
+                  &quot;peer&quot;: &quot;10.99.1.1&quot;,
+                  &quot;server&quot;: &quot;203.0.113.2&quot;
+                },
+                &quot;error&quot;: null
+              }
+            },
+            {
+              &quot;state&quot;: &quot;RUNNING&quot;,
+              &quot;selected&quot;: &quot;A&quot;,
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;HEALTHY&quot;,
+                &quot;B&quot;: &quot;DOWN&quot;
+              },
+              &quot;round&quot;: 19,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 30.497101972,
+                  &quot;finished&quot;: 30.50023493,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.00244004199999992,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.002233499999999111,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0027692500000000564,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 30.501557763,
+                  &quot;finished&quot;: 31.004535972,
+                  &quot;successes&quot;: 0,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5027039590000015,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5026022499999989,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5013104169999991,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 31.006411972,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 26.059612428
+                },
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 30.444123555
+                }
+              ],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;B_down&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: true,
+                &quot;result&quot;: {
+                  &quot;ok&quot;: true,
+                  &quot;nonce&quot;: &quot;d4bd11b4c12395087811d8f6&quot;,
+                  &quot;peer&quot;: &quot;10.99.1.1&quot;,
+                  &quot;server&quot;: &quot;203.0.113.2&quot;
+                },
+                &quot;error&quot;: null
+              }
+            },
+            {
+              &quot;state&quot;: &quot;NO_HEALTHY_UPLINK&quot;,
+              &quot;selected&quot;: &quot;A&quot;,
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;SUSPECT&quot;,
+                &quot;B&quot;: &quot;RECOVERING&quot;
+              },
+              &quot;round&quot;: 20,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 31.046561264,
+                  &quot;finished&quot;: 31.552809514,
+                  &quot;successes&quot;: 0,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5057367920000004,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5056849159999999,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5056671250000022,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 31.556875514,
+                  &quot;finished&quot;: 31.563103972,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.005801208000001168,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0054058329999975285,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.005619583999997957,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 31.564400305,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 26.059612428
+                },
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 30.444123555
+                }
+              ],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;A_down_again&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: false,
+                &quot;result&quot;: null,
+                &quot;error&quot;: &quot;request_failed&quot;
+              }
+            },
+            {
+              &quot;state&quot;: &quot;NO_HEALTHY_UPLINK&quot;,
+              &quot;selected&quot;: &quot;A&quot;,
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;SUSPECT&quot;,
+                &quot;B&quot;: &quot;RECOVERING&quot;
+              },
+              &quot;round&quot;: 21,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 32.615360639,
+                  &quot;finished&quot;: 33.121683681,
+                  &quot;successes&quot;: 0,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5058480840000001,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5045116670000027,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5041372499999994,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 33.124051806,
+                  &quot;finished&quot;: 33.12811789,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0036820830000010574,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0029924159999978883,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0031529170000013096,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 33.132750931,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 26.059612428
+                },
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 30.444123555
+                }
+              ],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;A_down_again&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: false,
+                &quot;result&quot;: null,
+                &quot;error&quot;: &quot;request_failed&quot;
+              }
+            },
+            {
+              &quot;state&quot;: &quot;SWITCHING&quot;,
+              &quot;selected&quot;: &quot;B&quot;,
+              &quot;before&quot;: &quot;A&quot;,
+              &quot;target&quot;: &quot;B&quot;,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;DOWN&quot;,
+                &quot;B&quot;: &quot;HEALTHY&quot;
+              },
+              &quot;round&quot;: 22,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 34.175427265,
+                  &quot;finished&quot;: 34.678845682,
+                  &quot;successes&quot;: 0,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5027854169999983,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5025702089999982,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5026369169999967,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 34.68370014,
+                  &quot;finished&quot;: 34.689728807,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0053498750000002815,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.00469449999999938,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.005292457999999556,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 34.691564057,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: {
+                &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+                &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                &quot;target&quot;: &quot;B&quot;,
+                &quot;round&quot;: 22,
+                &quot;observed_at&quot;: 34.689728807,
+                &quot;expires_at&quot;: 36.689728807
+              },
+              &quot;history&quot;: [
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 26.059612428
+                },
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 30.444123555
+                },
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 34.691576974
+                }
+              ],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;A_down_again&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: true,
+                &quot;result&quot;: {
+                  &quot;ok&quot;: true,
+                  &quot;nonce&quot;: &quot;914a221d25cfbf9f7a21f639&quot;,
+                  &quot;peer&quot;: &quot;10.99.2.1&quot;,
+                  &quot;server&quot;: &quot;203.0.113.2&quot;
+                },
+                &quot;error&quot;: null
+              }
+            },
+            {
+              &quot;state&quot;: &quot;RUNNING&quot;,
+              &quot;selected&quot;: &quot;B&quot;,
+              &quot;before&quot;: &quot;B&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;DOWN&quot;,
+                &quot;B&quot;: &quot;HEALTHY&quot;
+              },
+              &quot;round&quot;: 23,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 34.740482682,
+                  &quot;finished&quot;: 35.246804566,
+                  &quot;successes&quot;: 0,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5057313129999983,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.503441169999995,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5034598389999942,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 35.253488214,
+                  &quot;finished&quot;: 35.260049459,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0056074630000040315,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0050303980000023785,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.004648885000001712,
+                      &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 35.262518574,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 26.059612428
+                },
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 30.444123555
+                },
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 34.691576974
+                }
+              ],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;A_down_again&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: true,
+                &quot;result&quot;: {
+                  &quot;ok&quot;: true,
+                  &quot;nonce&quot;: &quot;73b88706db8aba458b72a249&quot;,
+                  &quot;peer&quot;: &quot;10.99.2.1&quot;,
+                  &quot;server&quot;: &quot;203.0.113.2&quot;
+                },
+                &quot;error&quot;: null
+              }
+            },
+            {
+              &quot;state&quot;: &quot;NO_HEALTHY_UPLINK&quot;,
+              &quot;selected&quot;: &quot;B&quot;,
+              &quot;before&quot;: &quot;B&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;RECOVERING&quot;,
+                &quot;B&quot;: &quot;SUSPECT&quot;
+              },
+              &quot;round&quot;: 24,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 35.309228249,
+                  &quot;finished&quot;: 35.312542881,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0030843410000045424,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.002954639999998676,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0026828509999958783,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 35.313630827,
+                  &quot;finished&quot;: 35.815517256,
+                  &quot;successes&quot;: 0,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5015387130000022,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5013949590000024,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5009635900000049,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 35.820072173,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 26.059612428
+                },
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 30.444123555
+                },
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 34.691576974
+                }
+              ],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;B_down_again&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: false,
+                &quot;result&quot;: null,
+                &quot;error&quot;: &quot;request_failed&quot;
+              }
+            },
+            {
+              &quot;state&quot;: &quot;NO_HEALTHY_UPLINK&quot;,
+              &quot;selected&quot;: &quot;B&quot;,
+              &quot;before&quot;: &quot;B&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;RECOVERING&quot;,
+                &quot;B&quot;: &quot;SUSPECT&quot;
+              },
+              &quot;round&quot;: 25,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 36.869897624000004,
+                  &quot;finished&quot;: 36.87297266,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0028209580000009282,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0024509550000004765,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.002074195999995254,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 36.874173284,
+                  &quot;finished&quot;: 37.376474411,
+                  &quot;successes&quot;: 0,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5017171189999985,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.501870659000005,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5012203479999968,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 37.382039016,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 26.059612428
+                },
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 30.444123555
+                },
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 34.691576974
+                }
+              ],
+              &quot;latched&quot;: false,
+              &quot;stage&quot;: &quot;B_down_again&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: false,
+                &quot;result&quot;: null,
+                &quot;error&quot;: &quot;request_failed&quot;
+              }
+            },
+            {
+              &quot;state&quot;: &quot;DEGRADED_LATCHED&quot;,
+              &quot;selected&quot;: &quot;B&quot;,
+              &quot;before&quot;: &quot;B&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;HEALTHY&quot;,
+                &quot;B&quot;: &quot;DOWN&quot;
+              },
+              &quot;round&quot;: 26,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 38.438452055,
+                  &quot;finished&quot;: 38.442235968,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0034793519999993805,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.00295979699999549,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.003121835000001738,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 38.443787002,
+                  &quot;finished&quot;: 38.947627801,
+                  &quot;successes&quot;: 0,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5032609719999996,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5032740599999954,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5032887750000015,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 38.950312933,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 26.059612428
+                },
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 30.444123555
+                },
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 34.691576974
+                }
+              ],
+              &quot;latched&quot;: true,
+              &quot;stage&quot;: &quot;B_down_again&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: false,
+                &quot;result&quot;: null,
+                &quot;error&quot;: &quot;request_failed&quot;
+              }
+            },
+            {
+              &quot;state&quot;: &quot;DEGRADED_LATCHED&quot;,
+              &quot;selected&quot;: &quot;B&quot;,
+              &quot;before&quot;: &quot;B&quot;,
+              &quot;target&quot;: null,
+              &quot;health&quot;: {
+                &quot;A&quot;: &quot;HEALTHY&quot;,
+                &quot;B&quot;: &quot;DOWN&quot;
+              },
+              &quot;round&quot;: 27,
+              &quot;probes&quot;: {
+                &quot;A&quot;: {
+                  &quot;started&quot;: 40.014140346,
+                  &quot;finished&quot;: 40.017709233,
+                  &quot;successes&quot;: 3,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0032923300000007316,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0026698380000027555,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    },
+                    {
+                      &quot;ok&quot;: true,
+                      &quot;infrastructure&quot;: false,
+                      &quot;seconds&quot;: 0.0027234989999982417,
+                      &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                      &quot;link&quot;: &quot;A&quot;
+                    }
+                  ]
+                },
+                &quot;B&quot;: {
+                  &quot;started&quot;: 40.019177365,
+                  &quot;finished&quot;: 40.521713505,
+                  &quot;successes&quot;: 0,
+                  &quot;results&quot;: [
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5018443529999956,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5018773329999959,
+                      &quot;link&quot;: &quot;B&quot;
+                    },
+                    {
+                      &quot;ok&quot;: false,
+                      &quot;infrastructure&quot;: false,
+                      &quot;error&quot;: &quot;TimeoutError&quot;,
+                      &quot;seconds&quot;: 0.5018005319999972,
+                      &quot;link&quot;: &quot;B&quot;
+                    }
+                  ]
+                }
+              },
+              &quot;decision_at&quot;: 40.526375111,
+              &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+              &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+              &quot;proof&quot;: null,
+              &quot;history&quot;: [
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 26.059612428
+                },
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 30.444123555
+                },
+                {
+                  &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+                  &quot;at&quot;: 34.691576974
+                }
+              ],
+              &quot;latched&quot;: true,
+              &quot;stage&quot;: &quot;B_down_again&quot;,
+              &quot;lan_request&quot;: {
+                &quot;ok&quot;: false,
+                &quot;result&quot;: null,
+                &quot;error&quot;: &quot;request_failed&quot;
+              }
+            }
+          ],
+          &quot;latched&quot;: true,
+          &quot;uses_agent_cycle&quot;: true
+        }
+      },
+      {
+        &quot;name&quot;: &quot;single_real_target_failure&quot;,
+        &quot;passed&quot;: true,
+        &quot;seconds&quot;: 0.5591209210000017,
+        &quot;details&quot;: [
+          2,
+          [
+            {
+              &quot;ok&quot;: false,
+              &quot;infrastructure&quot;: false,
+              &quot;error&quot;: &quot;TimeoutError&quot;,
+              &quot;seconds&quot;: 0.5018594610000022,
+              &quot;link&quot;: &quot;A&quot;
+            },
+            {
+              &quot;ok&quot;: true,
+              &quot;infrastructure&quot;: false,
+              &quot;seconds&quot;: 0.0038512900000000627,
+              &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+              &quot;link&quot;: &quot;A&quot;
+            },
+            {
+              &quot;ok&quot;: true,
+              &quot;infrastructure&quot;: false,
+              &quot;seconds&quot;: 0.00384403599999672,
+              &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+              &quot;link&quot;: &quot;A&quot;
+            }
+          ]
+        ]
+      }
+    ],
+    &quot;environment&quot;: {
+      &quot;kernel&quot;: &quot;6.8.0-117-generic&quot;,
+      &quot;python&quot;: &quot;3.12.3&quot;,
+      &quot;systemd&quot;: &quot;systemd 255 (255.4-1ubuntu8.15)&quot;
+    },
+    &quot;service_source_sha256&quot;: &quot;d7e234c881fd227980d72fe7cf3166f99d52f21a3af17f58934edf5e2046d586&quot;,
+    &quot;installed_unit_sha256&quot;: &quot;82d18d51e0ddc0d5762bd0d13320918bc47229d1bb8dab36fe670104f19a0fb7&quot;
+  },
+  &quot;reboot_before&quot;: {
+    &quot;before_boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+    &quot;pending&quot;: {
+      &quot;before&quot;: &quot;A&quot;,
+      &quot;target&quot;: &quot;B&quot;,
+      &quot;token&quot;: &quot;49e211623e8f403191ed558d41184daa&quot;
+    },
+    &quot;selected_receipt&quot;: &quot;A&quot;,
+    &quot;actual_route&quot;: [
+      {
+        &quot;dst&quot;: &quot;default&quot;,
+        &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+        &quot;dev&quot;: &quot;wanB&quot;,
+        &quot;metric&quot;: 100,
+        &quot;flags&quot;: []
+      },
+      {
+        &quot;dst&quot;: &quot;192.0.2.0/30&quot;,
+        &quot;dev&quot;: &quot;wanA&quot;,
+        &quot;scope&quot;: &quot;link&quot;,
+        &quot;flags&quot;: []
+      },
+      {
+        &quot;dst&quot;: &quot;192.0.2.4/30&quot;,
+        &quot;dev&quot;: &quot;wanB&quot;,
+        &quot;scope&quot;: &quot;link&quot;,
+        &quot;flags&quot;: []
+      }
+    ],
+    &quot;process_restart_before&quot;: &quot;MainPID=4352\nInvocationID=b4a1d455d549442b8ed934f182a5355d\n&quot;,
+    &quot;process_restart_after&quot;: &quot;MainPID=4414\nActiveState=active\nInvocationID=fb32c140fb0c47dc81b5738598130040\n&quot;,
+    &quot;latched_before&quot;: true
+  },
+  &quot;reboot&quot;: {
+    &quot;passed&quot;: true,
+    &quot;orderly_vm_restart&quot;: true,
+    &quot;power_loss_tested&quot;: false,
+    &quot;before&quot;: {
+      &quot;before_boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;,
+      &quot;pending&quot;: {
+        &quot;before&quot;: &quot;A&quot;,
+        &quot;target&quot;: &quot;B&quot;,
+        &quot;token&quot;: &quot;49e211623e8f403191ed558d41184daa&quot;
+      },
+      &quot;selected_receipt&quot;: &quot;A&quot;,
+      &quot;actual_route&quot;: [
+        {
+          &quot;dst&quot;: &quot;default&quot;,
+          &quot;gateway&quot;: &quot;192.0.2.5&quot;,
+          &quot;dev&quot;: &quot;wanB&quot;,
+          &quot;metric&quot;: 100,
+          &quot;flags&quot;: []
+        },
+        {
+          &quot;dst&quot;: &quot;192.0.2.0/30&quot;,
+          &quot;dev&quot;: &quot;wanA&quot;,
+          &quot;scope&quot;: &quot;link&quot;,
+          &quot;flags&quot;: []
+        },
+        {
+          &quot;dst&quot;: &quot;192.0.2.4/30&quot;,
+          &quot;dev&quot;: &quot;wanB&quot;,
+          &quot;scope&quot;: &quot;link&quot;,
+          &quot;flags&quot;: []
+        }
+      ],
+      &quot;process_restart_before&quot;: &quot;MainPID=4352\nInvocationID=b4a1d455d549442b8ed934f182a5355d\n&quot;,
+      &quot;process_restart_after&quot;: &quot;MainPID=4414\nActiveState=active\nInvocationID=fb32c140fb0c47dc81b5738598130040\n&quot;,
+      &quot;latched_before&quot;: true
+    },
+    &quot;pre_agent_journal&quot;: {
+      &quot;boot&quot;: &quot;11f9dbfd-d612-4921-a039-2cf9ebf5977a&quot;,
+      &quot;pending&quot;: {
+        &quot;before&quot;: &quot;A&quot;,
+        &quot;target&quot;: &quot;B&quot;,
+        &quot;token&quot;: &quot;49e211623e8f403191ed558d41184daa&quot;
+      },
+      &quot;selected&quot;: &quot;A&quot;
+    },
+    &quot;after&quot;: {
+      &quot;boot&quot;: &quot;11f9dbfd-d612-4921-a039-2cf9ebf5977a&quot;,
+      &quot;selected&quot;: &quot;B&quot;,
+      &quot;pending&quot;: null,
+      &quot;latched&quot;: true,
+      &quot;unit&quot;: &quot;MainPID=720\nActiveState=active\nInvocationID=10bb19906a584b979b09d3cff605ea72\n&quot;,
+      &quot;request&quot;: {
+        &quot;ok&quot;: true,
+        &quot;result&quot;: {
+          &quot;ok&quot;: true,
+          &quot;nonce&quot;: &quot;d0c5b03d86358666b7560218&quot;,
+          &quot;peer&quot;: &quot;10.99.2.1&quot;,
+          &quot;server&quot;: &quot;203.0.113.2&quot;
+        },
+        &quot;error&quot;: null
+      },
+      &quot;first_tick&quot;: {
+        &quot;name&quot;: &quot;tick&quot;,
+        &quot;boot&quot;: &quot;11f9dbfd-d612-4921-a039-2cf9ebf5977a&quot;,
+        &quot;at&quot;: 2.858578542,
+        &quot;state&quot;: &quot;DEGRADED_LATCHED&quot;,
+        &quot;selected&quot;: &quot;B&quot;,
+        &quot;before&quot;: &quot;B&quot;,
+        &quot;target&quot;: null,
+        &quot;health&quot;: {
+          &quot;A&quot;: &quot;RECOVERING&quot;,
+          &quot;B&quot;: &quot;RECOVERING&quot;
+        },
+        &quot;round&quot;: 0,
+        &quot;probes&quot;: {
+          &quot;A&quot;: {
+            &quot;started&quot;: 2.8494136670000003,
+            &quot;finished&quot;: 2.854435042,
+            &quot;successes&quot;: 3,
+            &quot;results&quot;: [
+              {
+                &quot;ok&quot;: true,
+                &quot;infrastructure&quot;: false,
+                &quot;seconds&quot;: 0.004653124999999925,
+                &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                &quot;link&quot;: &quot;A&quot;
+              },
+              {
+                &quot;ok&quot;: true,
+                &quot;infrastructure&quot;: false,
+                &quot;seconds&quot;: 0.004554249999999982,
+                &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                &quot;link&quot;: &quot;A&quot;
+              },
+              {
+                &quot;ok&quot;: true,
+                &quot;infrastructure&quot;: false,
+                &quot;seconds&quot;: 0.0041132089999997845,
+                &quot;peer_observed&quot;: &quot;10.99.1.1&quot;,
+                &quot;link&quot;: &quot;A&quot;
+              }
+            ]
+          },
+          &quot;B&quot;: {
+            &quot;started&quot;: 2.855385542,
+            &quot;finished&quot;: 2.857542417,
+            &quot;successes&quot;: 3,
+            &quot;results&quot;: [
+              {
+                &quot;ok&quot;: true,
+                &quot;infrastructure&quot;: false,
+                &quot;seconds&quot;: 0.0019222499999997922,
+                &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                &quot;link&quot;: &quot;B&quot;
+              },
+              {
+                &quot;ok&quot;: true,
+                &quot;infrastructure&quot;: false,
+                &quot;seconds&quot;: 0.0015651669999998674,
+                &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                &quot;link&quot;: &quot;B&quot;
+              },
+              {
+                &quot;ok&quot;: true,
+                &quot;infrastructure&quot;: false,
+                &quot;seconds&quot;: 0.0018494169999998533,
+                &quot;peer_observed&quot;: &quot;10.99.2.1&quot;,
+                &quot;link&quot;: &quot;B&quot;
+              }
+            ]
+          }
+        },
+        &quot;decision_at&quot;: 2.8585263750000003,
+        &quot;config_hash&quot;: &quot;316e18f1794f86f839ad426fdf1131e893f8366407eb5937bc7aea2f87a5ee81&quot;,
+        &quot;proof&quot;: null,
+        &quot;history&quot;: [
+          {
+            &quot;at&quot;: 26.059612428,
+            &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;
+          },
+          {
+            &quot;at&quot;: 30.444123555,
+            &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;
+          },
+          {
+            &quot;at&quot;: 34.691576974,
+            &quot;boot&quot;: &quot;79642768-b66a-4ba2-ae7e-d2100830b794&quot;
+          }
+        ],
+        &quot;latched&quot;: true
+      },
+      &quot;rss_snapshot&quot;: &quot;VmRSS:\t   23704 kB&quot;
+    }
+  },
+  &quot;cleanup&quot;: {
+    &quot;passed&quot;: true,
+    &quot;root_network_unchanged&quot;: true,
+    &quot;namespaces_removed&quot;: true,
+    &quot;units_removed&quot;: true,
+    &quot;root_before_sha256&quot;: &quot;e8cf25d9a0a9bfc08b9e8ba4d235a1a02b6cc95915324932e234a62a519f4bc5&quot;,
+    &quot;root_after_sha256&quot;: &quot;e8cf25d9a0a9bfc08b9e8ba4d235a1a02b6cc95915324932e234a62a519f4bc5&quot;,
+    &quot;ignored_fields&quot;: [
+      &quot;nft_handles&quot;,
+      &quot;nft_counter_values&quot;,
+      &quot;xt_chain_counters&quot;,
+      &quot;xt_generated_comments&quot;
+    ]
+  },
+  &quot;snapshot_removed&quot;: true,
+  &quot;vm_final&quot;: &quot;Stopped&quot;,
+  &quot;controls&quot;: [
+    &quot;failed_stage&quot;,
+    &quot;timeout&quot;,
+    &quot;missing_case&quot;,
+    &quot;missing_test&quot;,
+    &quot;source_mismatch&quot;,
+    &quot;fake_reboot&quot;,
+    &quot;shutdown_rollback&quot;,
+    &quot;cleanup_failed&quot;,
+    &quot;vm_running&quot;,
+    &quot;power_loss_claim&quot;,
+    &quot;false_healthy_probes&quot;,
+    &quot;internal_route_escape&quot;,
+    &quot;duplicate_borrow_link&quot;,
+    &quot;local_service_escape&quot;,
+    &quot;inverted_rule_accepted&quot;,
+    &quot;expired_health_mutated&quot;,
+    &quot;malformed_target_crash&quot;,
+    &quot;fabricated_probe_time&quot;,
+    &quot;fake_budget_transition&quot;,
+    &quot;wrong_installed_unit&quot;
+  ]
+}</pre></html>

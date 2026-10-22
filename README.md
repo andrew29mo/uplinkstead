@@ -26,7 +26,7 @@ their original licenses.
   real systemd service in the disposable router namespace.
 
 [Architecture](docs/ARCHITECTURE.md) · [MVP acceptance](docs/MVP_ACCEPTANCE.md)
-· [Validation](docs/VALIDATION.md) · [Research](docs/RESEARCH.md)
+· [Validation](docs/VALIDATION.md) · [Review corrections](docs/AUDIT.md) · [Research](docs/RESEARCH.md)
 
 ## Reproduce
 
@@ -56,6 +56,9 @@ One routed LAN and two independent static IPv4 uplink subnets; no bridge/VRF,
 DHCP/PPPoE, IPv6, ECMP, connection migration or general firewall reconciliation.
 Forwarding, NAT/return paths, reserved marks and compatible reverse-path filtering
 are explicit deployment prerequisites. The service does not repair external rules.
+Unknown or inverted RPDB selectors and missing/duplicate built-in lookup rules
+block mutation. Automatic selection rechecks boot/config-bound health evidence
+before dispatch; a helper deadline does not guarantee when the kernel completes.
 Other privileged network managers must cooperate with the resource reservation;
 CAP_NET_ADMIN is broad namespace authority, not a kernel-enforced table allowlist.
 

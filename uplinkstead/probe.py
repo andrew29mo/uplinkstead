@@ -43,7 +43,14 @@ def one(config, link, target, timeout=0.5):
                     if len(data) > 16384:
                         raise ValueError('Oversized probe response')
                 head, body = data.split(b'\r\n\r\n', 1)
-                result = json.loads(body)
+                try:
+                    result = json.loads(body, parse_constant=lambda value: (_ for _ in ()).throw(ValueError('Non-finite JSON constant')))
+                except RecursionError as exc:
+                    raise ValueError('Excessive JSON nesting') from exc
+                if not isinstance(result,dict):
+                    raise ValueError('Probe JSON must be an object')
+                if result.get('peer') is not None and not isinstance(result['peer'],str):
+                    raise ValueError('Invalid peer observation')
                 if not head.startswith(b'HTTP/1.0 200 ') or result.get('nonce') != nonce or result.get('ok') is not True:
                     raise ValueError('Invalid probe response')
                 return {'ok': True, 'infrastructure': False, 'seconds': time.monotonic()-began,

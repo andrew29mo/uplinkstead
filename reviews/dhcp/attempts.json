@@ -1,0 +1,98 @@
+[
+  {
+    "run_id": "05f5530d8fade3b1",
+    "passed": false,
+    "source_sha256": "ba38b3cf2ec0b4a1ebc816f032368fd848e77ec1a5faf71155e75fda7301b1c0",
+    "source_changed": true,
+    "error": "RuntimeError: cases failed or timed out",
+    "verification_error": null,
+    "cleanup": {
+      "passed": true,
+      "root_network_unchanged": true,
+      "namespaces_removed": true,
+      "unit_removed": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped"
+  },
+  {
+    "run_id": "12f0021076dcbb9d",
+    "passed": false,
+    "source_sha256": "cbf834c9d9af31753e0e575379f98006d1ff4396756d464e74565259a29a8494",
+    "source_changed": false,
+    "error": "RuntimeError: cases failed or timed out",
+    "verification_error": null,
+    "cleanup": {
+      "passed": true,
+      "root_network_unchanged": true,
+      "namespaces_removed": true,
+      "unit_removed": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped"
+  },
+  {
+    "run_id": "bfeaf774c0d90aac",
+    "passed": false,
+    "source_sha256": "5f0dd51c1b5cdfcc60a7c448dc5af3a6bb715aa7492160e635025cafbcbda6b2",
+    "source_changed": false,
+    "error": "RuntimeError: cases failed or timed out",
+    "verification_error": null,
+    "cleanup": {
+      "passed": true,
+      "root_network_unchanged": true,
+      "namespaces_removed": true,
+      "unit_removed": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped"
+  },
+  {
+    "run_id": "08b16f53bf87f737",
+    "passed": false,
+    "source_sha256": "8e2560372093d5eb97a1088b434cb442047b85f5da46b88b601302b50b226fe2",
+    "source_changed": true,
+    "error": "RuntimeError: cases failed or timed out",
+    "verification_error": null,
+    "cleanup": {
+      "passed": true,
+      "root_network_unchanged": true,
+      "namespaces_removed": true,
+      "unit_removed": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped"
+  },
+  {
+    "run_id": "d3aeb7be657d9c65",
+    "passed": false,
+    "source_sha256": "f292ee74dbed0507eff08cb528a2d911c784be68bed531f34a9c089bb19cca9a",
+    "source_changed": false,
+    "error": "RuntimeError: cases failed or timed out",
+    "verification_error": null,
+    "cleanup": {
+      "passed": true,
+      "root_network_unchanged": true,
+      "namespaces_removed": true,
+      "unit_removed": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped"
+  },
+  {
+    "run_id": "61cbde4565f7675b",
+    "passed": false,
+    "source_sha256": "4d3821c41e424cf63ed1519e81a161d55840069372f9fb89cb926d6f2bb5f5b0",
+    "source_changed": true,
+    "error": null,
+    "verification_error": "run failed/source changed",
+    "cleanup": {
+      "passed": true,
+      "root_network_unchanged": true,
+      "namespaces_removed": true,
+      "unit_removed": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped"
+  }
+]

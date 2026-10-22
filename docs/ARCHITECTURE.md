@@ -130,3 +130,11 @@ See [operations](OPERATIONS.md) for exact limits and deployment prerequisites.
 Root writer compromise remains outside the boundary; namespace capabilities are
 broad. No storage corruption repair, remote fleet control, HA, distribution package
 qualification, physical WAN result or recovery-time guarantee is established.
+
+## Optional single DHCP uplink
+
+The [DHCP lifecycle](DHCP.md) is a separate controller and journal. It owns dedicated
+41101/41103 tables and a supervised BusyBox client. It does not alter the static
+A/B controller or share its health, switch budget or authority. Every lease update
+invalidates health; restart quarantines persisted allocations before a new client
+session. Integration of dynamic links into dual-uplink failover remains future work.

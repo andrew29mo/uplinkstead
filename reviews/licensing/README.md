@@ -1,4 +1,4 @@
-# MIT adoption and current verification
+# MIT adoption verification (historical)
 
 Project license: [MIT](../../LICENSE), copyright 2026 Andrew Yuan.
 This verification was recorded while the repository was Private. The repository is
@@ -16,9 +16,10 @@ source snapshot, alongside package metadata and the formal implementation.
 36 rejected report corruptions, owned cleanup and a stopped VM.
 These are separate evidence categories. No runtime product module changed.
 
-```sh
-.venv/bin/python -m tools.report reviews/licensing
-```
+This receipt belongs to commit `b2df3be919f819e6d4cbb8672107c2dcc51ad902`.
+Its original verifier/source must be used to replay it. For the current source,
+use [DHCP validation](../dhcp/README.md) and
+[static regression](../dhcp-static-regression/README.md).
 
 Wheel metadata declares MIT and includes the exact repository license. The sdist
 also includes it. Native installed imports and console help passed; installing

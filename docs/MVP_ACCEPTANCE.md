@@ -63,3 +63,17 @@ qualified; default non-preemptive mode is the tested operational choice. No clai
 of physical-device/ISP failure, sustained saturated load, repeated-trial confidence,
 HA, IPv6, storage-corruption repair, sudden power-loss recovery, kernel-stuck I/O,
 whole-VM memory cap, boot-zero-gap or production readiness follows from these tests.
+
+## Optional DHCP lifecycle slice
+
+This slice is independent of the static dual-uplink MVP. Acceptance requires real
+wire-acquired leases, renewal/address/gateway invalidation of health, new pinned
+quorum before forwarding, real-deadline withdrawal with the client stalled, and
+no use of an independently reachable backup default. Installed-service SIGKILL
+recovery must reject an old session with otherwise current revision/time. A real
+backend write followed by an injected exception must preserve both sides of intent
+and recover without replaying the old lease. Portable tests separately check
+cross-boot identity and actual SQLite save rejection. Same-source macOS/Linux
+tests, failed-run retention, source change/timeout rejection and owned cleanup
+are required. This does not qualify DHCP VM reboot, sudden power loss, DHCPv6,
+PPPoE, dual-DHCP failover, transparent connections or production throughput.

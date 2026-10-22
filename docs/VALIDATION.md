@@ -1,4 +1,34 @@
-# MIT-licensed MVP validation
+# Current validation
+
+The optional DHCP lifecycle and existing static dual-uplink controller were checked
+against source fingerprint
+`b4bc56ad24c52e3f9d02ec3f0e223f40df54c3d3c5d09930d5fbaf9195b0ad2f`.
+
+- [DHCP lifecycle](../reviews/dhcp/README.md): run `29d384d681407367`, 96 portable
+  tests per platform, eight isolated Linux scenarios and 12 report corruption
+  controls. Installed-service restart, fresh leases/health, stale events, real
+  expiry with stalled callbacks and partial backend write recovery are covered.
+- [Static regression](../reviews/dhcp-static-regression/README.md): run
+  `1d722bbdd25827be`, same 96 portable tests, 27 existing Linux scenarios and 36
+  report corruption controls. Installed services and static-mode orderly VM reboot
+  recovery passed. The single low-load trial records 4/20 vs 13/20 successes.
+- Both runs verify source correspondence and owned cleanup, leave the dedicated VM
+  stopped and keep VM RSS/time separate from macOS portable validation. The DHCP
+  writer VmRSS snapshot is 23,816 KiB (client/kernel/VM excluded); its SQLite main
+  file is 8,192 bytes (temporary journal/filesystem excluded).
+
+DHCP is a separate **single-uplink** mode. Its VM reboot and sudden power-loss
+recovery were not tested; only its process restart and portable changed-boot logic
+are covered. Static-mode VM reboot evidence cannot establish DHCP-mode reboot
+behavior. Neither run establishes physical-ISP reliability, transparent TCP
+migration, sustained throughput, hard expiry scheduling or a production SLA.
+Read [DHCP deployment/limits](DHCP.md) before reproducing.
+
+The earlier receipt and measurements below remain historical, unchanged in their
+original files. Their 81-test counts and older source fingerprint are not the
+current validation matrix.
+
+# Historical MIT-adoption static MVP validation
 
 Run **ebff911bee98054a**, source fingerprint
 `8d888c2acccf3e46af48f855b0d8b61d59ca03dd16d4bfef13cb0bbf798117b3`.

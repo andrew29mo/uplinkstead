@@ -30,6 +30,8 @@ notices remain authoritative, including exceptions and bundled subcomponents.
 | systemd 255 | External service manager and fixture commands | [LGPL-2.1-or-later with noted exceptions](https://github.com/systemd/systemd/blob/v255/README) |
 | nftables / iptables | External isolated-fixture firewall setup and preservation checks | [Netfilter GPL-family licensing statement](https://netfilter.org/about.html#license); installed package notices govern exact components |
 | OpenSSL 3 | External fixture certificate command; runtime ssl support belongs to the interpreter distribution | [Apache-2.0 text](https://github.com/openssl/openssl/blob/openssl-3.0/LICENSE.txt) |
+| BusyBox udhcpc | Separately installed DHCP client for the optional lifecycle service | [GPLv2, component exceptions apply](https://busybox.net/license.html) |
+| dnsmasq | Separately installed DHCP server used only in isolated validation | [GPLv2 or GPLv3](https://thekelleys.org.uk/dnsmasq/doc.html) |
 | Colima | External validation VM manager | [MIT](https://github.com/abiosoft/colima/blob/main/LICENSE) |
 | Lima | External Colima infrastructure | [Apache-2.0 and notices](https://github.com/lima-vm/lima/blob/master/LICENSE) |
 

@@ -123,3 +123,10 @@ The bounded local event stream is operational history, not tamper-proof audit.
 Root compromise is outside the authentication boundary. The journal can refuse a
 corrupt/oversized state; no general corruption repair or sudden-power-loss result
 has been established.
+
+## Single DHCP uplink mode
+
+Use the separate [DHCP deployment/lifecycle guide](DHCP.md). Static-controller
+commands and acknowledgements do not operate this service. Stopping the DHCP service
+withdraws its lease/address and retains terminal prohibitions; it does not perform
+the static controller's explicit handoff to main routing.

@@ -1,0 +1,11 @@
+{
+  "interface": "wan0",
+  "lan": {"interface": "lan0", "prefix": "10.77.0.0/24"},
+  "targets": [
+    {"ip": "203.0.113.2", "port": 8443},
+    {"ip": "203.0.113.2", "port": 8444},
+    {"ip": "203.0.113.2", "port": 8445}
+  ],
+  "ca": "/etc/uplinkstead/ca.crt",
+  "server_name": "probe.test"
+}

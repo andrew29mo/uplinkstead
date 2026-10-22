@@ -34,10 +34,20 @@ see [third-party scope](docs/THIRD_PARTY.md).
 · [MVP acceptance](docs/MVP_ACCEPTANCE.md) · [Validation](docs/VALIDATION.md)
 · [Public release checks](docs/PUBLICATION.md) · [Publication review](docs/RELEASE_REVIEW.md) · [MVP review](docs/MVP_REVIEW.md) · [Earlier review](docs/AUDIT.md) · [Research](docs/RESEARCH.md)
 
+## Experimental single DHCP uplink
+
+An independent [DHCP lifecycle mode](docs/DHCP.md) adds supervised lease acquisition,
+renewal, expiry, address/gateway changes and fresh-session recovery. Every update
+invalidates health and requires fresh pinned TLS quorum before forwarding. It is
+not integrated into the static dual-uplink controller. See the
+[DHCP JSON/HTML evidence](reviews/dhcp/README.md) and
+[same-source static regression](reviews/dhcp-static-regression/README.md).
+
 ## Reproduce
 
 Python 3.12+ is required. Runtime uses the standard library and separately installed
-Linux iproute2/systemd. The isolated fixture additionally uses nftables and OpenSSL.
+Linux iproute2/systemd. The optional DHCP mode additionally requires BusyBox udhcpc.
+The isolated fixtures use nftables/OpenSSL and, for DHCP, dnsmasq.
 Do not run the fixture on a production machine.
 
 ```sh
@@ -63,7 +73,8 @@ Those actions have different effects.
 
 ## Limits
 
-One routed LAN and two independent static IPv4 subnets. No IPv6, DHCP/PPPoE,
+The dual-uplink controller supports one routed LAN and two independent static IPv4
+subnets. DHCP is available only in the separate single-uplink mode. No IPv6 or PPPoE,
 bridge/VRF, ECMP, connection migration, HA, general firewall reconciliation or remote
 operator API. NAT/return paths, forwarding and reverse-path settings are deployment
 prerequisites. Other privileged managers must cooperate with reserved resources.

@@ -7,6 +7,7 @@ import argparse
 from collections import deque
 from concurrent.futures import ThreadPoolExecutor
 import copy
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -118,6 +119,7 @@ class Capture:
         self.dirty = False
         self.version = 0
         self.versions = {}
+        self.observations = deque(maxlen=32)
         # ETH_P_ALL taps outgoing REQUESTs as well as incoming ACKs. A socket
         # subscribed only to ETH_P_IP is insufficient for the transmit tap.
         self.socket = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.htons(0x0003))
@@ -132,6 +134,7 @@ class Capture:
             self.dirty = False
             self.version = 0
             self.versions = {}
+            self.observations.clear()
 
     def proof_keys(self):
         return {(k,v['request_at'],v['at']) for k,v in self.tracker.acks.items()}
@@ -143,7 +146,7 @@ class Capture:
                     before = now()
                     try: frame = self.socket.recv(4096)
                     except BlockingIOError:
-                        self.empty_at = before
+                        with self.lock: self.empty_at = before
                         break
                     # Normal IPv4 traffic is not DHCP; malformed/unsupported
                     # frames provide no proof, rather than killing observation.
@@ -155,6 +158,8 @@ class Capture:
                             kind = self.tracker.feed(frame, self.empty_at)
                             if kind == 3: self.counts['requests'] += 1
                             if kind == 5: self.counts['acks'] += 1
+                            if kind is not None:
+                                self.observations.append(dict(frame_sha256=hashlib.sha256(frame).hexdigest(),frame_index=self.counts['frames']))
                             after_ack = self.proof_keys()
                             for key in after_ack-before_ack:
                                 # New allocation invalidates old health even
@@ -213,6 +218,7 @@ class Capture:
     def stats(self):
         with self.lock:
             return dict(self.counts,unclaimed_acks=len(self.tracker.acks),requests_tracked=len(self.tracker.requests),
+                        empty_at=self.empty_at,version=self.version,pending=self.dirty,seen_frames=list(self.observations),
                         last_unsupported=self.last_unsupported,alive=self.thread.is_alive())
 
 
@@ -220,7 +226,9 @@ class Runtime:
     def __init__(self, writer, path, hook, executable='/usr/bin/busybox', probe=probe_round):
         self.w, self.path, self.hook, self.executable, self.probe = writer, Path(path), Path(hook), executable, probe
         cfg = writer.cfg.get('runtime', {})
-        if set(cfg)-{'queue_capacity','probe_interval','restart_delay'}: raise ValueError('Unknown runtime config')
+        if set(cfg)-{'queue_capacity','probe_interval','restart_delay','client_diagnostics'}: raise ValueError('Unknown runtime config')
+        self.client_diagnostics = cfg.get('client_diagnostics',False)
+        if type(self.client_diagnostics) is not bool:raise ValueError('client_diagnostics must be boolean')
         self.inbox = Inbox(cfg.get('queue_capacity', 8))
         self.interval = cfg.get('probe_interval', .2)
         self.restart_delay = cfg.get('restart_delay', .2)
@@ -262,7 +270,8 @@ class Runtime:
                    UPLINKSTEAD_SESSION=s['links'][k]['session'], UPLINKSTEAD_BOOT=s['boot'])
         self.children[k] = subprocess.Popen([self.executable,'udhcpc','-f','-i',self.w.cfg['links'][k]['interface'],
             '-s',str(self.hook),'-t','3','-T','1','-A','1','-O','lease','-O','33','-O','121','-O','249'],
-            env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            env=env, stdout=None if self.client_diagnostics else subprocess.DEVNULL,
+            stderr=subprocess.STDOUT if self.client_diagnostics else subprocess.DEVNULL)
 
     @staticmethod
     def kill(child):

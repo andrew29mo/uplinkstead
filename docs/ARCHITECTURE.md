@@ -191,8 +191,9 @@ the static service's separate unprivileged policy-worker design.
 
 [P0](DHCP_P0.md) selects an experimental external BusyBox build explicitly.
 Process-local nonrepeating xids provide a new transaction boundary; the writer
-continues to require matching wire evidence and fixed hook authority. Superseded
-xids cannot reopen after a newer ACK. New transactions may extend deadlines;
+continues to require matching wire evidence and fixed hook authority. The first-seen REQUEST watermark retires prior unanswered transactions too;
+known superseded xids cannot reopen after a later request. A new REQUEST alone
+does not withdraw an unexpired allocation. New transactions may extend deadlines;
 same-xid ambiguity remains fail-closed. The default distro client is unchanged.
 The build is separately GPL-governed and is not bundled with the MIT package.
 Natural client renewal/rebinding is separate from negotiated DHCP option 58/59

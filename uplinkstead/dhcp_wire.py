@@ -81,6 +81,7 @@ class DHCPTracker:
         # distinguished from a fresh reply. Cap it at the first proven deadline.
         self.history, self.exhausted, self.invalidations = {}, False, 0
         self.latest_xid = None
+        self.latest_request = None
         self.last_at = 0.
 
     def invalidate(self, key):
@@ -116,6 +117,14 @@ class DHCPTracker:
                     self.requests.clear(); self.acks.clear()
                     raise ValueError('Wire session history exhausted; fresh client required')
                 self.history[key] = dict(at=at, address=requested, packet=None)
+                # Only a first-seen REQUEST advances transaction authority.
+                # An unanswered attempt is retired too; a late ACK must not
+                # roll back the watermark after a newer successful transaction.
+                if self.latest_request is not None:
+                    self.history[self.latest_request]['superseded'] = True
+                    self.requests.pop(self.latest_request,None)
+                    self.acks.pop(self.latest_request,None)
+                self.latest_request = key
             history = self.history[key]
             if history.get('superseded'): return packet['type']
             canonical = history['packet']

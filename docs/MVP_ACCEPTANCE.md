@@ -147,3 +147,11 @@ remain open; it must not be reported as completing the entire DHCP MVP.
 This is an exploration-evidence gate, not approval of a default client. The
 observed early loss after bounded rebinding attempts and option 58/59 timing
 interoperability must be resolved or explicitly constrained before deployment.
+
+P0 review regression gates additionally require an unanswered old transaction's
+late ACK to be rejected before/after a later successful transaction. Replays must
+be observed on the router and processed by the formal Capture plus a subsequent
+Runtime step. Renewal and rebinding receipts must join matching REQUEST/ACK/xid/
+MAC/allocation to runtime sequence and actual REQUEST-origin deadline. Early-loss
+causality requires the real client branch diagnostic, retry packets and deconfig
+hook; source reasoning alone is not equivalent to observing that branch.

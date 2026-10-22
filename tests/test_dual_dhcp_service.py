@@ -1,5 +1,6 @@
 """Stage-one production inbox/runtime challenged without Linux routing mocks as proof."""
 import copy
+from collections import deque
 from pathlib import Path
 import tempfile
 import threading
@@ -159,9 +160,25 @@ class RuntimeTests(unittest.TestCase):
 
 
 class CaptureTests(unittest.TestCase):
+    def test_unanswered_old_ACK_cannot_dirty_or_ambiguate_current_proof(self):
+        capture=Capture.__new__(Capture)
+        capture.stop=threading.Event();capture.lock=threading.RLock();capture.empty_at=10;capture.error=None;capture.observations=deque(maxlen=32)
+        capture.session='current';capture.counts=dict(frames=0,requests=0,acks=0,unsupported=0)
+        capture.version=0;capture.versions={};capture.dirty=False;capture.tracker=DHCPTracker(MAC)
+        frames=iter([packet(3,xid=10),packet(5,xid=10),packet(3,xid=11),packet(3,xid=12),packet(5,xid=12),packet(5,xid=11)]+[packet(5,xid=11)]*40)
+        def receive(_):
+            try:return next(frames)
+            except StopIteration:capture.stop.set();raise BlockingIOError()
+        capture.socket=SimpleNamespace(recv=receive)
+        with patch('uplinkstead.dual_dhcp_service.now',return_value=100.):
+            capture.run();proof=capture.claim(LEASE,'current')
+        self.assertEqual(proof['xid'],12);self.assertEqual(capture.version,2)
+        capture.acknowledge(proof['capture_version']);self.assertFalse(capture.take_dirty())
+        self.assertEqual(len(capture.observations),32)
+
     def test_contradictory_ACK_invalidates_already_claimed_queued_proof(self):
         capture=Capture.__new__(Capture)
-        capture.stop=threading.Event();capture.lock=threading.RLock();capture.empty_at=10;capture.error=None
+        capture.stop=threading.Event();capture.lock=threading.RLock();capture.empty_at=10;capture.error=None;capture.observations=deque(maxlen=32)
         capture.session='current';capture.counts=dict(frames=0,requests=0,acks=0,unsupported=0)
         capture.version=0;capture.versions={};capture.dirty=False;capture.tracker=DHCPTracker(MAC)
         def drain(frames):
@@ -181,7 +198,7 @@ class CaptureTests(unittest.TestCase):
 
     def test_backlogged_frames_use_previous_empty_queue_time(self):
         capture=Capture.__new__(Capture)
-        capture.stop=threading.Event();capture.lock=threading.RLock();capture.empty_at=10;capture.error=None
+        capture.stop=threading.Event();capture.lock=threading.RLock();capture.empty_at=10;capture.error=None;capture.observations=deque(maxlen=32)
         capture.counts=dict(frames=0,requests=0,acks=0,unsupported=0);capture.version=0;capture.versions={};capture.dirty=False
         capture.tracker=DHCPTracker(MAC)
         frames=iter([packet(3),packet(5)])
@@ -196,7 +213,7 @@ class CaptureTests(unittest.TestCase):
 
     def test_claim_keeps_matching_ACK_version_instead_of_latest_global_version(self):
         capture=Capture.__new__(Capture)
-        capture.stop=threading.Event();capture.lock=threading.RLock();capture.empty_at=10;capture.error=None
+        capture.stop=threading.Event();capture.lock=threading.RLock();capture.empty_at=10;capture.error=None;capture.observations=deque(maxlen=32)
         capture.session='current';capture.counts=dict(frames=0,requests=0,acks=0,unsupported=0)
         capture.version=0;capture.versions={};capture.dirty=False;capture.tracker=DHCPTracker(MAC)
         second=packet(5,xid=2).replace(b'\x33\x04\x00\x00\x00\x3c',b'\x33\x04\x00\x00\x00\x3d')
@@ -206,10 +223,12 @@ class CaptureTests(unittest.TestCase):
             except StopIteration:capture.stop.set();raise BlockingIOError()
         capture.socket=SimpleNamespace(recv=receive)
         with patch('uplinkstead.dual_dhcp_service.now',return_value=100.):
-            capture.run();proof=capture.claim(LEASE,'current')
-        self.assertEqual(proof['capture_version'],1)
+            capture.run()
+            with self.assertRaises(ValueError):capture.tracker.claim(LEASE,100.)
+            proof=capture.claim(dict(LEASE,lease='61'),'current')
+        self.assertEqual(proof['capture_version'],2)
         self.assertEqual(capture.version,2)
-        self.assertFalse(capture.is_current(proof['capture_version']))
+        self.assertTrue(capture.is_current(proof['capture_version']))
         self.assertTrue(capture.take_dirty());self.assertTrue(capture.take_dirty())
 
     def test_old_claim_cannot_clear_a_newer_allocation_notice(self):
@@ -219,7 +238,7 @@ class CaptureTests(unittest.TestCase):
 
     def test_non_DHCP_frame_does_not_kill_observer(self):
         capture=Capture.__new__(Capture)
-        capture.stop=threading.Event();capture.lock=threading.RLock();capture.empty_at=1;capture.error=None
+        capture.stop=threading.Event();capture.lock=threading.RLock();capture.empty_at=1;capture.error=None;capture.observations=deque(maxlen=32)
         capture.counts=dict(frames=0,requests=0,acks=0,unsupported=0)
         tracker=SimpleNamespace(feed=unittest.mock.Mock(side_effect=ValueError('ordinary IPv4')),acks={})
         capture.tracker=tracker

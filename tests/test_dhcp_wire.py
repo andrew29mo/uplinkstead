@@ -135,7 +135,7 @@ class WireTests(unittest.TestCase):
         with self.assertRaises(ValueError): t.claim(LEASE,3.)
         t = self.tracker()
         for xid in (1,2): t.feed(packet(3,xid=xid),float(xid*2)); t.feed(packet(5,xid=xid),float(xid*2+1))
-        with self.assertRaises(ValueError): t.claim(LEASE,6.)
+        self.assertEqual(t.claim(LEASE,6.)['xid'],2)
 
     def test_time_reversal_cannot_rebase_request(self):
         t = self.tracker(); t.feed(packet(3),10.)

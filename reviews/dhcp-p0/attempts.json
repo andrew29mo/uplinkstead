@@ -5,6 +5,15 @@
     "source_sha256": "9f17663c762afeed7a255ea9ea1df20ccb059b42f4dc99362dd903703748fe2c",
     "source_changed": false,
     "vm_final": "Stopped",
-    "explanation": "Only full P0 VM attempt in this work. Build and all five formal-service scenarios passed; native/client setup and portable counterexamples are separate from VM evidence."
+    "explanation": "Only full P0 VM attempt in this work. Build and all five formal-service scenarios passed; native/client setup and portable counterexamples are separate from VM evidence.",
+    "review_findings": "Superseded: unanswered old xid could reactivate proof; original report lacked ACK/deadline joins and production replay processing fence. Earlier pass does not qualify these new regressions."
+  },
+  {
+    "run_id": "521a6979ee907e0e",
+    "passed": true,
+    "source_sha256": "556eb500ea4e4a9b29ad205ebd3db031e1b7659c1c7ae55de2e6a1399c00af90",
+    "source_changed": false,
+    "vm_final": "Stopped",
+    "explanation": "Review rerun: fixed first-REQUEST watermark; source/binary provenance, ACK/deadline joins, receiver and production replay fences, synthetic unanswered-transaction fault and actual loss-branch diagnostic. All five scenarios and 43 report corruption controls passed."
   }
 ]

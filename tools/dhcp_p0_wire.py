@@ -28,6 +28,24 @@ def observe(interface, output):
                 f.write(json.dumps(p)+'\n');f.flush()
 
 
+
+
+def delayed_ack(template,xid):
+    """Synthetic delayed-reply fault: retarget an isolated captured ACK's xid.
+
+    Not a captured historical reply for that transaction. IPv4 UDP checksum zero
+    is legal; IPv4 header is unchanged. Never transmit outside the owned fixture.
+    """
+    if type(xid) is not int or not 0<=xid<=0xffffffff:raise ValueError('Invalid xid')
+    frame=bytearray(base64.b64decode(template['frame'],validate=True))
+    parsed=parse_frame(bytes(frame))
+    if parsed['type']!=5:raise ValueError('ACK template required')
+    udp=14+(frame[14]&15)*4
+    frame[udp+6:udp+8]=b'\0\0';frame[udp+12:udp+16]=xid.to_bytes(4,'big')
+    result=dict(template,xid=xid,frame=base64.b64encode(frame).decode(),frame_sha256=hashlib.sha256(frame).hexdigest())
+    return result
+
+
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--interface',required=True);p.add_argument('--output',type=Path)
     p.add_argument('--replay',type=Path);a=p.parse_args()

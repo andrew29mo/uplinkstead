@@ -24,15 +24,18 @@ change two things in a reproducible external build:
 
 The formal packet tracker still requires matching REQUEST/ACK evidence, fixed
 client authority and immutable queue timestamps. A new xid can establish a new
-conservative REQUEST origin and extend a lease. Once a later ACK is observed,
-the older xid is superseded for that capture session: replayed old REQUESTs or
-ACKs cannot reopen it, withdraw the later allocation or manufacture a new proof.
+conservative REQUEST origin and extend a lease. On the first observation of a new REQUEST xid, the prior transaction is
+superseded, even if it never received an ACK. This request watermark does not
+withdraw the still-valid allocation. Replayed known-old REQUESTs and late ACKs
+cannot reopen that transaction, withdraw a newer allocation or manufacture proof.
 Queued older proofs retain their old version and are rejected by the runtime.
 Contradictions concerning the latest allocation still invalidate its proof.
 
 This is correlation, not authentication. IDs are predictable after observation;
 DHCP is unauthenticated. No hostile DHCP server, crafted future-xid injection,
 cross-process xid collision or unlimited delayed-packet guarantee is claimed.
+If capture misses a newer REQUEST, the watermark cannot infer that unseen
+transaction; this is not a guarantee against capture loss or arbitrary reordering.
 The history remains bounded at 64 xids and fails closed on saturation. A fresh
 client session is then needed under the existing per-link restart limiter.
 
@@ -60,7 +63,12 @@ and the actual externally built client. It does not call `DualLifecycle` to
 fabricate renewal. Independent AF_PACKET observers retain real REQUEST/ACK
 identities and destinations. Raw frames stay private; reports export summaries
 and frame hashes. Replaying an ACK means transmitting the originally captured
-frame on the isolated B segment, not directly feeding the parser.
+frame on the isolated B segment, not directly feeding the parser. The runner
+requires the receiving observer to see a new matching frame hash, the formal
+Capture to record that hash with a newer frame ordinal and drain its queue, and
+a subsequent full Runtime step before checking identity, version and pending
+state. Capture retains at most 32 diagnostic frame hashes; eviction or delay
+fails the check rather than granting a pass.
 
 Required observations:
 
@@ -73,6 +81,10 @@ Required observations:
 - During a newer unanswered request, replay an ACK from an earlier transaction
   of that same running B client. Its allocation/deadline/event sequence must not
   change. The new real ACK, not the replay, must explain the next extension.
+- Also synthesize a server-shaped delayed reply for an unanswered older
+  transaction, using a captured ACK template and that older xid. Deliver it after
+  the next REQUEST; require the same production-processing fence and unchanged
+  lease. This is labelled packet fault injection, not an original server reply.
 - Stop B's DHCP server, observe B lose its allocation, then restart the server
   with a different offered address. A must remain independently usable; B must
   obtain the changed address from real packets and pass new TLS traffic.
@@ -130,9 +142,19 @@ References: [RFC 2131](https://www.rfc-editor.org/rfc/rfc2131.html),
 
 ## Finding retained from this trial
 
-The offline-server case observed BusyBox declare lease loss about 25 seconds
-before the service's conservative deadline. That is safe withdrawal but reduces
+The initial trial observed BusyBox declare lease loss about 25 seconds
+before the service's conservative deadline. The review validation additionally
+records the actual lease-loss branch diagnostic (interface, PID, xid, remaining
+lease seconds and attempt count), all three broadcast retries, and the deconfig
+hook. A positive remaining value with attempts equal to three distinguishes
+retry exhaustion from service deadline expiry. That is safe withdrawal but reduces
 availability. It is not an independent service-expiry test, and it remains an
 operational adoption gate together with option 58/59 timing interoperability.
 This exploration establishes a workable process-local transaction boundary and
 actual renewal/reacquisition, not a final default client/deployment decision.
+
+The experimental build's diagnostic marker does not change timer decisions.
+`runtime.client_diagnostics: true` optionally inherits the service's standard
+output/error streams for client diagnostics (default false). Operators own log
+retention; no journal/file size bound is implied. Raw logs remain private to the
+VM fixture; only the parsed bounded loss event is exported.

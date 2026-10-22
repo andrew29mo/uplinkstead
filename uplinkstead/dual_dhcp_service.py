@@ -369,6 +369,7 @@ class Runtime:
                 if 'capture_version' in event: self.captures[event['link']].acknowledge(event['capture_version'])
                 self.increment('processed')
                 self.recent.append(dict(link=event['link'],sequence=event['sequence'],reason=event['reason'],
+                    xid=event.get('xid'),
                     request_at=event['request_at'],observed_at=event['observed_at'],hook_at=event['at'],processed_at=now(),
                     expires=self.w.s['links'][event['link']]['expires'],
                     probe_inflight={k:k in self.futures and not self.futures[k][0].done() for k in LINKS}))

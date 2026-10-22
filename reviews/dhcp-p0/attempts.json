@@ -1,0 +1,10 @@
+[
+  {
+    "run_id": "aa5b61234d455c18",
+    "passed": true,
+    "source_sha256": "9f17663c762afeed7a255ea9ea1df20ccb059b42f4dc99362dd903703748fe2c",
+    "source_changed": false,
+    "vm_final": "Stopped",
+    "explanation": "Only full P0 VM attempt in this work. Build and all five formal-service scenarios passed; native/client setup and portable counterexamples are separate from VM evidence."
+  }
+]

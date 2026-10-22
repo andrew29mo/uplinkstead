@@ -186,3 +186,15 @@ Unclaimed new allocation evidence invalidates prior health. This can shorten
 availability and is not exact packet timing or a hard cleanup deadline. Clients,
 listener, probe workers and writer share the trusted root runtime; this is not
 the static service's separate unprivileged policy-worker design.
+
+## Renewable client exploration (P0)
+
+[P0](DHCP_P0.md) selects an experimental external BusyBox build explicitly.
+Process-local nonrepeating xids provide a new transaction boundary; the writer
+continues to require matching wire evidence and fixed hook authority. Superseded
+xids cannot reopen after a newer ACK. New transactions may extend deadlines;
+same-xid ambiguity remains fail-closed. The default distro client is unchanged.
+The build is separately GPL-governed and is not bundled with the MIT package.
+Natural client renewal/rebinding is separate from negotiated DHCP option 58/59
+qualification. Automatic selection, privilege separation and installed dual-DHCP
+service recovery remain later MVP gates.

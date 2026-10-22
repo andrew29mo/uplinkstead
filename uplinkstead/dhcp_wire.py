@@ -80,13 +80,14 @@ class DHCPTracker:
         # sequence, and BusyBox reuses xid. An identical delayed ACK cannot be
         # distinguished from a fresh reply. Cap it at the first proven deadline.
         self.history, self.exhausted, self.invalidations = {}, False, 0
+        self.latest_xid = None
         self.last_at = 0.
 
     def invalidate(self, key):
         history = self.history[key]
         if not history.get('invalid'):
             history['invalid'] = True
-            self.invalidations += 1
+            if key == self.latest_xid: self.invalidations += 1
         self.requests.pop(key, None)
         self.acks.pop(key, None)
 
@@ -116,6 +117,7 @@ class DHCPTracker:
                     raise ValueError('Wire session history exhausted; fresh client required')
                 self.history[key] = dict(at=at, address=requested, packet=None)
             history = self.history[key]
+            if history.get('superseded'): return packet['type']
             canonical = history['packet']
             if history.get('invalid') or requested != history['address'] or (canonical and packet['server'] is not None and packet['server'] != canonical['server']):
                 self.invalidate(key)
@@ -131,6 +133,7 @@ class DHCPTracker:
                 self.requests[key] = dict(at=at, origin=history['at'], identity=identity, ambiguous=False)
         else:
             history = self.history.get(key)
+            if history and history.get('superseded'): return packet['type']
             # ciaddr is zero during selection and populated during renewal;
             # it is not a change in the offered allocation. Compare all parsed
             # allocation semantics, not incidental BOOTP transport fields.
@@ -142,6 +145,10 @@ class DHCPTracker:
             request = self.requests.get(key)
             if request and not request['ambiguous'] and key not in self.used and request['identity'][0] == packet['ip'] and (request['identity'][1] is None or request['identity'][1] == packet['server']):
                 if history['packet'] is None: history['packet'] = allocation
+                if key not in self.acks:
+                    if self.latest_xid is not None and self.latest_xid != key:
+                        self.history[self.latest_xid]['superseded'] = True
+                    self.latest_xid = key
                 self.acks.setdefault(key, dict(at=at, request_at=request['origin'], packet=packet))
         for store in (self.requests, self.acks, self.used):
             while len(store) > self.capacity:
@@ -170,4 +177,4 @@ class DHCPTracker:
         self.used[key] = dict(at=at)
         del self.acks[key]
         self.requests.pop(key, None)
-        return dict(request_at=ack['request_at'], observed_at=ack['at'], options=ack['packet']['options'])
+        return dict(request_at=ack['request_at'], observed_at=ack['at'], options=ack['packet']['options'], xid=key)

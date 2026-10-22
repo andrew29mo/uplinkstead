@@ -37,7 +37,7 @@ class WireTests(unittest.TestCase):
         t.feed(packet(3), 10.)
         t.feed(packet(3), 20.)
         t.feed(packet(5), 21.)
-        self.assertEqual(t.claim(LEASE, 25.), dict(request_at=10., observed_at=21., options=[]))
+        self.assertEqual(t.claim(LEASE, 25.), dict(request_at=10., observed_at=21., options=[],xid=1))
         with self.assertRaises(ValueError): t.claim(LEASE, 25.)
         t.feed(packet(5), 26.)
         with self.assertRaises(ValueError): t.claim(LEASE, 26.)

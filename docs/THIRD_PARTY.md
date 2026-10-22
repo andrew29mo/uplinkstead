@@ -48,3 +48,14 @@ reviewed source and that no runtime Requires-Dist dependency was introduced. It
 also checks the sdist includes the project license. Existing pre-license receipts
 remain unchanged and are explicitly historical; they do not override the current
 LICENSE. See [licensing verification](../reviews/licensing/README.md).
+
+## Experimental P0 client build
+
+The P0 runner downloads no executable. It accepts a separately obtained, pinned
+BusyBox 1.36.1 source archive, verifies SHA-256 and builds a narrow xid adapter
+inside the isolated VM. The resulting BusyBox source/binary retains upstream GPL
+terms and component notices, independently of this Python project's MIT license.
+The transformation and reproduction command are in `tools/dhcp_client_build.py`
+and [DHCP_P0.md](DHCP_P0.md). No external source, archive or executable is included
+in this repository or Python distribution. Future binary redistribution requires
+separate compliance with BusyBox's source and notice requirements.

@@ -72,6 +72,19 @@ backlogged renewal and expiry with stopped clients. Its lease deadline uses a
 conservative REQUEST observation bound, not hook/processing time. Systemd/boot,
 natural timer and automatic-failover qualification remain separate work.
 
+## Renewable DHCP client exploration (P0)
+
+The [P0 exploration](docs/DHCP_P0.md) tests an explicitly selected, externally
+built BusyBox adapter with nonrepeating process-local transaction IDs. The
+[matching-source receipt](reviews/dhcp-p0/README.md) records **200 portable tests
+per platform** and **five formal-service Linux VM scenarios**: two natural
+renewals per link, broadcast rebinding, lease-loss/reacquisition and old ACK
+replay protection. The distro-client default is unchanged. Client timer-option
+interoperability and early lease-loss availability remain open; automatic
+failover, continuous forwarding and installed dual-service recovery are not
+qualified by these results. External BusyBox build artifacts are GPL-governed
+and are not bundled in this MIT Python project.
+
 ## Reproduce
 
 Python 3.12+ is required. Runtime uses the standard library and separately installed

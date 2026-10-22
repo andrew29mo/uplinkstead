@@ -128,3 +128,22 @@ naturally timed renewal qualification.
 These results do not complete automatic selection, root recovery/reset, natural
 timer T1/T2, installed systemd/boot qualification or same-schedule traffic comparison.
 Previously collected exploration reboot evidence is not new service boot evidence.
+
+### P0 renewable-client exploration gate
+
+Use the actual foreground service and its own explicitly selected external
+client. Require two natural renewal rounds per link with new xids and service
+expiry extension, natural broadcast rebinding after B-only unicast loss, real
+lease loss and changed-address reacquisition, and old ACK replay before/after
+reacquisition without mutation. A's authority must remain independent; fresh
+explicitly selected A/B LAN TLS traffic and zero cross-WAN DHCP counters are
+separate evidence. Build provenance, matching-source dual-platform tests,
+negative receipt controls and owned cleanup are required.
+
+This gate qualifies only the pinned client's actual timer algorithm. Arbitrary
+server T1/T2 options, history-saturation longevity, hostile DHCP, automatic
+selection/convergence, installed systemd/reboot and physical WAN qualification
+remain open; it must not be reported as completing the entire DHCP MVP.
+This is an exploration-evidence gate, not approval of a default client. The
+observed early loss after bounded rebinding attempts and option 58/59 timing
+interoperability must be resolved or explicitly constrained before deployment.

@@ -1,7 +1,8 @@
 # MIT adoption and current verification
 
 Project license: [MIT](../../LICENSE), copyright 2026 Andrew Yuan.
-The repository remains Private; no package is published.
+This verification was recorded while the repository was Private. The repository is
+now public; no package registry release is published.
 
 [Dependency scope](../../docs/THIRD_PARTY.md) · [Review receipt](review.json)
 · [Wheel/sdist checks](package.json) · [JSON](evidence.json) · [HTML](report.html)

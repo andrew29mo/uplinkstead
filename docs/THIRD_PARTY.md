@@ -3,7 +3,7 @@
 Uplinkstead's first-party code, configuration, tests, documentation and generated
 project reports are provided under the [MIT License](../LICENSE), copyright 2026
 Andrew Yuan. Package metadata declares the SPDX expression `MIT` and includes the
-same LICENSE text in distributions. Repository visibility remains Private.
+same LICENSE text in distributions. The repository is public.
 
 ## Distribution checked
 

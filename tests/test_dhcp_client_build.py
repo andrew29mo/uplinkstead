@@ -1,5 +1,5 @@
 import unittest
-from tools.dhcp_client_build import transform, OLD, RENEW, LOST
+from tools.dhcp_client_build import xid_transform as transform, OLD, RENEW, LOST
 from tests.test_dhcp_wire import MAC, LEASE, packet
 from uplinkstead.dhcp_wire import DHCPTracker
 

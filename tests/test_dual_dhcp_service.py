@@ -132,6 +132,22 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(self.r.inbox.stats()['revoked'],['B'])
         self.assertIsNotNone(self.r.inbox.sessions['A'])
 
+    def test_client_origin_can_only_shorten_wire_deadline(self):
+        for offset in (-.01,.01):
+            q=event(session=self.w.s['links']['B']['session'],boot=self.w.s['boot'])
+            origin=q.pop('request_at');q.pop('observed_at');q.update(op='event',id=str(offset),client_origin_ns=int((origin+offset)*1e9),client_xid=42)
+            self.r.captures['B']=SimpleNamespace(claim=lambda *_:dict(request_at=origin,observed_at=origin+.1,options=[],xid=42))
+            self.r.intake(q);e=self.r.inbox.get()
+            self.assertEqual(e['request_at'],min(origin,q['client_origin_ns']/1e9))
+            self.assertEqual(e['wire_request_at'],origin)
+
+    def test_client_origin_wrong_xid_revokes_only_B(self):
+        q=event(session=self.w.s['links']['B']['session'],boot=self.w.s['boot']);origin=q.pop('request_at');q.pop('observed_at')
+        q.update(op='event',client_origin_ns=int(origin*1e9),client_xid=43)
+        self.r.captures['B']=SimpleNamespace(claim=lambda *_:dict(request_at=origin,observed_at=origin+.1,options=[],xid=42))
+        with self.assertRaises(ValueError):self.r.intake(q)
+        self.assertEqual(self.r.inbox.stats()['revoked'],['B'])
+
     def test_retired_hook_cannot_consume_new_capture_proof(self):
         capture=SimpleNamespace(claim=unittest.mock.Mock())
         self.r.captures['B']=capture

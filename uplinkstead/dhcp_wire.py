@@ -9,13 +9,21 @@ execution. Missing, truncated or ambiguous evidence cannot authorize a lease.
 import ipaddress
 import math
 import struct
+from .dhcp_timing import timer_values
 
 
 def _time(value):
     return type(value) in (int, float) and math.isfinite(value) and value >= 0
 
 
-def parse_frame(frame):
+def dhcp_envelope(frame):
+    """Diagnostic classification only; never authorizes a lease."""
+    if len(frame)<42 or frame[12:14]!=b'\x08\x00' or frame[14]>>4!=4 or frame[23]!=17:return False
+    udp=14+(frame[14]&15)*4
+    return udp>=34 and frame[udp:udp+4] in (b'\x00C\x00D',b'\x00D\x00C')
+
+
+def parse_frame(frame, validate_timers=True):
     """Parse an unfragmented Ethernet/IPv4/UDP DHCP packet, or raise ValueError."""
     if not isinstance(frame, bytes) or not 14 + 20 + 8 + 240 <= len(frame) <= 65535:
         raise ValueError('Invalid frame size')
@@ -52,8 +60,8 @@ def parse_frame(frame):
     kind = opts[53][0]
     if kind != (3 if src == 68 else 5):
         raise ValueError('Message direction mismatch')
-    for code in (1, 50, 51, 54):
-        if code in opts and len(opts[code]) != 4:
+    for code in (1, 50, 51, 54, 58, 59):
+        if code in opts and len(opts[code]) != 4 and (code not in (58,59) or validate_timers):
             raise ValueError('Invalid fixed option')
     if 3 in opts and len(opts[3]) != 4:
         raise ValueError('Exactly one router required')
@@ -67,6 +75,16 @@ def parse_frame(frame):
         if not all(c in opts for c in (1, 3, 51, 54)):
             raise ValueError('Incomplete ACK')
         result.update(lease=str(int.from_bytes(opts[51], 'big')), subnet=addr(opts[1]), router=addr(opts[3]))
+        result.update(timer58=opts[58].hex() if 58 in opts else None,timer59=opts[59].hex() if 59 in opts else None)
+        try:
+            if any(code in opts and len(opts[code])!=4 for code in (58,59)):raise ValueError('Invalid timer option length')
+            renewal=int.from_bytes(opts[58],'big') if 58 in opts else None
+            rebinding=int.from_bytes(opts[59],'big') if 59 in opts else None
+            t1,t2=timer_values(int(result['lease']),renewal,rebinding)
+            result.update(renewal=renewal,rebinding=rebinding,t1_ns=t1,t2_ns=t2)
+        except ValueError as exc:
+            if validate_timers:raise
+            result.update(timer_error=str(exc),renewal=None,rebinding=None,t1_ns=None,t2_ns=None)
     return result
 
 
@@ -146,7 +164,7 @@ class DHCPTracker:
             # ciaddr is zero during selection and populated during renewal;
             # it is not a change in the offered allocation. Compare all parsed
             # allocation semantics, not incidental BOOTP transport fields.
-            allocation = {k:packet[k] for k in ('ip','subnet','router','lease','server','options')}
+            allocation = {k:packet[k] for k in ('ip','subnet','router','lease','server','options','t1_ns','t2_ns')}
             if history and history['packet'] is not None and allocation != history['packet']:
                 self.invalidate(key)
             if history and history.get('invalid'):

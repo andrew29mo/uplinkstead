@@ -23,7 +23,7 @@ import time
 from .control import decode
 from .dual_dhcp import DualLifecycle, LINKS
 from .dual_dhcp_linux import Backend
-from .dhcp_wire import DHCPTracker
+from .dhcp_wire import DHCPTracker,dhcp_envelope
 from .probe import round as probe_round
 from .writer import now
 
@@ -158,8 +158,6 @@ class Capture:
                             kind = self.tracker.feed(frame, self.empty_at)
                             if kind == 3: self.counts['requests'] += 1
                             if kind == 5: self.counts['acks'] += 1
-                            if kind is not None:
-                                self.observations.append(dict(frame_sha256=hashlib.sha256(frame).hexdigest(),frame_index=self.counts['frames']))
                             after_ack = self.proof_keys()
                             for key in after_ack-before_ack:
                                 # New allocation invalidates old health even
@@ -172,6 +170,8 @@ class Capture:
                             self.counts['unsupported'] += 1
                             self.last_unsupported = str(exc)
                         finally:
+                            if dhcp_envelope(frame):
+                                self.observations.append(dict(frame_sha256=hashlib.sha256(frame).hexdigest(),frame_index=self.counts['frames']))
                             if getattr(self.tracker, 'invalidations', 0) != invalidations:
                                 # Contradictions can remove a proof (including
                                 # one already queued), not merely add a new ACK.
@@ -260,7 +260,7 @@ class Runtime:
                 metrics=copy.deepcopy(self.metrics), recent=list(self.recent), as_of=now(),
                 capture={k:c.stats() for k,c in self.captures.items()},
                 last_errors=list(self.errors),
-                lease_clock='CLOCK_BOOTTIME; previous empty AF_PACKET receive queue lower bound'))
+                lease_clock='CLOCK_BOOTTIME; earlier of fixed client REQUEST origin and previous empty AF_PACKET queue bound'))
 
     def spawn(self, k):
         s = self.w.s
@@ -269,7 +269,7 @@ class Runtime:
         env = dict(os.environ, UPLINKSTEAD_SOCKET=str(self.path), UPLINKSTEAD_LINK=k,
                    UPLINKSTEAD_SESSION=s['links'][k]['session'], UPLINKSTEAD_BOOT=s['boot'])
         self.children[k] = subprocess.Popen([self.executable,'udhcpc','-f','-i',self.w.cfg['links'][k]['interface'],
-            '-s',str(self.hook),'-t','3','-T','1','-A','1','-O','lease','-O','33','-O','121','-O','249'],
+            '-s',str(self.hook),'-t','3','-T','1','-A','1','-O','lease','-O','33','-O','121','-O','249','-O','58','-O','59'],
             env=env, stdout=None if self.client_diagnostics else subprocess.DEVNULL,
             stderr=subprocess.STDOUT if self.client_diagnostics else subprocess.DEVNULL)
 
@@ -297,7 +297,8 @@ class Runtime:
             self.restart_at[k] = instant+self.restart_delay
 
     def intake(self, q):
-        if set(q) != {'op','link','session','boot','id','at','reason','lease','options'}:
+        base={'op','link','session','boot','id','at','reason','lease','options'}
+        if set(q) not in (base,base|{'client_origin_ns','client_xid'}):
             raise ValueError('Invalid hook envelope')
         k = q['link']
         if k not in LINKS or not isinstance(q['id'],str) or not 1 <= len(q['id']) <= 64 or not self.w.number(q['at']) or not q['at'] <= now():
@@ -308,7 +309,14 @@ class Runtime:
             if q['id'] in self.inbox.seen[k]: raise ValueError('Duplicate event')
         event = {a:b for a,b in q.items() if a != 'op'}
         if q['reason'] in ('bound','renew'):
-            try: proof = self.captures[k].claim(q['lease'], q['session'])
+            try:
+                proof = self.captures[k].claim(q['lease'], q['session'])
+                proof['wire_request_at']=proof['request_at']
+                if 'client_origin_ns' in q:
+                    origin=q['client_origin_ns']
+                    if type(origin) is not int or not 0<=origin<=int(q['at']*1_000_000_000) or type(q['client_xid']) is not int or q['client_xid']!=proof['xid']:
+                        raise ValueError('Invalid client request origin/transaction')
+                    proof['request_at']=min(proof['request_at'],origin/1_000_000_000)
             except ValueError:
                 # The current client reported an allocation we cannot verify.
                 # Retire only that authority, never a replacement client.
@@ -379,6 +387,7 @@ class Runtime:
                 self.increment('processed')
                 self.recent.append(dict(link=event['link'],sequence=event['sequence'],reason=event['reason'],
                     xid=event.get('xid'),
+                    client_origin_ns=event.get('client_origin_ns'),wire_request_at=event.get('wire_request_at'),
                     request_at=event['request_at'],observed_at=event['observed_at'],hook_at=event['at'],processed_at=now(),
                     expires=self.w.s['links'][event['link']]['expires'],
                     probe_inflight={k:k in self.futures and not self.futures[k][0].done() for k in LINKS}))
@@ -456,6 +465,8 @@ def hook():
              boot=os.environ['UPLINKSTEAD_BOOT'],id=secrets.token_hex(16),at=now(),reason=reason,
              lease={k:os.environ.get(k,'') for k in ('ip','subnet','router','lease')} if reason in ('bound','renew') else None,
              options=[k for k in ('routes','staticroutes','msstaticroutes') if os.environ.get(k)])
+    if reason in ('bound','renew') and 'UPLINKSTEAD_CLIENT_ORIGIN_NS' in os.environ:
+        q.update(client_origin_ns=int(os.environ['UPLINKSTEAD_CLIENT_ORIGIN_NS']),client_xid=int(os.environ['UPLINKSTEAD_CLIENT_XID']))
     answer = request(Path(os.environ['UPLINKSTEAD_SOCKET']),q)
     if not answer['ok']: raise RuntimeError('DHCP event not queued; inspect service status')
 

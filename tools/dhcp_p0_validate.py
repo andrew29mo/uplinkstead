@@ -23,6 +23,7 @@ from .dhcp_p0_report import verify, render, controls
 
 
 def main():
+    raise RuntimeError('Historical P0 workflow: use commit f34ae37, or tools.dhcp_timer_validate for current timers')
     if not __debug__:
         raise RuntimeError('Validation requires assertions')
     p = argparse.ArgumentParser()

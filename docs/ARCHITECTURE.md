@@ -187,7 +187,7 @@ availability and is not exact packet timing or a hard cleanup deadline. Clients,
 listener, probe workers and writer share the trusted root runtime; this is not
 the static service's separate unprivileged policy-worker design.
 
-## Renewable client exploration (P0)
+## Renewable client exploration (historical P0)
 
 [P0](DHCP_P0.md) selects an experimental external BusyBox build explicitly.
 Process-local nonrepeating xids provide a new transaction boundary; the writer
@@ -196,6 +196,36 @@ known superseded xids cannot reopen after a later request. A new REQUEST alone
 does not withdraw an unexpired allocation. New transactions may extend deadlines;
 same-xid ambiguity remains fail-closed. The default distro client is unchanged.
 The build is separately GPL-governed and is not bundled with the MIT package.
-Natural client renewal/rebinding is separate from negotiated DHCP option 58/59
-qualification. Automatic selection, privilege separation and installed dual-DHCP
+The historical P0 client did not qualify negotiated DHCP options 58/59. Automatic selection, privilege separation and installed dual-DHCP
 service recovery remain later MVP gates.
+
+## REQUEST-origin absolute timers
+
+The [current explicit client adapter](DHCP_TIMERS.md) uses the exact C schedule
+embedded by the external build. ACK options establish absolute BOOTTIME T1, T2
+and expiry from the first REQUEST origin. T1 and T2 each begin a new xid; retries
+retain that xid/origin. Missing options use half/seven-eighths defaults; malformed
+or inconsistent values cannot replace a live lease. Retry-count exhaustion no
+longer ends that lease. At expiry the client deconfigures and the writer separately
+withdraws its owned allocation. The hook's fixed client origin can only shorten
+the independent capture-derived deadline. This remains a bounded foreground
+integration, not the installed dual-DHCP automatic-failover MVP.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Acquiring
+    Acquiring --> Bound: matching valid ACK
+    Bound --> Renewing: absolute T1 / new xid
+    Renewing --> Rebinding: absolute T2 / new xid
+    Renewing --> Bound: matching valid ACK / new schedule
+    Rebinding --> Bound: matching valid ACK / new schedule
+    Renewing --> Renewing: retry / same xid and origin
+    Rebinding --> Rebinding: retry / same xid and origin
+    Bound --> Acquiring: absolute expiry / deconfigure
+    Renewing --> Acquiring: absolute expiry / deconfigure
+    Rebinding --> Acquiring: absolute expiry / deconfigure
+```
+
+Invalid timer ACKs do not reset the schedule; superseded ACKs cannot reopen an
+older transaction. Restart starts a new authority and requires acquisition and
+fresh health; this diagram does not establish reboot or power-loss qualification.

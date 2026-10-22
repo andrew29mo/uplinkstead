@@ -20,7 +20,7 @@ def observe(interface, output):
             while True:
                 try:frame=s.recv(65535)
                 except socket.timeout:continue
-                try:p=parse_frame(frame)
+                try:p=parse_frame(frame,validate_timers=False)
                 except ValueError:continue
                 p['chaddr']=p['chaddr'].hex()
                 p.update(at=now(),destination=str(ipaddress.IPv4Address(frame[30:34])),

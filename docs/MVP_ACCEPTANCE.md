@@ -129,7 +129,7 @@ These results do not complete automatic selection, root recovery/reset, natural
 timer T1/T2, installed systemd/boot qualification or same-schedule traffic comparison.
 Previously collected exploration reboot evidence is not new service boot evidence.
 
-### P0 renewable-client exploration gate
+### Historical P0 renewable-client exploration gate
 
 Use the actual foreground service and its own explicitly selected external
 client. Require two natural renewal rounds per link with new xids and service
@@ -155,3 +155,12 @@ Runtime step. Renewal and rebinding receipts must join matching REQUEST/ACK/xid/
 MAC/allocation to runtime sequence and actual REQUEST-origin deadline. Early-loss
 causality requires the real client branch diagnostic, retry packets and deconfig
 hook; source reasoning alone is not equivalent to observing that branch.
+
+## DHCP absolute-timer integration gate
+
+See [DHCP_TIMERS.md](DHCP_TIMERS.md) for the bounded client timer profile and
+[matching-source evidence](../reviews/dhcp-timers/README.md). This integration
+requires natural T1 unicast, T2 broadcast, no retry-count early withdrawal, true
+expiry removal, changed-address reacquisition and fenced old ACK rejection.
+Passing those checks does not qualify complete server interoperability, random
+fuzz, infinite leases, installed automatic failover or reboot/power-loss behavior.

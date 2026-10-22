@@ -1,5 +1,10 @@
 # P0: renewable dual-DHCP client integration
 
+**Historical workflow:** this document and its receipts describe commit `f34ae37`.
+Use that revision to reproduce the old early-loss finding. Current development
+uses the [absolute T1/T2 adapter and runner](DHCP_TIMERS.md); the current builder
+intentionally changes the timer behavior expected by the old P0 scenarios.
+
 This is a technical exploration of the formal foreground service, not the
 completed DHCP automatic-failover MVP. The existing distro-client mode remains
 available with its conservative same-xid deadline. The experimental adapter is

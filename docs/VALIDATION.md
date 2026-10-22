@@ -289,3 +289,12 @@ Untested: physical NIC/ISP failures, IPv6/dynamic addresses, optional live prefe
 failback, sustained/saturated load, production deployment images, whole-VM memory
 limits, storage-corruption repair, sudden power loss, actual kernel-stuck I/O and
 boot-zero-gap protection. No maximum recovery time or production SLA is established.
+
+## Explicit DHCP timer adapter
+
+The [T1/T2 validation workflow](DHCP_TIMERS.md) builds an external pinned client
+and tests the same manifest on native macOS and isolated Linux. It separately
+records natural unicast/broadcast timer transitions, invalid ACK rejection,
+retry retention through absolute expiry and changed-address reacquisition. Its
+foreground/manual-selection scope does not replace installed-service or reboot
+qualification; earlier receipts retain their original source and scope.

@@ -39,6 +39,14 @@ Reserved event slots are not an end-to-end fairness guarantee for transport inta
 
 ## Lease origin: conservative wire evidence
 
+The original stage-one receipt below uses the distro client. The current
+explicit [absolute-timer adapter](DHCP_TIMERS.md) adds fixed client REQUEST-origin
+metadata, strict option 58/59 policy and a new xid at each T1/T2 phase. Admission
+still requires the wire proof described here and uses the earlier origin; it
+never substitutes a later client/hook timestamp to extend validity. Historical
+stage-one receipts do not qualify the newer adapter.
+
+
 The service opens an AF_PACKET ETH_P_ALL socket on each dedicated WAN **before
 creating clients**. ETH_P_ALL is needed for outgoing REQUEST observation as well
 as incoming ACKs. The strict bounded parser matches DHCP transaction/address/MAC/

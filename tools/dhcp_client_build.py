@@ -9,11 +9,14 @@ import json
 from pathlib import Path
 import subprocess
 import tarfile
+import sys
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
+from tools.dhcp_timer_patch import apply as timer_transform
 
 TARBALL_SHA256='b8cc24c9574d809e7279c3be349795c5d5ceb6fdf19ca709f80cde50e47de314'
 URL='https://busybox.net/downloads/busybox-1.36.1.tar.bz2'
 UPSTREAM_DHCPC_SHA256='4c2f9169dd2ecc4083e0dd31e79437c43fb5bbe24db42c5322e94fc3d8e0b5cc'
-PATCHED_DHCPC_SHA256='6af6206761c6b0037be3645b5a84b3cce782d4109293395279cbf722bb5862b6'
+PATCHED_DHCPC_SHA256='73aab8fee8347f3fdc733c95f6d1477d95cc7739fd6e10b8950ae45189dd4fcf'
 OLD='''static ALWAYS_INLINE uint32_t random_xid(void)
 {
 \treturn rand();
@@ -34,10 +37,13 @@ LOST='\t\t\t\tbb_simple_info_msg("lease lost, entering init state");'
 LOSS_DIAGNOSTIC='\t\t\t\tbb_info_msg("uplinkstead_loss if=%s pid=%u xid=%u remaining=%d attempts=%u", client_data.interface, (unsigned)getpid(), (unsigned)ntohl(client_data.xid), lease_remaining, packet_num); fflush(NULL);'
 
 
-def transform(source):
+def xid_transform(source):
     if source.count(OLD)!=1 or source.count(RENEW)!=1 or source.count(LOST)!=1:
         raise ValueError('Unsupported upstream source; refusing approximate patch')
     return source.replace(OLD,NEW).replace(RENEW,'\t\t\t\tclient_data.xid = random_xid(); /* Uplinkstead transaction boundary */').replace(LOST,LOSS_DIAGNOSTIC+'\n'+LOST)
+
+
+def transform(source):return timer_transform(xid_transform(source))
 
 
 def digest(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -61,7 +67,7 @@ def build(archive, directory):
     receipt=dict(upstream_url=URL,source_tar_sha256=TARBALL_SHA256,upstream_dhcpc_sha256=before,
                  patched_dhcpc_sha256=digest(p),config_sha256=digest(config),binary_sha256=digest(source/'busybox'),
                  license='GPL-2.0; upstream source, full transformation and build recipe required for binary redistribution',
-                 boundary='process-local nonrepeating xid; new transaction after ACK or scheduled renewal retry; no cross-process cryptographic identity')
+                 boundary='process-local nonrepeating xid; new transaction on T1/T2 phase entry; REQUEST-origin absolute deadlines; no cross-process cryptographic identity')
     receipt['compiler']=subprocess.check_output(['gcc','--version'],text=True).splitlines()[0]
     receipt['recipe_sha256']=digest(__file__)
     (directory/'build.json').write_text(json.dumps(receipt,indent=2)+'\n')

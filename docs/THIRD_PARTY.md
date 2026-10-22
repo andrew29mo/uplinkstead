@@ -52,10 +52,11 @@ LICENSE. See [licensing verification](../reviews/licensing/README.md).
 ## Experimental P0 client build
 
 The P0 runner downloads no executable. It accepts a separately obtained, pinned
-BusyBox 1.36.1 source archive, verifies SHA-256 and builds a narrow xid adapter
+BusyBox 1.36.1 source archive, verifies SHA-256 and builds a bounded xid/absolute-T1/T2 adapter
 inside the isolated VM. The resulting BusyBox source/binary retains upstream GPL
 terms and component notices, independently of this Python project's MIT license.
 The transformation and reproduction command are in `tools/dhcp_client_build.py`
-and [DHCP_P0.md](DHCP_P0.md). No external source, archive or executable is included
+and [DHCP_TIMERS.md](DHCP_TIMERS.md). The earlier [P0 workflow](DHCP_P0.md)
+is preserved as historical evidence. No external source, archive or executable is included
 in this repository or Python distribution. Future binary redistribution requires
 separate compliance with BusyBox's source and notice requirements.

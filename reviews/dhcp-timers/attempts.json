@@ -1,0 +1,508 @@
+[
+  {
+    "run_id": "87bde1566196027a",
+    "source_sha256": "b296b1f33c8fbde30447f53659b49f2d9133700a6f670c9358581e784887c4a8",
+    "passed": false,
+    "selected": false,
+    "reason": "Client rejection observation timed out; later diagnosis found the UDP receive/quarantine ordering gap.",
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "cases",
+        "exit_code": 1,
+        "timed_out": false
+      },
+      {
+        "name": "diagnose",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false
+      }
+    ],
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true
+    },
+    "vm_final": "Stopped"
+  },
+  {
+    "run_id": "ce191ee69c1b1880",
+    "source_sha256": "2221d4f167aa6f1d1add6b94754ad2086239b02187fc0548e483ccd92cf8547b",
+    "passed": false,
+    "selected": false,
+    "reason": "Transaction check read a renewal quarantine transient; require a complete admitted runtime snapshot.",
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "cases",
+        "exit_code": 1,
+        "timed_out": false
+      },
+      {
+        "name": "diagnose",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false
+      }
+    ],
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true
+    },
+    "vm_final": "Stopped"
+  },
+  {
+    "run_id": "b05c47c13692961e",
+    "source_sha256": "84aeaf9b970ddd705aa07177ddeba1ddada95227c53a9cf6a4a1876b366875ef",
+    "passed": false,
+    "selected": false,
+    "reason": "Valid ACK observed by production Capture but not admitted by the UDP client after address quarantine; fixed with the existing raw receive path.",
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "cases",
+        "exit_code": 1,
+        "timed_out": false
+      },
+      {
+        "name": "diagnose",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false
+      }
+    ],
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true
+    },
+    "vm_final": "Stopped"
+  },
+  {
+    "run_id": "47c8c2d6b9cdc8ae",
+    "source_sha256": "45c0e20dfd11557908f5ef63cea2a718e7f45de40be449f561d7aff41d13cb6c",
+    "passed": false,
+    "selected": false,
+    "reason": "Selection token invalidated by concurrent A renewal; retry only after observing changed authority.",
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "cases",
+        "exit_code": 1,
+        "timed_out": false
+      },
+      {
+        "name": "diagnose",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false
+      }
+    ],
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true
+    },
+    "vm_final": "Stopped"
+  },
+  {
+    "run_id": "b8c4a0415f57a870",
+    "source_sha256": "dcfc96799c86558b8ec30c4eb058ffff90379be4bc41481524398b33fab999a6",
+    "passed": true,
+    "selected": false,
+    "reason": "All six VM scenarios passed the prior 24-control verifier; superseded after review found string/integer route-table normalization and missing exported client-rejection diagnostics.",
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "cases",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false
+      }
+    ],
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true
+    },
+    "vm_final": "Stopped"
+  },
+  {
+    "run_id": "d2969a97bc45cafa",
+    "source_sha256": "2dc9122815eca8bce9ec11c2b4a6efd43ff5b1ef5fe1f572f41487a3882d8c16",
+    "passed": true,
+    "selected": true,
+    "reason": "Final matching-source run with strict route-readback controls and exported client rejection events.",
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "cases",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false
+      }
+    ],
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true
+    },
+    "vm_final": "Stopped"
+  }
+]

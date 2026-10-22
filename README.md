@@ -79,11 +79,21 @@ built BusyBox adapter with nonrepeating process-local transaction IDs. The
 [matching-source receipt](reviews/dhcp-p0/README.md) records **206 portable tests
 per platform** and **five formal-service Linux VM scenarios**: two natural
 renewals per link, broadcast rebinding, lease-loss/reacquisition and old ACK
-replay protection. The distro-client default is unchanged. Client timer-option
-interoperability and early lease-loss availability remain open; automatic
+replay protection. The distro-client default is unchanged. That receipt predates the absolute-timer adapter below; automatic
 failover, continuous forwarding and installed dual-service recovery are not
 qualified by these results. External BusyBox build artifacts are GPL-governed
 and are not bundled in this MIT Python project.
+
+## DHCP absolute T1/T2 integration
+
+The [timer adapter](docs/DHCP_TIMERS.md) replaces retry-count-driven early loss
+with REQUEST-origin absolute T1/T2/expiry deadlines. It handles explicit or absent
+options 58/59, retains valid leases across unanswered retries, and rejects invalid
+timer ACKs. The [new receipt](reviews/dhcp-timers/README.md) separates compiled C
+portable tests from formal-client Linux VM packet evidence, including natural
+renewal/rebinding, true expiry withdrawal and old ACK protection. The distro
+client remains the default; this is not full RFC/server interoperability or
+installed automatic dual-DHCP failover qualification.
 
 ## Reproduce
 

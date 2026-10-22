@@ -29,5 +29,25 @@
     "failed_stages": [],
     "vm_final": "Stopped",
     "explanation": "All then-defined tests and VM scenarios passed, but superseded after independent review found a two-ACK queue ordering gap. Added per-proof versions, sticky pending observation and stale-proof rejection plus two targeted counterexamples; this earlier pass does not qualify that gap."
+  },
+  {
+    "run_id": "8ab8a09f428b2276",
+    "passed": true,
+    "source_sha256": "c769cb0544513033b4e783f462bb14d40b733204fae676a4b892af6238980e59",
+    "source_changed": false,
+    "failed_stages": [],
+    "vm_final": "Stopped",
+    "explanation": "Previously retained passing receipt at Git b29d3c9; superseded after review reproduced same-xid delayed ACK deadline extension and contradictory ACK acceptance. It did not qualify the new session-long history protection."
+  },
+  {
+    "run_id": "14501b3ad9e84b5f",
+    "passed": false,
+    "source_sha256": "6b7cc98dbeef55350cb14c89df900f876fe3b4a701733518fb9cfa81ac559baf",
+    "source_changed": false,
+    "failed_stages": [
+      "cases"
+    ],
+    "vm_final": "Stopped",
+    "explanation": "Rejected: real renewal did not satisfy the renewal/probe scenario after conservative ACK comparison. Corrected comparison to allocation semantics rather than incidental BOOTP fields; this failed run is not recovery evidence. Cleanup succeeded."
   }
 ]

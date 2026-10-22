@@ -76,7 +76,19 @@ class DHCPTracker:
             raise ValueError('Invalid tracker limits')
         self.mac, self.capacity, self.max_age = mac, capacity, max_age
         self.requests, self.acks, self.used = {}, {}, {}
+        # Session-long history is never aged/evicted: DHCP carries no renewal
+        # sequence, and BusyBox reuses xid. An identical delayed ACK cannot be
+        # distinguished from a fresh reply. Cap it at the first proven deadline.
+        self.history, self.exhausted, self.invalidations = {}, False, 0
         self.last_at = 0.
+
+    def invalidate(self, key):
+        history = self.history[key]
+        if not history.get('invalid'):
+            history['invalid'] = True
+            self.invalidations += 1
+        self.requests.pop(key, None)
+        self.acks.pop(key, None)
 
     def feed(self, frame, at):
         if not _time(at) or at < self.last_at:
@@ -89,27 +101,48 @@ class DHCPTracker:
         packet = parse_frame(frame)
         if packet['chaddr'] != self.mac:
             return None
+        if self.exhausted:
+            raise ValueError('Wire session history exhausted; fresh client required')
         key = packet['xid']
         if packet['type'] == 3:
-            # BusyBox deliberately reuses xid across renewal transactions. A
-            # newly observed REQUEST after claim opens a new transaction; an
-            # ACK alone can never resurrect a consumed proof.
-            if key in self.used:
-                del self.used[key]
             requested = packet['requested'] or packet['ciaddr']
             if requested == '0.0.0.0':
                 raise ValueError('REQUEST has no address identity')
+            if key not in self.history:
+                if len(self.history) >= self.capacity:
+                    self.exhausted = True
+                    self.invalidations += 1
+                    self.requests.clear(); self.acks.clear()
+                    raise ValueError('Wire session history exhausted; fresh client required')
+                self.history[key] = dict(at=at, address=requested, packet=None)
+            history = self.history[key]
+            canonical = history['packet']
+            if history.get('invalid') or requested != history['address'] or (canonical and packet['server'] is not None and packet['server'] != canonical['server']):
+                self.invalidate(key)
+                return packet['type']
+            if key in self.used:
+                del self.used[key]
             identity = (requested, packet['server'])
             previous = self.requests.get(key)
             # Same xid with differing address/server is ambiguous, never rebased.
             if previous and previous['identity'] != identity:
-                previous['ambiguous'] = True
+                self.invalidate(key)
             elif not previous and key not in self.used:
-                self.requests[key] = dict(at=at, identity=identity, ambiguous=False)
+                self.requests[key] = dict(at=at, origin=history['at'], identity=identity, ambiguous=False)
         else:
+            history = self.history.get(key)
+            # ciaddr is zero during selection and populated during renewal;
+            # it is not a change in the offered allocation. Compare all parsed
+            # allocation semantics, not incidental BOOTP transport fields.
+            allocation = {k:packet[k] for k in ('ip','subnet','router','lease','server','options')}
+            if history and history['packet'] is not None and allocation != history['packet']:
+                self.invalidate(key)
+            if history and history.get('invalid'):
+                return packet['type']
             request = self.requests.get(key)
             if request and not request['ambiguous'] and key not in self.used and request['identity'][0] == packet['ip'] and (request['identity'][1] is None or request['identity'][1] == packet['server']):
-                self.acks.setdefault(key, dict(at=at, request_at=request['at'], packet=packet))
+                if history['packet'] is None: history['packet'] = allocation
+                self.acks.setdefault(key, dict(at=at, request_at=request['origin'], packet=packet))
         for store in (self.requests, self.acks, self.used):
             while len(store) > self.capacity:
                 del store[next(iter(store))]

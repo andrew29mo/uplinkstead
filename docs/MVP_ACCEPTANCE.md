@@ -118,6 +118,12 @@ are retained distinctly; actual queue overflow must be observed, bounded and
 link-local. Real lease expiry must occur with clients stopped and servers offline,
 not be explained by a client deconfig callback. Portable tests separately challenge
 fully expired queued events, capture backlog lower bounds and revoked unread events.
+Session-long xid replay/contradiction protection must survive claim, age and
+history saturation. Same-xid renewals may be processed but must retain the original
+deadline; expired-proof rejection requests only that client's fresh acquisition.
+Those replay/contradiction and rejected-renewal recovery counterexamples are
+portable formal-runtime/parser tests, not a claim of VM replay injection or
+naturally timed renewal qualification.
 
 These results do not complete automatic selection, root recovery/reset, natural
 timer T1/T2, installed systemd/boot qualification or same-schedule traffic comparison.

@@ -99,6 +99,17 @@ class RuntimeTests(unittest.TestCase):
         self.r.step();self.assertIsNone(self.w.s['links']['B']['current'])
         self.assertEqual(self.w.s['links']['B']['expires'],0)
 
+    def test_expired_same_xid_renewal_retires_only_its_client(self):
+        self.submit('A');self.r.step()
+        before=copy.deepcopy(self.w.s['links']['A']);session=self.w.s['links']['B']['session']
+        instant=now()
+        self.submit(reason='renew',at=instant,request_at=instant-121,observed_at=instant-.1)
+        self.r.step()
+        self.assertNotEqual(self.w.s['links']['B']['session'],session)
+        self.assertIsNone(self.w.s['links']['B']['current'])
+        self.assertEqual(self.r.metrics['client_restarts']['B'],1)
+        self.assertEqual(self.w.s['links']['A'],before)
+
     def test_overflow_retires_only_affected_client_authority(self):
         for k in ('A','B'):self.submit(k,identity=k);self.r.step()
         before=copy.deepcopy(self.w.s['links']['A'])
@@ -148,6 +159,26 @@ class RuntimeTests(unittest.TestCase):
 
 
 class CaptureTests(unittest.TestCase):
+    def test_contradictory_ACK_invalidates_already_claimed_queued_proof(self):
+        capture=Capture.__new__(Capture)
+        capture.stop=threading.Event();capture.lock=threading.RLock();capture.empty_at=10;capture.error=None
+        capture.session='current';capture.counts=dict(frames=0,requests=0,acks=0,unsupported=0)
+        capture.version=0;capture.versions={};capture.dirty=False;capture.tracker=DHCPTracker(MAC)
+        def drain(frames):
+            frames=iter(frames);capture.stop.clear()
+            def receive(_):
+                try:return next(frames)
+                except StopIteration:capture.stop.set();raise BlockingIOError()
+            capture.socket=SimpleNamespace(recv=receive)
+            with patch('uplinkstead.dual_dhcp_service.now',return_value=100.):capture.run()
+        drain([packet(3),packet(5)])
+        with patch('uplinkstead.dual_dhcp_service.now',return_value=100.):proof=capture.claim(LEASE,'current')
+        capture.acknowledge(proof['capture_version']);self.assertFalse(capture.take_dirty())
+        changed=packet(5).replace(b'\x03\x04\xc0\x00\x02\x01',b'\x03\x04\xc0\x00\x02\x03')
+        drain([changed])
+        self.assertTrue(capture.take_dirty());self.assertFalse(capture.is_current(proof['capture_version']))
+        self.assertFalse(capture.tracker.acks)
+
     def test_backlogged_frames_use_previous_empty_queue_time(self):
         capture=Capture.__new__(Capture)
         capture.stop=threading.Event();capture.lock=threading.RLock();capture.empty_at=10;capture.error=None

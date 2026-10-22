@@ -167,6 +167,7 @@ def run(root,source):
         assert matching,renewed
         overlap=matching[-1]['probe_inflight']['B']
         assert overlap,matching[-1]
+        assert renewed['state']['links']['B']['expires']==inflight['state']['links']['B']['expires']
         case('slow_B_probe_real_renewal_event_intake',began,before=inflight,after=renewed,
              renewal_observed_seconds=elapsed,probe_still_inflight_at_observation=overlap,
              interpretation='Observed real renewal while slow probe work was scheduled; no hard scheduling bound')
@@ -190,6 +191,8 @@ def run(root,source):
         assert record['request_at']<=resumed_at,record
         assert record['expires']==record['request_at']+120,record
         assert record['expires']<=resumed_at+120,record
+        assert renewed['state']['links']['B']['expires']==before['state']['links']['B']['expires']
+        assert pause_at<=request_sent<=resumed_at<=record['processed_at']
         assert immutable_link(renewed['state']['links']['A'])==a
         case('real_backlogged_wire_renew_keeps_REQUEST_deadline',began,before=before,after=renewed,
              service_paused_at=pause_at,renew_requested_at=request_sent,service_resumed_at=resumed_at,wire_record=record,
@@ -239,6 +242,7 @@ def run(root,source):
         with ThreadPoolExecutor(max_workers=12) as executor:responses=list(executor.map(loss_request,range(48)))
         after=wait(lambda:(lambda observed:observed if observed['state']['links']['B']['session']!=b['session'] else None)(status()),10)
         assert immutable_link(after['state']['links']['A'])==immutable_link(before['state']['links']['A'])
+        assert after['state']['active']==before['state']['active']
         queue=after['runtime']['queue']
         assert queue['peak']<=queue['capacity']==4
         assert queue['overflow']['B']>before['runtime']['queue']['overflow']['B'],(before,after)
@@ -264,9 +268,11 @@ def run(root,source):
             assert expired['state']['active'] is None
             data=f.client();assert not data['ok'],data
             assert all(expired['runtime']['children'][k]==before['runtime']['children'][k] for k in LINKS)
+            states={k:next(line for line in Path('/proc',str(expired['runtime']['children'][k]),'status').read_text().splitlines() if line.startswith('State:')).split()[1] for k in LINKS}
+            assert all(state=='T' for state in states.values()),states
             case('wire_deadline_expires_without_client_cleanup',began,before=before,after=expired,
                  original_deadlines=deadlines,observed_at=at,client=data,
-                 stopped_clients_remained_same=True)
+                 stopped_clients_remained_same=True,stopped_client_states=states)
         finally:
             for child in stopped:
                 try:os.kill(child,signal.SIGCONT)

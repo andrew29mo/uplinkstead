@@ -42,13 +42,46 @@ class WireTests(unittest.TestCase):
         t.feed(packet(5), 26.)
         with self.assertRaises(ValueError): t.claim(LEASE, 26.)
 
-    def test_busybox_xid_reuse_requires_a_new_observed_request(self):
+    def test_busybox_xid_reuse_cannot_extend_original_deadline(self):
         t = self.tracker(); t.feed(packet(3),1.); t.feed(packet(5),2.)
         t.claim(LEASE,3.)
         t.feed(packet(5),4.)
         with self.assertRaises(ValueError): t.claim(LEASE,4.)
         t.feed(packet(3),30.); t.feed(packet(5),31.)
-        self.assertEqual(t.claim(LEASE,32.)['request_at'],30.)
+        self.assertEqual(t.claim(LEASE,32.)['request_at'],1.)
+
+    def test_contradictory_ACK_poison_survives_claim_age_and_new_request(self):
+        for claimed in (False, True):
+            for replacement in (b'\x03\x04\xc0\x00\x02\x03', b'\x33\x04\x00\x00\x00\x78'):
+                t=self.tracker();t.feed(packet(3),1.);t.feed(packet(5),2.)
+                if claimed:t.claim(LEASE,3.)
+                old=b'\x03\x04\xc0\x00\x02\x01' if replacement[0]==3 else b'\x33\x04\x00\x00\x00\x3c'
+                t.feed(packet(5).replace(old,replacement),4.)
+                self.assertEqual(t.invalidations,1)
+                t.feed(packet(3),100000.);t.feed(packet(5),100001.)
+                with self.assertRaises(ValueError):t.claim(LEASE,100002.)
+
+    def test_session_history_never_evicts_or_rebases_after_age(self):
+        t=DHCPTracker(MAC,capacity=2,max_age=10.)
+        t.feed(packet(3),1.);t.feed(packet(5),2.);t.claim(LEASE,3.)
+        t.feed(packet(3),30.);t.feed(packet(5),31.)
+        self.assertEqual(t.claim(LEASE,32.)['request_at'],1.)
+        t.feed(packet(3,xid=2),33.)
+        with self.assertRaises(ValueError):t.feed(packet(3,xid=3),34.)
+        self.assertTrue(t.exhausted);self.assertEqual(len(t.history),2)
+        with self.assertRaises(ValueError):t.feed(packet(3),100000.)
+        with self.assertRaises(ValueError):t.claim(LEASE,100001.)
+
+    def test_renewal_ciaddr_is_not_a_conflicting_allocation(self):
+        t=self.tracker();t.feed(packet(3),1.);t.feed(packet(5),2.);t.claim(LEASE,3.)
+        request=packet(3).replace(b'\x36\x04\xc0\x00\x02\x01',b'')
+        # Rebuild lengths after removing optional server identifier.
+        request=bytearray(request)
+        request[16:18]=(len(request)-14).to_bytes(2,'big')
+        request[38:40]=(len(request)-34).to_bytes(2,'big')
+        ack=bytearray(packet(5));ack[54:58]=b'\xc0\x00\x02\x02'
+        t.feed(bytes(request),30.);t.feed(bytes(ack),31.)
+        self.assertEqual(t.claim(LEASE,32.)['request_at'],1.)
 
     def test_backlogged_capture_lower_bound_never_starts_at_hook(self):
         t = self.tracker()
@@ -87,11 +120,12 @@ class WireTests(unittest.TestCase):
 
     def test_capacity_and_age_are_bounded_fail_closed(self):
         t = DHCPTracker(MAC,capacity=2,max_age=10.)
-        for xid in (1,2,3): t.feed(packet(3,xid=xid),float(xid))
+        for xid in (1,2): t.feed(packet(3,xid=xid),float(xid))
+        with self.assertRaises(ValueError):t.feed(packet(3,xid=3),3.)
         self.assertLessEqual(len(t.requests),2)
-        t.feed(packet(5,xid=1),4.)
+        with self.assertRaises(ValueError):t.feed(packet(5,xid=1),4.)
         with self.assertRaises(ValueError): t.claim(LEASE,4.)
-        t.feed(packet(5,xid=2),20.)
+        with self.assertRaises(ValueError):t.feed(packet(5,xid=2),20.)
         with self.assertRaises(ValueError): t.claim(LEASE,20.)
 
     def test_ambiguous_xid_and_multiple_matching_acks_are_rejected(self):

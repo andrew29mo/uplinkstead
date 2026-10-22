@@ -177,6 +177,11 @@ no automatic selection loop is present.
 An AF_PACKET observer establishes a conservative original-REQUEST time lower
 bound from the last proven-empty receive queue and matches ACK to hook allocation.
 Queued events keep that bound; processing cannot add a full lease at delivery.
+Within a capture session, reused xids retain the earliest bound and immutable
+ACK semantics. Conflicting evidence invalidates even already-claimed queued
+proofs; bounded history cannot evict that protection. Legitimate same-xid renewals
+therefore cannot extend validity. Rejected expired hooks request link-local
+reacquisition under the existing restart limiter, without automatic reselection.
 Unclaimed new allocation evidence invalidates prior health. This can shorten
 availability and is not exact packet timing or a hard cleanup deadline. Clients,
 listener, probe workers and writer share the trusted root runtime; this is not

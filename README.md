@@ -66,7 +66,7 @@ This is **not an installed dual-DHCP automatic-failover MVP**. Automatic selecti
 operator recovery, natural timer qualification and deployment remain explicit
 [MVP gates](docs/MVP_ACCEPTANCE.md). Existing static and single-DHCP installed
 services are unchanged.
-The [stage-one service receipt](reviews/dhcp-stage1/README.md) records **193 tests
+The [stage-one service receipt](reviews/dhcp-stage1/README.md) records **198 tests
 per platform** and **nine formal-service Linux VM scenarios**, including real
 backlogged renewal and expiry with stopped clients. Its lease deadline uses a
 conservative REQUEST observation bound, not hook/processing time. Systemd/boot,

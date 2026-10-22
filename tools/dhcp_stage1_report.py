@@ -38,10 +38,15 @@ def verify(v):
         require(s['exit_code']==0 and s['timed_out'] is False and type(s['seconds']) in (int,float) and math.isfinite(s['seconds']) and s['seconds']>=0, 'Stage failed/timed out')
     for key,platform in (('native_unit','Darwin'),('linux_unit','Linux')):
         r=v[key]
-        require(r['passed'] is True and r['source_sha256']==v['source_sha256'] and r['platform']==platform and r['count']>=193 and
+        require(r['passed'] is True and r['source_sha256']==v['source_sha256'] and r['platform']==platform and r['count']>=198 and
                 r['count']==len(r['tests'])==len(set(r['tests'])) and r['errors']==r['failures']==r['skipped']==0, 'Portable validation mismatch')
     require(v['native_unit']['tests']==v['linux_unit']['tests'], 'Different tests per platform')
     require({'test_dual_dhcp_service.RuntimeTests.test_older_queued_ACK_cannot_restore_after_newer_ACK_observed',
+             'test_dhcp_wire.WireTests.test_busybox_xid_reuse_cannot_extend_original_deadline',
+             'test_dhcp_wire.WireTests.test_contradictory_ACK_poison_survives_claim_age_and_new_request',
+             'test_dhcp_wire.WireTests.test_session_history_never_evicts_or_rebases_after_age',
+             'test_dual_dhcp_service.CaptureTests.test_contradictory_ACK_invalidates_already_claimed_queued_proof',
+             'test_dual_dhcp_service.RuntimeTests.test_expired_same_xid_renewal_retires_only_its_client',
              'test_dual_dhcp_service.CaptureTests.test_claim_keeps_matching_ACK_version_instead_of_latest_global_version'} <= set(v['native_unit']['tests']), 'Missing ACK race regression')
     guest=v['guest'];require(guest['passed'] is True and guest['source_sha256']==v['source_sha256'], 'Guest failed/source mismatch')
     names=[c['name'] for c in guest['cases']]
@@ -61,13 +66,23 @@ def verify(v):
     d=cases['B_SIGKILL_supervised_replacement_preserves_A']
     require(d['before']['runtime']['children']['B']!=d['after']['runtime']['children']['B'] and
             d['before']['state']['links']['B']['session']!=d['after']['state']['links']['B']['session'] and
+            bool(d['after']['state']['links']['B']['current']) and
             identity(d['before']['state']['links']['A'])==identity(d['after']['state']['links']['A']) and
             d['before']['state']['active']==d['after']['state']['active'] and d['client']['ok'] is True, 'B replacement disrupted A')
     d=cases['slow_B_probe_real_renewal_event_intake']
+    require(d['after']['state']['links']['B']['generation']>d['before']['state']['links']['B']['generation'] and
+            d['after']['state']['links']['B']['session']==d['before']['state']['links']['B']['session'] and
+            identity(d['before']['state']['links']['A'])==identity(d['after']['state']['links']['A']), 'Renewal not processed independently')
     records=[r for r in d['after']['runtime']['recent'] if r['link']=='B' and r['reason']=='renew' and r['probe_inflight']['B']]
     require(bool(records),'No actual event/probe overlap');proof(records[-1])
+    require(d['after']['state']['links']['B']['expires']==records[-1]['expires']==d['before']['state']['links']['B']['expires'], 'Renewal rebased actual deadline')
     d=cases['real_backlogged_wire_renew_keeps_REQUEST_deadline'];r=d['wire_record'];proof(r)
-    require(r['processed_at']>=d['service_resumed_at'] and r['expires']<=d['service_resumed_at']+120, 'Backlog extended lease')
+    require(d['after']['state']['links']['B']['expires']==r['expires']==d['before']['state']['links']['B']['expires'], 'Backlog rebased actual deadline')
+    require(0<=d['service_paused_at']<=d['renew_requested_at']<=d['service_resumed_at']<=r['processed_at'] and
+            r['request_at']<=d['service_resumed_at'] and r['expires']<=d['service_resumed_at']+120 and
+            d['after']['state']['links']['B']['generation']>d['before']['state']['links']['B']['generation'] and
+            d['after']['state']['links']['B']['session']==d['before']['state']['links']['B']['session'] and
+            identity(d['before']['state']['links']['A'])==identity(d['after']['state']['links']['A']), 'Backlog timeline/lease invalid')
     d=cases['retired_client_event_cannot_extend_lease']
     require(d['response']['ok'] is False and d['unchanged_expiry'] is True and
             identity(d['before']['state']['links']['B'])==identity(d['after']['state']['links']['B']), 'Retired event changed allocation')
@@ -80,9 +95,15 @@ def verify(v):
     d=cases['bounded_live_loss_queue_overflow_retires_only_B'];q=d['after']['runtime']['queue']
     require(d['requests']==d['queued']+d['server_rejected']+d['transport_rejected']==48 and
             q['peak']<=q['capacity']==4 and q['overflow']['B']>d['before']['runtime']['queue']['overflow']['B'] and d['server_rejected']>0 and
+            d['before']['state']['links']['B']['session']!=d['after']['state']['links']['B']['session'] and
+            d['before']['state']['active']==d['after']['state']['active'] and
+            bool(d['restored']['state']['links']['B']['current']) and
+            d['restored']['state']['links']['B']['session']==d['after']['state']['links']['B']['session'] and
             identity(d['before']['state']['links']['A'])==identity(d['after']['state']['links']['A']), 'Queue overflow not safely observed')
     d=cases['wire_deadline_expires_without_client_cleanup']
     require(d['stopped_clients_remained_same'] is True and d['observed_at']>=max(d['original_deadlines'].values()) and
+            d['before']['runtime']['children']==d['after']['runtime']['children'] and
+            all(d['stopped_client_states'][k]=='T' for k in ('A','B')) and
             all(d['after']['state']['links'][k]['current'] is None for k in ('A','B')) and
             d['after']['state']['active'] is None and d['client']['ok'] is False, 'Live expiry not established')
     return True
@@ -102,6 +123,17 @@ def controls(v):
                 alter('retired_client_event_cannot_extend_lease',lambda d:d.update(unchanged_expiry=False)),
                 alter('wire_deadline_expires_without_client_cleanup',lambda d:d['client'].update(ok=True)),
                 alter('bounded_live_loss_queue_overflow_retires_only_B',lambda d:d['after']['runtime']['queue'].update(peak=99))]
+    changes += [alter('slow_B_probe_real_renewal_event_intake',lambda d:d['after']['state']['links']['B'].update(generation=d['before']['state']['links']['B']['generation'])),
+                alter('wire_deadline_expires_without_client_cleanup',lambda d:d['after']['runtime'].update(children={'A':-1,'B':-2})),
+                alter('wire_deadline_expires_without_client_cleanup',lambda d:d['stopped_client_states'].update(B='R')),
+                alter('bounded_live_loss_queue_overflow_retires_only_B',lambda d:d['after']['state']['links']['B'].update(session=d['before']['state']['links']['B']['session'])),
+                alter('bounded_live_loss_queue_overflow_retires_only_B',lambda d:d['after']['state'].update(active=None)),
+                alter('real_backlogged_wire_renew_keeps_REQUEST_deadline',lambda d:d.update(renew_requested_at=d['service_resumed_at']+1)),
+                alter('real_backlogged_wire_renew_keeps_REQUEST_deadline',lambda d:d.update(service_paused_at=d['service_resumed_at']+1))]
+    changes += [alter('slow_B_probe_real_renewal_event_intake',lambda d:d['after']['state']['links']['B'].update(expires=10000)),
+                alter('real_backlogged_wire_renew_keeps_REQUEST_deadline',lambda d:d['after']['state']['links']['B'].update(expires=d['wire_record']['processed_at']+120)),
+                alter('B_SIGKILL_supervised_replacement_preserves_A',lambda d:d['after']['state']['links']['B'].update(current=None)),
+                alter('bounded_live_loss_queue_overflow_retires_only_B',lambda d:d['restored']['state']['links']['B'].update(current=None))]
     for change in changes:
         broken=copy.deepcopy(v);change(broken)
         try:verify(broken)

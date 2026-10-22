@@ -150,6 +150,7 @@ class Capture:
                     with self.lock:
                         self.counts['frames'] += 1
                         before_ack = self.proof_keys()
+                        invalidations = getattr(self.tracker, 'invalidations', 0)
                         try:
                             kind = self.tracker.feed(frame, self.empty_at)
                             if kind == 3: self.counts['requests'] += 1
@@ -165,6 +166,13 @@ class Capture:
                         except ValueError as exc:
                             self.counts['unsupported'] += 1
                             self.last_unsupported = str(exc)
+                        finally:
+                            if getattr(self.tracker, 'invalidations', 0) != invalidations:
+                                # Contradictions can remove a proof (including
+                                # one already queued), not merely add a new ACK.
+                                self.dirty = True
+                                self.version += 1
+                                self.versions = {k:v for k,v in self.versions.items() if k in self.proof_keys()}
                 self.stop.wait(.005)
         except OSError:
             if not self.stop.is_set(): self.error = 'Packet observation failed'
@@ -357,13 +365,18 @@ class Runtime:
             try:
                 if 'capture_version' in event and not self.captures[event['link']].is_current(event['capture_version']):
                     raise RuntimeError('Stale captured allocation')
-                self.w.wire_callback(**{k:event[k] for k in ('link','session','boot','sequence','at','reason','lease','request_at','observed_at','options')})
+                outcome = self.w.wire_callback(**{k:event[k] for k in ('link','session','boot','sequence','at','reason','lease','request_at','observed_at','options')})
                 if 'capture_version' in event: self.captures[event['link']].acknowledge(event['capture_version'])
                 self.increment('processed')
                 self.recent.append(dict(link=event['link'],sequence=event['sequence'],reason=event['reason'],
                     request_at=event['request_at'],observed_at=event['observed_at'],hook_at=event['at'],processed_at=now(),
                     expires=self.w.s['links'][event['link']]['expires'],
                     probe_inflight={k:k in self.futures and not self.futures[k][0].done() for k in LINKS}))
+                if outcome.get('lease_rejected'):
+                    # A real same-xid renewal may outlive its conservative
+                    # deadline. Reacquire under fresh authority instead of
+                    # remaining permanently stuck on that expired proof.
+                    self.retire(event['link'])
             except RuntimeError as exc:
                 if self.w.s['phase'] != 'READY': raise
                 self.increment('rejected')

@@ -43,16 +43,33 @@ The service opens an AF_PACKET ETH_P_ALL socket on each dedicated WAN **before
 creating clients**. ETH_P_ALL is needed for outgoing REQUEST observation as well
 as incoming ACKs. The strict bounded parser matches DHCP transaction/address/MAC/
 server evidence to the hook's allocation. Unsupported/incomplete/ambiguous proof
-does not authorize a new lease. The tested client reuses xid during renewal;
-a newly observed REQUEST opens a new transaction, but an ACK alone cannot replay
-a previously consumed proof.
+does not authorize a new lease. The tested client reuses xid during renewal.
+Because DHCP has no renewal sequence, an identical delayed ACK cannot be
+distinguished from a fresh ACK after another REQUEST. For the entire capture
+session, each xid therefore retains its earliest REQUEST bound and immutable
+parsed ACK (including lifetime, gateway and route-option semantics). A new
+REQUEST permits another claim, but never extends that xid's original deadline.
+Contradictory ACKs or REQUEST address/server identities poison that xid and
+invalidate queued proofs, including proofs already claimed from capture.
+The bounded 64-xid history never ages out or evicts authority; saturation
+invalidates all proofs until a fresh client session. Unproven hooks trigger
+the existing link-local retirement path.
+
+This is a deliberate availability tradeoff: a legitimate same-xid renewal is
+processed but cannot extend validity. Expiry withdraws the link. A later hook
+with an expired proof retires that client and schedules fresh acquisition,
+subject to the restart limit; this path has portable formal-runtime coverage,
+not a naturally timed VM renewal result. Short leases can exhaust the limiter.
+Selection remains explicit after fresh health; no automatic reselection is promised.
+DHCP transaction IDs are not cryptographic identities across client sessions;
+hostile replay and colliding IDs across sessions are not qualified guarantees.
 
 Each matched ACK retains its own observation version. A queued event cannot take
 the current global version at delivery; if a newer allocation has been observed,
 the older queued event is rejected. The pending-allocation flag remains set
 until that newest matching proof is applied. This prevents a withdrawal followed
 by accidental restoration of an older ACK from the queue. The two-ACK ordering
-counterexamples are formal runtime/parser tests, separate from the live VM's
+counterexamples (including same-xid replay and contradiction) are formal runtime/parser tests, separate from the live VM's
 single-renewal backlog scenario.
 
 RFC 2131 starts lease lifetime at the original REQUEST, not hook execution or

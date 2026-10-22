@@ -1,7 +1,7 @@
 # Formal dual-DHCP stage-one validation
 
-Run `8ab8a09f428b2276`, source fingerprint
-`c769cb0544513033b4e783f462bb14d40b733204fae676a4b892af6238980e59`.
+Run `c3e62ad3eb750649`, source fingerprint
+`3ffcf3bab723ebfc4bb3f487fb6e440911165e4dde0db17937fb36dcd08f8179`.
 
 [JSON](evidence.json) · [HTML](report.html) · [macOS](native-unit.json)
 · [Linux](linux-unit.json) · [Development attempts](attempts.json)
@@ -9,7 +9,7 @@ Run `8ab8a09f428b2276`, source fingerprint
 
 ## What actually ran
 
-- **193 portable tests on each platform**, identical source/test IDs and zero
+- **198 portable tests on each platform**, identical source/test IDs and zero
   skips/failures/errors. New tests invoke the formal packet tracker, SQLite core,
   finite inbox and runtime. Actual routing is separately Linux-qualified; native
   tests inject a clock/backend rather than pretending macOS has Linux networking.
@@ -20,28 +20,29 @@ Run `8ab8a09f428b2276`, source fingerprint
 - Two real wire leases and new LAN TLS over A; B SIGKILL gives a new PID/session
   while A's session/generation/allocation/deadline/selection remain unchanged.
 - A real B renewal is processed while B's slow failed probe is still in flight.
-  The recorded renewal observation took **0.209 s** including polling/IPC. This is
+  The recorded renewal observation took **0.052 s** including polling/IPC; the whole case took 0.157 s. This is
   one controlled observation, not a scheduling/failover bound or capacity result.
 - A whole-service one-second SIGSTOP creates real packet/intake backlog. The
-  retained event has REQUEST/ACK observation lower bound **16.269079590**, hook
-  **16.354440173**, processing **17.313157299**, and expiry **136.269079590** seconds
+  retained event has earliest same-xid REQUEST bound **14.421589298**, ACK bound
+  **15.103961548**, hook
+  **15.136335507**, processing **16.145656674**, and expiry **134.421589298** seconds
   on CLOCK_BOOTTIME. The 120-second lease was not restarted at processing time.
   These are conservative capture lower bounds, not exact packet-send timestamps.
 - Retired-session input leaves state/network/expiry unchanged. A current-session
   renewal without matching wire proof retires/reacquires only B while A forwards.
-- All **48** stale flood attempts remain accounted: **41 service rejections,
-  seven pre-send transport rejections, zero accepted**. Connect EAGAIN is not
+- All **48** stale flood attempts remain accounted: **38 service rejections,
+  ten pre-send transport rejections, zero accepted**. Connect EAGAIN is not
   relabeled a server rejection; no retries/timestamp rebasing occur.
 - All **48** synthetic current-authority loss attempts remain accounted: **two
-  queued, 42 service rejections, four pre-send transport rejections**. Actual B
+  queued, 27 service rejections, 19 pre-send transport rejections**. Actual B
   queue overflow increments once; peak observed depth is **two** against global
   capacity **four**, with two reserved slots per link. B is retired/reacquired;
   A's allocation identity remains unchanged. This is not general traffic fairness.
 - Both clients are SIGSTOPed and both DHCP servers stopped. The actual deadlines
   expire with those same clients still stopped; both allocations and the selected
-  route are withdrawn, and LAN TLS fails. The **120.038 s** scenario includes the
+  route are withdrawn, and LAN TLS fails. The **120.081 s** scenario includes the
   intentional lease wait. A client deconfig cannot explain the withdrawal.
-- **19 corrupted-receipt variants reject** under normal and optimized Python.
+- **30 corrupted-receipt variants reject** under normal and optimized Python.
   HTML exactly corresponds to JSON. Owned process/namespace cleanup, root network
   semantic preservation, source removal and stopped VM all passed.
 
@@ -63,15 +64,32 @@ challenge ACK1-queued/ACK2-observed and matching-old-proof/global-new-version
 mislabeling. These tests are portable runtime/parser counterexamples; the live
 VM backlog case contains one renewal, not a claimed two-ACK fault injection.
 
-Earlier failures and the superseded passing trial are summarized in
+A further review reproduced two same-xid defects: an old ACK after a new
+REQUEST could extend the lease, and a contradictory ACK could leave an old
+queued proof valid. The service now retains a bounded session-long earliest
+origin and immutable allocation fingerprint. Same-xid renewals cannot extend
+that original deadline; contradictions invalidate already-claimed proofs.
+History never ages out or evicts authority. Portable tests cover replay,
+contradiction before/after claim, age/capacity, and valid renewal BOOTP changes.
+Expired-proof rejection requests only that client's fresh acquisition; natural
+expiry-to-reacquisition timing has not been qualified in the VM.
+
+The report verifier now binds wire records to actual service expiry and checks
+scenario generation/session changes, backlog time ordering, replacement
+allocation, selected-route preservation and stopped client PID/process state.
+Corruption controls challenge these conditions. A new VM trial that rejected
+real renewal was retained as failed before correcting incidental BOOTP-field
+comparison. These new replay counterexamples were not injected on the VM wire.
+
+Earlier failures and the superseded passing trials are summarized in
 [attempts.json](attempts.json). Raw development logs remain local/ignored;
 intermediate source hashes do not imply every intermediate source is archived.
 The retained final source is reproducible from its Git revision and manifest.
 
 ## Memory and limitations
 
-One initial live `VmRSS` snapshot records **23,992 KiB** for the formal service and
-**1,356 KiB each** for clients A/B. These are individual process snapshots, not
+One initial live `VmRSS` snapshot records **23,972 KiB** for the formal service and
+**1,352 KiB each** for clients A/B. These are individual process snapshots, not
 peak/PSS/process-tree/whole-VM memory, and exclude kernel capture buffers, fixture
 servers, filesystem/cache and VM overhead. No reduction or performance advantage
 is claimed. All scenario/host stage durations remain separate in JSON.

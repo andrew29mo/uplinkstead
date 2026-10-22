@@ -9,7 +9,7 @@ from .writer import Writer, boot_id, now
 
 
 def cycle(w, policy, rid):
-    """One real agent iteration; also driven unchanged by the VM fault harness."""
+    """Core exploration iteration; the deployed MVP uses worker/control RPC."""
     w.reconcile()
     before=w.s['selected']
     probes={}
@@ -29,6 +29,7 @@ def cycle(w, policy, rid):
     if target:
         proof=policy.proof(target,now())
         admission=policy.admit(now())
+        w.s['history']=policy.history[:-1]
         w.switch(w.s['epoch'],target,admission,proof)
     result=dict(state=state,selected=w.s['selected'],before=before,target=target,
                 health={k:v.state for k,v in policy.links.items()},round=rid,

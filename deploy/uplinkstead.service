@@ -1,11 +1,15 @@
 [Unit]
-Description=Uplinkstead exploratory dual-uplink agent
+Wants=uplinkstead-policy.service
+Description=Uplinkstead privileged route writer
 StartLimitIntervalSec=60
 StartLimitBurst=3
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 -m uplinkstead.agent --config /etc/uplinkstead/config.json --state /var/lib/uplinkstead
+Group=uplinkstead
+RuntimeDirectory=uplinkstead
+RuntimeDirectoryMode=0750
+ExecStart=/usr/bin/python3 -m uplinkstead.daemon --config /etc/uplinkstead/config.json --state /var/lib/uplinkstead --socket /run/uplinkstead/control.sock
 Restart=on-failure
 RestartSec=2
 KillMode=control-group

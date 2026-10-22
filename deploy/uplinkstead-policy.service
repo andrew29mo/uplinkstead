@@ -1,0 +1,23 @@
+[Unit]
+Description=Uplinkstead unprivileged policy worker
+BindsTo=uplinkstead.service
+After=uplinkstead.service
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=uplinkstead
+Group=uplinkstead
+ExecStart=/usr/bin/python3 -m uplinkstead.worker --socket /run/uplinkstead/control.sock
+Restart=on-failure
+RestartSec=2
+KillMode=control-group
+TimeoutStopSec=5
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+RestrictAddressFamilies=AF_UNIX
+UMask=0077

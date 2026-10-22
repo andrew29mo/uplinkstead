@@ -13,6 +13,10 @@ class Blocked(RuntimeError):
     pass
 
 
+class UncertainCommand(Blocked):
+    """A retired helper timed out; outcome needs exclusive reconciliation."""
+
+
 class Linux:
     def __init__(self, config, lock_fd=None):
         self.c = config
@@ -31,7 +35,7 @@ class Linux:
         except subprocess.TimeoutExpired:
             p.kill()
             p.communicate()  # Never relinquish writer ownership with a live helper.
-            raise Blocked('ip timeout; outcome requires readback')
+            raise UncertainCommand('ip timeout; outcome requires readback')
         if p.returncode:
             if absent and 'FIB table does not exist' in err:
                 return '[]'
@@ -204,3 +208,18 @@ class Linux:
             guard()
         self.run(['route', 'replace', 'default', 'via', v['gateway'], 'dev', v['interface'],
                   'table', TABLE['LAN'], 'metric', 100], deadline=deadline)
+
+    def detach(self):
+        """Remove only validated owned objects; restart completes partial detach."""
+        self.preflight(partial=True)
+        expected={r['priority']:r for r in self.expected()}
+        rows=[self.normalized(r) for r in self.rules()]
+        # Lookup removal may fall through to the existing main policy. The root
+        # operator must explicitly acknowledge that deployment-specific handoff.
+        for r in sorted(rows,key=lambda r:bool(r.get('action'))):
+            if r.get('priority') in expected:
+                if r != expected[r['priority']]:raise Blocked('Foreign rule during detach')
+                self.run(['rule','del','priority',r['priority']])
+        for table in TABLE.values():
+            self.run(['route','flush','table',table])
+        self.preflight(fresh=True)

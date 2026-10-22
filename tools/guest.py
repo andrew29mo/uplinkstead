@@ -22,6 +22,7 @@ from tools.netproof import digest
 
 ROOT=Path('/opt/uplinkstead')
 NAMES=['us_r','us_c','us_a','us_b','us_s','us_o']
+WORKER='uplinkstead-policy.service'
 UNIT='uplinkstead.service';TOPO='uplinkstead-fixture.service';SERVER='uplinkstead-fixture-server.service'
 STATE=ROOT/'state';CONF=ROOT/'config.json'
 
@@ -180,7 +181,7 @@ def preflight():
     if Path('/proc/1/comm').read_text().strip()!='systemd':raise RuntimeError('systemd required')
     existing={line.split()[0] for line in cmd(['ip','netns','list']).stdout.splitlines() if line}
     if existing.intersection(NAMES):raise RuntimeError('Foreign namespace')
-    for unit in (UNIT,TOPO,SERVER):
+    for unit in (UNIT,WORKER,TOPO,SERVER):
         if Path('/etc/systemd/system',unit).exists():raise RuntimeError('Foreign unit file')
         r=cmd(['systemctl','show',unit,'-p','LoadState','-p','FragmentPath','-p','DropInPaths']).stdout
         if 'LoadState=not-found' not in r or 'FragmentPath=\n' not in r or 'DropInPaths=\n' not in r:raise RuntimeError('Foreign unit definition')
@@ -196,13 +197,22 @@ def setup():
     c=config();c['ca']=str(ROOT/'ca.crt');CONF.write_text(json.dumps(c))
     STATE.mkdir(mode=0o700)
     topology()
+    # Dedicated policy identity; never reuse or delete a preexisting account.
+    import pwd
+    try:pwd.getpwnam('uplinkstead')
+    except KeyError:pass
+    else:raise RuntimeError('Foreign uplinkstead account')
+    cmd(['systemd-sysusers',ROOT/'source/deploy/uplinkstead.conf'])
+    (ROOT/'user-created').write_text('uplinkstead')
+    ROOT.chmod(0o755);CONF.chmod(0o600);(ROOT/'server.key').chmod(0o600)
     original=(ROOT/'source/deploy/uplinkstead.service').read_text()
     # Only executable/source/config/state and network namespace paths differ.
     unit=original.replace('/etc/uplinkstead/config.json',str(CONF)).replace('/var/lib/uplinkstead',str(STATE))
     unit=unit.replace('[Service]','[Service]\nWorkingDirectory=/opt/uplinkstead/source\nNetworkNamespacePath=/run/netns/us_r')
     unit=unit.replace('[Unit]','[Unit]\nRequires=uplinkstead-fixture.service uplinkstead-fixture-server.service\nAfter=uplinkstead-fixture.service uplinkstead-fixture-server.service')
     (ROOT/'service-installed').write_text(unit)
-    units={UNIT:unit,TOPO:'[Unit]\nBefore=uplinkstead.service uplinkstead-fixture-server.service\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/usr/bin/python3 /opt/uplinkstead/source/tools/guest.py topology\n',
+    worker=(ROOT/'source/deploy/uplinkstead-policy.service').read_text().replace('[Service]','[Service]\nWorkingDirectory=/opt/uplinkstead/source')
+    units={UNIT:unit,WORKER:worker,TOPO:'[Unit]\nBefore=uplinkstead.service uplinkstead-fixture-server.service\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/usr/bin/python3 /opt/uplinkstead/source/tools/guest.py topology\n',
            SERVER:'[Unit]\nRequires=uplinkstead-fixture.service\nAfter=uplinkstead-fixture.service\n[Service]\nNetworkNamespacePath=/run/netns/us_s\nExecStart=/usr/bin/python3 /opt/uplinkstead/source/tools/server.py /opt/uplinkstead/ca.crt /opt/uplinkstead/server.key\nKillMode=control-group\n'}
     # Current boot topology already provisioned; next boot uses the topology unit.
     (ROOT/'unit-hashes.json').write_text(json.dumps({n:hashlib.sha256(b.encode()).hexdigest() for n,b in units.items()}))
@@ -477,8 +487,11 @@ with Writer(c,'/opt/uplinkstead/state') as w:
         nft('us_a','delete table ip one_target\n');assert r[0]==2
         return r
     case('single_real_target_failure',single_target)
+    from tools.mvp_guest import run_mvp
+    for name,fn in run_mvp():case(name,fn)
     result['passed']=True;result['environment']=dict(kernel=cmd(['uname','-r']).stdout.strip(),python=sys.version.split()[0],systemd=cmd(['systemctl','--version']).stdout.splitlines()[0])
     result['service_source_sha256']=hashlib.sha256((ROOT/'source/deploy/uplinkstead.service').read_bytes()).hexdigest()
+    result['policy_unit_sha256']=hashlib.sha256(Path('/etc/systemd/system',WORKER).read_bytes()).hexdigest()
     result['installed_unit_sha256']=hashlib.sha256(Path('/etc/systemd/system',UNIT).read_bytes()).hexdigest()
     (ROOT/'guest.json').write_text(json.dumps(result,indent=2))
     print(json.dumps(result))
@@ -486,7 +499,7 @@ with Writer(c,'/opt/uplinkstead/state') as w:
 
 def prepare_reboot():
     # Verify real shipped agent service and automatic process restart first.
-    cmd(['systemctl','start',UNIT]);time.sleep(1)
+    cmd(['systemctl','reset-failed',UNIT,WORKER]);cmd(['systemctl','start',UNIT]);time.sleep(1)
     before=cmd(['systemctl','show',UNIT,'-p','InvocationID','-p','MainPID']).stdout
     system(UNIT,'kill','--signal=SIGKILL','--kill-whom=main');time.sleep(3)
     after=cmd(['systemctl','show',UNIT,'-p','InvocationID','-p','MainPID','-p','ActiveState']).stdout
@@ -532,6 +545,10 @@ def after_reboot():
     unit=cmd(['systemctl','show',UNIT,'-p','InvocationID','-p','MainPID','-p','ActiveState']).stdout;assert 'ActiveState=active' in unit
     with sqlite3.connect(STATE/'journal.sqlite') as c:
         events=[json.loads(x[0]) for x in c.execute('SELECT value FROM events ORDER BY id')]
+    deadline=time.monotonic()+8
+    while not any(x['boot']==boot_id() and x['name']=='tick' for x in events) and time.monotonic()<deadline:
+        time.sleep(.2)
+        with sqlite3.connect(STATE/'journal.sqlite') as c:events=[json.loads(x[0]) for x in c.execute('SELECT value FROM events ORDER BY id')]
     new_probes=[x for x in events if x['boot']==boot_id() and x['name']=='tick']
     assert new_probes and new_probes[0]['health']=={'A':'RECOVERING','B':'RECOVERING'}
     pid=int(cmd(['systemctl','show',UNIT,'-p','MainPID','--value']).stdout)
@@ -551,7 +568,7 @@ def cleanup():
     for name,unit_digest in hashes.items():
         path=Path('/etc/systemd/system',name)
         if path.exists():assert path.is_file() and not path.is_symlink() and hashlib.sha256(path.read_bytes()).hexdigest()==unit_digest
-    for name in (UNIT,SERVER,TOPO):
+    for name in (WORKER,UNIT,SERVER,TOPO):
         if name in hashes:cmd(['systemctl','stop',name],check=False)
     enable=Path('/etc/systemd/system/multi-user.target.wants',UNIT)
     if enable.is_symlink():
@@ -572,6 +589,8 @@ def cleanup():
             time.sleep(.05)
             assert not cmd(['ip','netns','pids',name]).stdout.strip()
             cmd(['ip','netns','del',name])
+    if (ROOT/'user-created').exists():
+        cmd(['userdel','uplinkstead']);(ROOT/'user-created').unlink()
     before=json.loads((ROOT/'root-before.json').read_text())
     after=root_snapshot()
     assert digest(before)==digest(after),'VM root network semantics changed'
@@ -585,6 +604,7 @@ def diagnose():
     if Path('/run/netns/us_r').exists():
         value['rules']=dump_rules()
         value['routes']={str(t):cmd(['ip','-n','us_r','-j','route','show','table',str(t)],check=False).stdout for t in TABLE.values()}
+    value['service_state']={name:cmd(['systemctl','show',name,'-p','Result','-p','ActiveState','-p','SubState','-p','NRestarts'],check=False).stdout for name in (UNIT,WORKER)}
     for name in ('guest.json','prestart.json'):
         if (ROOT/name).exists():value[name]=json.loads((ROOT/name).read_text())
     print(json.dumps(value))

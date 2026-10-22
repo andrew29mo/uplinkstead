@@ -9,7 +9,7 @@ from .evidence import ROOT, manifest, fingerprint
 from uplinkstead.policy import Policy,Settings
 import hashlib
 import re
-CASES = {'pinned_healthy_probes', 'probe_blackhole_missing_route_link_down', 'binding_error_unknown', 'lan_scope_new_tls_and_internal_exclusion', 'external_rpdb_conflict_and_preservation', 'output_success_does_not_prove_forwarding', 'strict_rp_filter_contract', 'routed_without_nat_and_provisioned_return_path', 'delayed_old_operation_rejected', 'live_old_writer_blocks_takeover', 'inherited_mutation_helper_lock', 'sigkill_intent_route_and_receipt_boundaries', 'real_probe_failover_flapping_and_budget', 'single_real_target_failure', 'link_down_owned_route_reconstruction','inverted_rpdb_rules_rejected','missing_local_lookup_rejected','expired_health_before_mutation','malformed_target_quorum'}
+CASES = {'pinned_healthy_probes', 'probe_blackhole_missing_route_link_down', 'binding_error_unknown', 'lan_scope_new_tls_and_internal_exclusion', 'external_rpdb_conflict_and_preservation', 'output_success_does_not_prove_forwarding', 'strict_rp_filter_contract', 'routed_without_nat_and_provisioned_return_path', 'delayed_old_operation_rejected', 'live_old_writer_blocks_takeover', 'inherited_mutation_helper_lock', 'sigkill_intent_route_and_receipt_boundaries', 'real_probe_failover_flapping_and_budget', 'single_real_target_failure', 'link_down_owned_route_reconstruction','inverted_rpdb_rules_rejected','missing_local_lookup_rejected','expired_health_before_mutation','malformed_target_quorum','mvp_privilege_boundary','mvp_safe_lifecycle_and_resume','mvp_storage_bounds','mvp_lifecycle_failure_recovery','mvp_identical_schedule_benchmark','mvp_bounded_restart'}
 
 def require(condition, message='Evidence validation failed'):
     if not condition:
@@ -58,6 +58,49 @@ def verify_cycle_trace(rows):
     require(any(r['stage']=='A_down' and r['selected']=='B' and r['lan_request']['ok'] for r in rows))
     require(all(r['selected']=='B' for r in rows if r['stage']=='A_recovers'))
     return transitions
+
+
+def verify_mvp(d):
+    priv=d['mvp_privilege_boundary']
+    require(priv['initial_mode']=='DISABLED' and priv['idle_peer_survived'] is True)
+    require(len(priv['protocol_rejections'])==4 and all(x is True for x in priv['protocol_rejections']))
+    require(priv['writer']['uid']==[0]*4 and priv['worker']['uid'][0]!=0)
+    require(int(priv['worker']['cap_eff'],16)==0 and priv['worker']['no_new_privs']=='1')
+    require(all(priv[k] is True for k in ('worker_operator_denied','foreign_peer_denied','state_read_denied','direct_mutation_denied','main_unchanged')))
+    for k in ('writer','worker'):require(priv[k]['rss_kib']>0 and priv[k]['pid']>0)
+    life=d['mvp_safe_lifecycle_and_resume']
+    require(life['disabled_mode']=='DISABLED' and life['enabled_mode']=='PAUSED' and life['restarted_mode']=='ENABLED')
+    require(life['paused_selected']=='A' and life['manual_selected']=='B')
+    require(all(life[k] is True for k in ('premature_resume_denied','stale_revision_denied','retained_route_while_stopped','epoch_changed','stale_epoch_denied','main_unchanged')))
+    storage=d['mvp_storage_bounds']
+    require(storage['events']==128 and storage['page_count']<=storage['max_pages']==2048 and storage['page_size']==4096)
+    require(storage['low_space_blocked'] is True and storage['selected_unchanged'] is True)
+    failure=d['mvp_lifecycle_failure_recovery']
+    require(set(failure)=={'disable_write_failure_recovered','partial_enable_recovered_paused','real_helper_timeout_reaped','sqlite_write_failure_no_mutation'})
+    require(all(v is True for v in failure.values()))
+    restart=d['mvp_bounded_restart']
+    require(len(restart['invocations'])==len(set(restart['invocations']))==3 and restart['failed_result'] in ('signal','start-limit-hit'))
+    require(restart['limit_message_observed'] is True and len(restart['no_writer_samples'])==8 and all(x is True for x in restart['no_writer_samples']))
+    require(restart['no_live_writer'] is True and restart['manual_reset_recovered'] is True)
+    bench=d['mvp_identical_schedule_benchmark']
+    require(bench['vm_only'] is True and bench['repeated_trials'] is False)
+    require(bench['schedule']==dict(requests=20,interval=.5,blackhole_from_index=4))
+    require([m['mode'] for m in bench['modes']]==['fixed_primary','automatic'])
+    for m in bench['modes']:
+        rows=m['rows'];require(len(rows)==20 and [r['index'] for r in rows]==list(range(20)))
+        require([r['scheduled'] for r in rows]==[i*.5 for i in range(20)])
+        require(all(0<=r['scheduled']<=r['started']<=r['finished']<=m['elapsed'] for r in rows))
+        for r in rows:
+            require(abs(r['latency']-(r['finished']-r['started']))<1e-8)
+            require(abs(r['end_to_end']-(r['finished']-r['scheduled']))<1e-8)
+            require(r['late']==(r['started']-r['scheduled']>.1) and type(r['ok']) is bool)
+            require(r['peer'] in ('10.99.1.1','10.99.2.1') if r['ok'] else r['peer'] is None)
+        require(m['successes']==sum(r['ok'] for r in rows) and m['failures']==20-m['successes'])
+        require(abs(m['throughput']-m['successes']/m['elapsed'])<1e-8)
+        require(all(v>0 for v in m['rss_kib'].values()) and 0<m['journal_bytes']<=8388608)
+    fixed,auto=bench['modes']
+    require(fixed['final_selected']=='A' and all(not r['ok'] for r in fixed['rows'][4:]))
+    require(auto['final_selected']=='B' and any(r['ok'] and r['peer']=='10.99.2.1' for r in auto['rows']))
 
 
 def verify(v, source=None, ids=None):
@@ -129,6 +172,7 @@ def verify(v, source=None, ids=None):
     require(flap['latched'] is True and len(flap['transitions']) == 3)
     require(flap['uses_agent_cycle'] is True)
     require(verify_cycle_trace(flap['rounds'])==flap['transitions'])
+    verify_mvp(d)
     restart = v['reboot']
     require(restart['passed'] is True and restart['orderly_vm_restart'] is True and (restart['power_loss_tested'] is False))
     require(restart['before']['before_boot'] != restart['after']['boot'] == restart['pre_agent_journal']['boot'])
@@ -143,6 +187,8 @@ def verify(v, source=None, ids=None):
     text=text.replace('[Service]','[Service]\nWorkingDirectory=/opt/uplinkstead/source\nNetworkNamespacePath=/run/netns/us_r')
     text=text.replace('[Unit]','[Unit]\nRequires=uplinkstead-fixture.service uplinkstead-fixture-server.service\nAfter=uplinkstead-fixture.service uplinkstead-fixture-server.service')
     require(guest['installed_unit_sha256']==hashlib.sha256(text.encode()).hexdigest())
+    worker=(ROOT/'deploy/uplinkstead-policy.service').read_text().replace('[Service]','[Service]\nWorkingDirectory=/opt/uplinkstead/source')
+    require(guest['policy_unit_sha256']==hashlib.sha256(worker.encode()).hexdigest())
     require(re.fullmatch(r'VmRSS:\s+[1-9][0-9]* kB',restart['after']['rss_snapshot']) is not None)
     require(restart['after']['first_tick']['boot']==restart['after']['boot'])
     require(v['cleanup']['root_before_sha256'] == v['cleanup']['root_after_sha256'])
@@ -168,6 +214,13 @@ def controls(v, source, ids):
       ('malformed_target_crash',lambda x:details(x,'malformed_target_quorum').update(agent_survived=False)),
       ('fabricated_probe_time',lambda x:details(x,'real_probe_failover_flapping_and_budget')['rounds'][0]['probes']['A'].update(started=0,finished=0)),
       ('fake_budget_transition',lambda x:details(x,'real_probe_failover_flapping_and_budget')['rounds'][0].update(target='B')),
+      ('unbounded_restart',lambda x:details(x,'mvp_bounded_restart').update(limit_message_observed=False)),
+      ('worker_has_netadmin',lambda x:details(x,'mvp_privilege_boundary')['worker'].update(cap_eff='00001000')),
+      ('unsafe_resume',lambda x:details(x,'mvp_safe_lifecycle_and_resume').update(premature_resume_denied=False)),
+      ('unbounded_events',lambda x:details(x,'mvp_storage_bounds').update(events=1000)),
+      ('hidden_request_failure',lambda x:details(x,'mvp_identical_schedule_benchmark')['modes'][0]['rows'].pop()),
+      ('changed_arrival_schedule',lambda x:details(x,'mvp_identical_schedule_benchmark')['modes'][1]['rows'][3].update(scheduled=0)),
+      ('false_storage_recovery',lambda x:details(x,'mvp_lifecycle_failure_recovery').update(sqlite_write_failure_no_mutation=False)),
       ('wrong_installed_unit',lambda x:x['guest'].update(installed_unit_sha256='bad'))]
     rejected = []
     for (name, change) in mutations:
@@ -181,6 +234,19 @@ def controls(v, source, ids):
             raise AssertionError('Report accepted corruption: ' + name)
     return rejected
 
+def benchmark_html(v):
+    cases=v.get('guest',{}).get('cases',[])
+    data=next((r['details'] for r in cases if r['name']=='mvp_identical_schedule_benchmark'),None)
+    if not data:return ''
+    import math
+    rows=''
+    for m in data['modes']:
+        lat=sorted(r['end_to_end'] for r in m['rows'])
+        p95=lat[max(0,math.ceil(len(lat)*.95)-1)]
+        rows+='<tr><td>'+html.escape(m['mode'])+'</td><td>'+str(m['successes'])+'/'+str(len(lat))+'</td><td>'+format(m['throughput'],'.3f')+'</td><td>'+format(p95*1000,'.1f')+'</td><td>'+str(m['rss_kib']['writer'])+' / '+str(m['rss_kib']['worker'])+'</td><td>'+str(m['journal_bytes'])+'</td></tr>'
+    return '<h2>Controlled VM trial</h2><p>All-attempt end-to-end p95 includes failed requests and client-process overhead. One fixed-order trial; no speedup or SLA inference.</p><table><tr><th>Mode</th><th>Successful / attempted</th><th>Useful requests/s</th><th>All-attempt p95 ms</th><th>Writer / worker RSS KiB</th><th>Main DB bytes</th></tr>'+rows+'</table>'
+
+
 def render(v):
     try:
         verify(v)
@@ -188,7 +254,7 @@ def render(v):
     except (AssertionError, KeyError, TypeError, ValueError):
         passed = False
     rows = ''.join(('<tr><td>' + html.escape(x['name']) + '</td><td>' + ('PASS' if x.get('passed') else 'FAIL') + '</td><td>' + format(x['seconds'], '.3f') + '</td></tr>' for x in v.get('guest', {}).get('cases', [])))
-    return '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Uplinkstead exploration evidence</title><style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:0 20px;color:#182536}table{border-collapse:collapse;width:100%}td,th{padding:8px;border-bottom:1px solid #ddd;text-align:left}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f1f4f7;padding:16px}h1{color:#224d62}</style><h1>Uplinkstead technical explorations</h1><p><b>' + ('PASS' if passed else 'INCOMPLETE / FAIL') + '</b> · ' + html.escape(v.get('run_id', '')) + '</p><p>Isolated Linux ARM64 VM. Scenario seconds include orchestration and validation; they are not failover latency. RSS is a process snapshot, not peak or whole-VM memory. Orderly stop/start only; sudden power loss, boot-zero-gap and physical uplinks are untested.</p><table><thead><tr><th>Scenario</th><th>Result</th><th>Orchestration seconds</th></tr></thead><tbody>' + rows + '</tbody></table><h2>Complete retained evidence</h2><pre>' + html.escape(json.dumps(v, indent=2, allow_nan=False)) + '</pre></html>\n'
+    return '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Uplinkstead MVP evidence</title><style>body{font:16px system-ui;max-width:1000px;margin:40px auto;padding:0 20px;color:#182536}table{border-collapse:collapse;width:100%}td,th{padding:8px;border-bottom:1px solid #ddd;text-align:left}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f1f4f7;padding:16px}h1{color:#224d62}</style><h1>Uplinkstead MVP validation</h1><p><b>' + ('PASS' if passed else 'INCOMPLETE / FAIL') + '</b> · ' + html.escape(v.get('run_id', '')) + '</p><p>Isolated Linux ARM64 VM. Scenario seconds include orchestration and validation; they are not failover latency. RSS is a process snapshot, not peak or whole-VM memory. Orderly stop/start only; sudden power loss, boot-zero-gap and physical uplinks are untested.</p><table><thead><tr><th>Scenario</th><th>Result</th><th>Orchestration seconds</th></tr></thead><tbody>' + rows + '</tbody></table>' + benchmark_html(v) + '<h2>Measurement scope</h2><p>MVP benchmark uses identical open-loop arrival offsets and a fixed fault index. All scheduled attempts, failures and scheduling lateness are retained below. Latency includes the fixture client process and TLS request. Process RSS snapshots exclude whole-VM memory; a single controlled run does not establish a speedup or SLA.</p><h2>Complete retained evidence</h2><pre>' + html.escape(json.dumps(v, indent=2, allow_nan=False)) + '</pre></html>\n'
 
 def main():
     p = argparse.ArgumentParser()

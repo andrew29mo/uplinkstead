@@ -1,0 +1,40 @@
+{
+  "lan": {
+    "interface": "lan0",
+    "prefix": "10.77.0.0/24",
+    "exclude": [
+      "198.18.0.0/24"
+    ]
+  },
+  "links": {
+    "A": {
+      "interface": "wanA",
+      "source": "192.0.2.2",
+      "gateway": "192.0.2.1",
+      "prefix": "192.0.2.0/30"
+    },
+    "B": {
+      "interface": "wanB",
+      "source": "192.0.2.6",
+      "gateway": "192.0.2.5",
+      "prefix": "192.0.2.4/30"
+    }
+  },
+  "targets": [
+    {
+      "ip": "203.0.113.2",
+      "port": 8443
+    },
+    {
+      "ip": "203.0.113.2",
+      "port": 8444
+    },
+    {
+      "ip": "203.0.113.2",
+      "port": 8445
+    }
+  ],
+  "ca": "/etc/uplinkstead/ca.crt",
+  "server_name": "probe.test",
+  "policy": {}
+}

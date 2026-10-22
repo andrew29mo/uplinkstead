@@ -1,4 +1,4 @@
-"""Test transport only: invokes the exact agent cycle while retaining the real writer."""
+"""Test transport only: invokes the core exploration cycle while retaining the real writer."""
 import argparse
 import json
 from pathlib import Path

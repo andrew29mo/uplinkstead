@@ -5,6 +5,7 @@ import math
 import os
 from pathlib import Path
 import sqlite3
+import shutil
 import stat
 import time
 import uuid
@@ -20,9 +21,10 @@ def now():
 
 
 class Writer:
-    def __init__(self, config, directory):
+    def __init__(self, config, directory, initial_mode="ENABLED"):
         self.c, self.directory = config, Path(directory)
         self.fd = self.db = None
+        self.initial_mode = initial_mode
 
     def __enter__(self):
         self.directory.mkdir(mode=0o700, parents=True, exist_ok=True)
@@ -40,6 +42,9 @@ class Writer:
                 raise Blocked('Unsafe journal')
             self.db = sqlite3.connect(path, isolation_level=None)
             self.db.execute('PRAGMA synchronous=FULL')
+            self.db.execute('PRAGMA journal_mode=DELETE')
+            if self.db.execute('PRAGMA page_size').fetchone()[0]!=4096 or self.db.execute('PRAGMA max_page_count=2048').fetchone()[0]!=2048:
+                raise Blocked('Existing journal exceeds supported storage layout/capacity')
             self.db.execute('CREATE TABLE IF NOT EXISTS state (id INTEGER PRIMARY KEY CHECK(id=1), value TEXT NOT NULL)')
             self.db.execute('CREATE TABLE IF NOT EXISTS events (id INTEGER PRIMARY KEY, value TEXT NOT NULL)')
             row = self.db.execute('SELECT value FROM state WHERE id=1').fetchone()
@@ -47,12 +52,17 @@ class Writer:
             if row is None:
                 self.backend.preflight(fresh=True)
                 self.s = dict(config_hash=self.c['_hash'], epoch=0, selected=None, pending=None,
-                              boot=boot_id(), history=[], latched=False, provisioning=True)
+                              boot=boot_id(), history=[], latched=False, provisioning=self.initial_mode != "DISABLED",
+                              mode=self.initial_mode, lifecycle=None, revision=0)
                 self.save()
             else:
                 self.s = json.loads(row[0])
+                # Explicit migration of the original exploration journal.
+                if set(self.s) == {'config_hash','epoch','selected','pending','boot','history','latched','provisioning'}:
+                    self.s.update(mode='ENABLED',lifecycle=None,revision=0)
                 self.validate()
-            self.backend.preflight(partial=self.s['provisioning'] or self.s['boot'] != boot_id())
+            self.backend.preflight(fresh=self.s['mode']=='DISABLED' and self.s['lifecycle'] is None,
+                                   partial=self.s['provisioning'] or self.s['boot'] != boot_id() or self.s['lifecycle'] is not None)
             self.s['epoch'] += 1
             self.save()
             self.reconcile()
@@ -62,10 +72,16 @@ class Writer:
             raise
 
     def validate(self):
-        keys = {'config_hash','epoch','selected','pending','boot','history','latched','provisioning'}
+        keys = {'config_hash','epoch','selected','pending','boot','history','latched','provisioning','mode','lifecycle','revision'}
         s = self.s
         if set(s) != keys or s['config_hash'] != self.c['_hash'] or type(s['epoch']) is not int or s['epoch'] < 0:
             raise Blocked('Invalid journal/config')
+        if s['mode'] not in ('ENABLED','PAUSED','DISABLED') or s['lifecycle'] not in (None,'enable','disable') or type(s['revision']) is not int or s['revision'] < 0:
+            raise Blocked('Invalid lifecycle journal')
+        if s['mode']=='DISABLED' and s['lifecycle'] is None and (s['selected'] is not None or s['pending'] is not None or s['provisioning']):
+            raise Blocked('Detached state contains attached intent')
+        if len(s['history']) > 64:
+            raise Blocked('Budget history exceeds capacity')
         if s['selected'] not in (None, 'A', 'B') or type(s['latched']) is not bool or type(s['provisioning']) is not bool:
             raise Blocked('Invalid journal fields')
         if not isinstance(s['boot'],str) or not s['boot'] or not isinstance(s['history'],list):
@@ -79,14 +95,53 @@ class Writer:
             raise Blocked('Invalid pending operation')
 
     def save(self):
+        if shutil.disk_usage(self.directory).free < 2*1024*1024:
+            raise Blocked('State volume reserve below 2 MiB; mutation blocked')
+        if len(self.s['history']) > 64:
+            raise Blocked('Budget history exceeds capacity')
         self.db.execute('INSERT INTO state VALUES(1,?) ON CONFLICT(id) DO UPDATE SET value=excluded.value',
                         (json.dumps(self.s, sort_keys=True, allow_nan=False),))
 
     def event(self, name, **fields):
-        self.db.execute('INSERT INTO events(value) VALUES(?)',
-                        (json.dumps(dict(name=name, boot=boot_id(), at=now(), **fields), allow_nan=False),))
+        value=json.dumps(dict(name=name, boot=boot_id(), at=now(), **fields), allow_nan=False)
+        if len(value.encode()) > 32768:
+            raise Blocked('Event exceeds capacity')
+        self.db.execute('BEGIN IMMEDIATE')
+        try:
+            self.db.execute('INSERT INTO events(value) VALUES(?)',(value,))
+            self.db.execute('DELETE FROM events WHERE id NOT IN (SELECT id FROM events ORDER BY id DESC LIMIT 128)')
+            self.db.execute('COMMIT')
+        except BaseException:
+            if self.db.in_transaction:self.db.execute('ROLLBACK')
+            raise
+
+    def lifecycle(self, operation):
+        if operation not in ('enable','disable') or self.s['pending']:
+            raise Blocked('Unsafe lifecycle operation')
+        if operation=='enable' and self.s['mode']!='DISABLED':
+            raise Blocked('Already attached')
+        if operation=='disable' and self.s['mode']=='DISABLED':
+            raise Blocked('Already detached')
+        self.s['lifecycle']=operation
+        self.s['revision']+=1
+        self.save()  # Recovery intent precedes every network change.
+        self.reconcile()
 
     def reconcile(self):
+        operation=self.s['lifecycle']
+        if operation=='disable':
+            self.backend.preflight(partial=True)
+            self.backend.detach()
+            self.s.update(mode='DISABLED',lifecycle=None,selected=None,pending=None,provisioning=False,boot=boot_id())
+            self.save();self.event('disabled');return
+        if self.s['mode']=='DISABLED' and operation is None:
+            self.backend.preflight(fresh=True)
+            self.s['boot']=boot_id();self.save();return
+        if operation=='enable':
+            self.backend.preflight(partial=True)
+            self.backend.layout()
+            self.s.update(mode='PAUSED',lifecycle=None,provisioning=False,boot=boot_id(),selected=None)
+            self.save();self.event('enabled_paused')
         changed_boot = self.s['boot'] != boot_id()
         if self.s['provisioning'] or changed_boot:
             self.backend.layout()
@@ -130,6 +185,8 @@ class Writer:
             raise Blocked('Automatic health proof expired')
 
     def switch(self, epoch, target, admission=None, proof=None):
+        if self.s['mode']=='DISABLED' or self.s['lifecycle']:
+            raise Blocked('Routing is detached or transitioning')
         if epoch != self.s['epoch'] or target not in ('A','B') or self.s['pending']:
             raise Blocked('Stale or concurrent operation')
         if admission is not None:
@@ -152,6 +209,7 @@ class Writer:
         if self.backend.selected() != target:
             raise Blocked('Selection readback mismatch')
         self.s['selected'], self.s['pending'] = target, None
+        self.s['revision']+=1
         self.save()
         self.event('completed', target=target, token=p['token'])
 

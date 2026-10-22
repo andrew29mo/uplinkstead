@@ -1,4 +1,8 @@
-# Four-exploration review corrections
+# Historical four-exploration review corrections
+
+This records the pre-MVP review at commit 732a518. The current service boundary
+and additional qualification are described in [Architecture](ARCHITECTURE.md) and
+[Validation](VALIDATION.md); the original core driver is retained for fault tests.
 
 Two independent read-only agents reviewed routing/backend and policy/recovery,
 then reviewed the corrections. Their agreement is not runtime evidence: the

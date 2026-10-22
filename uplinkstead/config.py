@@ -6,6 +6,8 @@ from .policy import Settings
 
 
 def load(path):
+    if path.stat().st_size > 65536:
+        raise ValueError('Configuration exceeds 64 KiB')
     c = json.loads(path.read_text())
     if set(c) != {'lan', 'links', 'targets', 'ca', 'server_name', 'policy'}:
         raise ValueError('Unexpected config keys')

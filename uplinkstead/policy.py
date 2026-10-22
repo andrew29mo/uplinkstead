@@ -19,6 +19,8 @@ class Settings:
         for name in ('failures', 'successes', 'budget'):
             if type(getattr(self, name)) is not int or getattr(self, name) < 1:
                 raise ValueError('Invalid count')
+        if self.budget > 32 or self.failures > 100 or self.successes > 100:
+            raise ValueError('Policy count exceeds capacity')
         for name in ('freshness', 'stable', 'window'):
             if type(getattr(self, name)) not in (int, float) or not math.isfinite(getattr(self, name)) or getattr(self, name) <= 0:
                 raise ValueError('Invalid duration')
@@ -105,6 +107,7 @@ class Policy:
 
     def admit(self, now):
         e = {'boot': self.boot, 'at': now}
+        self.history=[x for x in self.history if (x['boot']==self.boot and now-x['at']<=self.s.window) or (x['boot']!=self.boot and now<=self.s.window)]
         self.history.append(e)
         return e
 

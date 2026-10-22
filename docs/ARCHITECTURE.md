@@ -1,4 +1,4 @@
-# Architecture after technical review
+# MVP architecture
 
 ## Supported topology and ownership
 
@@ -56,8 +56,9 @@ checks it after preflight/readback and again immediately before dispatch; helper
 waiting is bounded by the remaining evidence lifetime. This does not guarantee
 kernel completion before expiry or continued link health after dispatch. Recovery
 reconstructs recorded intent without requiring old health to become fresh again.
-The shipped agent and fault driver share the same `agent.cycle()`; the driver only
-supplies tick commands and retains actual probe timestamps and persistent state.
+The original core exploration driver retains `agent.cycle()` for fault injection.
+The deployed MVP separately uses `worker.step()` and `control.Controller`; its
+qualification runs both installed services and the formal operator CLI.
 
 ## Writer and recovery
 
@@ -81,12 +82,44 @@ uses control-group cleanup, a five-second stop timeout and bounded capabilities.
 The fixture substitutes only namespace, source/config/state and dependency paths;
 external fault wrappers pause real Writer boundaries and are not the shipped agent.
 
-## Deliberate gaps before MVP
+## Service and operator boundary
 
-- Restrict mutation behind a dedicated privileged writer API; policy/probe
-  components do not yet constitute a privilege-separated service boundary.
-- Implement authenticated local status/resume with fresh-evidence checks and
-  audit semantics; editing the journal is not an operator API.
-- Qualify the deployment contract and define safe enable/disable behavior.
-- Bound event-history storage and complete packaging and operational documentation.
-- Repeat fault/load measurements before any capacity or recovery-time claims.
+The privileged daemon owns Writer and observations, with a bounded SOCK_SEQPACKET
+UNIX socket. SO_PEERCRED accepts only root and the dedicated policy UID. Root-only
+operator commands are separate from sample/automatic proposal operations. Every
+mutation checks a process epoch and a same-process revision. Automatic proposals
+also carry the latest round; the writer independently recomputes admission from
+its own observations. This keeps health forgery out of the unprivileged boundary.
+The capability-free worker computes policy and proposes selections; it cannot
+read the state DB or issue netlink writes. Trusted probe/admission validation
+remains in the writer, rather than pretending it is a tiny untrusted syscall shim.
+
+Service mode is independent from selected route and health:
+
+- DISABLED: no attached owned layout. First daemon start is detached.
+- Enable intent -> install/complete layout -> PAUSED, without selecting a WAN.
+- PAUSED: probe and maintain owned layout, but do not select automatically.
+- Resume: require fresh healthy explicit target and root acknowledgement of a
+  recorded budget reset; select if needed, then enter ENABLED.
+- ENABLED: admit healthy automatic proposals within the persistent budget.
+- Disable intent -> remove validated owned objects -> DISABLED. The operator
+  explicitly acknowledges handoff to the preexisting main policy.
+
+Enable/disable intent is durable before any write. A successor completes partial
+lifecycle work under the same inherited-lock discipline. Stop leaves routes intact;
+restart retains modes and reconstructs fresh health. RPC loss does not undo a
+completed mutation; clients must inspect status, never automatically retry with a
+new token. Unknown mutation/storage outcomes terminate the writer for reconciliation.
+
+## Capacity and remaining boundaries
+
+Protocol packets, peer wait/backlog and probe rate are bounded. Events retain 128
+rows and 32-KiB payloads; budget history retains only relevant admission entries
+and rejects more than 64. The SQLite main DB has 2048 4-KiB pages; rollback files
+and system journald are separate resource domains. A low-space check is a guard,
+not a filesystem quota or guarantee against concurrent disk exhaustion.
+
+See [operations](OPERATIONS.md) for exact limits and deployment prerequisites.
+Root writer compromise remains outside the boundary; namespace capabilities are
+broad. No storage corruption repair, remote fleet control, HA, distribution package
+qualification, physical WAN result or recovery-time guarantee is established.

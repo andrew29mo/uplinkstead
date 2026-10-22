@@ -1,6 +1,6 @@
 """Stage-one dual DHCP runtime: one writer, bounded intake, independent clients.
 
-No automatic selection loop. The root-local choose operation is explicit. Packet
+Automatic selection is opt-in; manual mode remains the default. Packet
 capture supplies conservative REQUEST-time lower bounds, never hook-time leases.
 """
 import argparse
@@ -226,9 +226,19 @@ class Runtime:
     def __init__(self, writer, path, hook, executable='/usr/bin/busybox', probe=probe_round):
         self.w, self.path, self.hook, self.executable, self.probe = writer, Path(path), Path(hook), executable, probe
         cfg = writer.cfg.get('runtime', {})
-        if set(cfg)-{'queue_capacity','probe_interval','restart_delay','client_diagnostics','restore_selected'}: raise ValueError('Unknown runtime config')
-        self.restore_selected=cfg.get('restore_selected',False)
+        if set(cfg)-{'queue_capacity','probe_interval','restart_delay','client_diagnostics','restore_selected','automatic_selection','selection_hold','failover_delay'}: raise ValueError('Unknown runtime config')
+        self.automatic_selection=cfg.get('automatic_selection',False)
+        if type(self.automatic_selection) is not bool:raise ValueError('automatic_selection must be boolean')
+        self.selection_hold=cfg.get('selection_hold',1.)
+        self.failover_delay=cfg.get('failover_delay',2.)
+        for v in (self.selection_hold,self.failover_delay):
+            if type(v) not in (int,float) or not .05<=v<=30:raise ValueError('Selection delay outside .05..30 seconds')
+        self.stable={k:None for k in LINKS}
+        self.withdrawn_at=None
+        self.auto_status='DISABLED'
+        self.restore_selected=cfg.get('restore_selected',self.automatic_selection)
         if type(self.restore_selected) is not bool:raise ValueError('restore_selected must be boolean')
+        if self.automatic_selection and not self.restore_selected:raise ValueError('Automatic selection requires lease restoration')
         self.restore_target=None
         self.restorations=deque(maxlen=16)
         self.restore_status='DISARMED'
@@ -246,8 +256,10 @@ class Runtime:
         self.restart_at = {k: 0 for k in LINKS}
         self.restarts = {k: deque(maxlen=3) for k in LINKS}
         self.metrics = dict(queued=0,processed=0,rejected=0,probe_results=0,stale_probe_results=0,
-                            client_restarts={k:0 for k in LINKS},lease_restore_attempts=0,lease_restores=0)
+                            client_restarts={k:0 for k in LINKS},lease_restore_attempts=0,lease_restores=0,
+                            automatic_choices=0,selection_invalidations=0)
         self.recent = deque(maxlen=16)
+        self.selection_events = deque(maxlen=16)
         self.errors = deque(maxlen=16)
         self.cache = {}
         self.cache_lock = threading.RLock()
@@ -262,8 +274,10 @@ class Runtime:
             self.cache = dict(ok=True, state=self.w.snapshot(), runtime=dict(
                 children={k:self.children[k].pid if k in self.children and self.children[k].poll() is None else None for k in LINKS},
                 restoration=dict(enabled=self.restore_selected,target=self.restore_target,status=self.restore_status,recent=len(self.restorations),limit=16,window_seconds=60),
+                automatic=dict(enabled=self.automatic_selection,status=self.auto_status,selection_hold=self.selection_hold,failover_delay=self.failover_delay,withdrawn_at=self.withdrawn_at),
                 inflight={k:k in self.futures for k in LINKS}, queue=self.inbox.stats(),
                 metrics=copy.deepcopy(self.metrics), recent=list(self.recent), as_of=now(),
+                selection_events=list(self.selection_events),
                 capture={k:c.stats() for k,c in self.captures.items()},
                 last_errors=list(self.errors),
                 lease_clock='CLOCK_BOOTTIME; earlier of fixed client REQUEST origin and previous empty AF_PACKET queue bound'))
@@ -425,15 +439,79 @@ class Runtime:
         if item:
             q,done,result = item
             try:
-                self.w.choose(q['link'],q['epoch'],q['revision'])
-                if self.restore_selected:self.restore_target=q['link']
-                result.update(ok=True,state=self.w.snapshot())
+                valid=self.select_guarded(q['link'],lambda:self.w.choose(q['link'],q['epoch'],q['revision']))
+                if valid and self.restore_selected:self.restore_target=q['link']
+                result.update(ok=valid,state=self.w.snapshot())
+                if not valid:result['error']='SelectionInvalidated'
             except RuntimeError as exc:
                 if self.w.s['phase'] != 'READY': raise
                 result.update(ok=False,error=type(exc).__name__)
             done.set()
         self.converge()
+        self.automatic()
         self.publish()
+
+    def selection_stamp(self,k):
+        c=self.captures[k].stats();q=self.inbox.stats()
+        return (c.get('version',0),q['per_link_depth'][k],self.inbox.sequence[k],k in q['revoked']),bool(c.get('pending',False) or q['per_link_depth'][k] or k in q['revoked'])
+
+    def select_guarded(self,k,action):
+        """Recheck intake after a real write; never publish that stale choice.
+
+        This is not an atomic ACK/kernel transaction. A later packet is handled
+        by the next step; an observed concurrent change withdraws and resets health.
+        """
+        if k not in LINKS:raise RuntimeError('Unknown selection link')
+        before,blocked=self.selection_stamp(k)
+        if blocked:raise RuntimeError('Pending lease evidence')
+        action()
+        after,blocked=self.selection_stamp(k)
+        if blocked or after!=before:
+            self.w.transition(k,None,0.)
+            self.increment('selection_invalidations')
+            self.selection_events.append(dict(at=now(),link=k,outcome='INVALIDATED',before=list(before),after=list(after),pending=blocked,
+                generation=self.w.s['links'][k]['generation'],current=copy.deepcopy(self.w.s['links'][k]['current']),active=copy.deepcopy(self.w.s['active'])))
+            return False
+        return self.w.s['active'] is not None and self.w.s['active']['link']==k
+
+    def automatic(self):
+        if not self.automatic_selection:return
+        instant=now();s=self.w.s
+        for k in LINKS:
+            row=s['links'][k];_,pending=self.selection_stamp(k)
+            if row['current'] is None or self.w.health[k]['state']!='HEALTHY' or pending:
+                self.stable[k]=None
+            elif self.stable[k] is None or self.stable[k][0]!=row['generation']:
+                self.stable[k]=(row['generation'],instant)
+        if s['paused'] or s['latched']:
+            self.auto_status='OPERATOR_BLOCKED';return
+        if s['active'] is not None:
+            self.withdrawn_at=None;self.auto_status='SELECTED';return
+        if self.withdrawn_at is None:self.withdrawn_at=instant
+        anchor=s['selection']
+        if anchor is not None:
+            k=anchor['link'];row=s['links'][k]
+            if row['generation']>anchor['generation'] and row['current'] and self.w.health[k]['state']=='HEALTHY':
+                self.auto_status='LEASE_RESTORE_BLOCKED';return
+        if anchor is not None and instant-self.withdrawn_at<self.failover_delay:
+            self.auto_status='WITHDRAWAL_GRACE';return
+        candidates=[k for k in LINKS if self.stable[k] is not None and instant-self.stable[k][1]>=self.selection_hold]
+        # Sticky, no automatic preemption/failback. Prefer the last WAN if both
+        # are usable after withdrawal; initial acquisition prefers A when ready.
+        preferred=anchor['link'] if anchor else 'A'
+        candidates.sort(key=lambda k:k!=preferred)
+        if not candidates:self.auto_status='NO_STABLE_UPLINK';return
+        k=candidates[0]
+        try:
+            valid=self.select_guarded(k,lambda:self.w.choose(k,s['epoch'],s['revision']))
+        except RuntimeError:
+            if s['phase']!='READY':raise
+            self.auto_status='OPERATOR_BLOCKED' if s['latched'] else 'EVIDENCE_CHANGED';return
+        self.restore_target=k
+        if valid:
+            self.withdrawn_at=None
+            self.increment('automatic_choices');self.auto_status='SELECTED'
+        else:self.auto_status='EVIDENCE_CHANGED'
 
     def converge(self):
         if not self.restore_selected or self.restore_target is None:
@@ -452,11 +530,11 @@ class Runtime:
         if len(self.restorations)>=16:
             self.restore_status='RATE_LIMITED';return
         self.restorations.append(instant);self.increment('lease_restore_attempts')
-        try:self.w.restore(k,s['epoch'],s['revision'])
+        try:valid=self.select_guarded(k,lambda:self.w.restore(k,s['epoch'],s['revision']))
         except RuntimeError:
             if s['phase']!='READY':raise
             self.restore_status='EVIDENCE_CHANGED';return
-        if s['active'] is not None:self.increment('lease_restores')
+        if valid and s['active'] is not None:self.increment('lease_restores')
         self.restore_status='SELECTED' if s['active'] is not None else 'WITHDRAWN_DURING_RESTORE'
 
     def run(self):

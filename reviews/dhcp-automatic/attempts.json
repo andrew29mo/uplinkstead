@@ -1,0 +1,679 @@
+[
+  {
+    "run_id": "589ad62c594116bd",
+    "source_sha256": "c4f43fa4ef6667e19fc34ea5c747269dde03f6370bdbe4f30b9d9669bc52ac06",
+    "passed": false,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.2883617079933174
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.4355501249956433
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 10.814526625006692
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.22688908298732713
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.38479233399266377
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.143089417018928
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.79806041700067
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.31190158298704773
+      },
+      {
+        "name": "cases",
+        "exit_code": 1,
+        "timed_out": false,
+        "seconds": 21.86100966698723
+      },
+      {
+        "name": "diagnose",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3422385420126375
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.26211050001438707
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2568721249990631
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.451649875001749
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.1941262909967918
+      }
+    ],
+    "error": "RuntimeError: cases failed or timed out",
+    "verification_error": null,
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped",
+    "controls": null,
+    "interpretation": "Fixture wrongly assumed A acquired before B; actual automatic B selection was valid.",
+    "completed_cases": [],
+    "guest_failure": {
+      "type": "TimeoutError",
+      "message": "Stage 1 observation deadline exceeded"
+    }
+  },
+  {
+    "run_id": "648f09e7fadf69a1",
+    "source_sha256": "f07f42243b132df41a9d972e2a4503ad652781d0959f4b7f42698a67f7dde019",
+    "passed": false,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.451443041994935
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2587964170088526
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 10.782233875012025
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3192906670155935
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3835458329995163
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.178308583010221
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.9976542920048814
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2372637499938719
+      },
+      {
+        "name": "cases",
+        "exit_code": 1,
+        "timed_out": false,
+        "seconds": 50.12439358400297
+      },
+      {
+        "name": "diagnose",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.30359054199652746
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.27445337499375455
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2816804169851821
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.5913455419940874
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.1957242500211578
+      }
+    ],
+    "error": "RuntimeError: cases failed or timed out",
+    "verification_error": null,
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped",
+    "controls": null,
+    "interpretation": "Fixture incorrectly expected a full budget alone to latch; free same-WAN renewal was valid before a charged attempt.",
+    "completed_cases": [
+      "automatic_initial_A",
+      "A_blackhole_automatic_B",
+      "four_natural_B_renewals",
+      "B_loss_automatic_A_stale_request",
+      "short_flap_and_no_preemption"
+    ],
+    "guest_failure": {
+      "type": "TimeoutError",
+      "message": "Stage 1 observation deadline exceeded"
+    }
+  },
+  {
+    "run_id": "d4d12b58d665b9ff",
+    "source_sha256": "b81c0e662c34a87fece1fec38825eafeae6533c233e2284fe1094cf270d33b30",
+    "passed": false,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.3595428749977145
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.32369741701404564
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 8.55577400000766
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3379288330033887
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3158827089937404
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.194956124993041
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.1340463749947958
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2990118750021793
+      },
+      {
+        "name": "cases",
+        "exit_code": 1,
+        "timed_out": false,
+        "seconds": 58.02436504201614
+      },
+      {
+        "name": "diagnose",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.42178070900263265
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.255470082978718
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3053672079986427
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.560959417023696
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.1922957500210032
+      }
+    ],
+    "error": "RuntimeError: cases failed or timed out",
+    "verification_error": null,
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped",
+    "controls": null,
+    "interpretation": "Seven service cases completed; later B could not qualify. TLS accept-loop blocking was found separately; no socket dump conclusively attributes this failed run.",
+    "completed_cases": [
+      "automatic_initial_A",
+      "A_blackhole_automatic_B",
+      "four_natural_B_renewals",
+      "B_loss_automatic_A_stale_request",
+      "short_flap_and_no_preemption",
+      "both_down_then_budget_latch",
+      "ACK_during_backend_write"
+    ],
+    "guest_failure": {
+      "type": "TimeoutError",
+      "message": "Stage 1 observation deadline exceeded"
+    }
+  },
+  {
+    "run_id": "a52cafc17d1659f9",
+    "source_sha256": "896d584e704ef52b4117abc68086e679b62fd7bf30f428f2828b02d42864553b",
+    "passed": false,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.4586477499979082
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3285418750019744
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 12.14434029199765
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2550278340058867
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3820997080183588
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.42511820900836
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.091084707994014
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.21819770798902027
+      },
+      {
+        "name": "cases",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 45.91208941699006
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.4505610830092337
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3607494999887422
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.4963447079935577
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2781729999987874
+      }
+    ],
+    "error": null,
+    "verification_error": "Recovery A data failed",
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped",
+    "controls": null,
+    "interpretation": "All nine cases ran, but report rejected an unavailable main-route witness after service replacement.",
+    "completed_cases": [
+      "automatic_initial_A",
+      "TLS_fixture_slow_handshake_isolation",
+      "A_blackhole_automatic_B",
+      "four_natural_B_renewals",
+      "B_loss_automatic_A_stale_request",
+      "short_flap_and_no_preemption",
+      "both_down_then_budget_latch",
+      "ACK_during_backend_write",
+      "loss_during_backend_write"
+    ],
+    "guest_failure": null
+  },
+  {
+    "run_id": "196618cea4029dcf",
+    "source_sha256": "1fcf4b17ffac9cb3ac7d190a8f9de701ab3c8e873f3ffbbfbd7744ba808a820b",
+    "passed": true,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.5279450000089128
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3252114169881679
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 9.607031374995131
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2433519579935819
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.4528335420181975
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.064107457990758
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.99911558299209
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.312566834007157
+      },
+      {
+        "name": "cases",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 45.738798875012435
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3513442080002278
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2707122919964604
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.5529983330052346
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.19239008400472812
+      }
+    ],
+    "error": null,
+    "verification_error": null,
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped",
+    "controls": {
+      "passed": true,
+      "rejected": 31
+    },
+    "interpretation": "Passed earlier checks, but short packet-drop pulse did not prove a failed round. Superseded after a formal regression exposed unnecessary withdrawal on SUSPECT recovery.",
+    "completed_cases": [
+      "automatic_initial_A",
+      "TLS_fixture_slow_handshake_isolation",
+      "A_blackhole_automatic_B",
+      "four_natural_B_renewals",
+      "B_loss_automatic_A_stale_request",
+      "short_flap_and_no_preemption",
+      "both_down_then_budget_latch",
+      "ACK_during_backend_write",
+      "loss_during_backend_write"
+    ],
+    "guest_failure": null
+  },
+  {
+    "run_id": "ef28b81686a296b5",
+    "source_sha256": "b5a3d5f93525dd3938d8f222881c7a90d618b33aa4a454e84224984161d920cc",
+    "passed": true,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.3461357500054874
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3471089169906918
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 10.03477404100704
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2322039160062559
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.39264787497813813
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.327164000016637
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.9740295419760514
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.30247429199516773
+      },
+      {
+        "name": "cases",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 45.332120042003226
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3596974170068279
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.35715320901363157
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.5916320840187836
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2553030000126455
+      }
+    ],
+    "error": null,
+    "verification_error": null,
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped",
+    "controls": {
+      "passed": true,
+      "rejected": 32
+    },
+    "interpretation": "Final accepted run after SUSPECT recovery fix, with an observed failed round and unchanged selected route/budget.",
+    "completed_cases": [
+      "automatic_initial_A",
+      "TLS_fixture_slow_handshake_isolation",
+      "A_blackhole_automatic_B",
+      "four_natural_B_renewals",
+      "B_loss_automatic_A_stale_request",
+      "short_flap_and_no_preemption",
+      "both_down_then_budget_latch",
+      "ACK_during_backend_write",
+      "loss_during_backend_write"
+    ],
+    "guest_failure": null
+  }
+]

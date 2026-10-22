@@ -183,3 +183,23 @@ change A. Manual cross-WAN selection must still latch when exhausted, and latch
 blocks subsequent restoration. Portable tests independently challenge stale
 health/tokens, same-generation reuse, rate bound, additive migration and reopen
 disarming. This gate does not complete automatic failover or deployment recovery.
+
+## Milestone 1: automatic dual-DHCP foreground gate
+
+[Automatic selection](DHCP_AUTOMATIC.md) must use the formal service/client/backend:
+initial fresh selection, A blackhole→B, four natural selected-B renewals without
+extra budget, real B lease release→A, healthy backup without preemption, short
+flap without charged oscillation, both-down withdrawal, and exhausted-budget
+latch surviving a fresh healthy renewal. Initial selection counts toward budget.
+A viable independent A/main witness must accompany latched LAN rejection.
+
+Inject new ACK and real client loss during a bounded pause around the production
+backend's completed route write. Require target intake during the pause and
+formal invalidation/withdrawal before publication, then new-generation health for
+recovery. The injection wrapper must not replace health/admission/backend results.
+Delayed stale operator and probe results cannot change new authority. Portable
+pause and restore-rate tests, matching-source dual-platform IDs, build readback,
+negative report controls, JSON/HTML agreement and cleanup remain required.
+These tests do not prove every ACK/kernel interleaving or zero-gap forwarding.
+Installed/reboot recovery, capacity longevity and traffic-distribution comparisons
+remain independent gates; passing this milestone does not complete the full MVP.

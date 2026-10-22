@@ -287,8 +287,13 @@ class DualLifecycle(Writer):
         if votes is None:
             h.update(state='UNKNOWN',good=0,bad=0,until=0.)
         elif votes >= 2:
+            active=self.s['active']
+            # A fresh successful round repairs a SUSPECT selected path without
+            # treating its already-qualified generation as a new acquisition.
+            # Unselected/new/expired generations still need the full quorum.
+            continuing=active is not None and active['link']==link and active['generation']==generation and h['state'] in ('HEALTHY','SUSPECT') and self.clock()<h['until']
             h.update(good=h['good']+1,bad=0,until=min(at+self.freshness,row['expires']))
-            h['state'] = 'HEALTHY' if h['good'] >= self.successes else 'UNVERIFIED'
+            h['state'] = 'HEALTHY' if continuing or h['good'] >= self.successes else 'UNVERIFIED'
         else:
             h.update(good=0,bad=h['bad']+1)
             h['state'] = 'DOWN' if h['bad'] >= self.failures else 'SUSPECT'

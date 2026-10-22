@@ -109,6 +109,18 @@ lease generation or choose the other WAN. It starts disarmed after writer restar
 portable fault tests. This remains a foreground integration, not automatic
 cross-WAN failover or a deployed dual-DHCP MVP.
 
+## Automatic dual-DHCP selection (milestone 1)
+
+[Opt-in automatic mode](docs/DHCP_AUTOMATIC.md) adds fresh-candidate hold,
+withdrawal grace, sticky failover and authoritative switching budget. Initial
+selection is charged; new-generation same-WAN lease restoration remains free and
+bounded. Observed ACK/loss during a selection write causes withdrawal and new
+health qualification; no atomic ACK/kernel or zero-gap guarantee is made.
+[Evidence](reviews/dhcp-automatic/README.md) distinguishes the normal foreground
+service from explicitly labelled backend-delay fault injections. Installed
+privilege separation/recovery, capacity longevity and application traffic
+comparisons remain later gates: this is not the completed deployed dual-DHCP MVP.
+
 ## Reproduce
 
 Python 3.12+ is required. Runtime uses the standard library and separately installed

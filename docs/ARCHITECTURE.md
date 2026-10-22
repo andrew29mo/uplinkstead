@@ -248,3 +248,27 @@ budget; automatic same-WAN lease restoration does not. A separate 16/60-second
 dispatch bound and one-success-per-generation guard bound retries. Pause/latch
 blocks restoration, not safety withdrawal. Writer reopen clears the anchor and
 runtime intent while preserving budget; no old DHCP health is restored.
+
+## Milestone 1: automatic dual-DHCP selection
+
+[Automatic mode](DHCP_AUTOMATIC.md) adds healthy-candidate hold, withdrawal grace
+and sticky non-preemptive selection to the formal runtime. Initial/cross-WAN and
+same-generation reselection use the lifecycle's charged `choose`; same-WAN new
+lease recovery uses bounded `restore`. Both paths respect pause/latch and intake
+fences before/after the actual write. Observed concurrent ACK/loss invalidates and
+withdraws before publication; the final check is not atomic with future packets.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Acquiring
+    Acquiring --> Selected: fresh lease + quorum + hold / charged choice
+    Selected --> Selected: new lease + fresh quorum / bounded free restoration
+    Selected --> Withdrawn: lease loss or failed/expired health
+    Withdrawn --> Selected: grace + stable candidate / charged choice
+    Withdrawn --> Latched: budget exhausted
+    Latched --> Latched: renewal or recovered health / no selection
+```
+
+The renewal self-transition includes real quarantine/withdrawal; it does not mean
+continuous forwarding. No automatic failback is enabled. Deployment/privilege
+separation, operator reset and installed recovery for this mode remain later work.

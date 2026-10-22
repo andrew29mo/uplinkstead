@@ -97,6 +97,18 @@ the receive queue. The distro
 client remains the default; this is not full RFC/server interoperability or
 installed automatic dual-DHCP failover qualification.
 
+## Selected-WAN DHCP convergence (P0)
+
+An opt-in [convergence mode](docs/DHCP_CONVERGENCE.md) restores the previously
+operator-selected WAN after a new lease and fresh health, covering renewal,
+address/gateway change and reacquisition. It retains conservative quarantine;
+renewal may interrupt traffic. Automatic same-WAN restoration does not spend
+manual switching budget, has a separate bounded rate and cannot restore an older
+lease generation or choose the other WAN. It starts disarmed after writer restart.
+[Evidence](reviews/dhcp-convergence/README.md) separates formal VM cases from
+portable fault tests. This remains a foreground integration, not automatic
+cross-WAN failover or a deployed dual-DHCP MVP.
+
 ## Reproduce
 
 Python 3.12+ is required. Runtime uses the standard library and separately installed

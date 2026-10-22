@@ -414,3 +414,54 @@ class DualDHCPTests(unittest.TestCase):
             state = json.loads(db.execute('SELECT value FROM state').fetchone()[0]); state['links']['A']['current']={'ip':'garbage'}
             db.execute('UPDATE state SET value=?',(json.dumps(state),))
         with self.assertRaises(Blocked): self.open()
+
+class LeaseRestorationTests(unittest.TestCase):
+    setUp=DualDHCPTests.setUp
+    open=DualDHCPTests.open
+    event=DualDHCPTests.event
+    bind=DualDHCPTests.bind
+    healthy=DualDHCPTests.healthy
+    choose=DualDHCPTests.choose
+    def test_same_WAN_new_generation_restores_without_spending_budget(self):
+        self.w.budget=1;self.bind('A');self.healthy('A');self.choose('A')
+        history=copy.deepcopy(self.w.s['history'])
+        for _ in range(4):
+            self.bind('A',reason='renew')
+            with self.assertRaises(Blocked):self.w.restore('A',self.w.s['epoch'],self.w.s['revision'])
+            self.healthy('A');self.w.restore('A',self.w.s['epoch'],self.w.s['revision'])
+            self.assertEqual(self.w.s['active']['link'],'A');self.assertEqual(self.w.s['history'],history)
+            self.assertFalse(self.w.s['latched'])
+    def test_health_flapping_does_not_reuse_same_generation_restoration(self):
+        self.bind('A');self.healthy('A');self.choose('A');self.bind('A',reason='renew');self.healthy('A')
+        self.w.restore('A',self.w.s['epoch'],self.w.s['revision'])
+        self.w._select(None)
+        with self.assertRaises(Blocked):self.w.restore('A',self.w.s['epoch'],self.w.s['revision'])
+    def test_restore_cannot_cross_WAN_after_withdrawal(self):
+        self.w.budget=1;self.bind('A');self.bind('B');self.healthy('A');self.healthy('B');self.choose('A')
+        self.w.transition('A',None,0)
+        with self.assertRaises(Blocked):self.w.restore('B',self.w.s['epoch'],self.w.s['revision'])
+        with self.assertRaises(Blocked):self.choose('B')
+        self.assertTrue(self.w.s['latched']);self.assertIsNone(self.w.s['active'])
+    def test_old_restoration_token_and_old_health_cannot_select_new_lease(self):
+        self.bind('A');self.healthy('A');self.choose('A');old=copy.deepcopy(self.w.s)
+        self.bind('A',reason='renew')
+        with self.assertRaises(Blocked):self.w.restore('A',old['epoch'],old['revision'])
+        with self.assertRaises(Blocked):self.w.observation('A',old['links']['A']['generation'],99,self.time,3)
+        self.assertIsNone(self.w.s['active'])
+    def test_writer_reopen_disarms_restoration_without_resetting_budget(self):
+        self.bind('A');self.healthy('A');self.choose('A');history=copy.deepcopy(self.w.s['history'])
+        self.w.__exit__();self.w=self.open()
+        self.assertIsNone(self.w.s['selection']);self.assertEqual(self.w.s['history'],history)
+    def test_restore_is_blocked_by_pause_and_latch(self):
+        self.bind('A');self.healthy('A');self.choose('A');self.bind('A',reason='renew');self.healthy('A')
+        for key in ('paused','latched'):
+            self.w.s[key]=True
+            with self.assertRaises(Blocked):self.w.restore('A',self.w.s['epoch'],self.w.s['revision'])
+            self.w.s[key]=False
+    def test_historical_journal_additive_migration_preserves_budget(self):
+        self.bind('A');self.healthy('A');self.choose('A');history=copy.deepcopy(self.w.s['history'])
+        self.w.s.pop('selection');self.w.save();self.w.__exit__();self.w=self.open()
+        self.assertIsNone(self.w.s['selection']);self.assertEqual(self.w.s['history'],history)
+    def test_invalid_future_selection_anchor_rejected(self):
+        self.w.s['selection']=dict(link='A',generation=999);self.w.save();self.w.__exit__()
+        with self.assertRaises(Blocked):self.open()

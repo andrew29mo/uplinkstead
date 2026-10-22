@@ -171,3 +171,15 @@ client-expire log to justify an earlier withdrawal. Require same-burst/equal-buf
 real socket filter contrast with kernel drops, plus actual-client ACK processing
 after quarantine with the kernel UDP delivery path proven blocked. The report
 must bind that drop rule to wanB, UDP 67→68 and the actual prerouting hook.
+
+## P0 selected-WAN restoration gate
+
+[The convergence contract](DHCP_CONVERGENCE.md) requires actual natural renewal,
+changed allocation, fresh-health withholding, gateway-only change, true expiry,
+reacquisition and old ACK replay using the formal service/backend. Initial
+selection remains manual. Four automatic renewals must succeed with the global
+manual budget already full without adding history or latching. Inactive B cannot
+change A. Manual cross-WAN selection must still latch when exhausted, and latch
+blocks subsequent restoration. Portable tests independently challenge stale
+health/tokens, same-generation reuse, rate bound, additive migration and reopen
+disarming. This gate does not complete automatic failover or deployment recovery.

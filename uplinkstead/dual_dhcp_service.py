@@ -226,7 +226,12 @@ class Runtime:
     def __init__(self, writer, path, hook, executable='/usr/bin/busybox', probe=probe_round):
         self.w, self.path, self.hook, self.executable, self.probe = writer, Path(path), Path(hook), executable, probe
         cfg = writer.cfg.get('runtime', {})
-        if set(cfg)-{'queue_capacity','probe_interval','restart_delay','client_diagnostics'}: raise ValueError('Unknown runtime config')
+        if set(cfg)-{'queue_capacity','probe_interval','restart_delay','client_diagnostics','restore_selected'}: raise ValueError('Unknown runtime config')
+        self.restore_selected=cfg.get('restore_selected',False)
+        if type(self.restore_selected) is not bool:raise ValueError('restore_selected must be boolean')
+        self.restore_target=None
+        self.restorations=deque(maxlen=16)
+        self.restore_status='DISARMED'
         self.client_diagnostics = cfg.get('client_diagnostics',False)
         if type(self.client_diagnostics) is not bool:raise ValueError('client_diagnostics must be boolean')
         self.inbox = Inbox(cfg.get('queue_capacity', 8))
@@ -241,7 +246,7 @@ class Runtime:
         self.restart_at = {k: 0 for k in LINKS}
         self.restarts = {k: deque(maxlen=3) for k in LINKS}
         self.metrics = dict(queued=0,processed=0,rejected=0,probe_results=0,stale_probe_results=0,
-                            client_restarts={k:0 for k in LINKS})
+                            client_restarts={k:0 for k in LINKS},lease_restore_attempts=0,lease_restores=0)
         self.recent = deque(maxlen=16)
         self.errors = deque(maxlen=16)
         self.cache = {}
@@ -256,6 +261,7 @@ class Runtime:
         with self.cache_lock:
             self.cache = dict(ok=True, state=self.w.snapshot(), runtime=dict(
                 children={k:self.children[k].pid if k in self.children and self.children[k].poll() is None else None for k in LINKS},
+                restoration=dict(enabled=self.restore_selected,target=self.restore_target,status=self.restore_status,recent=len(self.restorations),limit=16,window_seconds=60),
                 inflight={k:k in self.futures for k in LINKS}, queue=self.inbox.stats(),
                 metrics=copy.deepcopy(self.metrics), recent=list(self.recent), as_of=now(),
                 capture={k:c.stats() for k,c in self.captures.items()},
@@ -420,12 +426,38 @@ class Runtime:
             q,done,result = item
             try:
                 self.w.choose(q['link'],q['epoch'],q['revision'])
+                if self.restore_selected:self.restore_target=q['link']
                 result.update(ok=True,state=self.w.snapshot())
             except RuntimeError as exc:
                 if self.w.s['phase'] != 'READY': raise
                 result.update(ok=False,error=type(exc).__name__)
             done.set()
+        self.converge()
         self.publish()
+
+    def converge(self):
+        if not self.restore_selected or self.restore_target is None:
+            self.restore_status='DISARMED';return
+        k=self.restore_target;s=self.w.s;row=s['links'][k];anchor=s['selection']
+        if s['paused'] or s['latched']:
+            self.restore_status='OPERATOR_BLOCKED';return
+        if s['active'] is not None:
+            self.restore_status='SELECTED';return
+        if anchor is None or anchor['link']!=k or row['generation']<=anchor['generation']:
+            self.restore_status='NO_NEW_LEASE';return
+        if row['current'] is None or self.w.health[k]['state']!='HEALTHY' or self.captures[k].stats().get('pending',False):
+            self.restore_status='AWAITING_FRESH_LEASE_HEALTH';return
+        instant=now()
+        while self.restorations and instant-self.restorations[0]>=60:self.restorations.popleft()
+        if len(self.restorations)>=16:
+            self.restore_status='RATE_LIMITED';return
+        self.restorations.append(instant);self.increment('lease_restore_attempts')
+        try:self.w.restore(k,s['epoch'],s['revision'])
+        except RuntimeError:
+            if s['phase']!='READY':raise
+            self.restore_status='EVIDENCE_CHANGED';return
+        if s['active'] is not None:self.increment('lease_restores')
+        self.restore_status='SELECTED' if s['active'] is not None else 'WITHDRAWN_DURING_RESTORE'
 
     def run(self):
         if os.geteuid() != 0: raise PermissionError('Root Linux runtime required')

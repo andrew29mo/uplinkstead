@@ -148,12 +148,12 @@ class Fixture:
             try:p.wait(timeout=3)
             except subprocess.TimeoutExpired:p.kill();p.wait(timeout=3)
 
-    def server(self, link, address=None, gateway=None, extra=()):
+    def server(self, link, address=None, gateway=None, extra=(), duration="2m"):
         v=LINKS[link]
         if link in self.servers:self.stop(self.servers[link])
         (self.root/('leases-'+link)).unlink(missing_ok=True)
         p=self.spawn(v['namespace'],['dnsmasq','--no-daemon','--port=0','--interface=edge','--bind-interfaces',
-             '--dhcp-authoritative','--dhcp-range='+str(address or v['address'])+','+str(address or v['address'])+',255.255.255.0,2m',
+             '--dhcp-authoritative','--dhcp-range='+str(address or v['address'])+','+str(address or v['address'])+',255.255.255.0,'+duration,
              '--dhcp-option=option:router,'+str(gateway or v['gateway']),
              '--dhcp-leasefile='+str(self.root/('leases-'+link)), '--pid-file='+str(self.root/('dnsmasq-'+link+'.pid')),
              '--log-dhcp','--user=root',*extra], 'dnsmasq-'+link)

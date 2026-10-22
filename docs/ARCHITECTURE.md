@@ -237,3 +237,14 @@ compares equal-buffer filtered/unfiltered sockets on one actual burst, and
 separately tests the real client processing a delayed ACK after quarantine while
 the ordinary kernel UDP path is blocked. This is not protection against arbitrary
 DHCP floods or a proof of every receive interleaving.
+
+## P0 selected-WAN convergence
+
+[Convergence](DHCP_CONVERGENCE.md) adds an opt-in runtime restoration target armed
+only by successful explicit selection. A journalled link/generation anchor
+authorizes one restoration for a newer lease generation on that same WAN. Fresh
+health and completed ACK admission remain required. Manual choose still consumes
+budget; automatic same-WAN lease restoration does not. A separate 16/60-second
+dispatch bound and one-success-per-generation guard bound retries. Pause/latch
+blocks restoration, not safety withdrawal. Writer reopen clears the anchor and
+runtime intent while preserving budget; no old DHCP health is restored.

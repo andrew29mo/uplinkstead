@@ -76,12 +76,14 @@ class DualLifecycle(Writer):
                 raise Blocked('Journal capacity/layout unsupported')
             self.db.execute('CREATE TABLE IF NOT EXISTS state (id INTEGER PRIMARY KEY CHECK(id=1), value TEXT NOT NULL)')
             row = self.db.execute('SELECT value FROM state WHERE id=1').fetchone()
-            self.s = json.loads(row[0]) if row else dict(config_hash=self.c['_hash'], boot=self.boot(), epoch=0, revision=0, history=[], latched=False, paused=False, phase='RECOVERING', links={k:self.empty() for k in LINKS}, active=None, pending=None)
+            self.s = json.loads(row[0]) if row else dict(config_hash=self.c['_hash'], boot=self.boot(), epoch=0, revision=0, history=[], latched=False, paused=False, phase='RECOVERING', links={k:self.empty() for k in LINKS}, active=None, pending=None, selection=None)
             # Explicit additive migration of the historical exploration schema.
             # Existing unknown fields are still rejected by validate().
             for row in self.s.get('links', {}).values():
                 if isinstance(row, dict) and set(row) == {'current','generation','revision','session','last_event','expires'}:
                     row['event_sequence'] = 0
+            if set(self.s)=={'config_hash','boot','epoch','revision','history','latched','paused','phase','links','active','pending'}:
+                self.s['selection']=None
             self.validate()
             self.backend = self.factory(self.cfg, self.fd)
             self.health = {k:dict(state='WAITING', good=0, bad=0, round=-1, until=0.) for k in LINKS}
@@ -91,7 +93,7 @@ class DualLifecycle(Writer):
             for k in LINKS:
                 old = self.s['links'][k]
                 self.s['links'][k] = dict(self.empty(), generation=old['generation']+1, revision=old['revision']+1)
-            self.s.update(boot=self.boot(), active=None, pending=None, phase='READY', revision=self.s['revision']+1)
+            self.s.update(boot=self.boot(), active=None, pending=None, selection=None, phase='READY', revision=self.s['revision']+1)
             self.save()
             return self
         except BaseException:
@@ -100,7 +102,7 @@ class DualLifecycle(Writer):
 
     def validate(self):
         s = self.s
-        if set(s) != {'config_hash','boot','epoch','revision','history','latched','paused','phase','links','active','pending'} or s['config_hash'] != self.c['_hash'] or set(s['links']) != set(LINKS):
+        if set(s) != {'config_hash','boot','epoch','revision','history','latched','paused','phase','links','active','pending','selection'} or s['config_hash'] != self.c['_hash'] or set(s['links']) != set(LINKS):
             raise Blocked('Invalid dual DHCP journal')
         if not isinstance(s['boot'],str) or not s['boot'] or any(type(s[n]) is not int or s[n] < 0 for n in ('epoch','revision')) or type(s['paused']) is not bool or type(s['latched']) is not bool or s['phase'] not in ('RECOVERING','READY','RECOVERY_REQUIRED'):
             raise Blocked('Invalid journal authority')
@@ -110,6 +112,9 @@ class DualLifecycle(Writer):
             if set(row) != {'current','generation','revision','session','event_sequence','last_event','expires'} or any(type(row[n]) is not int or row[n] < 0 for n in ('generation','revision','event_sequence')) or not isinstance(row['session'],str) or not re.fullmatch('[0-9a-f]{48}',row['session']) or any(not self.number(row[n]) for n in ('last_event','expires')):
                 raise Blocked('Invalid link journal')
             self.validate_value(row['current'])
+        anchor=s['selection']
+        if anchor is not None and (not isinstance(anchor,dict) or set(anchor)!={'link','generation'} or anchor['link'] not in LINKS or type(anchor['generation']) is not int or not 0<=anchor['generation']<=s['links'][anchor['link']]['generation']):
+            raise Blocked('Invalid lease restoration anchor')
         self.validate_active(s['active'])
         if s['active']:
             a = s['active']; row = s['links'][a['link']]
@@ -306,7 +311,10 @@ class DualLifecycle(Writer):
         if active:
             row = self.s['links'][active['link']]
             deadline = min(self.clock()+self.freshness,row['expires'],self.health[active['link']]['until'])
-        self.mutate(p,lambda:self.backend.select(self.allowed(),active,deadline),lambda:self.s.update(active=active))
+        def finish():
+            self.s['active']=active
+            if active:self.s['selection']=dict(link=active['link'],generation=active['generation'])
+        self.mutate(p,lambda:self.backend.select(self.allowed(),active,deadline),finish)
 
     def tick(self):
         self.ready()
@@ -346,6 +354,24 @@ class DualLifecycle(Writer):
         self.s['history'].append(dict(boot=self.s['boot'],at=self.clock()))
         self._select(active)
         # A delayed backend return cannot certify a now-expired allocation.
+        self.tick()
+        return self.snapshot()
+
+    def restore(self, link, epoch, revision):
+        """One new lease generation on the previously chosen WAN, never failover."""
+        self.ready()
+        if type(epoch) is not int or type(revision) is not int or epoch!=self.s['epoch'] or revision!=self.s['revision']:
+            raise Blocked('Stale restoration')
+        self.tick()
+        if epoch!=self.s['epoch'] or revision!=self.s['revision']:
+            raise Blocked('Restoration invalidated by cleanup')
+        a=self.s['selection']
+        if self.s['paused'] or self.s['latched'] or self.s['active'] is not None or a is None or link!=a['link']:
+            raise Blocked('Restoration not armed for this WAN')
+        row=self.s['links'][link]
+        if row['generation']<=a['generation'] or row['current'] is None or self.health[link]['state']!='HEALTHY':
+            raise Blocked('Fresh lease and health required')
+        self._select(dict(link=link,generation=row['generation'],value=copy.deepcopy(row['current'])))
         self.tick()
         return self.snapshot()
 

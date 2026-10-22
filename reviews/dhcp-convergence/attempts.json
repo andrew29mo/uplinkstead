@@ -1,0 +1,250 @@
+[
+  {
+    "run_id": "7ce5602bde7a7f28",
+    "source_sha256": "a198d7eee251e79059f306a605ae92fd686a2df90562b2f87256960fadbc7eb8",
+    "passed": false,
+    "selected": false,
+    "reason": "Address change fixture sent a changed-address renewal ACK rejected by formal wire matching. Runtime safely reacquired/restored, but observer awaited the older session sequence; corrected fixture to NAK/new acquisition and accepted newer session authority in the observer.",
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "cases",
+        "exit_code": 1,
+        "timed_out": false
+      },
+      {
+        "name": "diagnose",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false
+      }
+    ],
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true
+    },
+    "vm_final": "Stopped"
+  },
+  {
+    "run_id": "2fd1b207232d2069",
+    "source_sha256": "21511f72ee2fe7ff7629086c46a198050b25f1688d24e54511e79bfa1637fdf9",
+    "passed": true,
+    "selected": false,
+    "reason": "Six cases passed 24 controls; superseded by stricter actual WAN-peer and restore-mode report checks.",
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "cases",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false
+      }
+    ],
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true
+    },
+    "vm_final": "Stopped"
+  },
+  {
+    "run_id": "319ce0a3f44a1c2c",
+    "source_sha256": "bfdc4a2ca68b1fec8211402cbae4c584b226b61744d1c1fd9afa36b2e1cb191e",
+    "passed": true,
+    "selected": true,
+    "reason": "Final same-source run, including actual WAN-peer checks and 27 corrupt-evidence controls.",
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "cases",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false
+      }
+    ],
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true
+    },
+    "vm_final": "Stopped"
+  }
+]

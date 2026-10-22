@@ -84,6 +84,30 @@ class RuntimeTests(unittest.TestCase):
         if 'identity' in changes: changes['id']=changes.pop('identity')
         e.update(changes);self.r.inbox.put(e);return e
 
+    def test_runtime_restores_selected_only_with_new_lease_and_health(self):
+        self.r.restore_selected=True;self.submit();self.r.step()
+        row=self.w.s['links']['B'];self.w.observation('B',row['generation'],10,now(),3);self.w.observation('B',row['generation'],11,now(),3)
+        self.w.choose('B',self.w.s['epoch'],self.w.s['revision']);self.r.restore_target='B'
+        before=copy.deepcopy(self.w.s['history']);self.submit(identity='next',reason='renew');self.r.step()
+        self.assertIsNone(self.w.s['active']);row=self.w.s['links']['B']
+        self.w.observation('B',row['generation'],12,now(),3);self.w.observation('B',row['generation'],13,now(),3)
+        self.r.converge();self.assertEqual(self.w.s['active']['link'],'B');self.assertEqual(before,self.w.s['history'])
+    def test_restoration_rate_limit_does_not_spend_global_budget(self):
+        self.r.restore_selected=True;self.submit();self.r.step();row=self.w.s['links']['B']
+        self.w.observation('B',row['generation'],10,now(),3);self.w.observation('B',row['generation'],11,now(),3)
+        self.w.choose('B',self.w.s['epoch'],self.w.s['revision']);self.r.restore_target='B'
+        self.submit(identity='next',reason='renew');self.r.step();row=self.w.s['links']['B']
+        self.w.observation('B',row['generation'],12,now(),3);self.w.observation('B',row['generation'],13,now(),3)
+        self.r.restorations.extend([now()]*16);history=copy.deepcopy(self.w.s['history']);self.r.converge()
+        self.assertEqual(self.r.restore_status,'RATE_LIMITED');self.assertIsNone(self.w.s['active']);self.assertEqual(history,self.w.s['history'])
+    def test_pending_wire_allocation_blocks_restore(self):
+        self.r.restore_selected=True;self.submit();self.r.step();row=self.w.s['links']['B']
+        self.w.observation('B',row['generation'],10,now(),3);self.w.observation('B',row['generation'],11,now(),3)
+        self.w.choose('B',self.w.s['epoch'],self.w.s['revision']);self.r.restore_target='B'
+        self.submit(identity='next',reason='renew');self.r.step();row=self.w.s['links']['B']
+        self.w.observation('B',row['generation'],12,now(),3);self.w.observation('B',row['generation'],13,now(),3)
+        self.r.captures['B'].stats=lambda:dict(pending=True);self.r.converge();self.assertIsNone(self.w.s['active'])
+
     def test_slow_probe_does_not_block_formal_lease_application(self):
         self.submit();self.r.step();self.assertTrue(self.started.wait(timeout=1))
         before=self.w.s['links']['B']['generation']

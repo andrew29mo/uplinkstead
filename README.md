@@ -40,7 +40,7 @@ An independent [DHCP lifecycle mode](docs/DHCP.md) adds supervised lease acquisi
 renewal, expiry, address/gateway changes and fresh-session recovery. Every update
 invalidates health and requires fresh pinned TLS quorum before forwarding. It is
 not integrated into the static dual-uplink controller. See the
-[DHCP lifecycle and VM restart evidence](reviews/dhcp-reboot/README.md).
+[Reviewed DHCP lifecycle and VM restart evidence](reviews/dhcp-reboot-review/README.md).
 The restart check retains a live lease across an orderly VM stop/start using an
 explicit shutdown-only process fault, then requires new DHCP acquisition and
 fresh health. It does not establish sudden power-loss recovery or protection

@@ -23,11 +23,19 @@ a replay of the static controller's restart result.
    state nor starts a DHCP server. The new service has no drop-ins. Thus a shutdown-time rollback cannot explain
    the result. Boot IDs must differ.
 4. Observe the automatically started service with a different InvocationID and
-   session. Before any new DHCP server is started, repeatedly require no current
+   session. Before BusyBox starts, the formal service independently checks its
+   empty allocation/health and the actual Linux rules/addresses/routes, then emits
+   a structured startup record. The verifier ties this to journald boot/PID/invocation
+   and requires the initial recovery revision, before any client callback. Before
+   any new DHCP server is started, repeatedly require no current
    allocation, no expiry/healthy state, no DHCP address or owned probe/data routes,
-   and all six owned lookup/terminal rules. New LAN TLS attempts must fail. A
+   and exactly the six owned lookup/terminal rules plus the three builtins;
+   unexpected or duplicate rules reject. New LAN TLS attempts must fail. A
    positive control first proves the alternate main default works, then its
-   counter is reset: waiting-period attempts must put zero packets on that path.
+   TCP tuple is retained. Only that exact root-control tuple is exempted from the
+   subsequent counter, so delayed teardown cannot contaminate it. Actual nftables
+   hook and expressions are verified; all other target flows, including LAN and
+   DHCP-source probes, must put zero packets on that path.
 5. Start a real DHCP server offering a different address. Temporarily blackhole
    probe traffic so LEASED/UNVERIFIED can be observed, with no LAN default. Remove
    that fixture hole, then require fresh quorum and successful LAN TLS traffic on
@@ -35,7 +43,9 @@ a replay of the static controller's restart result.
 6. Stall client callbacks while separately injecting an old session, old boot
    identity and old revision through the formal socket. Other authority fields
    remain current. Require the exact retired-session/stale errors and unchanged
-   status plus independent address/route/rule readback.
+   status plus independent address/route/rule readback. Retain dispatch/completion
+   timestamps and the prior journal event time so bad time/order cannot explain
+   the expected stale-authority errors; each proposed allocation must also be valid.
 
 The test-only topology dependency is explicit. It is not a production boot guard
 or an unchanged native distribution-package installation. Fixture service paths,
@@ -56,7 +66,8 @@ The post-start `seconds` field measures the guest verification routine, includin
 intentional waiting, test failures and DHCP reacquisition. It excludes host-side
 VM stop/start time; those durations are separate driver stages. Neither is a
 recovery SLO or continuous outage measurement. Writer RSS is a process snapshot,
-not peak RSS, DHCP-client memory, kernel memory or VM overhead. SQLite bytes refer
+not peak RSS, DHCP-client memory, kernel memory or VM overhead. Service identity
+is checked immediately before and after the RSS read. SQLite bytes refer
 to the main file in the earlier lifecycle phase, not whole-filesystem disk usage.
 
 ## Limits
@@ -68,5 +79,8 @@ before the service installs its guards. A stopped/stuck service or exhausted
 systemd restart limit can prevent recovery. It does not provide a kernel lease
 expiry guarantee, uninterrupted existing connections or DHCP dual-WAN failover.
 
-See [the retained receipt](../reviews/dhcp-reboot/README.md) for actual results and
+See [the reviewed receipt](../reviews/dhcp-reboot-review/README.md) for actual results and
 [DHCP operations](DHCP.md) for ownership and deployment requirements.
+
+See [the evidence review](DHCP_REBOOT_REVIEW.md) for baseline limitations and
+fixture ownership/partial-write corrections.

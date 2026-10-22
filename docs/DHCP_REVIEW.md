@@ -74,3 +74,10 @@ power loss and long-running natural T1/T2 scheduling remain untested. Timings in
 polling work; RSS is a single writer-process snapshot excluding client/kernel/VM.
 No forwarding-capacity, peak-memory, hard-expiry or production-recovery guarantee
 is derived from these runs.
+
+## Follow-up VM evidence review
+
+The later [DHCP VM reboot review](DHCP_REBOOT_REVIEW.md) closes timestamp,
+unknown-rule, pre-client startup and fixture ownership gaps in the first reboot
+receipt. [Current reviewed evidence](../reviews/dhcp-reboot-review/README.md) has
+its own source identity; historical receipts are not rewritten as passes.

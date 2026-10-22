@@ -4,8 +4,8 @@ import hashlib
 from pathlib import Path
 import unittest
 
-from tools.dhcp_report import installed, restart, deadline
-from tools.dhcp_fixture import unit
+from tools.dhcp_report import installed, restart, deadline, BUILTINS, no_forwarding
+from tools.dhcp_fixture import unit, monitor_expressions
 from uplinkstead.dhcp import Backend, config
 
 
@@ -45,7 +45,7 @@ class DHCPReportTests(unittest.TestCase):
                before_request=dict(ok=True,response=dict(peer='10.99.1.1')),
                before_network=dict(data_routes=[dict(dst='default',gateway='192.0.2.1',dev='wan0')]),
                current=dict(current=None,healthy=False),request=dict(ok=False),backup_packets=0,client_stalled=True,
-               after_network=dict(data_routes=[],probe_routes=[],addresses=[],rules=Backend(c).expected()))
+               after_network=dict(data_routes=[],probe_routes=[],addresses=[],rules=Backend(c).expected()+BUILTINS))
         deadline(d)
         changes=[lambda x:x['before'].update(healthy=False),lambda x:x['before_network'].update(data_routes=[]),
                  lambda x:x['after_network']['rules'].pop(),lambda x:x.update(observed=1.9),
@@ -67,25 +67,31 @@ class DHCPReportTests(unittest.TestCase):
         source='source';sha=hashlib.sha256(fixture().encode()).hexdigest()
         before=dict(boot='old',state=old,journal=journal,service=svc('a'),service_frozen=True,
                     request=dict(ok=True,response=dict(peer='10.99.1.1')),source_sha256=source,fixture_sha256=sha,
-                    network=dict(data_routes=[dict(dst='default')]),
+                    network=dict(data_routes=[dict(dst='default')],rules=Backend(c).expected()+BUILTINS),
                     shutdown_fault=dict(KillSignal='9',DropInPaths='/run/systemd/system/uplinkstead-dhcp.service.d/reboot-fault.conf'))
-        fresh=dict(boot='new',session='b'*48,revision=3,current=dict(ip='192.0.2.4',gateway='192.0.2.5'),healthy=True)
+        fresh=dict(boot='new',session='b'*48,revision=3,current=dict(ip='192.0.2.4',gateway='192.0.2.5',seconds=60),expires=62,healthy=True)
         waiting=dict(fresh,current=None,expires=0,healthy=False)
-        net=dict(data_routes=[],probe_routes=[],addresses=[],rules=Backend(c).expected())
+        net=dict(data_routes=[],probe_routes=[],addresses=[],rules=Backend(c).expected()+BUILTINS)
         events=[]
         for i in range(3):
             q=dict(session=old['session'] if i==0 else fresh['session'],boot='old' if i==1 else 'new',
-                   revision=1 if i==2 else 3,reason='renew',lease=dict(ip='192.0.2.2'),at=1)
-            events.append(dict(event=q,rejection=dict(rejected=True,error='RetiredSession' if i==0 else 'Blocked')))
+                   revision=1 if i==2 else 3,reason='renew',lease=dict(ip='192.0.2.2',router='192.0.2.1',subnet='255.255.255.0',lease='60'),at=3)
+            events.append(dict(event=q,rejection=dict(rejected=True,error='RetiredSession' if i==0 else 'Blocked'),sent=3.01,completed=3.1))
         d=dict(passed=True,orderly_vm_restart_tested=True,power_loss_tested=False,before=copy.deepcopy(before),boot='new',
-               prestart=dict(boot='new',journal=copy.deepcopy(journal),network=copy.deepcopy(net),source_sha256=source),
-               service=svc('b'),source_sha256=source,fixture_sha256=sha,backup_warmup_packets=1,backup_packets=0,dhcp_server_absent_while_waiting=True,
+               prestart=dict(boot='new',journal=copy.deepcopy(journal),network=copy.deepcopy(net),source_sha256=source,captured_boottime=.1),
+               service=svc('b'),startup=dict(message=dict(event='dhcp_startup_ready',
+               state=dict(fresh,current=None,expires=0,healthy=False,revision=2),backend_empty_verified=True,boottime=1),
+               _PID='123',_SYSTEMD_INVOCATION_ID='b'*32,_BOOT_ID='new',__MONOTONIC_TIMESTAMP='1000000'),
+               rss_identity_before=svc('b'),rss_identity_after=svc('b'),source_sha256=source,fixture_sha256=sha,backup_warmup_packets=1,backup_packets=0,dhcp_server_absent_while_waiting=True,
                waiting=[dict(state=copy.deepcopy(waiting),network=copy.deepcopy(net),request=dict(ok=False),backup_packets=0) for _ in range(3)],
                unverified=dict(state=dict(fresh,healthy=False),network=copy.deepcopy(net),request=dict(ok=False)),
                fresh=fresh,request=dict(ok=True,response=dict(peer='10.99.1.1')),
                stale=dict(state_before=copy.deepcopy(fresh),state_after=copy.deepcopy(fresh),
-                          network_before=copy.deepcopy(net),network_after=copy.deepcopy(net),events=events),
+                          network_before=copy.deepcopy(net),network_after=copy.deepcopy(net),events=events,prior_event=2),
                rss_snapshot='VmRSS: 12345 kB',seconds=1)
+        d['backup_control']=dict(local_address='198.51.100.2',local_port=40000,peer_address='203.0.113.2',peer_port=8443)
+        d['backup_monitor']=dict(nftables=[dict(chain=dict(family='ip',table='observe',name='f',type='filter',hook='forward',prio=-100,policy='accept'))]+
+            [dict(rule=dict(family='ip',table='observe',chain='f',expr=expr)) for expr in monitor_expressions(40000)])
         reboot(d,before,source)
         changes=[lambda x:x.update(boot='old'),lambda x:x['prestart']['journal'].update(current=None),
                  lambda x:x['waiting'][0]['state'].update(healthy=True),
@@ -93,7 +99,18 @@ class DHCPReportTests(unittest.TestCase):
                  lambda x:x['waiting'][0].update(backup_packets=1),
                  lambda x:x['stale']['events'][0]['rejection'].update(error='Blocked'),
                  lambda x:x['stale']['state_after'].update(current=None),
-                 lambda x:x.update(power_loss_tested=True),lambda x:x.update(fixture_sha256='bad')]
+                 lambda x:x.update(power_loss_tested=True),lambda x:x.update(fixture_sha256='bad'),
+                 lambda x:x['stale']['events'][1]['event'].update(at=1),
+                 lambda x:x['stale']['events'][2]['event'].update(at=10**12),
+                 lambda x:x['startup']['message'].update(backend_empty_verified=False),
+                 lambda x:x['rss_identity_after'].update(MainPID='456')]
         for change in changes:
             bad=copy.deepcopy(d);change(bad)
             with self.assertRaises(ValueError):reboot(bad,before,source)
+
+    def test_unknown_priority_rule_cannot_bypass_guards_for_an_unprobed_destination(self):
+        c=config(Path(__file__).resolve().parents[1]/'deploy/dhcp.example.json')
+        network=dict(data_routes=[],probe_routes=[],addresses=[],rules=Backend(c).expected()+BUILTINS)
+        no_forwarding(network)
+        network['rules'].append(dict(priority=1,src='10.77.0.0/24',iif='lan0',dst='203.0.113.99/32',table='main'))
+        with self.assertRaises(ValueError):no_forwarding(network)

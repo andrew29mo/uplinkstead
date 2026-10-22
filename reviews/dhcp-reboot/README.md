@@ -1,5 +1,12 @@
 # DHCP-mode VM restart validation
 
+Historical receipt at `7f836de`. Its first post-start observations occurred after
+client creation. It did not observe startup quarantine before the initial client
+deconfig; the old report also lacked strict foreign-rule and stale-time checks.
+See [the reviewed receipt](../dhcp-reboot-review/README.md) and
+[findings](../../docs/DHCP_REBOOT_REVIEW.md). Replay the commands below only with
+this receipt's source revision; current tools require stronger evidence.
+
 Run `e9764f00ec645c79`, source fingerprint
 `114835a344600925392a78640c9d464006f63ff9a3317219ea277e4299a251ae`.
 

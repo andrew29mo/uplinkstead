@@ -1,0 +1,295 @@
+{
+  "baseline_commit": "7f836dea0b20871850cb30cafda227b90617841f",
+  "findings": [
+    "unexpected priority-rule evidence accepted",
+    "stale challenge time could mask authority rejection",
+    "client initial deconfig could obscure startup observation",
+    "planned rather than actual ownership in cleanup",
+    "RSS identity sampled before the read",
+    "positive control and negative checks shared a live packet counter"
+  ],
+  "note": "Private logs and uncommitted development snapshots remain local; this summary is not a replayable release or new passed trial.",
+  "failed_attempts": [
+    {
+      "run_id": "d5e5086ae2487d83",
+      "passed": false,
+      "source_sha256": "0d54c7cfb04b6f8b10e77b6e0664c94d670b8e5876c54dd5e978f0a3d723907f",
+      "error": "RuntimeError: reboot-after failed or timed out",
+      "stages": [
+        {
+          "name": "native",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.7080417920078617
+        },
+        {
+          "name": "initial",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.4652525410056114
+        },
+        {
+          "name": "start",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 9.805491875013104
+        },
+        {
+          "name": "preflight",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.2459612500097137
+        },
+        {
+          "name": "upload",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.23836524999933317
+        },
+        {
+          "name": "linux",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 1.7734193329815753
+        },
+        {
+          "name": "linux-read",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.28119108398095705
+        },
+        {
+          "name": "cases",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 153.55791933299042
+        },
+        {
+          "name": "reboot-prepare",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 5.995937875006348
+        },
+        {
+          "name": "reboot-stop",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 2.813502040982712
+        },
+        {
+          "name": "reboot-between",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.1974744580220431
+        },
+        {
+          "name": "reboot-start",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 9.744915166986175
+        },
+        {
+          "name": "reboot-after",
+          "exit_code": 1,
+          "timed_out": false,
+          "seconds": 0.5699075000011362
+        },
+        {
+          "name": "diagnose",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.32592941701295786
+        },
+        {
+          "name": "diagnose-fixture",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.3760745829786174
+        },
+        {
+          "name": "diagnose-reboot-journal",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.22627783298958093
+        },
+        {
+          "name": "diagnose-state",
+          "exit_code": 1,
+          "timed_out": false,
+          "seconds": 0.4288999169948511
+        },
+        {
+          "name": "reboot-cleanup",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.49117833300260827
+        },
+        {
+          "name": "cleanup",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.43584854100481607
+        },
+        {
+          "name": "remove",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.2528280839906074
+        },
+        {
+          "name": "stop",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 2.6060732080077287
+        },
+        {
+          "name": "final",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.21163654199335724
+        }
+      ],
+      "cleanup": {
+        "passed": true,
+        "root_network_unchanged": true,
+        "namespaces_removed": true,
+        "unit_removed": true
+      },
+      "snapshot_removed": true,
+      "vm_final": "Stopped",
+      "observation": "First waiting backup counter was nonzero after the root TCP control; no flow capture identified the source. This run remains failed."
+    },
+    {
+      "run_id": "134f81a1fd5695bd",
+      "passed": false,
+      "source_sha256": "8416953c3b218782932878a13ce45684a53e235f70eb84a6f72eed7f90c60829",
+      "verification_error": "backup monitor exemption/scope",
+      "stages": [
+        {
+          "name": "native",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.6420332079869695
+        },
+        {
+          "name": "initial",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.3181561669916846
+        },
+        {
+          "name": "start",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 9.61667745799059
+        },
+        {
+          "name": "preflight",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.2429852089844644
+        },
+        {
+          "name": "upload",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.23690033398452215
+        },
+        {
+          "name": "linux",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 1.3842311660118867
+        },
+        {
+          "name": "linux-read",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.2224953330005519
+        },
+        {
+          "name": "cases",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 152.46816962497542
+        },
+        {
+          "name": "reboot-prepare",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 5.929149375006091
+        },
+        {
+          "name": "reboot-stop",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 2.65552637501969
+        },
+        {
+          "name": "reboot-between",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.20030508300988004
+        },
+        {
+          "name": "reboot-start",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 9.425488707987824
+        },
+        {
+          "name": "reboot-after",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 13.245664541987935
+        },
+        {
+          "name": "reboot-cleanup",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.4632905420148745
+        },
+        {
+          "name": "cleanup",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.3550017920206301
+        },
+        {
+          "name": "remove",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.33494520900421776
+        },
+        {
+          "name": "stop",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 2.5452183749875985
+        },
+        {
+          "name": "final",
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.19455808299244381
+        }
+      ],
+      "cleanup": {
+        "passed": true,
+        "root_network_unchanged": true,
+        "namespaces_removed": true,
+        "unit_removed": true
+      },
+      "snapshot_removed": true,
+      "vm_final": "Stopped",
+      "observation": "All VM phases passed, but nftables reordered adjacent TCP port match conditions in readback. Verifier expected a different order. Fixed the exact expected/generated order; this original run remains failed."
+    }
+  ],
+  "run_id": "2d40cc540f51c289",
+  "source_sha256": "472aaede93793df9b014c22eba67653bdabe050ad4f901087c6ac7ecde46ba4d",
+  "portable_tests_per_platform": 113,
+  "lifecycle_scenarios": 9,
+  "orderly_dhcp_vm_restart": true,
+  "report_controls": 47,
+  "power_loss_tested": false
+}

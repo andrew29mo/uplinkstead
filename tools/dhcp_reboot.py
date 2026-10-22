@@ -15,6 +15,7 @@ import time
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from tools import dhcp_guest as g
 from tools.evidence import manifest, fingerprint
+from tools.dhcp_fixture import monitor_script
 from uplinkstead.writer import boot_id
 
 ROOT = g.ROOT
@@ -41,7 +42,45 @@ def store(name, value):
     return value
 
 
+def assets():
+    files={SYSTEM/TOPO:fixture(),FAULT:FAULT_TEXT}
+    links={SYSTEM/(g.UNIT+'.requires')/TOPO:'../'+TOPO,
+           SYSTEM/'multi-user.target.wants'/g.UNIT:'../'+g.UNIT}
+    directories=(FAULT.parent,SYSTEM/(g.UNIT+'.requires'))
+    return files,links,directories
+
+
+def preflight():
+    files,links,directories=assets()
+    for p in (*files,*links,*directories):
+        if p.exists() or p.is_symlink():raise FileExistsError('Foreign reboot fixture object: '+str(p))
+    if (ROOT/'reboot-owned.json').exists():raise FileExistsError('Reboot ledger already exists')
+
+
+def inode(path):
+    st=path.lstat();return dict(device=st.st_dev,inode=st.st_ino)
+
+
+def install():
+    preflight()  # Recheck immediately before mutation; exclusive create below.
+    files,links,directories=assets()
+    ledger=dict(owner=(ROOT/'owner').read_text(),files={},links={},directories={})
+    def persist():store('reboot-owned',ledger)
+    persist()
+    for p in directories:
+        p.mkdir();ledger['directories'][str(p)]=inode(p);persist()
+    for p,text in files.items():
+        with p.open('x') as f:
+            ledger['files'][str(p)]=dict(text=text,complete=False,**inode(p));persist()
+            f.write(text)
+        ledger['files'][str(p)]['complete']=True;persist()
+    for p,target in links.items():
+        p.symlink_to(target)
+        ledger['links'][str(p)]=dict(target=target,**inode(p));persist()
+
+
 def prepare():
+    preflight()  # Refuse conflicts before touching or freezing the running service.
     os.kill(int((ROOT/'dnsmasq.pid').read_text()), signal.SIGCONT)
     g.command('systemctl','start',g.UNIT)
     s=g.wait(g.healthy);service=g.identity();request=g.client();net=g.network()
@@ -56,19 +95,7 @@ def prepare():
     assert saved['session']==s['session'] and saved['expires']>time.clock_gettime(time.CLOCK_BOOTTIME)+20
     # systemd resumes stopped processes on SIGTERM; SIGSTOP alone cannot
     # prevent graceful journal cleanup. Inject a runtime-only shutdown kill.
-    assert not FAULT.parent.exists()
-    store('reboot-fault-owned',dict(path=str(FAULT),text=FAULT_TEXT))
-    FAULT.parent.mkdir(parents=True);FAULT.write_text(FAULT_TEXT)
-    files={TOPO:fixture()}
-    links={g.UNIT+'.requires/'+TOPO:'../'+TOPO,
-           'multi-user.target.wants/'+g.UNIT:'../'+g.UNIT}
-    # Ledger before mutation allows cleanup after a partial fixture install.
-    store('reboot-owned',dict(files=files,links=links))
-    for name,text in files.items():
-        p=SYSTEM/name;assert not p.exists();p.write_text(text)
-    for name,target in links.items():
-        p=SYSTEM/name;assert not p.exists() and not p.is_symlink()
-        p.parent.mkdir(exist_ok=True);p.symlink_to(target)
+    install()
     g.command('systemctl','daemon-reload')
     shutdown=dict(line.split('=',1) for line in g.command('systemctl','show',g.UNIT,'-p','KillSignal','-p','DropInPaths').splitlines())
     assert shutdown['KillSignal']=='9' and shutdown['DropInPaths']==str(FAULT)
@@ -90,6 +117,20 @@ def boot():
     assert g.command('systemctl','show',g.UNIT,'-p','MainPID','--value').strip()=='0'
     return store('reboot-prestart',dict(boot=boot_id(),journal=saved,network=g.network(),
                  source_sha256=fingerprint(manifest()),captured_boottime=time.clock_gettime(time.CLOCK_BOOTTIME)))
+
+
+def startup_receipt(service):
+    def collect():
+        rows=[json.loads(line) for line in g.command('journalctl','-b','-u',g.UNIT,'-o','json','--no-pager').splitlines()]
+        matched=[]
+        for row in rows:
+            try:message=json.loads(row.get('MESSAGE',''))
+            except (ValueError,TypeError):continue
+            if isinstance(message,dict) and message.get('event')=='dhcp_startup_ready' and row.get('_SYSTEMD_INVOCATION_ID')==service['InvocationID']:
+                matched.append(dict(message=message,**{k:row[k] for k in ('_PID','_BOOT_ID','_SYSTEMD_INVOCATION_ID','__MONOTONIC_TIMESTAMP')}))
+        if len(matched)>1:raise ValueError('Duplicate startup journal receipt')
+        return matched[0] if matched else None
+    return g.wait(collect,timeout=3)
 
 
 def reject(event, expected):
@@ -115,19 +156,28 @@ def after():
     # The old PID file is meaningless in a new boot; never kill its reused PID.
     (ROOT/'dnsmasq.pid').unlink(missing_ok=True)
     waiting=g.wait(lambda:g.state() if g.state()['current'] is None else None)
-    service=g.identity();assert service['InvocationID']!=before['service']['InvocationID']
+    service=g.identity();startup=startup_receipt(service)
+    assert service['InvocationID']!=before['service']['InvocationID']
     assert waiting['boot']==boot_id() and waiting['session']!=before['state']['session'] and not waiting['healthy']
     # Positive control: main-table backup really works; then reset its counter.
-    p=g.ns('ud_r',['python3','-c',"import socket;s=socket.create_connection(('203.0.113.2',8443),timeout=1);s.close()"])
+    code="import socket,json;s=socket.create_connection(('203.0.113.2',8443),timeout=1);a=s.getsockname();b=s.getpeername();print(json.dumps(dict(local_address=a[0],local_port=a[1],peer_address=b[0],peer_port=b[1])));s.close()"
+    p=g.ns('ud_r',['python3','-c',code]);control=json.loads(p.stdout)
+    assert control['local_address']=='198.51.100.2' and control['peer_address']=='203.0.113.2' and control['peer_port']==8443
     warmup=g.counter();assert p.returncode==0 and warmup>0
-    g.nft('ud_b','flush chain ip observe f\nadd rule ip observe f ip daddr 203.0.113.2 counter\n')
+    # Closing a successful TCP control can still emit ACK/FIN/RST afterward.
+    # Isolate precisely that tuple; count every other target flow unchanged.
+    g.nft('ud_b',monitor_script(control['local_port']))
+    monitor=json.loads(g.ns('ud_b',['nft','-j','list','table','ip','observe']).stdout)
     assert not g.command('ip','netns','pids','ud_a').strip()
     observations=[]
     for _ in range(3):
         s=g.state();net=g.network();request=g.client()
         assert s['current'] is None and s['expires']==0 and not s['healthy'] and not request['ok']
         assert not net['data_routes'] and not net['probe_routes'] and not any(r['addr_info'] for r in net['addresses'])
-        assert g.counter()==0
+        count=g.counter()
+        if count:
+            store('reboot-counter-failure',dict(state=s,network=net,request=request,packets=count,control=control,monitor=monitor))
+        assert count==0
         observations.append(dict(state=s,network=net,request=request,backup_packets=g.counter()))
         time.sleep(1)
     # Hold TLS probes unsuccessful while a genuinely new wire lease is acquired,
@@ -144,52 +194,66 @@ def after():
     # Stop callbacks, not the writer, while checking separate stale authorities.
     os.kill(g.child_pid(),signal.SIGSTOP)
     s=g.state();net=g.network();events=[]
-    now=time.clock_gettime(time.CLOCK_BOOTTIME)
-    base=dict(session=s['session'],boot=s['boot'],revision=s['revision'],at=now,reason='renew',
+    prior_event=journal()['last_event']
+    base=dict(session=s['session'],boot=s['boot'],revision=s['revision'],reason='renew',
               lease=dict(ip='192.0.2.2',subnet='255.255.255.0',router='192.0.2.1',lease='60'))
     for updates,error in ((dict(session=before['state']['session']),'RetiredSession'),
                           (dict(boot=before['boot']),'Blocked'),
                           (dict(revision=before['state']['revision']),'Blocked')):
-        q=dict(base,**updates);rejection=reject(q,error)
+        at=time.clock_gettime(time.CLOCK_BOOTTIME)
+        q=dict(base,at=at,**updates);sent=time.clock_gettime(time.CLOCK_BOOTTIME)
+        rejection=reject(q,error);completed=time.clock_gettime(time.CLOCK_BOOTTIME)
+        assert prior_event<at<=sent<=completed and completed-at<=3
         assert g.state()==s and g.network()==net
-        events.append(dict(event=q,rejection=rejection))
+        events.append(dict(event=q,rejection=rejection,sent=sent,completed=completed))
     assert g.counter()==0
+    rss_identity_before=g.identity();assert rss_identity_before==service
     rss=next(x for x in Path('/proc',service['MainPID'],'status').read_text().splitlines() if x.startswith('VmRSS:'))
+    rss_identity_after=g.identity();assert rss_identity_after==rss_identity_before
     return store('reboot-after',dict(passed=True,orderly_vm_restart_tested=True,power_loss_tested=False,
-                 boot=boot_id(),before=before,prestart=pre,service=service,waiting=observations,dhcp_server_absent_while_waiting=True,
-                 backup_warmup_packets=warmup,unverified=dict(state=new,network=unverified_net,request=unverified_request),
+                 boot=boot_id(),before=before,prestart=pre,service=service,startup=startup,waiting=observations,dhcp_server_absent_while_waiting=True,
+                 backup_warmup_packets=warmup,backup_control=control,backup_monitor=monitor,unverified=dict(state=new,network=unverified_net,request=unverified_request),
                  fresh=fresh,request=request,stale=dict(state_before=s,state_after=g.state(),
-                 network_before=net,network_after=g.network(),events=events),backup_packets=g.counter(),
-                 rss_snapshot=rss,seconds=time.monotonic()-began,source_sha256=fingerprint(manifest()),
+                 network_before=net,network_after=g.network(),events=events,prior_event=prior_event),backup_packets=g.counter(),
+                 rss_snapshot=rss,rss_identity_before=rss_identity_before,rss_identity_after=rss_identity_after,seconds=time.monotonic()-began,source_sha256=fingerprint(manifest()),
                  installed_unit_sha256=hashlib.sha256((SYSTEM/g.UNIT).read_bytes()).hexdigest(),
                  fixture_sha256=hashlib.sha256((SYSTEM/TOPO).read_bytes()).hexdigest()))
 
 
 def cleanup():
-    fault=ROOT/'reboot-fault-owned.json'
-    if fault.exists() and FAULT.exists():
-        assert FAULT.read_text()==FAULT_TEXT
-        FAULT.unlink();FAULT.parent.rmdir()
-        g.command('systemctl','daemon-reload')
     p=ROOT/'reboot-owned.json'
     if not p.exists():return dict(passed=True,fixture_removed=True)
     ledger=json.loads(p.read_text())
-    for name,target in ledger['links'].items():
-        path=SYSTEM/name
-        if path.is_symlink():
-            assert os.readlink(path)==target;path.unlink()
-    directory=SYSTEM/(g.UNIT+'.requires')
-    if directory.exists():directory.rmdir()
+    assert ledger['owner']==(ROOT/'owner').read_text()
+    files,links,directories=assets()
+    assert set(ledger['files'])<=set(map(str,files)) and set(ledger['links'])<=set(map(str,links))
+    assert set(ledger['directories'])<=set(map(str,directories))
+    def same(path,entry):
+        assert inode(path)=={k:entry[k] for k in ('device','inode')}, 'Replaced fixture object'
+    # Only actual creations are owned. Never infer ownership from equal content.
+    for name,entry in ledger['links'].items():
+        path=Path(name)
+        if path.exists() or path.is_symlink():
+            same(path,entry);assert path.is_symlink() and os.readlink(path)==entry['target'];path.unlink()
+    if str(FAULT) in ledger['files'] and FAULT.exists():
+        entry=ledger['files'][str(FAULT)];same(FAULT,entry)
+        if entry['complete']:assert FAULT.read_text()==entry['text']
+        FAULT.unlink()
+        g.command('systemctl','daemon-reload')
     g.cmd(['systemctl','stop',g.UNIT],check=False)
-    for name,text in ledger['files'].items():
-        path=SYSTEM/name
-        if path.exists():
-            assert path.read_text()==text
-            g.cmd(['systemctl','stop',name],check=False);path.unlink()
-    g.command('systemctl','daemon-reload')
-    g.cmd(['systemctl','reset-failed',TOPO],check=False)
-    return dict(passed=True,fixture_removed=all(not (SYSTEM/n).exists() for n in ledger['files']) and
-                all(not (SYSTEM/n).is_symlink() for n in ledger['links']))
+    for name,entry in ledger['files'].items():
+        path=Path(name)
+        if path.exists() or path.is_symlink():
+            same(path,entry);assert path.is_file() and not path.is_symlink()
+            if entry['complete']:assert path.read_text()==entry['text']
+            g.cmd(['systemctl','stop',path.name],check=False);path.unlink()
+    for name,entry in reversed(list(ledger['directories'].items())):
+        path=Path(name)
+        if path.exists() or path.is_symlink():
+            same(path,entry);assert path.is_dir() and not path.is_symlink();path.rmdir()
+    g.command('systemctl','daemon-reload');g.cmd(['systemctl','reset-failed',TOPO],check=False)
+    return dict(passed=True,fixture_removed=all(not Path(n).exists() and not Path(n).is_symlink()
+                for kind in ('files','links','directories') for n in ledger[kind]))
 
 
 if __name__=='__main__':

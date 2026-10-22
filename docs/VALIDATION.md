@@ -1,4 +1,38 @@
-# Current DHCP validation
+# Current reviewed DHCP validation
+
+[Reviewed DHCP lifecycle and VM restart receipt](../reviews/dhcp-reboot-review/README.md),
+run `2d40cc540f51c289`, source fingerprint
+`472aaede93793df9b014c22eba67653bdabe050ad4f901087c6ac7ecde46ba4d`.
+
+- macOS/Linux: **113 portable tests each**, identical source/test IDs, zero skips.
+- Nine lifecycle scenarios plus an actual orderly DHCP-mode VM stop/start passed.
+  The retained pre-service journal excludes graceful pre-shutdown lease clearing.
+  Formal-service startup admission additionally checks actual backend emptiness
+  **before client creation**, with journal PID/boot/invocation and initial revision
+  evidence; the first client deconfig cannot explain this observation.
+- Server-off waiting, different wire acquisition, unverified/fresh health and
+  separately timed stale session/boot/revision challenges passed. Exactly the
+  supported rules are required, including absence of foreign priority bypasses.
+  The backup counter excludes only the recorded root positive-control TCP tuple;
+  all other target flows remain counted. Actual nftables expressions are verified.
+- **47 report corruption variants** reject under normal and optimized Python.
+  JSON/HTML match. Owner/inode cleanup preserves foreign objects and removes owned partial creations
+  in tests; actual VM cleanup, root network preservation and stopped state passed.
+  Review development failures remain failed, with causes/uncertainty retained.
+- Post-start guest verification: **9.98 s**, including intentional waiting and
+  acquisition; host VM durations are separate. This is not downtime or a recovery
+  bound. Writer RSS snapshots: **23,916 KiB** lifecycle / **23,720 KiB** post-restart,
+  excluding client/kernel/VM, with no peak/reduction claim. Lifecycle SQLite main
+  file: **8,192 bytes**, excluding temporary journal/filesystem overhead.
+
+See [review findings](DHCP_REBOOT_REVIEW.md) and [procedure](DHCP_REBOOT.md).
+Sudden power loss, torn writes, disk corruption, continuous early-boot protection,
+physical ISP behavior and long-running natural T1/T2 renewal remain untested.
+There is no hard kernel expiry, transparent connection migration or production SLO
+claim. DHCP is separate single-uplink mode. Older receipts below remain historical;
+the old static-mode VM run is not a new static regression at this source revision.
+
+# Historical first DHCP VM restart validation (`7f836de`)
 
 [DHCP lifecycle and VM restart receipt](../reviews/dhcp-reboot/README.md), run
 `e9764f00ec645c79`, source fingerprint

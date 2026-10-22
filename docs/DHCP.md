@@ -138,7 +138,7 @@ comparisons. No forwarding throughput, peak RSS or physical ISP result is claime
 Failed runs remain failed. Cleanup must remove owned units/namespaces/source,
 preserve the VM root network and stop the VM. Private fixture keys/logs stay local.
 
-Current result: [DHCP lifecycle and VM restart JSON/HTML](../reviews/dhcp-reboot/README.md).
+Current result: [Reviewed DHCP lifecycle and VM restart JSON/HTML](../reviews/dhcp-reboot-review/README.md).
 Earlier [DHCP audit](../reviews/dhcp-audit/README.md) and its
 [same-source static regression](../reviews/dhcp-audit-static/README.md) remain historical;
 the current runner/verifier requires the added reboot evidence.

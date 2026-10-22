@@ -156,6 +156,22 @@ class DHCPTests(unittest.TestCase):
                     self.assertEqual(w.s,current);self.assertEqual(w.backend.calls,calls)
                     self.assertTrue(w.snapshot()['healthy'])
 
+    def test_formal_startup_checks_kernel_before_any_client_callback(self):
+        from uplinkstead.dhcp_service import startup
+        with self.open() as w:
+            w.event(self.event(w));w.tick();w.tick()
+        with self.open() as w:
+            with patch.object(w.backend,'check',create=True) as check, patch('uplinkstead.dhcp_service.now',return_value=self.clock):
+                record=startup(w)
+                check.assert_called_once_with([None])
+                self.assertIsNone(record['state']['current'])
+                self.assertFalse(record['state']['healthy'])
+                self.assertTrue(record['backend_empty_verified'])
+            with patch.object(w.backend,'check',create=True,side_effect=Blocked('foreign route')):
+                with self.assertRaises(Blocked):startup(w)
+            with patch.object(w,'snapshot',return_value=dict(current=None,expires=0,healthy=True)):
+                with self.assertRaises(Blocked):startup(w)
+
     def test_actual_sqlite_save_failure_cannot_mutate_backend(self):
         import sqlite3
         with self.open() as w:

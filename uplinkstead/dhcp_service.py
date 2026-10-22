@@ -41,6 +41,17 @@ def hook():
               file=__import__('sys').stderr)
 
 
+def startup(w):
+    """Read-only admission before the first client callback can run."""
+    from .linux import Blocked
+    snapshot = w.snapshot()
+    if snapshot['current'] is not None or snapshot['expires'] != 0 or snapshot['healthy']:
+        raise Blocked('DHCP startup allocation was not quarantined')
+    w.backend.check([None])  # Actual rules/addresses/routes, not a cached flag.
+    return dict(event='dhcp_startup_ready', state=snapshot,
+                backend_empty_verified=True, boottime=now())
+
+
 def serve(c, state, path, executable, hook_path):
     if os.geteuid() != 0:
         raise PermissionError('DHCP service requires root')
@@ -59,6 +70,7 @@ def serve(c, state, path, executable, hook_path):
             path.unlink()  # Writer lock excludes a live previous owner.
         listener.bind(str(path));path.chmod(0o600)
         listener.listen(4);listener.settimeout(.1)
+        print(json.dumps(startup(w), allow_nan=False), flush=True)
         env = dict(os.environ, UPLINKSTEAD_SESSION=w.s['session'], UPLINKSTEAD_BOOT=boot_id(), UPLINKSTEAD_SOCKET=str(path))
         child = subprocess.Popen([executable, 'udhcpc', '-f', '-i', c['interface'], '-s', str(hook_path),
                                   '-t', '3', '-T', '1', '-A', '2', '-O', 'lease'], env=env)

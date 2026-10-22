@@ -4,11 +4,12 @@ import copy
 import html
 import hashlib
 import json
+import math
 import re
 from pathlib import Path
 from .evidence import ROOT, fingerprint, manifest
 from .report import test_ids
-from .dhcp_fixture import unit as fixture_unit
+from .dhcp_fixture import unit as fixture_unit, monitor_expressions
 from uplinkstead.dhcp import Backend, config
 
 CASES = ['wire_bound_and_pinned_tls', 'wire_renew', 'wire_gateway_change', 'wire_address_change',
@@ -37,12 +38,32 @@ def installed(source_hash, installed_hash):
     require(hashlib.sha256(fixture_unit(original.decode()).encode()).hexdigest()==installed_hash, 'installed service differs')
 
 
+BUILTINS = [dict(priority=0,src='all',table='local'),dict(priority=32766,src='all',table='main'),
+            dict(priority=32767,src='all',table='default')]
+
+
+def strict_rules(network):
+    expected=Backend(config(ROOT/'deploy/dhcp.example.json')).expected()+BUILTINS
+    rules=[Backend.normalized(r) for r in network['rules']]
+    require(len(rules)==len(expected) and all(rules.count(r)==1 for r in expected),
+            'missing/foreign/duplicate policy rule')
+
+
 def no_forwarding(network):
     require(not network['data_routes'] and not network['probe_routes'] and
             not any(r['addr_info'] for r in network['addresses']), 'allocation still present')
-    expected=Backend(config(ROOT/'deploy/dhcp.example.json')).expected()
-    rules=[Backend.normalized(r) for r in network['rules']]
-    require(all(rules.count(r)==1 for r in expected), 'terminal guard/lookup missing')
+    strict_rules(network)
+
+
+def startup(receipt, instance, before, pre, fresh):
+    message=receipt['message'];s=message['state']
+    require(receipt['_PID']==instance['MainPID'] and receipt['_SYSTEMD_INVOCATION_ID']==instance['InvocationID'] and
+            receipt['_BOOT_ID']==fresh['boot'].replace('-','') and int(receipt['__MONOTONIC_TIMESTAMP'])>0,
+            'startup journal identity')
+    require(message['event']=='dhcp_startup_ready' and message['backend_empty_verified'] is True and
+            s['boot']==fresh['boot'] and s['session']==fresh['session'] and s['current'] is None and
+            s['expires']==0 and s['healthy'] is False and s['revision']==before['journal']['revision']+1 and
+            pre['captured_boottime']<=message['boottime']<fresh['expires']-fresh['current']['seconds'], 'startup before client did not quarantine')
 
 
 def restart(d, initial_session, initial_invocation):
@@ -74,6 +95,19 @@ def deadline(d):
     no_forwarding(d['after_network'])
 
 
+def monitor(d):
+    c=d['backup_control']
+    require(c['local_address']=='198.51.100.2' and c['peer_address']=='203.0.113.2' and c['peer_port']==8443,
+            'backup control tuple')
+    rules=[x['rule'] for x in d['backup_monitor']['nftables'] if 'rule' in x]
+    chains=[x['chain'] for x in d['backup_monitor']['nftables'] if 'chain' in x]
+    require(len(chains)==1 and chains[0]['family']=='ip' and chains[0]['table']=='observe' and
+            chains[0]['name']=='f' and chains[0]['type']=='filter' and chains[0]['hook']=='forward' and
+            chains[0]['prio']==-100 and chains[0]['policy']=='accept', 'backup monitor hook')
+    require(len(rules)==2 and all(r['family']=='ip' and r['table']=='observe' and r['chain']=='f' for r in rules) and
+            [r['expr'] for r in rules]==monitor_expressions(c['local_port']), 'backup monitor exemption/scope')
+
+
 def reboot(d, before, source):
     require(d['passed'] is True and d['orderly_vm_restart_tested'] is True and
             d['power_loss_tested'] is False and d['before']==before, 'reboot scope/receipt')
@@ -94,6 +128,7 @@ def reboot(d, before, source):
             not any(r['addr_info'] for r in pre['network']['addresses']), 'fixture replayed lease')
     from .dhcp_reboot import fixture
     require(before['fixture_sha256']==d['fixture_sha256']==hashlib.sha256(fixture().encode()).hexdigest(), 'boot fixture mismatch')
+    monitor(d)
     require(d['dhcp_server_absent_while_waiting'] is True and d['backup_warmup_packets']>0 and d['backup_packets']==0 and len(d['waiting'])>=3, 'backup not tested')
     for observation in d['waiting']:
         w=observation['state']
@@ -106,16 +141,30 @@ def reboot(d, before, source):
             uv['healthy'] is False and not u['network']['data_routes'] and u['request']['ok'] is False and
             new['current']==uv['current'] and new['healthy'] is True and uv['session']==new['session'] and
             d['request']['ok'] is True and d['request']['response']['peer']=='10.99.1.1', 'new wire lease/fresh health')
+    startup(d['startup'],d['service'],before,pre,new)
+    require(d['rss_identity_before']==d['rss_identity_after']==d['service'], 'RSS process changed')
+    strict_rules(before['network']);strict_rules(u['network'])
     stale=d['stale'];q0=stale['state_before']
+    strict_rules(stale['network_before']);strict_rules(stale['network_after'])
     require(q0==stale['state_after']==new and stale['network_before']==stale['network_after'] and
             len(stale['events'])==3, 'stale changed configuration')
+    require(abs(stale['prior_event']-(new['expires']-new['current']['seconds']))<1e-6, 'stale baseline event time')
+    from uplinkstead.dhcp import lease
+    cfg=config(ROOT/'deploy/dhcp.example.json')
     for i,entry in enumerate(stale['events']):
         q=entry['event'];error=('RetiredSession','Blocked','Blocked')[i]
+        clocks=[q['at'],entry['sent'],entry['completed'],stale['prior_event']]
+        require(all(type(t) in (int,float) and math.isfinite(t) for t in clocks) and
+                stale['prior_event']<q['at']<=entry['sent']<=entry['completed'] and entry['completed']-q['at']<=3 and entry['completed']<new['expires'],
+                'stale challenge also had invalid time')
+        require(set(q)=={'session','boot','revision','at','reason','lease'} and
+                lease(cfg,q['lease'])['ip']=='192.0.2.2', 'invalid stale allocation')
         require(entry['rejection']==dict(rejected=True,error=error) and q['reason']=='renew' and
                 q['lease']['ip']=='192.0.2.2' and q['at']>0 and
                 q['session']==(old['session'] if i==0 else new['session']) and
                 q['boot']==(before['boot'] if i==1 else new['boot']) and
-                q['revision']==(old['revision'] if i==2 else new['revision']), 'stale authority not isolated')
+                q['revision']==(old['revision'] if i==2 else new['revision']) and
+                old['boot']!=new['boot'] and old['revision']!=new['revision'], 'stale authority not isolated')
     require(re.fullmatch(r'VmRSS:\s+[1-9][0-9]* kB',d['rss_snapshot']) and d['seconds']>=0, 'reboot measurement')
 
 
@@ -208,7 +257,16 @@ def controls(v):
              lambda x:x['reboot'].update(installed_unit_sha256='0'*64),
              lambda x:x['reboot'].update(fixture_sha256='0'*64),
              lambda x:x['reboot_before']['shutdown_fault'].update(KillSignal='15'),
-             lambda x:x['reboot'].update(dhcp_server_absent_while_waiting=False)]
+             lambda x:x['reboot'].update(dhcp_server_absent_while_waiting=False),
+             lambda x:x['reboot']['waiting'][0]['network']['rules'].append(dict(priority=1,src='10.77.0.0/24',iif='lan0',dst='203.0.113.99/32',table='main')),
+             lambda x:x['reboot']['stale']['events'][1]['event'].update(at=1),
+             lambda x:x['reboot']['stale']['events'][2]['event'].update(at=10**12),
+             lambda x:x['reboot']['startup']['message']['state'].update(current={'ip':'192.0.2.3'}),
+             lambda x:x['reboot']['startup'].update(_SYSTEMD_INVOCATION_ID='0'*32),
+             lambda x:x['reboot']['startup']['message'].update(backend_empty_verified=False),
+             lambda x:x['reboot']['rss_identity_after'].update(MainPID='999999'),
+             lambda x:x['reboot']['backup_control'].update(local_address='10.77.0.2'),
+             lambda x:x['reboot']['backup_monitor']['nftables'].append({'rule':dict(family='ip',table='observe',chain='f',expr=[{'return':None}])})]
     for index,change in enumerate(changes):
         bad=copy.deepcopy(v);change(bad)
         try:verify(bad)

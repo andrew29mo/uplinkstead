@@ -1,7 +1,7 @@
 # Dual-DHCP policy/operator boundary evidence
 
-Run `be3e1d4c110ac9f9`, matching-source fingerprint
-`11c3448436e5e8723cf3cb5b04d555e850d38ba81024270d6fba81c37be5667e`.
+Run `9367ed8b839a3847`, matching-source fingerprint
+`88b4a054355fe241346158eb201e5a2a4147308bdbbe1000baf03d0403dc9b90`.
 
 [JSON](evidence.json) · [HTML](report.html) · [macOS](native-unit.json) ·
 [Linux](linux-unit.json) · [Attempts](attempts.json) ·
@@ -28,11 +28,11 @@ revision, so a durable control change cannot leave an older token current.
 
 | Control case | Actual observation | Seconds |
 |---|---|---:|
-| Real unprivileged worker/kernel boundary | No writer-only initial choice; actual worker then selects A; raw socket, route-write, journal and private-event access denied | 3.943 |
-| Rogue worker rejection | Healthy B cannot preempt A; forged fields, root controls and a different UID sharing the socket group reject without state mutation | 0.105 |
-| Pause/stale resume/safety | Real root CLI pause; old resume rejected; A failure still withdraws while paused; B/main TLS works but LAN cannot borrow it | 1.702 |
-| Absent worker and budget | Resume without reset leaves history intact; no charged choice without worker; restarted worker's B suggestion hits durable latch | 1.378 |
-| Explicit reset/new lease/resume | Resume cannot clear latch; reset without ack rejects; explicit reset remains paused/unselected; real paused B renewal gets new health; fresh resume/proposal selects B, stale pause rejects | 0.825 |
+| Real unprivileged worker/kernel boundary | No writer-only initial choice; actual worker then selects A; raw socket, route-write, journal and private-event access denied | 3.884 |
+| Rogue worker rejection | Healthy B cannot preempt A; forged fields, root controls and a different UID sharing the socket group reject without state mutation | 0.084 |
+| Pause/stale resume/safety | Real root CLI pause; old resume rejected; A failure still withdraws while paused; B/main TLS works but LAN cannot borrow it | 1.796 |
+| Absent worker and budget | Resume without reset leaves history intact; no charged choice without worker; restarted worker's B suggestion hits durable latch | 1.381 |
+| Explicit reset/new lease/resume | Resume cannot clear latch; reset without ack rejects; explicit reset remains paused/unselected; real paused B renewal gets new health; fresh resume/proposal selects B, stale pause rejects | 0.878 |
 
 The actual worker readback is UID/GID **61001 in all four fields**,
 **CapEff/CapPrm/CapInh/CapAmb/CapBnd = 0**, **NoNewPrivs = 1**. Its root-owned
@@ -50,7 +50,7 @@ rounds with a health start after the new lease event; the final wire transaction
 current deadline/generation and actual B endpoint agree. Resumed selection records
 one new budget entry, with no hidden reset in resume.
 
-VM process RSS snapshots: root writer **25,032 KiB**, worker **11,816 KiB**.
+VM process RSS snapshots: root writer **25,272 KiB**, worker **11,816 KiB**.
 These are not peaks and exclude clients/kernel/fixture/whole-VM overhead. Case
 durations include intentional waits and are not throughput, failover-time bounds,
 application latency comparisons or estimates of privilege-separation overhead.
@@ -69,16 +69,35 @@ application latency comparisons or estimates of privilege-separation overhead.
   ACK/loss write interleavings, budget/latch and non-borrowing. No live journal is
   deleted to reset its authority. Its complete cases remain nested under
   `guest.regression`; the HTML top table lists only the five control cases.
-- **54 corrupted-evidence controls** pass: 36 automatic and 18 control-specific.
+- **57 corrupted-evidence controls** pass: 36 automatic and 21 control-specific.
   They reject source/build/stage/cleanup failures, invalid old health/budget,
   wrong UID/capability/access, accepted malicious/stale operations, reset-unpause,
   missing new quorum, borrowing and missing receipts. Normal and optimized Python
   verification agree; HTML exactly renders JSON, and standalone unit receipts
   equal their embedded copies.
-- One full VM attempt completed. All owned processes/namespaces and the temporary
+- One full VM attempt on this revised source completed; attempts also retains the
+  preceding successful run on its earlier source. All owned processes/namespaces and the temporary
   control directory/source/build are removed; root network and source are unchanged;
   VM is stopped. Private logs/keys/journals/raw frames and external binaries stay
   excluded. The external BusyBox client remains separately GPL-governed.
+
+## Review correction
+
+Two independent read-only reviews inspected implementation and evidence. No
+reproducible worker authority, writer admission or stale-control bypass was found;
+that result is limited to the reviewed paths and tests, not proof of completeness.
+
+The evidence review found that the control-phase client build fields could be
+corrupted while the verifier checked only the nested automatic-regression build.
+The original recorded values agreed, but the gate was incomplete. Verification
+now requires both phases' entire build receipts and binary/configuration hashes
+to agree; the inherited regression gate binds them to the pinned source/patch/
+recipe and actual binary/configuration hashes. Three new negative controls reject
+an empty control-phase build, a changed binary hash and a changed configuration
+hash. The complete same-source dual-platform/VM run above was repeated after this
+fix, rather than assigning the old VM run a new source fingerprint. JSON/HTML and
+both standalone test receipts were regenerated from that run. Normal and optimized
+verification both reject all 57 corrupted-evidence controls.
 
 ## Material limits
 

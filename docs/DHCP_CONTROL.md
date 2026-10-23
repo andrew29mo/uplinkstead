@@ -135,7 +135,9 @@ then fresh resume/proposal can select B. Stale resume and pause cannot change th
 new state. Receipts, wire transaction, process RSS and owned cleanup must agree.
 
 The same frozen tree/binary also reruns the prior nine-case automatic regression
-in a separate owned fixture phase and fresh journal. macOS runs portable tests;
+in a separate owned fixture phase and fresh journal. The report gate compares
+both phases' complete client build receipts and binary/configuration hashes;
+changing any control-phase build field must fail verification. macOS runs portable tests;
 actual credential, packet and routing evidence is Linux VM only. Resume/save
 interleavings, queue reservation, receipt capacity/reopen and disk-write failure
 are portable formal-runtime/core tests, not additional VM crash injections.

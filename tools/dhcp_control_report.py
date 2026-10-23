@@ -12,6 +12,7 @@ def regression_view(v):
 def verify(v):
     automatic.verify(regression_view(v))
     g=v['guest'];require(g['passed'] is True and g['source_sha256']==v['source_sha256']==fingerprint(v['source']) and v['native_unit']['count']>=258,'Control source/suite mismatch')
+    require(all(g[key]==g['regression'][key] for key in ('client_build','client_binary_sha256','client_config_sha256')),'Control/regression client build detached')
     require(g['worker_file_sha256']==v['source']['uplinkstead/dual_dhcp_worker.py'] and g['cli_file_sha256']==v['source']['uplinkstead/dual_dhcp_cli.py'],'Installed worker/CLI detached')
     require(len(g['cases'])==len(CASES) and {c['name'] for c in g['cases']}==CASES,'Missing control case')
     for c in g['cases']:require(c['passed'] is True and math.isfinite(c['seconds']) and c['seconds']>=0,'Control case failed')
@@ -45,6 +46,7 @@ def controls(v):
     inherited=automatic.controls(regression_view(v))
     def case(name,fn):return lambda x:fn(next(c['details'] for c in x['guest']['cases'] if c['name']==name))
     changes=[lambda x:x['guest'].update(worker_file_sha256='0'*64),lambda x:x['guest'].update(control_directory_removed=False),lambda x:x['guest']['cases'].pop(),case('real_unprivileged_worker_and_kernel_boundary',lambda d:d['credentials'].update(Uid='0 0 0 0')),case('real_unprivileged_worker_and_kernel_boundary',lambda d:d['credentials'].update(CapEff='1')),case('real_unprivileged_worker_and_kernel_boundary',lambda d:d['denials'].update(route_denied=False)),case('real_unprivileged_worker_and_kernel_boundary',lambda d:d['denials'].update(event_socket_denied=False)),case('writer_rejects_rogue_worker',lambda d:d['rejections'][0]['reply'].update(ok=True)),case('writer_rejects_rogue_worker',lambda d:d['rejections'][-1].update(uid=61001)),case('pause_stale_resume_and_safety_withdrawal',lambda d:d['stale_resume'].update(exit_code=0)),case('pause_stale_resume_and_safety_withdrawal',lambda d:d['blocked'].update(ok=True)),case('pause_stale_resume_and_safety_withdrawal',lambda d:d['fallback']['response'].update(peer='10.99.1.1')),case('absent_worker_no_bypass_then_latch',lambda d:d['absent']['state'].update(paused=True)),case('absent_worker_no_bypass_then_latch',lambda d:d['latched']['state'].update(latched=False)),case('explicit_reset_resume_new_lease_authority',lambda d:d['reset_state']['state'].update(paused=False)),case('explicit_reset_resume_new_lease_authority',lambda d:d['renewed']['state']['links']['B'].update(good=0)),case('explicit_reset_resume_new_lease_authority',lambda d:d['stale_pause'].update(exit_code=0)),case('explicit_reset_resume_new_lease_authority',lambda d:d['final']['state'].update(operations=[]))]
+    changes += [lambda x:x['guest'].update(client_build={}),lambda x:x['guest'].update(client_binary_sha256='0'*64),lambda x:x['guest'].update(client_config_sha256='0'*64)]
     for change in changes:
         broken=copy.deepcopy(v);change(broken)
         try:verify(broken)

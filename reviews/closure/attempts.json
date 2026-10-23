@@ -1,0 +1,1262 @@
+[
+  {
+    "run_id": "c2057fab42c428e2",
+    "source_sha256": "3cd508159003b41d9a0a938287d1065caf614fd04e77cfaa49350e4722d427e1",
+    "passed": false,
+    "stages": [
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.1904705410124734
+      },
+      {
+        "name": "create",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 21.9833709160157
+      },
+      {
+        "name": "clean-baseline",
+        "exit_code": 1,
+        "timed_out": false,
+        "seconds": 0.2673306670039892
+      },
+      {
+        "name": "guest-failed",
+        "exit_code": 1,
+        "timed_out": false,
+        "seconds": 0.32875495799817145
+      },
+      {
+        "name": "install-failed",
+        "exit_code": 1,
+        "timed_out": false,
+        "seconds": 0.21904645799077116
+      },
+      {
+        "name": "journal-failed",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.21716400000150315
+      },
+      {
+        "name": "delete",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.328869165998185
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.20635995801421814
+      }
+    ],
+    "vm_final": "Deleted",
+    "error": "RuntimeError: clean-baseline failed/timed out",
+    "explanation": "Pre-install baseline command had a nested quote error; no product service exercised. Dedicated VM deleted."
+  },
+  {
+    "run_id": "a76baf282c3f4bd3",
+    "source_sha256": "17ffc5b6c0bb561af626d69cc258447afa9f0979fbe2c6360fdf73ed2536e00f",
+    "passed": false,
+    "stages": [
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.328327209019335
+      },
+      {
+        "name": "create",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 21.657158125017304
+      },
+      {
+        "name": "clean-baseline",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2504638340033125
+      },
+      {
+        "name": "dependencies",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 25.488520249986323
+      },
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.447636958997464
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.4269288750074338
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.3473924999998417
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3192138329904992
+      },
+      {
+        "name": "client-build",
+        "exit_code": -9,
+        "timed_out": false,
+        "interrupted": true,
+        "seconds": 5.730648708005901
+      },
+      {
+        "name": "guest-failed",
+        "exit_code": 1,
+        "timed_out": false,
+        "seconds": 0.27281441699597053
+      },
+      {
+        "name": "install-failed",
+        "exit_code": 1,
+        "timed_out": false,
+        "seconds": 0.31481391700799577
+      },
+      {
+        "name": "journal-failed",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.4326909999945201
+      },
+      {
+        "name": "delete",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.5118231659871526
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.27371300000231713
+      }
+    ],
+    "vm_final": "Deleted",
+    "error": "KeyboardInterrupt: ",
+    "explanation": "Deliberately interrupted during dependency preparation to add both DHCP clients to resource sampling. Not qualification; VM deleted."
+  },
+  {
+    "run_id": "e78512196a71b473",
+    "source_sha256": "ce11475347b6ee8b92f9e6f975ff085eb1419c45842b43fcc6bb5ffa88de7189",
+    "passed": false,
+    "stages": [
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3297885420033708
+      },
+      {
+        "name": "create",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 22.284134916990297
+      },
+      {
+        "name": "clean-baseline",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.34250570900621824
+      },
+      {
+        "name": "dependencies",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 26.740939958021045
+      },
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.257899249991169
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.6391779170080554
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.9900400000042282
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2543501250038389
+      },
+      {
+        "name": "client-build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 8.289548959000967
+      },
+      {
+        "name": "closure",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 284.80685908399755
+      },
+      {
+        "name": "guest-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.41875666700070724
+      },
+      {
+        "name": "guest-failed",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.32862462499178946
+      },
+      {
+        "name": "install-failed",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2543258329969831
+      },
+      {
+        "name": "journal-failed",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3450292079942301
+      },
+      {
+        "name": "delete",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.5113792500051204
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.22211708402028307
+      }
+    ],
+    "vm_final": "Deleted",
+    "error": "ValueError: Resource growth budget exceeded",
+    "functional_guest_passed": true,
+    "cycles_completed": 6,
+    "samples": 138,
+    "sample_seconds": 276.985417332,
+    "observed_metrics": {
+      "writer": {
+        "rss_kib": {
+          "first_third_median": 25076,
+          "last_third_median": 27044,
+          "min": 24696,
+          "max": 27216
+        },
+        "fd": {
+          "first_third_median": 9,
+          "last_third_median": 9,
+          "min": 9,
+          "max": 12
+        },
+        "threads": {
+          "first_third_median": 6,
+          "last_third_median": 7,
+          "min": 6,
+          "max": 10
+        }
+      },
+      "worker": {
+        "rss_kib": {
+          "first_third_median": 11896,
+          "last_third_median": 11900,
+          "min": 11892,
+          "max": 11900
+        },
+        "fd": {
+          "first_third_median": 3,
+          "last_third_median": 3,
+          "min": 3,
+          "max": 4
+        },
+        "threads": {
+          "first_third_median": 1,
+          "last_third_median": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "clientA": {
+        "rss_kib": {
+          "first_third_median": 1620,
+          "last_third_median": 1628,
+          "min": 1612,
+          "max": 1628
+        },
+        "fd": {
+          "first_third_median": 5,
+          "last_third_median": 5,
+          "min": 5,
+          "max": 5
+        },
+        "threads": {
+          "first_third_median": 1,
+          "last_third_median": 1,
+          "min": 1,
+          "max": 1
+        }
+      },
+      "clientB": {
+        "rss_kib": {
+          "first_third_median": 1624,
+          "last_third_median": 1632,
+          "min": 1616,
+          "max": 1636
+        },
+        "fd": {
+          "first_third_median": 5,
+          "last_third_median": 5,
+          "min": 5,
+          "max": 5
+        },
+        "threads": {
+          "first_third_median": 1,
+          "last_third_median": 1,
+          "min": 1,
+          "max": 1
+        }
+      }
+    },
+    "explanation": "Six functional cycles and operator handoff completed, but resource verifier failed its median+2 peak gate: writer FD max12 vs median9 and threads max10 vs first median6. Raw writer RSS rose 24696 to27208 KiB; tail still increased. No qualification. Source inspection identified bounded nested probe pools (up to six short-lived threads/sockets). New run uses concurrency-derived absolute peak bounds plus median-growth limits and a five-minute tail with a stricter RSS trend gate. Original result remains failed; VM deleted."
+  },
+  {
+    "run_id": "de214139eea6cbfb",
+    "source_sha256": "55cc54a528f2e53868854345d69431105c4b6a1488a1999d1dfa5cf9cb54efa5",
+    "passed": false,
+    "stages": [
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.5646698329946958
+      },
+      {
+        "name": "create",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 21.805063166015316
+      },
+      {
+        "name": "clean-baseline",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.24877370899775997
+      },
+      {
+        "name": "dependencies",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 44.250300374988
+      },
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.6132342500204686
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.4011244579742197
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.450282582984073
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.23912341697723605
+      },
+      {
+        "name": "client-build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.488795791985467
+      },
+      {
+        "name": "closure",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 547.5394065419969
+      },
+      {
+        "name": "guest-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.31355129199801013
+      },
+      {
+        "name": "guest-failed",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3222011250036303
+      },
+      {
+        "name": "install-failed",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.32585637501324527
+      },
+      {
+        "name": "journal-failed",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.23958529101219028
+      },
+      {
+        "name": "delete",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.473235833022045
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.19661991702741943
+      }
+    ],
+    "vm_final": "Deleted",
+    "error": "ValueError: Hidden service restart in resource series",
+    "functional_guest_passed": true,
+    "cycles_completed": 6,
+    "samples": 267,
+    "sample_seconds": 538.717649412,
+    "observed_metrics": {
+      "writer": {
+        "process_identities": 1,
+        "tail": {
+          "rss_kib": {
+            "first_third_median": 27124,
+            "last_third_median": 27436,
+            "min": 26916,
+            "max": 27508
+          },
+          "fd": {
+            "first_third_median": 9,
+            "last_third_median": 9,
+            "min": 9,
+            "max": 15
+          },
+          "threads": {
+            "first_third_median": 7,
+            "last_third_median": 7,
+            "min": 7,
+            "max": 10
+          }
+        }
+      },
+      "worker": {
+        "process_identities": 1,
+        "tail": {
+          "rss_kib": {
+            "first_third_median": 11892,
+            "last_third_median": 11896,
+            "min": 11892,
+            "max": 11896
+          },
+          "fd": {
+            "first_third_median": 3,
+            "last_third_median": 3,
+            "min": 3,
+            "max": 3
+          },
+          "threads": {
+            "first_third_median": 1,
+            "last_third_median": 1,
+            "min": 1,
+            "max": 1
+          }
+        }
+      },
+      "clientA": {
+        "process_identities": 1,
+        "tail": {
+          "rss_kib": {
+            "first_third_median": 1632,
+            "last_third_median": 1636,
+            "min": 1628,
+            "max": 1636
+          },
+          "fd": {
+            "first_third_median": 5,
+            "last_third_median": 5,
+            "min": 5,
+            "max": 5
+          },
+          "threads": {
+            "first_third_median": 1,
+            "last_third_median": 1,
+            "min": 1,
+            "max": 1
+          }
+        }
+      },
+      "clientB": {
+        "process_identities": 2,
+        "tail": {
+          "rss_kib": {
+            "first_third_median": 1616,
+            "last_third_median": 1632,
+            "min": 1612,
+            "max": 1632
+          },
+          "fd": {
+            "first_third_median": 5,
+            "last_third_median": 5,
+            "min": 5,
+            "max": 5
+          },
+          "threads": {
+            "first_third_median": 1,
+            "last_third_median": 1,
+            "min": 1,
+            "max": 1
+          }
+        }
+      }
+    },
+    "client_restarts": {
+      "A": 0,
+      "B": 1
+    },
+    "explanation": "Extended run fails same-client resource identity gate: B reached its bounded64-transaction wire history and was replaced once. Writer remained one instance. Independent tail calculation also shows writer RSS median+312KiB above predeclared256KiB tail allowance. No qualification. Next revision reuses six target threads for service lifetime, and uses A T1=20/B T1=15 with120s leases so the nine-minute same-client control stays below64 transactions; history capacity is not enlarged. The original failure and old faster workload remain recorded."
+  },
+  {
+    "run_id": "715109568c1fc632",
+    "source_sha256": "cc8e05467eb04608c5b7dc7ee5aa42baf99ad4f5a90b9a52884e20bcfeb0abf1",
+    "passed": false,
+    "stages": [
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.34372925001662225
+      },
+      {
+        "name": "create",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 22.2599341669993
+      },
+      {
+        "name": "clean-baseline",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2618934999918565
+      },
+      {
+        "name": "dependencies",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 25.35938929198892
+      },
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.458573542011436
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.5146487089805305
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.219224166008644
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3228499999968335
+      },
+      {
+        "name": "client-build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 8.172922166995704
+      },
+      {
+        "name": "closure",
+        "exit_code": 1,
+        "timed_out": false,
+        "seconds": 544.4890410839871
+      },
+      {
+        "name": "guest-failed",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.38385129199014045
+      },
+      {
+        "name": "install-failed",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.31394608397386037
+      },
+      {
+        "name": "journal-failed",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.24151449999772012
+      },
+      {
+        "name": "delete",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.4209774579794612
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.19892866601003334
+      }
+    ],
+    "vm_final": "Deleted",
+    "error": "RuntimeError: closure failed/timed out",
+    "guest_error": "RuntimeError: Resource sampler failed",
+    "sample_errors": [
+      "StopIteration: "
+    ],
+    "cycles_completed": 6,
+    "samples": 266,
+    "diagnostic_resource_summary": {
+      "writer_rss_kib": {
+        "first_third_median": 26090.0,
+        "last_third_median": 27040.0,
+        "delta": 950.0,
+        "min": 24744,
+        "max": 27092,
+        "slope_per_minute": 212.17099486151017,
+        "delta_allowance": 4096,
+        "peak_limit": 30186.0
+      },
+      "writer_fd": {
+        "first_third_median": 9.0,
+        "last_third_median": 9.0,
+        "delta": 0.0,
+        "min": 9,
+        "max": 12,
+        "slope_per_minute": -0.006825092685049059,
+        "delta_allowance": 2,
+        "peak_limit": 24
+      },
+      "writer_threads": {
+        "first_third_median": 13.0,
+        "last_third_median": 13.0,
+        "delta": 0.0,
+        "min": 9,
+        "max": 13,
+        "slope_per_minute": 0.15563292305563262,
+        "delta_allowance": 2,
+        "peak_limit": 13
+      },
+      "worker_rss_kib": {
+        "first_third_median": 11900.0,
+        "last_third_median": 11900.0,
+        "delta": 0.0,
+        "min": 11892,
+        "max": 11900,
+        "slope_per_minute": 0.12401116236740355,
+        "delta_allowance": 1024,
+        "peak_limit": 12924.0
+      },
+      "worker_fd": {
+        "first_third_median": 3.0,
+        "last_third_median": 3.0,
+        "delta": 0.0,
+        "min": 3,
+        "max": 3,
+        "slope_per_minute": 0.0,
+        "delta_allowance": 2,
+        "peak_limit": 8
+      },
+      "worker_threads": {
+        "first_third_median": 1.0,
+        "last_third_median": 1.0,
+        "delta": 0.0,
+        "min": 1,
+        "max": 1,
+        "slope_per_minute": 0.0,
+        "delta_allowance": 2,
+        "peak_limit": 2
+      },
+      "clientA_rss_kib": {
+        "first_third_median": 1620.0,
+        "last_third_median": 1624.0,
+        "delta": 4.0,
+        "min": 1612,
+        "max": 1628,
+        "slope_per_minute": 0.9990780038473648,
+        "delta_allowance": 512,
+        "peak_limit": 2132.0
+      },
+      "clientA_fd": {
+        "first_third_median": 5.0,
+        "last_third_median": 5.0,
+        "delta": 0.0,
+        "min": 5,
+        "max": 5,
+        "slope_per_minute": 0.0,
+        "delta_allowance": 2,
+        "peak_limit": 8
+      },
+      "clientA_threads": {
+        "first_third_median": 1.0,
+        "last_third_median": 1.0,
+        "delta": 0.0,
+        "min": 1,
+        "max": 1,
+        "slope_per_minute": 0.0,
+        "delta_allowance": 2,
+        "peak_limit": 2
+      },
+      "clientB_rss_kib": {
+        "first_third_median": 1624.0,
+        "last_third_median": 1628.0,
+        "delta": 4.0,
+        "min": 1616,
+        "max": 1632,
+        "slope_per_minute": 1.23720212898992,
+        "delta_allowance": 512,
+        "peak_limit": 2136.0
+      },
+      "clientB_fd": {
+        "first_third_median": 5.0,
+        "last_third_median": 5.0,
+        "delta": 0.0,
+        "min": 5,
+        "max": 5,
+        "slope_per_minute": 0.0,
+        "delta_allowance": 2,
+        "peak_limit": 8
+      },
+      "clientB_threads": {
+        "first_third_median": 1.0,
+        "last_third_median": 1.0,
+        "delta": 0.0,
+        "min": 1,
+        "max": 1,
+        "slope_per_minute": 0.0,
+        "delta_allowance": 2,
+        "peak_limit": 2
+      },
+      "tail": {
+        "writer_rss_kib": {
+          "first_third_median": 26896,
+          "last_third_median": 27060,
+          "delta": 164,
+          "delta_allowance": 256
+        },
+        "writer_fd": {
+          "first_third_median": 9,
+          "last_third_median": 9,
+          "delta": 0,
+          "delta_allowance": 0
+        },
+        "writer_threads": {
+          "first_third_median": 13,
+          "last_third_median": 13,
+          "delta": 0,
+          "delta_allowance": 0
+        },
+        "worker_rss_kib": {
+          "first_third_median": 11900,
+          "last_third_median": 11900,
+          "delta": 0,
+          "delta_allowance": 64
+        },
+        "worker_fd": {
+          "first_third_median": 3,
+          "last_third_median": 3,
+          "delta": 0,
+          "delta_allowance": 0
+        },
+        "worker_threads": {
+          "first_third_median": 1,
+          "last_third_median": 1,
+          "delta": 0,
+          "delta_allowance": 0
+        },
+        "clientA_rss_kib": {
+          "first_third_median": 1624,
+          "last_third_median": 1624,
+          "delta": 0,
+          "delta_allowance": 64
+        },
+        "clientA_fd": {
+          "first_third_median": 5,
+          "last_third_median": 5,
+          "delta": 0,
+          "delta_allowance": 0
+        },
+        "clientA_threads": {
+          "first_third_median": 1,
+          "last_third_median": 1,
+          "delta": 0,
+          "delta_allowance": 0
+        },
+        "clientB_rss_kib": {
+          "first_third_median": 1628,
+          "last_third_median": 1632,
+          "delta": 4,
+          "delta_allowance": 64
+        },
+        "clientB_fd": {
+          "first_third_median": 5,
+          "last_third_median": 5,
+          "delta": 0,
+          "delta_allowance": 0
+        },
+        "clientB_threads": {
+          "first_third_median": 1,
+          "last_third_median": 1,
+          "delta": 0,
+          "delta_allowance": 0
+        }
+      },
+      "samples": 266,
+      "stable_samples": 258,
+      "seconds": 537.7473686879999,
+      "disk_first": 8192,
+      "disk_last": 8192,
+      "disk_max": 16912,
+      "cgroup_processes_min": 4,
+      "cgroup_processes_max": 5
+    },
+    "client_restarts": {
+      "A": 0,
+      "B": 0
+    },
+    "explanation": "All six cycles and extended tail completed without client replacement, but a StopIteration during resource sampling failed the entire run before operator handoff. The observer read full /proc records of transient cgroup helpers; an exited/zombie helper can omit VmRSS. New observer counts kernel cgroup membership without per-helper RSS, samples only four stable processes, and separately checks stopped cgroups empty. The derived resource summary is diagnostic only, not qualification. VM deleted."
+  },
+  {
+    "run_id": "295330c759d83449",
+    "source_sha256": "85f8c7d987072f7d768aab258251ed56defc0d88b73b8548b28c44258e0021ec",
+    "passed": true,
+    "stages": [
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3873829579970334
+      },
+      {
+        "name": "create",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 22.921745625004405
+      },
+      {
+        "name": "clean-baseline",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.24035991699201986
+      },
+      {
+        "name": "dependencies",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 28.982803541992325
+      },
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.204767957999138
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.41935608399217017
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.2795164170092903
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2296621249988675
+      },
+      {
+        "name": "client-build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.4117514160170685
+      },
+      {
+        "name": "closure",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 546.1685393330117
+      },
+      {
+        "name": "guest-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.426530750002712
+      },
+      {
+        "name": "delete",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.5985804999945685
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.19637954101199284
+      }
+    ],
+    "vm_final": "Deleted",
+    "samples": 267,
+    "resources": {
+      "writer_rss_kib": {
+        "first_third_median": 26132.0,
+        "last_third_median": 27092.0,
+        "delta": 960.0,
+        "min": 24760,
+        "max": 27172,
+        "slope_per_minute": 205.20430884535094,
+        "delta_allowance": 4096,
+        "peak_limit": 30228.0
+      },
+      "writer_fd": {
+        "first_third_median": 9.0,
+        "last_third_median": 9.0,
+        "delta": 0.0,
+        "min": 9,
+        "max": 13,
+        "slope_per_minute": 0.021534979318431593,
+        "delta_allowance": 2,
+        "peak_limit": 24
+      },
+      "writer_threads": {
+        "first_third_median": 13.0,
+        "last_third_median": 13.0,
+        "delta": 0.0,
+        "min": 9,
+        "max": 13,
+        "slope_per_minute": 0.19213227572890132,
+        "delta_allowance": 2,
+        "peak_limit": 13
+      },
+      "worker_rss_kib": {
+        "first_third_median": 11888.0,
+        "last_third_median": 11892.0,
+        "delta": 4.0,
+        "min": 11884,
+        "max": 11892,
+        "slope_per_minute": 0.5590363460364983,
+        "delta_allowance": 1024,
+        "peak_limit": 12912.0
+      },
+      "worker_fd": {
+        "first_third_median": 3.0,
+        "last_third_median": 3.0,
+        "delta": 0.0,
+        "min": 3,
+        "max": 3,
+        "slope_per_minute": 0.0,
+        "delta_allowance": 2,
+        "peak_limit": 8
+      },
+      "worker_threads": {
+        "first_third_median": 1.0,
+        "last_third_median": 1.0,
+        "delta": 0.0,
+        "min": 1,
+        "max": 1,
+        "slope_per_minute": 0.0,
+        "delta_allowance": 2,
+        "peak_limit": 2
+      },
+      "clientA_rss_kib": {
+        "first_third_median": 1624.0,
+        "last_third_median": 1628.0,
+        "delta": 4.0,
+        "min": 1616,
+        "max": 1632,
+        "slope_per_minute": 1.0319328901274427,
+        "delta_allowance": 512,
+        "peak_limit": 2136.0
+      },
+      "clientA_fd": {
+        "first_third_median": 5.0,
+        "last_third_median": 5.0,
+        "delta": 0.0,
+        "min": 5,
+        "max": 5,
+        "slope_per_minute": 0.0,
+        "delta_allowance": 2,
+        "peak_limit": 8
+      },
+      "clientA_threads": {
+        "first_third_median": 1.0,
+        "last_third_median": 1.0,
+        "delta": 0.0,
+        "min": 1,
+        "max": 1,
+        "slope_per_minute": 0.0,
+        "delta_allowance": 2,
+        "peak_limit": 2
+      },
+      "clientB_rss_kib": {
+        "first_third_median": 1624.0,
+        "last_third_median": 1628.0,
+        "delta": 4.0,
+        "min": 1616,
+        "max": 1632,
+        "slope_per_minute": 1.115701089756361,
+        "delta_allowance": 512,
+        "peak_limit": 2136.0
+      },
+      "clientB_fd": {
+        "first_third_median": 5.0,
+        "last_third_median": 5.0,
+        "delta": 0.0,
+        "min": 5,
+        "max": 5,
+        "slope_per_minute": 0.0,
+        "delta_allowance": 2,
+        "peak_limit": 8
+      },
+      "clientB_threads": {
+        "first_third_median": 1.0,
+        "last_third_median": 1.0,
+        "delta": 0.0,
+        "min": 1,
+        "max": 1,
+        "slope_per_minute": 0.0,
+        "delta_allowance": 2,
+        "peak_limit": 2
+      },
+      "tail": {
+        "writer_rss_kib": {
+          "first_third_median": 26992,
+          "last_third_median": 27096,
+          "delta": 104,
+          "delta_allowance": 256
+        },
+        "writer_fd": {
+          "first_third_median": 9,
+          "last_third_median": 9,
+          "delta": 0,
+          "delta_allowance": 0
+        },
+        "writer_threads": {
+          "first_third_median": 13,
+          "last_third_median": 13,
+          "delta": 0,
+          "delta_allowance": 0
+        },
+        "worker_rss_kib": {
+          "first_third_median": 11892,
+          "last_third_median": 11892,
+          "delta": 0,
+          "delta_allowance": 64
+        },
+        "worker_fd": {
+          "first_third_median": 3,
+          "last_third_median": 3,
+          "delta": 0,
+          "delta_allowance": 0
+        },
+        "worker_threads": {
+          "first_third_median": 1,
+          "last_third_median": 1,
+          "delta": 0,
+          "delta_allowance": 0
+        },
+        "clientA_rss_kib": {
+          "first_third_median": 1628,
+          "last_third_median": 1628,
+          "delta": 0,
+          "delta_allowance": 64
+        },
+        "clientA_fd": {
+          "first_third_median": 5,
+          "last_third_median": 5,
+          "delta": 0,
+          "delta_allowance": 0
+        },
+        "clientA_threads": {
+          "first_third_median": 1,
+          "last_third_median": 1,
+          "delta": 0,
+          "delta_allowance": 0
+        },
+        "clientB_rss_kib": {
+          "first_third_median": 1628,
+          "last_third_median": 1628,
+          "delta": 0,
+          "delta_allowance": 64
+        },
+        "clientB_fd": {
+          "first_third_median": 5,
+          "last_third_median": 5,
+          "delta": 0,
+          "delta_allowance": 0
+        },
+        "clientB_threads": {
+          "first_third_median": 1,
+          "last_third_median": 1,
+          "delta": 0,
+          "delta_allowance": 0
+        }
+      },
+      "samples": 267,
+      "stable_samples": 258,
+      "seconds": 537.9070798089999,
+      "disk_first": 8192,
+      "disk_last": 8192,
+      "disk_max": 8192,
+      "cgroup_processes_min": 4,
+      "cgroup_processes_max": 5
+    },
+    "cycles_completed": 6,
+    "client_restarts": {
+      "A": 0,
+      "B": 0
+    },
+    "explanation": "Passed its original full installed-service/resource/operator gate with292 tests per platform and14 controls; exact HTML rechecked. Colima profile/rootfs deleted, but default delete retained separate container-data disk. Superseded as final closure receipt by stricter fresh-disk refusal/automatic --data cleanup; resource/process implementation unchanged. Separate scoped cleanup receipt removes the retained disk."
+  },
+  {
+    "run_id": "3c391f8967fca724",
+    "source_sha256": "d090d3daf8c5ad2c9e73718fd496941547587d0c19012b6e09ab25e0314dfc39",
+    "passed": true,
+    "stages": [
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.32963037499575876
+      },
+      {
+        "name": "create",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 22.317230958025903
+      },
+      {
+        "name": "clean-baseline",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.23877450000145473
+      },
+      {
+        "name": "dependencies",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 29.701990000001388
+      },
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.2147547919885255
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.5449461670068558
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.407080875011161
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.25051654200069606
+      },
+      {
+        "name": "client-build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.63957716699224
+      },
+      {
+        "name": "closure",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 546.928170707979
+      },
+      {
+        "name": "guest-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3330619999906048
+      },
+      {
+        "name": "delete",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.6782850000017788
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.27952904099947773
+      }
+    ],
+    "vm_final": "Deleted",
+    "data_disk_initially_absent": true,
+    "data_disk_removed": true,
+    "samples": 267,
+    "cycles_completed": 6,
+    "tests_per_platform": 292,
+    "controls": {
+      "passed": true,
+      "rejected": 16
+    },
+    "explanation": "Final same-source full gate: clean installed wheel/shipped units, six fault/recovery cycles, extended same-process resource tail, real CLI handoff, cgroup cleanup and automatic VM/container-data deletion. All checks pass."
+  }
+]

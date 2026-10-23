@@ -62,7 +62,11 @@ def one(config, link, target, timeout=0.5):
                 'error': type(exc).__name__, 'seconds': time.monotonic()-began, 'link': link}
 
 
-def round(config, link):
-    with ThreadPoolExecutor(max_workers=3) as pool:
-        rows = list(pool.map(lambda t: one(config, link, t), config['targets']))
+def round(config, link, executor=None):
+    # Installed dual-DHCP runtime supplies a bounded service-lifetime executor.
+    # Each target still opens a fresh bound TLS socket and validates its nonce.
+    if executor is None:
+        with ThreadPoolExecutor(max_workers=3) as pool:
+            return round(config, link, executor=pool)
+    rows = list(executor.map(lambda t: one(config, link, t), config['targets']))
     return None if any(r['infrastructure'] for r in rows) else sum(r['ok'] for r in rows), rows

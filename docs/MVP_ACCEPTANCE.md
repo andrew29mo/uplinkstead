@@ -1,5 +1,10 @@
 # First MVP acceptance
 
+> The initial sections preserve the original static-mode MVP contract. Current
+> dual-DHCP acceptance is in the staged gates below, ending with the
+> [closure gate](#dhcp-mvp-closure-gate). Historical receipts retain their own
+> source versions and do not automatically qualify the latest implementation.
+
 Acceptance is tied to the retained matching-source evidence in [Validation](VALIDATION.md).
 A passing portable test is separate from real Linux installed-service evidence.
 The initial sections describe the static writer. Later DHCP headings specify its
@@ -318,3 +323,46 @@ separate bounded slice, not by a claim covering every I/O failure.
 No abrupt power loss, boot-zero-gap, arbitrary corruption, existing-connection
 continuity or general DHCP/physical-WAN compatibility claim follows from this gate.
 See [deployment and evidence interpretation](DHCP_BOOT.md).
+
+## DHCP MVP closure gate
+
+The implemented dual-DHCP gates above are distinct historical source-bound
+qualifications. Closure requires a new clean-install and bounded integration run;
+it does not relabel their earlier VM receipts as current-source executions.
+
+- Create a fresh dedicated Linux VM with no host directory mounts or preinstalled
+  product/account/state. Install the built wheel, qualified client, shipped units,
+  standalone worker and hook using the documented recipe. Record hashes, clean
+  preconditions and installed module correspondence. Move checkout product modules
+  out of import reach before starting the formal service; namespace-only drop-ins
+  must not change ExecStart, PYTHONPATH or add a fixture startup timer.
+- With the installed writer and capability-free worker, observe natural lease
+  events on both links and six complete active-uplink fault/recovery cycles.
+  Initial selection and each cross-uplink switch are charged once; same-uplink
+  renewals and backup recovery cannot consume extra history or preempt.
+- Keep one writer/worker instance during the bounded resource series. At least
+  230 samples over 500 seconds, including at least 200 comparable stable samples.
+  Publish first/last-third medians, all stable extrema and slope; enforce declared
+  deltas (writer RSS 4 MiB, worker RSS 1 MiB, FD/threads median +2), queue limits and disk
+  bounds. These are short-run regression allowances, not no-leak proofs.
+- Exercise real operator status/pause/reset/resume, stale revision rejection,
+  stop/new-start with new authority, old process cleanup and a viable positive
+  main-route witness accompanying rejected LAN traffic after stop.
+- Identical same-source portable test IDs on macOS/Linux, verifier corruption
+  controls, exact JSON/HTML, owned network/process cleanup and deletion of the
+  newly created VM and its container-data disk are required. Creation must
+  refuse a retained same-name data disk; final absence is read back. Retain failed attempts without cherry-picking.
+
+No new power-loss, VM reboot, boot-zero-gap, long-term capacity or broad DHCP
+interoperability claim is established by this closure run. The separate reboot
+receipt remains bounded by its fixture timer and orderly-stop conditions.
+
+The closure resource series also samples each actual DHCP client (RSS allowance
+512 KiB, FD/threads +2) and rejects a hidden client restart during the soak.
+
+Writer FD/thread peaks are independently bounded at 24/13 from probe concurrency;
+worker/client peaks at 8/2. A five-minute tail must include >=100 samples over
+250 seconds, with writer RSS median delta <=256 KiB, other processes <=64 KiB,
+and no positive FD/thread median delta. The original short run failed its
+median-plus-two *peak* assumption and remains failed; it is not retroactively
+relabelled after the concurrency-aware gate correction.

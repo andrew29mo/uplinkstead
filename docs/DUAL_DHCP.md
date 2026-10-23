@@ -1,5 +1,8 @@
 # Dual-DHCP technical explorations
 
+> Historical exploration. For deployed automatic mode, use the
+> [current configuration](DHCP_CONFIG.md) and [installation guide](DHCP_INSTALL.md).
+
 Historical exploration scope; the newer [formal stage-one service](DHCP_STAGE1.md)
 replaces fixture event scheduling for its own separately recorded validation.
 The hook-time approximation below applies to the historical adapter, not the

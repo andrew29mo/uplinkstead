@@ -6,6 +6,7 @@ capture supplies conservative REQUEST-time lower bounds, never hook-time leases.
 import argparse
 from collections import deque
 from concurrent.futures import ThreadPoolExecutor
+from functools import partial
 import copy
 import hashlib
 import json
@@ -283,6 +284,9 @@ class Runtime:
         self.operator = deque(maxlen=4)
         self.proposals = deque(maxlen=1)
         self.pool = ThreadPoolExecutor(max_workers=2)
+        self.target_pool = ThreadPoolExecutor(max_workers=6) if probe is probe_round else None
+        if self.target_pool is not None:
+            self.probe = partial(probe_round, executor=self.target_pool)
 
     def increment(self, key):
         with self.cache_lock: self.metrics[key] += 1
@@ -690,6 +694,7 @@ class Runtime:
             if control_listener and self.control_path:self.control_path.unlink(missing_ok=True)
             for p in self.children.values(): self.kill(p)
             self.pool.shutdown(wait=True,cancel_futures=True)
+            if self.target_pool is not None:self.target_pool.shutdown(wait=True,cancel_futures=True)
             for capture in self.captures.values(): capture.close()
             if self.w.s['phase'] == 'READY':
                 for k in LINKS: self.w.restart_client(k)

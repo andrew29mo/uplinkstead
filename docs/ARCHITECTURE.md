@@ -1,5 +1,9 @@
 # MVP architecture
 
+> Scope: this document describes the original static dual-uplink architecture.
+> For the current dual-DHCP MVP, start with [installation](DHCP_INSTALL.md)
+> and [installed-service lifecycle](DHCP_SYSTEMD.md). The modes are separate.
+
 ## Supported topology and ownership
 
 One static routed IPv4 LAN, two different WAN subnets and a local management CLI.

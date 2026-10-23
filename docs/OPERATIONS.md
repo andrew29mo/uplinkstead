@@ -1,5 +1,9 @@
 # MVP operations and deployment contract
 
+> Scope: this document describes the original static-mode operations.
+> For the current dual-DHCP MVP, start with [installation](DHCP_INSTALL.md)
+> and [installed-service lifecycle](DHCP_SYSTEMD.md). The modes are separate.
+
 ## Scope and prerequisites
 
 Linux, Python 3.12+, systemd and iproute2. The operator reserves tables 41001–41003,

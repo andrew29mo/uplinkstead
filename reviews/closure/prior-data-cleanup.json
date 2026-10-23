@@ -1,0 +1,99 @@
+{
+  "passed": true,
+  "scope": "Only disposable profiles created during this closure task; no live profile deleted",
+  "records": [
+    {
+      "profile": "uplinkclose",
+      "command": [
+        "colima",
+        "delete",
+        "uplinkclose",
+        "--data",
+        "--force"
+      ],
+      "exit_code": 0,
+      "seconds": 0.4139490830129944,
+      "data_disk_absent": true
+    },
+    {
+      "profile": "uplinkclose-final01",
+      "command": [
+        "colima",
+        "delete",
+        "uplinkclose-final01",
+        "--data",
+        "--force"
+      ],
+      "exit_code": 0,
+      "seconds": 0.3774087089987006,
+      "data_disk_absent": true
+    },
+    {
+      "profile": "uplinkclose-final02",
+      "command": [
+        "colima",
+        "delete",
+        "uplinkclose-final02",
+        "--data",
+        "--force"
+      ],
+      "exit_code": 0,
+      "seconds": 0.4840007080056239,
+      "data_disk_absent": true
+    },
+    {
+      "profile": "uplinkclose-final03",
+      "command": [
+        "colima",
+        "delete",
+        "uplinkclose-final03",
+        "--data",
+        "--force"
+      ],
+      "exit_code": 0,
+      "seconds": 0.5628092500264756,
+      "data_disk_absent": true
+    },
+    {
+      "profile": "uplinkclose-final04",
+      "command": [
+        "colima",
+        "delete",
+        "uplinkclose-final04",
+        "--data",
+        "--force"
+      ],
+      "exit_code": 0,
+      "seconds": 0.5173682919994462,
+      "data_disk_absent": true
+    },
+    {
+      "profile": "uplinkclose-final05",
+      "command": [
+        "colima",
+        "delete",
+        "uplinkclose-final05",
+        "--data",
+        "--force"
+      ],
+      "exit_code": 0,
+      "seconds": 0.437188125011744,
+      "data_disk_absent": true
+    },
+    {
+      "profile": "uplinkclose-final06",
+      "command": [
+        "colima",
+        "delete",
+        "uplinkclose-final06",
+        "--data",
+        "--force"
+      ],
+      "exit_code": 0,
+      "seconds": 0.47072733400273137,
+      "data_disk_absent": true
+    }
+  ],
+  "existing_relay_before": "Stopped",
+  "existing_relay_after": "Stopped"
+}

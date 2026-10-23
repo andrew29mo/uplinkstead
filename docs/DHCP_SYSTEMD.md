@@ -9,6 +9,10 @@ Do not attach unrelated main-table routes to those DHCP interfaces: Linux can
 remove interface-tied routes/neighbours when their last IPv4 address is removed.
 The service does not recreate another tool's routes to conceal that kernel effect.
 
+For step-by-step fresh-host commands, see [clean installation](DHCP_INSTALL.md).
+The historical source-path fixture below is separate from the installed-wheel
+closure check; its old receipts are preserved.
+
 ## Installation contract
 
 Install the Python package for `/usr/bin/python3` (Python >= 3.12), an existing

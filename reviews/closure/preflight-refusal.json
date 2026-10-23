@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "kind": "Actual runner negative preflight, not VM-soak qualification",
+  "source_sha256": "d090d3daf8c5ad2c9e73718fd496941547587d0c19012b6e09ab25e0314dfc39",
+  "exit_code": 1,
+  "expected_refusal": "RuntimeError: Refusing retained container-data disk; use a fresh name",
+  "stages": [
+    {
+      "name": "initial",
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.3378859999938868
+    }
+  ],
+  "seconds": 0.46494066700688563,
+  "existing_data_preserved": true,
+  "create_stage_executed": false
+}

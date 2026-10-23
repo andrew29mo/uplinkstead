@@ -1,0 +1,24 @@
+[Unit]
+Description=Uplinkstead dual-DHCP unprivileged proposal worker
+BindsTo=uplinkstead-dual.service
+PartOf=uplinkstead-dual.service
+After=uplinkstead-dual.service
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=uplinkstead
+Group=uplinkstead
+ExecStart=/usr/bin/python3 /usr/libexec/uplinkstead-dual-worker.py --socket /run/uplinkstead-dual/control.sock
+Restart=on-failure
+RestartSec=2
+KillMode=control-group
+TimeoutStopSec=5
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+RestrictAddressFamilies=AF_UNIX
+UMask=0077

@@ -272,7 +272,7 @@ stateDiagram-v2
 The renewal self-transition includes real quarantine/withdrawal; it does not mean
 continuous forwarding. No automatic failback is enabled. Foreground policy-process
 separation and operator controls are added by the next slice below; installed recovery
-for this mode remains later work.
+for this mode has a separate qualification below.
 
 ## Dual-DHCP policy/operator boundary
 
@@ -289,3 +289,22 @@ actual selection still requires hold/grace/budget. The journal holds 32 bounded
 operator receipts alongside state, with explicit migration of known old schemas.
 Entering latch advances revision. This is foreground separation, not installed
 process-tree or reboot recovery qualification; DHCP clients/capture remain trusted.
+
+## Installed dual-DHCP lifecycle
+
+The [dual service units](DHCP_SYSTEMD.md) are separate from static/single-DHCP
+deployments. The writer uses Type=notify only after production quarantine,
+capture/listener/client setup and status publication. After= ordering delays the
+unprivileged policy unit until that readiness point, not until a usable WAN.
+KillMode=control-group and a post-stop invocation of the same exclusive recovery
+core remove the previous process tree and allocations before replacement. The
+post-stop core preserves journal limits and operator state; it does not spawn
+clients. Startup then advances authority again and admits only new DHCP/health.
+
+Normal stop withdraws DHCP routing and keeps terminal RPDB guards; pause preserves
+a still-safe selected path. A crash leaves a supervision/cleanup interval, not
+continuous userspace safety enforcement. Bounded restart exhaustion requires
+explicit service-manager repair and never resets the application switch budget.
+One test-only pre-exec ip delay observes inherited-lock ownership and cgroup kill
+before takeover; this is not evidence for every helper failure or escaped root
+process. Installed orderly VM reboot and storage-exhaustion safety remain separate.

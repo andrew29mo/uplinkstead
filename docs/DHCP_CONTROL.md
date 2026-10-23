@@ -2,8 +2,8 @@
 
 This is the first slice of milestone 2: a capability-free proposal process,
 authoritative privileged writer and fenced root operator interface. It extends
-foreground dual-DHCP mode; installed systemd/process-tree/reboot qualification and
-capacity rollover remain later deliveries.
+foreground dual-DHCP mode. [Installed systemd/process-tree recovery](DHCP_SYSTEMD.md)
+has a separate gate; reboot qualification and capacity rollover remain later work.
 
 ## Authority
 

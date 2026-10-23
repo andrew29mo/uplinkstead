@@ -10,6 +10,7 @@ import copy
 import hashlib
 import json
 import os
+import pwd
 import re
 from pathlib import Path
 import select
@@ -27,6 +28,15 @@ from .dual_dhcp_linux import Backend
 from .dhcp_wire import DHCPTracker,dhcp_envelope
 from .probe import round as probe_round
 from .writer import now
+
+
+def notify_ready():
+    """systemd readiness: quarantine, sockets and clients exist, not WAN health."""
+    path=os.environ.get('NOTIFY_SOCKET')
+    if path:
+        with socket.socket(socket.AF_UNIX,socket.SOCK_DGRAM) as peer:
+            peer.connect('\0'+path[1:] if path.startswith('@') else path)
+            peer.sendall(b'READY=1\nSTATUS=Writer ready; awaiting fresh DHCP/health')
 
 
 def request(path, q, timeout=3):
@@ -297,9 +307,11 @@ class Runtime:
         self.inbox.replace(k, s['links'][k]['session'], s['boot'])
         env = dict(os.environ, UPLINKSTEAD_SOCKET=str(self.path), UPLINKSTEAD_LINK=k,
                    UPLINKSTEAD_SESSION=s['links'][k]['session'], UPLINKSTEAD_BOOT=s['boot'])
-        self.children[k] = subprocess.Popen([self.executable,'udhcpc','-f','-i',self.w.cfg['links'][k]['interface'],
+        # BusyBox dispatches by argv[0]; a qualified binary may be installed
+        # under an application-specific filename rather than "busybox".
+        self.children[k] = subprocess.Popen(['busybox','udhcpc','-f','-i',self.w.cfg['links'][k]['interface'],
             '-s',str(self.hook),'-t','3','-T','1','-A','1','-O','lease','-O','33','-O','121','-O','249','-O','58','-O','59'],
-            env=env, stdout=None if self.client_diagnostics else subprocess.DEVNULL,
+            executable=self.executable,env=env, stdout=None if self.client_diagnostics else subprocess.DEVNULL,
             stderr=subprocess.STDOUT if self.client_diagnostics else subprocess.DEVNULL)
 
     @staticmethod
@@ -668,6 +680,7 @@ class Runtime:
                     control_thread=threading.Thread(target=self.listen_control,args=(control_listener,),daemon=True);control_thread.start()
                 thread = threading.Thread(target=self.listen,args=(listener,),daemon=True); thread.start()
                 for k in LINKS: self.spawn(k)
+                self.publish();notify_ready()
                 while not self.stop.is_set(): self.step(); self.stop.wait(.01)
         finally:
             self.stop.set()
@@ -704,7 +717,11 @@ def main():
     p.add_argument('--hook',type=Path,default=Path('/usr/libexec/uplinkstead-dual-hook.py'))
     p.add_argument('--client',default='/usr/bin/busybox')
     p.add_argument('--policy-uid',type=int);p.add_argument('--policy-gid',type=int);p.add_argument('--control-socket',type=Path)
+    p.add_argument('--policy-user')
     a = p.parse_args()
+    if a.policy_user:
+        if a.policy_uid is not None or a.policy_gid is not None:p.error('Choose policy user or numeric UID/GID')
+        identity=pwd.getpwnam(a.policy_user);a.policy_uid,a.policy_gid=identity.pw_uid,identity.pw_gid
     c = json.loads(a.config.read_text())
     with DualLifecycle(c,a.journal,Backend) as writer:
         runtime = Runtime(writer,a.socket,a.hook,a.client,policy_uid=a.policy_uid,policy_gid=a.policy_gid,control_path=a.control_socket)

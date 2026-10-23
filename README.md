@@ -118,8 +118,8 @@ bounded. Observed ACK/loss during a selection write causes withdrawal and new
 health qualification; no atomic ACK/kernel or zero-gap guarantee is made.
 [Reviewed evidence](reviews/dhcp-automatic-review/README.md) distinguishes the normal foreground
 service from explicitly labelled backend-delay fault injections. Installed
-privilege separation/recovery, capacity longevity and application traffic
-comparisons remain later gates: this is not the completed deployed dual-DHCP MVP.
+privilege separation/recovery has its own qualification below; capacity longevity
+and application traffic comparisons remain separate gates.
 
 ## Dual-DHCP policy and operator boundary
 
@@ -131,8 +131,23 @@ operations retain epoch/revision and bounded durable operation IDs. Reset does
 not resume; lease expiry and safety withdrawal continue while paused.
 [Evidence](reviews/dhcp-control/README.md) separates actual Linux UID/capability
 and CLI checks from portable save-race/reopen tests. DHCP clients/capture remain
-trusted privileged code. Installed systemd/reboot and capacity rollover remain
-later work; this slice does not complete the deployed dual-DHCP MVP.
+trusted privileged code. This foreground evidence alone does not establish
+installed recovery, reboot or capacity qualification.
+
+## Installed dual-DHCP service and writer takeover
+
+[Dedicated systemd units](docs/DHCP_SYSTEMD.md) start the worker after writer
+readiness and supervise the writer/client/helper process group. Orderly stop and
+post-crash cleanup use the production recovery core to quarantine both DHCP
+allocations and selected routing, retaining terminal guards against main-default
+borrowing. Restart retains pause, latch and budget, rebuilds lease/health authority,
+and rejects old epoch operations. A renamed BusyBox executable is dispatched with
+the correct applet identity.
+
+[Installed-service evidence](reviews/dhcp-systemd/README.md) distinguishes normal
+units from one explicitly delayed real-ip-helper fault case, plus bounded startup
+failure and explicit repair. VM reboot, sudden power loss, boot-zero-gap and
+capacity exhaustion remain unqualified. Writer readiness is not WAN recovery.
 
 ## Reproduce
 

@@ -224,3 +224,29 @@ New lease generation while paused must receive fresh health; delayed old control
 cannot overwrite it. Require matching-source dual-platform IDs and the full prior
 automatic VM regression. Storage failure/resume-save races/receipt reopen have
 portable coverage and are not whole-writer or VM reboot qualification.
+
+## Milestone 2 slice 2: installed supervision and writer takeover
+
+Require [the installed lifecycle contract](DHCP_SYSTEMD.md), with unmodified
+shipped units, explicit namespace/package-location fixture drop-ins, actual
+systemd InvocationIDs, Type=notify readiness and capability-free worker readback.
+Stop must terminate the old writer/client/helper/worker tree, remove IPC and
+quarantine both allocations plus selection using the production core. A viable
+independent main-default TLS witness must accompany rejected LAN traffic.
+
+Kill the real writer with SIGKILL. Require a distinct writer/worker instance,
+higher epoch, empty allocations and WAITING health before servers permit new
+acquisition; preserve switch history, pause/latch semantics and receipts. Replayed
+root pause/resume/reset, worker proposal and retired hook must reject before and
+after fresh selection without overwriting newer control or route state. Ordinary
+new-client events may advance revision; they cannot grant old requests authority.
+
+An explicitly labelled test-only pre-exec delay must hold a real Linux.run ip
+helper and inherited lock. After writer death, a competing lock must reject until
+systemd removes that old helper; the helper must never execute its delayed ip
+command after takeover. Require actual fresh acquisition/health and TLS afterward.
+Persistent invalid configuration must exhaust bounded systemd starts; repaired
+configuration alone must not silently reset the limiter, and explicit repair must
+restore service without application budget reset. Identical dual-platform suites,
+prior VM regressions, unit/client/source correspondence, negative report controls
+and owned cleanup are required. No reboot/power-loss/zero-gap/capacity claim.

@@ -1,0 +1,309 @@
+[
+  {
+    "run_id": "7963eff20733a3bc",
+    "source_sha256": "44b0748697767e8f9722f3e0b5e6402badeed6ca74175c61b6b69cbfc2bdd6c6",
+    "passed": false,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.9692155420198105
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.49203141598263755
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 10.97068579198094
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3358215000189375
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.391608375008218
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 8.276724708994152
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 3.611216958001023
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2355104169982951
+      },
+      {
+        "name": "cases",
+        "exit_code": 1,
+        "timed_out": false,
+        "seconds": 54.857157500024186
+      },
+      {
+        "name": "diagnose",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3048782499972731
+      },
+      {
+        "name": "diagnose-private",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.225487207993865
+      },
+      {
+        "name": "diagnose-storage",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2304941669863183
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.25665891700191423
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.277332416997524
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.593363166990457
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.19331570898066275
+      }
+    ],
+    "error": "RuntimeError: cases failed or timed out",
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped",
+    "explanation": "Source changed during this run; SQLite capacity assertion incorrectly required an unchanged journal even when smaller safe post-stop cleanup could commit. Not qualification evidence."
+  },
+  {
+    "run_id": "43e92cb5b72d393a",
+    "source_sha256": "132b8069a981d8de7ebfca7ec9126c9bbf3e1d4d56bb96308d3f0caa31b44af8",
+    "passed": false,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.9777340830187313
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.33508966700173914
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 9.602181792026386
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.28308458300307393
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3829594170092605
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.891866833000677
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.8178550000011455
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.23251137501210906
+      },
+      {
+        "name": "cases",
+        "exit_code": 1,
+        "timed_out": false,
+        "seconds": 0.23446825001155958
+      },
+      {
+        "name": "diagnose",
+        "exit_code": 1,
+        "timed_out": false,
+        "seconds": 0.35827249998692423
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 1,
+        "timed_out": false,
+        "seconds": 0.31591987499268726
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.551645792002091
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.19262879199231975
+      }
+    ],
+    "error": "RuntimeError: cases failed or timed out",
+    "cleanup_error": "RuntimeError",
+    "vm_final": "Stopped",
+    "explanation": "Guest Python indentation error before installation; automatic cleanup also could not parse. Not a passing cleanup or qualification run.",
+    "manual_remediation": {
+      "owner_matched": true,
+      "no_installation_or_volume_ledger": true,
+      "no_owned_namespaces": true,
+      "unit_files_absent": true,
+      "snapshot_removed": true,
+      "vm_final": "Stopped",
+      "scope": "Dedicated VM; verified owner 43e92cb5b72d393a before removing only its source snapshot."
+    }
+  },
+  {
+    "run_id": "d3033d933f295d2c",
+    "source_sha256": "0210c9e78bc6e55800048a47b71db6283b27c5e194109fe8faaf946da4a23e60",
+    "passed": true,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.834036041982472
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3041514589858707
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 10.54441712499829
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3335235420090612
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.378598458977649
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.835073583002668
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 3.05648258398287
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.31421137499273755
+      },
+      {
+        "name": "cases",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 124.14666591599234
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.34810379199916497
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.36475125001743436
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.6115640419884585
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.1876294169924222
+      }
+    ],
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped"
+  }
+]

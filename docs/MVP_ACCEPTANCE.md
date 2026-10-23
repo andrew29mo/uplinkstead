@@ -255,3 +255,25 @@ from the unit file. Cold health includes zero good/bad/deadline and round -1;
 reacquisition must replace session/generation and earn new quorum. Limiter evidence
 must include actual same-boot journal records newer than the pre-fault cursor/time,
 in addition to the bounded failed state and repaired-start rejection.
+
+
+## P0 dual-DHCP storage-failure gate
+
+Qualified separately in [storage evidence](../reviews/dhcp-storage/README.md):
+
+- Real installed-service filesystem ENOSPC and SQLite FULL must fail the API,
+  retire selection authority and withdraw only owned routing under the writer lock.
+- Real readonly-volume post-crash ExecStopPost recovery must observe READONLY;
+  competing lock and foreign scope must prevent unauthorized withdrawal.
+- A non-durable quarantine receipt must never mean successful mutation or READY.
+- Repair must preserve policy/history/receipts, start with no usable old lease or
+  health, reject retired operations, and require fresh evidence before new traffic.
+- Main routes, RPDB and unrelated foreign routes must remain unchanged, with a
+  separate positive traffic witness and negative no-borrowing test.
+- Both platform suites must use the same frozen source; VM volume, loop device,
+  installed artifacts, processes and namespaces must be cleaned and VM stopped.
+
+The gate does not qualify storage corruption, VM reboot for this fault slice,
+abrupt power loss, boot zero-gap or capacity longevity. Historical installed
+systemd evidence's lack of storage qualification is superseded only by this
+separate bounded slice, not by a claim covering every I/O failure.

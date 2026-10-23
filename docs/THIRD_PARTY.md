@@ -65,3 +65,9 @@ and [DHCP_TIMERS.md](DHCP_TIMERS.md). The earlier [P0 workflow](DHCP_P0.md)
 is preserved as historical evidence. No external source, archive or executable is included
 in this repository or Python distribution. Future binary redistribution requires
 separate compliance with BusyBox's source and notice requirements.
+
+
+The storage-fault VM fixture also invokes separately installed e2fsprogs
+(`mkfs.ext4`) and util-linux loop/mount tools (`losetup`, `mount`, `umount`,
+`findmnt`). Their distribution/package component notices apply. No filesystem
+image, external source, executable or OS package is redistributed in this project.

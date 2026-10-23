@@ -15,12 +15,17 @@ from pathlib import Path
 import secrets
 import sqlite3
 import stat
+import sys
 
 from .dhcp import lease as parse_lease
 from .linux import Blocked
 from .writer import Writer, boot_id, now
 
 LINKS = ('A', 'B')
+
+
+class StorageUnavailable(Blocked):
+    """Writer retired; a non-durable quarantine receipt is not API success."""
 
 
 class DualLifecycle(Writer):
@@ -42,7 +47,14 @@ class DualLifecycle(Writer):
             endpoints.add((str(a),t['port']))
         if len(endpoints) != 3 or len(json.dumps(config)) > 16384:
             raise ValueError('Three distinct targets and bounded config required')
-        super().__init__({'_hash': hashlib.sha256(json.dumps(config, sort_keys=True).encode()).hexdigest()}, directory)
+        storage=config.get('storage',{})
+        if not isinstance(storage,dict) or set(storage)-{'max_pages'} or type(storage.get('max_pages',2048)) is not int or not 2<=storage.get('max_pages',2048)<=2048:
+            raise ValueError('storage.max_pages must be 2..2048')
+        self.max_pages=storage.get('max_pages',2048)
+        # Storage size is a restart-only resource limit, not lease/route authority.
+        authority={k:v for k,v in config.items() if k!='storage'}
+        super().__init__({'_hash': hashlib.sha256(json.dumps(authority, sort_keys=True).encode()).hexdigest()}, directory)
+        self._owns_lock=False;self._last_durable=None;self.storage_fault=None
         self.successes = config.get('success_rounds', 2)
         self.failures = config.get('failure_rounds', 3)
         self.freshness = config.get('freshness', 2.)
@@ -61,21 +73,20 @@ class DualLifecycle(Writer):
         if not stat.S_ISDIR(st.st_mode) or st.st_uid != os.geteuid() or st.st_mode & 0o077:
             raise Blocked('Private owned state directory required')
         try:
-            self.fd = os.open(self.directory/'writer.lock', os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
+            lock=self.directory/'writer.lock'
+            self.fd = os.open(lock, (os.O_RDONLY if lock.exists() else os.O_CREAT|os.O_RDWR) | os.O_NOFOLLOW, 0o600)
             st = os.fstat(self.fd)
-            if not stat.S_ISREG(st.st_mode) or st.st_nlink != 1:
+            if not stat.S_ISREG(st.st_mode) or st.st_nlink != 1 or st.st_uid!=os.geteuid():
                 raise Blocked('Unsafe writer lock')
-            fcntl.flock(self.fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            fcntl.flock(self.fd, fcntl.LOCK_EX | fcntl.LOCK_NB);self._owns_lock=True
             path = self.directory/'journal.sqlite'
-            if path.is_symlink():
-                raise Blocked('Unsafe journal')
-            self.db = sqlite3.connect(path, isolation_level=None)
-            self.db.execute('PRAGMA synchronous=FULL')
-            self.db.execute('PRAGMA journal_mode=DELETE')
-            if self.db.execute('PRAGMA page_size').fetchone()[0] != 4096 or self.db.execute('PRAGMA max_page_count=2048').fetchone()[0] != 2048:
-                raise Blocked('Journal capacity/layout unsupported')
-            self.db.execute('CREATE TABLE IF NOT EXISTS state (id INTEGER PRIMARY KEY CHECK(id=1), value TEXT NOT NULL)')
-            row = self.db.execute('SELECT value FROM state WHERE id=1').fetchone()
+            if path.is_symlink():raise Blocked('Unsafe journal')
+            row=None
+            if path.exists():
+                reader=sqlite3.connect(path.resolve().as_uri()+'?mode=ro',uri=True,isolation_level=None)
+                try:row=reader.execute('SELECT value FROM state WHERE id=1').fetchone()
+                finally:reader.close()
+            had_snapshot=row is not None
             self.s = json.loads(row[0]) if row else dict(config_hash=self.c['_hash'], boot=self.boot(), epoch=0, revision=0, history=[], latched=False, paused=False, phase='RECOVERING', links={k:self.empty() for k in LINKS}, active=None, pending=None, selection=None,operations=[])
             # Explicit additive migration of the historical exploration schema.
             # Existing unknown fields are still rejected by validate().
@@ -86,8 +97,17 @@ class DualLifecycle(Writer):
             if base<=set(self.s)<=base|{'selection','operations'}:
                 self.s.setdefault('selection',None);self.s.setdefault('operations',[])
             self.validate()
+            if had_snapshot:self._last_durable=copy.deepcopy(self.s)
             self.backend = self.factory(self.cfg, self.fd)
             self.health = {k:dict(state='WAITING', good=0, bad=0, round=-1, until=0.) for k in LINKS}
+            try:
+                self.db = sqlite3.connect(path, isolation_level=None)
+                self.db.execute('PRAGMA synchronous=FULL')
+                self.db.execute('PRAGMA journal_mode=DELETE')
+                if self.db.execute('PRAGMA page_size').fetchone()[0] != 4096 or self.db.execute('PRAGMA max_page_count='+str(self.max_pages)).fetchone()[0] != self.max_pages:
+                    raise Blocked('Journal capacity/layout unsupported')
+                self.db.execute('CREATE TABLE IF NOT EXISTS state (id INTEGER PRIMARY KEY CHECK(id=1), value TEXT NOT NULL)')
+            except (sqlite3.Error,OSError,Blocked) as exc:self.storage_failed(exc)
             self.s.update(epoch=self.s['epoch']+1, phase='RECOVERING')
             self.save()
             self.backend.reconcile(self.allowed(), {k:None for k in LINKS}, None)
@@ -100,6 +120,41 @@ class DualLifecycle(Writer):
         except BaseException:
             self.__exit__()
             raise
+
+    def __exit__(self,*args):
+        try:super().__exit__(*args)
+        finally:self._owns_lock=False
+
+    def storage_failed(self,exc):
+        if self.storage_fault is not None:raise StorageUnavailable('Storage unavailable; writer retired') from exc
+        code=getattr(exc,'sqlite_errorcode',None)
+        kind='sqlite_full' if code is not None and code&255==sqlite3.SQLITE_FULL else 'sqlite_readonly' if code is not None and code&255==sqlite3.SQLITE_READONLY else ('reserve' if str(exc).startswith('State volume reserve') else 'layout') if isinstance(exc,Blocked) else 'sqlite_error' if isinstance(exc,sqlite3.Error) else 'os_error'
+        receipt=dict(event='storage_failure',kind=kind,sqlite_code=code,sqlite_name=getattr(exc,'sqlite_errorname',None),errno=getattr(exc,'errno',None),quarantined=False,durable=False,lock_held=self._owns_lock)
+        self.storage_fault=receipt;self.s['phase']='RECOVERY_REQUIRED'
+        try:
+            if not self._owns_lock or self.fd is None or self._last_durable is None:raise Blocked('No exclusive validated durable authority')
+            self.validate()
+            allowed=self.allowed();prior=self.allowed(self._last_durable)
+            for k in LINKS:
+                for v in prior[k]:
+                    if v not in allowed[k]:allowed[k].append(v)
+            # Only quarantine. No successful journal write, new route, lease,
+            # budget reset or client authority is permitted by this path.
+            self.backend.reconcile(allowed,{k:None for k in LINKS},None)
+            receipt['quarantined']=True
+            self.s.update(active=None,pending=None,selection=None)
+            for k in LINKS:
+                self.s['links'][k].update(current=None,expires=0.)
+                self.health[k]=dict(state='WAITING',good=0,bad=0,round=-1,until=0.)
+        except Exception as failure:receipt['quarantine_error']=type(failure).__name__+': '+str(failure)[:160]
+        print(json.dumps(receipt,allow_nan=False),file=sys.stderr,flush=True)
+        raise StorageUnavailable('Storage unavailable; quarantine='+str(receipt['quarantined'])+'; writer retired') from exc
+
+    def save(self):
+        if self.storage_fault is not None:raise StorageUnavailable('Storage unavailable; writer retired')
+        try:super().save()
+        except (sqlite3.Error,OSError,Blocked) as exc:self.storage_failed(exc)
+        self._last_durable=copy.deepcopy(self.s)
 
     def validate(self):
         s = self.s
@@ -164,9 +219,10 @@ class DualLifecycle(Writer):
                 raise Blocked('Invalid active identity')
             self.validate_value(a['value'])
 
-    def allowed(self):
-        values = {k:[self.s['links'][k]['current']] for k in LINKS}
-        p = self.s['pending']
+    def allowed(self,state=None):
+        state=self.s if state is None else state
+        values = {k:[state['links'][k]['current']] for k in LINKS}
+        p = state['pending']
         if p:
             if p['link']:
                 values[p['link']] += [p['old'],p['new']]

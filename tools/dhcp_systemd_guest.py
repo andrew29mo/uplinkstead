@@ -45,7 +45,7 @@ def cleanup_install(root):
     if not ledger.exists():return True
     owned=json.loads(ledger.read_text())
     allowed={str(Path('/etc/systemd/system')/u) for u in (UNIT,WORKER)}|{str(CONFIG),'/usr/libexec/uplinkstead-dual-worker.py','/usr/libexec/uplinkstead-dual-hook.py','/usr/libexec/uplinkstead-busybox'}
-    allowed|={str(Path('/etc/systemd/system')/(u+'.d/fixture.conf')) for u in (UNIT,WORKER)}|{str(Path('/etc/systemd/system')/(UNIT+'.d/fault.conf'))}
+    allowed|={str(Path('/etc/systemd/system')/(u+'.d/fixture.conf')) for u in (UNIT,WORKER)}|{str(Path('/etc/systemd/system')/(UNIT+'.d/fault.conf')),str(Path('/etc/systemd/system')/(UNIT+'.d/storage.conf'))}
     for row in owned['files']:
         p=Path(row['path'])
         if str(p) not in allowed:raise RuntimeError('Foreign installation cleanup target')
@@ -70,7 +70,7 @@ def cleanup_install(root):
     ledger.unlink()
     return True
 
-def run(root,source):
+def run(root,source,extension=None):
     f=Fixture(root,source);installed=[];dirs=[];created_user=False;state_inode=None
     ledger=root/'installation.json'
     ownership=dict(files=[],dirs=[],created_user=False,uid=None,state_inode=None)
@@ -231,6 +231,7 @@ def run(root,source):
         system('reset-failed',UNIT);system('reset-failed',WORKER,check=False);start();after=selected();assert f.client()['ok']
         assert after['state']['history'][:-1]==before_failure['history'] and after['state']['paused']==before_failure['paused'] and after['state']['latched']==before_failure['latched']
         case('bounded_restart_failure_and_explicit_repair',began,failed=failed,failed_worker=failed_worker,stable_failure=stable_failure,start_limit_observed=limit_observed,journal_before=journal_before,limit_entries=limit_entries,before=before_failure,repair_without_reset_exit=retry.returncode,after=after,explicit_reset_recovered=True)
+        if extension:result['storage']=extension(dict(root=root,source=source,fixture=f,system=system,state=state,selected=selected,observed=observed,servers=servers,ready=ready,stale=stale,net=net,write=write,persist=persist))
         result['worker_file_sha256']=digest(Path('/usr/libexec/uplinkstead-dual-worker.py'));result['wire_counters']=f.counters()
     except BaseException as exc:
         result['failure']=dict(type=type(exc).__name__,message=str(exc)[:1500]);persist()

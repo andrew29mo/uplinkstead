@@ -72,8 +72,10 @@ backend/capture/DHCP children; those components remain privileged and trusted.
 withdrawal continues. Stop withdraws both allocations and the selected route.
 Neither hands LAN traffic to main's default. A crash can leave old kernel state
 until supervision/cleanup runs; this is not continuous health enforcement while
-no writer is executing. Post-stop cleanup still requires healthy storage/kernel
-operations. Storage exhaustion and inability to quarantine are separate gates.
+no writer is executing. Post-stop cleanup normally persists its recovery state. The separately qualified
+[storage-failure path](DHCP_STORAGE.md) can withdraw under the same exclusive lock
+without a successful write, using a previously validated ownership snapshot.
+Kernel failures, invalid snapshots and foreign scope can still prevent quarantine.
 
 After repairing a demonstrated startup problem, inspect the journal/status and
 service logs, then explicitly use `systemctl reset-failed` on both units and start
@@ -125,5 +127,8 @@ sampled before the fault, retained with boot/time/unit identity, and rejected if
 they belong to an earlier interval. A boolean copied from an old log is not proof.
 
 This does **not** qualify VM reboot, sudden power loss, boot-zero-gap protection,
-capacity exhaustion, every helper/kernel interleaving or uninterrupted existing
+capacity longevity, every helper/kernel interleaving or uninterrupted existing
 connections. No universal failover or recovery time bound is claimed.
+
+The installed storage-fault extension and its explicit drop-ins are documented in
+[DHCP_STORAGE.md](DHCP_STORAGE.md); historical systemd receipts above remain unchanged.

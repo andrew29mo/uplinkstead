@@ -147,7 +147,24 @@ the correct applet identity.
 [Installed-service evidence](reviews/dhcp-systemd/README.md) distinguishes normal
 units from one explicitly delayed real-ip-helper fault case, plus bounded startup
 failure and explicit repair. VM reboot, sudden power loss, boot-zero-gap and
-capacity exhaustion remain unqualified. Writer readiness is not WAN recovery.
+capacity longevity remain unqualified. The bounded storage-failure slice below is
+qualified separately. Writer readiness is not WAN recovery.
+
+## Dual-DHCP storage failure and repair
+
+[Storage safety](docs/DHCP_STORAGE.md) retires a writer after failed persistence;
+it cannot accept another selection or report a failed mutation as successful.
+With the exclusive writer lock and a previously validated durable ownership
+snapshot, production recovery can withdraw only its controlled routing without a
+successful journal write. Foreign scope or unknown ownership refuses withdrawal;
+this is not a universal fail-closed guarantee.
+
+[Same-source evidence](reviews/dhcp-storage/README.md) contains 270 tests on each
+platform and three additional isolated Linux VM cases: real ext4 ENOSPC, SQLite
+page-capacity FULL, and readonly post-crash stop recovery. Repair retains policy
+limits/receipts and requires a fresh durable epoch, leases and health. Timings and
+process RSS snapshots are labelled VM observations. Abrupt power loss, VM reboot
+for this storage slice, corruption recovery and boot-zero-gap are not tested.
 
 ## Reproduce
 

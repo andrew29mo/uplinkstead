@@ -307,4 +307,22 @@ continuous userspace safety enforcement. Bounded restart exhaustion requires
 explicit service-manager repair and never resets the application switch budget.
 One test-only pre-exec ip delay observes inherited-lock ownership and cgroup kill
 before takeover; this is not evidence for every helper failure or escaped root
-process. Installed orderly VM reboot and storage-exhaustion safety remain separate.
+process. Installed orderly VM reboot remains a separate gate. Bounded storage-exhaustion
+safety now has its own [qualification](DHCP_STORAGE.md).
+
+
+## Dual-DHCP storage-failure exit
+
+Persistence failure retires the writer and rejects further selection. A failed
+API is never acknowledged as successful even when emergency withdrawal succeeds.
+The non-durable withdrawal uses the same exclusive flock and scoped backend,
+combining validated last-durable ownership with in-memory mutation intents. No
+initial durable snapshot means no inferred ownership. Foreign scope or lock
+contention refuses mutation. Existing terminal guards remain in place; no main
+routes or other tools' rules are changed. Receipts explicitly mark durable=false.
+
+Repair starts a new writer; it must durably save a new epoch before readiness,
+and acquire fresh leases/health before forwarding. Pause/latch, switch budget
+history and operation receipts survive. Root-only storage page limits can be
+changed on restart without changing route authority identity; all route-related
+configuration remains bound. See [contract and limits](DHCP_STORAGE.md).

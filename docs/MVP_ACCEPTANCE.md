@@ -205,3 +205,22 @@ negative report controls, JSON/HTML agreement and cleanup remain required.
 These tests do not prove every ACK/kernel interleaving or zero-gap forwarding.
 Installed/reboot recovery, capacity longevity and traffic-distribution comparisons
 remain independent gates; passing this milestone does not complete the full MVP.
+
+## Milestone 2 slice 1: policy/operator boundary
+
+Require the [formal control contract](DHCP_CONTROL.md): actual capability-free
+non-root worker, exact SO_PEERCRED identity, no caller health/commands, writer-owned
+live policy admission and separately bounded proposal/operator queues. Malicious
+worker proposals cannot preempt healthy A, inject health, change root controls,
+borrow main or reset latch/budget. A different UID sharing the socket group still
+rejects. Root-only event/journal access and kernel network-write/raw-socket denial
+must be observed, not inferred from portable fake UIDs.
+
+Actual CLI pause/resume/explicit reset use original tokens and persistent operation
+IDs. Pause continues safety withdrawal. Without a worker no new charged automatic
+choice occurs; resumed proposals remain budget-bound. Reset requires pause+ack,
+keeps paused, does not forward or reset other limiters; resume cannot clear latch.
+New lease generation while paused must receive fresh health; delayed old controls
+cannot overwrite it. Require matching-source dual-platform IDs and the full prior
+automatic VM regression. Storage failure/resume-save races/receipt reopen have
+portable coverage and are not whole-writer or VM reboot qualification.

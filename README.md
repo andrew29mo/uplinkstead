@@ -121,6 +121,19 @@ service from explicitly labelled backend-delay fault injections. Installed
 privilege separation/recovery, capacity longevity and application traffic
 comparisons remain later gates: this is not the completed deployed dual-DHCP MVP.
 
+## Dual-DHCP policy and operator boundary
+
+[The next control slice](docs/DHCP_CONTROL.md) adds an optional capability-free
+proposal process. The root writer independently checks current leases/health,
+hold/grace, budget/latch and tokens; there is no inline charged selection when
+that worker is absent. Separate root-only pause, explicit reset-budget and resume
+operations retain epoch/revision and bounded durable operation IDs. Reset does
+not resume; lease expiry and safety withdrawal continue while paused.
+[Evidence](reviews/dhcp-control/README.md) separates actual Linux UID/capability
+and CLI checks from portable save-race/reopen tests. DHCP clients/capture remain
+trusted privileged code. Installed systemd/reboot and capacity rollover remain
+later work; this slice does not complete the deployed dual-DHCP MVP.
+
 ## Reproduce
 
 Python 3.12+ is required. Runtime uses the standard library and separately installed

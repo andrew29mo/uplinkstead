@@ -10,6 +10,7 @@ import copy
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import select
 import signal
@@ -223,8 +224,14 @@ class Capture:
 
 
 class Runtime:
-    def __init__(self, writer, path, hook, executable='/usr/bin/busybox', probe=probe_round):
+    def __init__(self, writer, path, hook, executable='/usr/bin/busybox', probe=probe_round, policy_uid=None, policy_gid=None, control_path=None):
         self.w, self.path, self.hook, self.executable, self.probe = writer, Path(path), Path(hook), executable, probe
+        if any(v is not None for v in (policy_uid,policy_gid,control_path)) and not (type(policy_uid) is int and policy_uid>0 and type(policy_gid) is int and policy_gid>0 and control_path is not None):raise ValueError('Explicit non-root policy UID/GID and control path required')
+        self.policy_uid,self.policy_gid=policy_uid,policy_gid
+        self.control_path=Path(control_path) if control_path is not None else None
+        if self.control_path==self.path:raise ValueError('Separate event and control sockets required')
+        self.candidate_link=None
+        self.control_cache={}
         cfg = writer.cfg.get('runtime', {})
         if set(cfg)-{'queue_capacity','probe_interval','restart_delay','client_diagnostics','restore_selected','automatic_selection','selection_hold','failover_delay'}: raise ValueError('Unknown runtime config')
         self.automatic_selection=cfg.get('automatic_selection',False)
@@ -264,6 +271,7 @@ class Runtime:
         self.cache = {}
         self.cache_lock = threading.RLock()
         self.operator = deque(maxlen=4)
+        self.proposals = deque(maxlen=1)
         self.pool = ThreadPoolExecutor(max_workers=2)
 
     def increment(self, key):
@@ -281,6 +289,7 @@ class Runtime:
                 capture={k:c.stats() for k,c in self.captures.items()},
                 last_errors=list(self.errors),
                 lease_clock='CLOCK_BOOTTIME; earlier of fixed client REQUEST origin and previous empty AF_PACKET queue bound'))
+            self.control_cache=self.control_status()
 
     def spawn(self, k):
         s = self.w.s
@@ -435,17 +444,20 @@ class Runtime:
                 started = now()
                 self.futures[k] = (self.pool.submit(self.probe,c,k),row['generation'],started,self.rounds[k])
                 self.next_probe[k] = started+self.interval
-        with self.cache_lock: item = self.operator.popleft() if self.operator else None
+        with self.cache_lock: item = self.operator.popleft() if self.operator else (self.proposals.popleft() if self.proposals else None)
         if item:
             q,done,result = item
             try:
-                valid=self.select_guarded(q['link'],lambda:self.w.choose(q['link'],q['epoch'],q['revision']))
-                if valid and self.restore_selected:self.restore_target=q['link']
-                result.update(ok=valid,state=self.w.snapshot())
-                if not valid:result['error']='SelectionInvalidated'
+                if '_control' in q:result.update(self.process_control(q['_control'],q['_uid']))
+                else:
+                    valid=self.select_guarded(q['link'],lambda:self.w.choose(q['link'],q['epoch'],q['revision']))
+                    if valid and self.restore_selected:self.restore_target=q['link']
+                    result.update(ok=valid,state=self.w.snapshot())
+                    if not valid:result['error']='SelectionInvalidated'
             except RuntimeError as exc:
                 if self.w.s['phase'] != 'READY': raise
                 result.update(ok=False,error=type(exc).__name__)
+                if '_control' in q:result.update(detail=str(exc)[:160],status=self.control_status())
             done.set()
         self.converge()
         self.automatic()
@@ -454,6 +466,97 @@ class Runtime:
     def selection_stamp(self,k):
         c=self.captures[k].stats();q=self.inbox.stats()
         return (c.get('version',0),q['per_link_depth'][k],self.inbox.sequence[k],k in q['revoked']),bool(c.get('pending',False) or q['per_link_depth'][k] or k in q['revoked'])
+
+    def control_status(self):
+        s=self.w.s;k=self.candidate_link
+        return dict(epoch=s['epoch'],revision=s['revision'],phase=s['phase'],paused=s['paused'],latched=s['latched'],
+            active={n:s['active'][n] for n in ('link','generation')} if s['active'] else None,
+            links={k:dict(generation=r['generation'],has_lease=r['current'] is not None,health=self.w.health[k]['state'],expires=r['expires']) for k,r in s['links'].items()},
+            history_count=len(s['history']),budget=self.w.budget,
+            candidate=dict(target=k,generation=s['links'][k]['generation']) if k and s['active'] is None and not s['paused'] and not s['latched'] else None,
+            worker_required=self.policy_uid is not None,operations=copy.deepcopy(s['operations']),as_of=now())
+
+    def validate_control(self,q,uid):
+        if uid not in (0,self.policy_uid):raise PermissionError('Untrusted local peer')
+        op=q.get('op');schemas={'status':{'op'},'propose':{'op','epoch','revision','target','generation'},
+            'pause':{'op','epoch','revision','id'},'resume':{'op','epoch','revision','id'},'reset-budget':{'op','epoch','revision','id','ack'}}
+        if not isinstance(op,str) or op not in schemas or set(q)!=schemas[op]:raise ValueError('Unknown control operation/fields')
+        if op not in ('status','propose') and uid!=0:raise PermissionError('Root operator required')
+        if op=='propose' and (self.policy_uid is None or uid!=self.policy_uid):raise PermissionError('Dedicated policy peer required')
+        if op!='status' and any(type(q[n]) is not int or q[n]<0 for n in ('epoch','revision')):raise ValueError('Invalid operation token')
+        if op=='propose' and (not isinstance(q['target'],str) or q['target'] not in LINKS or type(q['generation']) is not int or q['generation']<0):raise ValueError('Invalid proposal')
+        if op in ('pause','resume','reset-budget') and (not isinstance(q['id'],str) or not re.fullmatch('[0-9a-f]{32}',q['id'])):raise ValueError('Invalid operation ID')
+        if op=='reset-budget' and q['ack']!='reset-switch-budget':raise ValueError('Explicit budget acknowledgement required')
+
+    def process_control(self,q,uid):
+        self.validate_control(q,uid);op=q['op']
+        self.w.token(q);self.w.tick();self.w.token(q)
+        if op=='propose':
+            k=q['target']
+            if k not in LINKS or type(q['generation']) is not int or q['generation']!=self.w.s['links'][k]['generation'] or self.candidate()!=k:
+                raise RuntimeError('Proposal not admitted by writer')
+            valid=self.admit_candidate(k)
+            return dict(ok=valid,status=self.control_status(),**({} if valid else dict(error='ProposalInvalidated')))
+        k=None;stamp=None
+        if op=='resume':
+            links=sorted(LINKS,key=lambda link: not (self.w.s['active'] and self.w.s['active']['link']==link))
+            for link in links:
+                value,pending=self.selection_stamp(link)
+                if self.w.healthy(link) and not pending:k,stamp=link,value;break
+            if k is None:raise RuntimeError('No fresh admitted lease/health')
+        self.w.operator(q,k)
+        if op=='resume':
+            after,pending=self.selection_stamp(k)
+            if pending or after!=stamp or not self.w.healthy(k):
+                self.w.transition(k,None,0.)
+                self.w.repause();return dict(ok=False,error='ResumeEvidenceChanged',status=self.control_status())
+        return dict(ok=True,status=self.control_status())
+
+    def submit_control(self,q,uid):
+        self.validate_control(q,uid)
+        if q['op']=='status':
+            with self.cache_lock:return dict(ok=True,status=copy.deepcopy(self.control_cache))
+        item=({'_control':copy.deepcopy(q),'_uid':uid},threading.Event(),{})
+        with self.cache_lock:
+            queue=self.proposals if q['op']=='propose' else self.operator
+            if len(queue)>=queue.maxlen:raise OverflowError('Control queue full')
+            queue.append(item)
+        if item[1].wait(.5):return item[2]
+        return dict(ok=False,error='OutcomeUnknownInspectStatus',id=q.get('id'))
+
+    def open_control(self):
+        parent=self.control_path.parent
+        if not parent.exists():
+            parent.mkdir(mode=0o750);os.chown(parent,0,self.policy_gid)
+        st=parent.lstat()
+        if not stat.S_ISDIR(st.st_mode) or parent.is_symlink() or st.st_uid!=0 or st.st_gid!=self.policy_gid or st.st_mode&0o027 or st.st_mode&0o050!=0o050:
+            raise PermissionError('Root-owned non-writable policy directory required')
+        if self.control_path.exists() or self.control_path.is_symlink():
+            st=self.control_path.lstat()
+            if not stat.S_ISSOCK(st.st_mode) or st.st_uid!=0:raise RuntimeError('Foreign control socket')
+            self.control_path.unlink()
+        listener=socket.socket(socket.AF_UNIX,socket.SOCK_SEQPACKET)
+        try:
+            listener.bind(str(self.control_path));os.chown(self.control_path,0,self.policy_gid);self.control_path.chmod(0o660)
+            listener.listen(4);listener.settimeout(.1);return listener
+        except BaseException:listener.close();raise
+
+    def listen_control(self,listener):
+        while not self.stop.is_set():
+            try:peer,_=listener.accept()
+            except socket.timeout:continue
+            except OSError:break
+            with peer:
+                peer.settimeout(.1)
+                try:
+                    uid=struct.unpack('3i',peer.getsockopt(socket.SOL_SOCKET,socket.SO_PEERCRED,12))[1]
+                    raw,_,flags,_=peer.recvmsg(4096)
+                    if flags&socket.MSG_TRUNC:raise ValueError('Control request too large')
+                    answer=self.submit_control(decode(raw),uid)
+                except (ValueError,TypeError,KeyError,PermissionError,OSError,OverflowError) as exc:
+                    self.increment('rejected');answer=dict(ok=False,error=type(exc).__name__)
+                try:peer.sendall(json.dumps(answer,allow_nan=False).encode())
+                except OSError:pass
 
     def select_guarded(self,k,action):
         """Recheck intake after a real write; never publish that stale choice.
@@ -474,7 +577,7 @@ class Runtime:
             return False
         return self.w.s['active'] is not None and self.w.s['active']['link']==k
 
-    def automatic(self):
+    def candidate(self):
         if not self.automatic_selection:return
         instant=now();s=self.w.s
         for k in LINKS:
@@ -501,17 +604,25 @@ class Runtime:
         preferred=anchor['link'] if anchor else 'A'
         candidates.sort(key=lambda k:k!=preferred)
         if not candidates:self.auto_status='NO_STABLE_UPLINK';return
-        k=candidates[0]
+        return candidates[0]
+
+    def automatic(self):
+        self.candidate_link=self.candidate()
+        if self.candidate_link is not None and self.policy_uid is None:self.admit_candidate(self.candidate_link)
+
+    def admit_candidate(self,k):
+        s=self.w.s
         try:
             valid=self.select_guarded(k,lambda:self.w.choose(k,s['epoch'],s['revision']))
         except RuntimeError:
             if s['phase']!='READY':raise
-            self.auto_status='OPERATOR_BLOCKED' if s['latched'] else 'EVIDENCE_CHANGED';return
+            self.auto_status='OPERATOR_BLOCKED' if s['latched'] else 'EVIDENCE_CHANGED';return False
         self.restore_target=k
         if valid:
             self.withdrawn_at=None
             self.increment('automatic_choices');self.auto_status='SELECTED'
         else:self.auto_status='EVIDENCE_CHANGED'
+        return valid
 
     def converge(self):
         if not self.restore_selected or self.restore_target is None:
@@ -546,18 +657,24 @@ class Runtime:
         if self.path.exists():
             if not stat.S_ISSOCK(self.path.lstat().st_mode): raise RuntimeError('Refusing foreign socket path')
             self.path.unlink()
-        thread = None
+        thread = None;control_thread=None;control_listener=None
         try:
             for k in LINKS: self.captures[k] = Capture(self.w.cfg['links'][k]['interface'])
             with socket.socket(socket.AF_UNIX,socket.SOCK_SEQPACKET) as listener:
                 listener.bind(str(self.path)); self.path.chmod(0o600); listener.listen(4); listener.settimeout(.1)
                 self.publish()
+                if self.control_path is not None:
+                    control_listener=self.open_control()
+                    control_thread=threading.Thread(target=self.listen_control,args=(control_listener,),daemon=True);control_thread.start()
                 thread = threading.Thread(target=self.listen,args=(listener,),daemon=True); thread.start()
                 for k in LINKS: self.spawn(k)
                 while not self.stop.is_set(): self.step(); self.stop.wait(.01)
         finally:
             self.stop.set()
             if thread: thread.join(timeout=1)
+            if control_listener:control_listener.close()
+            if control_thread:control_thread.join(timeout=1)
+            if control_listener and self.control_path:self.control_path.unlink(missing_ok=True)
             for p in self.children.values(): self.kill(p)
             self.pool.shutdown(wait=True,cancel_futures=True)
             for capture in self.captures.values(): capture.close()
@@ -585,10 +702,12 @@ def main():
     p = argparse.ArgumentParser(); p.add_argument('--config',type=Path,required=True)
     p.add_argument('--journal',type=Path,required=True); p.add_argument('--socket',type=Path,required=True)
     p.add_argument('--hook',type=Path,default=Path('/usr/libexec/uplinkstead-dual-hook.py'))
-    p.add_argument('--client',default='/usr/bin/busybox'); a = p.parse_args()
+    p.add_argument('--client',default='/usr/bin/busybox')
+    p.add_argument('--policy-uid',type=int);p.add_argument('--policy-gid',type=int);p.add_argument('--control-socket',type=Path)
+    a = p.parse_args()
     c = json.loads(a.config.read_text())
     with DualLifecycle(c,a.journal,Backend) as writer:
-        runtime = Runtime(writer,a.socket,a.hook,a.client)
+        runtime = Runtime(writer,a.socket,a.hook,a.client,policy_uid=a.policy_uid,policy_gid=a.policy_gid,control_path=a.control_socket)
         def stop(*_): runtime.stop.set()
         signal.signal(signal.SIGTERM,stop); signal.signal(signal.SIGINT,stop)
         runtime.run()

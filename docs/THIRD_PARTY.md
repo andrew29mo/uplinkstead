@@ -15,6 +15,11 @@ invokes separately installed iproute2 commands; the fixture additionally invokes
 systemd, nftables/iptables, OpenSSL and Colima/Lima. No dependency source or binary
 is copied into this repository or wheel.
 
+The dual-DHCP control fixture additionally invokes separately installed util-linux
+`setpriv` to launch real numeric UID/GID workers with dropped capabilities and
+NoNewPrivs. That executable is not vendored or redistributed; the installed
+package's component notices remain authoritative.
+
 MIT covers the project's own files. It does not relicense the programs below or
 claim that a complete OS/VM image can be redistributed under MIT. Their component
 notices remain authoritative, including exceptions and bundled subcomponents.

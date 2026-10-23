@@ -270,5 +270,22 @@ stateDiagram-v2
 ```
 
 The renewal self-transition includes real quarantine/withdrawal; it does not mean
-continuous forwarding. No automatic failback is enabled. Deployment/privilege
-separation, operator reset and installed recovery for this mode remain later work.
+continuous forwarding. No automatic failback is enabled. Foreground policy-process
+separation and operator controls are added by the next slice below; installed recovery
+for this mode remains later work.
+
+## Dual-DHCP policy/operator boundary
+
+[The control slice](DHCP_CONTROL.md) adds a separate capability-free proposal client
+and root operator socket. Root writer-owned candidate computation and live
+admission remain authoritative; worker clocks/proofs/commands are not accepted.
+SO_PEERCRED distinguishes the dedicated policy UID from root operations. The
+private client-event channel is separate. Proposal and operator queues have
+independent bounds; absent policy never grants inline charged selection.
+
+Pause, explicit reset-budget and resume carry epoch/revision/operation ID. Reset
+never resumes. Fresh lease/health and post-persistence checks gate resume; later
+actual selection still requires hold/grace/budget. The journal holds 32 bounded
+operator receipts alongside state, with explicit migration of known old schemas.
+Entering latch advances revision. This is foreground separation, not installed
+process-tree or reboot recovery qualification; DHCP clients/capture remain trusted.

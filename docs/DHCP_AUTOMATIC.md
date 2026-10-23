@@ -130,7 +130,8 @@ that expiry boundary is not an additional VM injection.
 
 ## Still outside milestone 1
 
-Dual-mode privilege separation, root reset/resume API, installed start/stop and
+The subsequent [control slice](DHCP_CONTROL.md) adds foreground policy-process
+separation and root pause/reset/resume. Installed start/stop and
 VM reboot qualification, sustained history-capacity rollover, same-schedule
 application traffic/outage distributions and physical-WAN interoperability remain
 separate gates. The existing static/single-DHCP deployments retain their own

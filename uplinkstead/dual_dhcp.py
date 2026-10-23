@@ -76,14 +76,15 @@ class DualLifecycle(Writer):
                 raise Blocked('Journal capacity/layout unsupported')
             self.db.execute('CREATE TABLE IF NOT EXISTS state (id INTEGER PRIMARY KEY CHECK(id=1), value TEXT NOT NULL)')
             row = self.db.execute('SELECT value FROM state WHERE id=1').fetchone()
-            self.s = json.loads(row[0]) if row else dict(config_hash=self.c['_hash'], boot=self.boot(), epoch=0, revision=0, history=[], latched=False, paused=False, phase='RECOVERING', links={k:self.empty() for k in LINKS}, active=None, pending=None, selection=None)
+            self.s = json.loads(row[0]) if row else dict(config_hash=self.c['_hash'], boot=self.boot(), epoch=0, revision=0, history=[], latched=False, paused=False, phase='RECOVERING', links={k:self.empty() for k in LINKS}, active=None, pending=None, selection=None,operations=[])
             # Explicit additive migration of the historical exploration schema.
             # Existing unknown fields are still rejected by validate().
             for row in self.s.get('links', {}).values():
                 if isinstance(row, dict) and set(row) == {'current','generation','revision','session','last_event','expires'}:
                     row['event_sequence'] = 0
-            if set(self.s)=={'config_hash','boot','epoch','revision','history','latched','paused','phase','links','active','pending'}:
-                self.s['selection']=None
+            base={'config_hash','boot','epoch','revision','history','latched','paused','phase','links','active','pending'}
+            if base<=set(self.s)<=base|{'selection','operations'}:
+                self.s.setdefault('selection',None);self.s.setdefault('operations',[])
             self.validate()
             self.backend = self.factory(self.cfg, self.fd)
             self.health = {k:dict(state='WAITING', good=0, bad=0, round=-1, until=0.) for k in LINKS}
@@ -102,12 +103,18 @@ class DualLifecycle(Writer):
 
     def validate(self):
         s = self.s
-        if set(s) != {'config_hash','boot','epoch','revision','history','latched','paused','phase','links','active','pending','selection'} or s['config_hash'] != self.c['_hash'] or set(s['links']) != set(LINKS):
+        if set(s) != {'config_hash','boot','epoch','revision','history','latched','paused','phase','links','active','pending','selection','operations'} or s['config_hash'] != self.c['_hash'] or set(s['links']) != set(LINKS):
             raise Blocked('Invalid dual DHCP journal')
         if not isinstance(s['boot'],str) or not s['boot'] or any(type(s[n]) is not int or s[n] < 0 for n in ('epoch','revision')) or type(s['paused']) is not bool or type(s['latched']) is not bool or s['phase'] not in ('RECOVERING','READY','RECOVERY_REQUIRED'):
             raise Blocked('Invalid journal authority')
         if not isinstance(s['history'], list) or len(s['history']) > 64 or any(set(h) != {'boot','at'} or not isinstance(h['boot'],str) or not self.number(h['at']) for h in s['history']):
             raise Blocked('Invalid budget history')
+        if not isinstance(s['operations'],list) or len(s['operations'])>32:raise Blocked('Invalid operation history')
+        ids=set()
+        for op in s['operations']:
+            if not isinstance(op,dict) or set(op)!={'id','kind','uid','at','boot','epoch','revision','outcome'} or not isinstance(op['id'],str) or not re.fullmatch('[0-9a-f]{32}',op['id']) or op['id'] in ids or op['kind'] not in ('pause','resume','reset-budget') or type(op['uid']) is not int or op['uid']!=0 or not self.number(op['at']) or not isinstance(op['boot'],str) or not op['boot'] or any(type(op[n]) is not int or not 0<=op[n]<=s[n] for n in ('epoch','revision')) or op['outcome'] not in ('APPLIED','REPAUSED'):
+                raise Blocked('Invalid operation receipt')
+            ids.add(op['id'])
         for k, row in s['links'].items():
             if set(row) != {'current','generation','revision','session','event_sequence','last_event','expires'} or any(type(row[n]) is not int or row[n] < 0 for n in ('generation','revision','event_sequence')) or not isinstance(row['session'],str) or not re.fullmatch('[0-9a-f]{48}',row['session']) or any(not self.number(row[n]) for n in ('last_event','expires')):
                 raise Blocked('Invalid link journal')
@@ -354,6 +361,7 @@ class DualLifecycle(Writer):
         self.s['history'] = [h for h in self.s['history'] if h['boot'] != self.s['boot'] or self.clock()-h['at'] < self.window]
         if len(self.s['history']) >= self.budget:
             self.s['latched'] = True
+            self.s['revision'] += 1
             self.save()
             raise Blocked('Switch budget exhausted')
         self.s['history'].append(dict(boot=self.s['boot'],at=self.clock()))
@@ -397,3 +405,43 @@ class DualLifecycle(Writer):
         self.s['revision'] += 1
         self.save()
         return self.tick()
+
+    def token(self,q):
+        self.ready()
+        if any(type(q[n]) is not int or q[n]!=self.s[n] for n in ('epoch','revision')):
+            raise Blocked('Stale operation token')
+
+    def healthy(self,k):
+        if k not in LINKS:return False
+        r,h=self.s['links'][k],self.health[k]
+        return r['current'] is not None and h['state']=='HEALTHY' and self.clock()<min(r['expires'],h['until'])
+
+    def control_save(self):
+        try:self.save()
+        except BaseException:
+            self.s['phase']='RECOVERY_REQUIRED'
+            raise
+
+    def repause(self):
+        self.s['paused']=True;self.s['revision']+=1
+        self.s['operations'][-1].update(outcome='REPAUSED',revision=self.s['revision'])
+        self.control_save()
+
+    def operator(self,q,link=None):
+        op=q['op'];fields={'op','epoch','revision','id'}|({'ack'} if op=='reset-budget' else set())
+        if op not in ('pause','resume','reset-budget') or set(q)!=fields or not isinstance(q['id'],str) or not re.fullmatch('[0-9a-f]{32}',q['id']):raise ValueError('Invalid operator envelope')
+        self.token(q);self.tick();self.token(q)
+        if any(v['id']==q['id'] for v in self.s['operations']):raise Blocked('Operation already recorded; inspect status')
+        if op=='reset-budget':
+            if not self.s['paused'] or q['ack']!='reset-switch-budget':raise Blocked('Pause and explicit budget acknowledgement required')
+            self.s.update(history=[],latched=False)
+        elif op=='resume':
+            if not self.s['paused'] or self.s['latched'] or not self.healthy(link):raise Blocked('Paused, unlatched fresh lease/health required')
+            self.s['paused']=False
+        else:self.s['paused']=True
+        self.s['revision']+=1
+        self.s['operations']=(self.s['operations']+[dict(id=q['id'],kind=op,uid=0,at=self.clock(),boot=self.boot(),epoch=self.s['epoch'],revision=self.s['revision'],outcome='APPLIED')])[-32:]
+        self.control_save();self.tick()
+        if op=='resume' and not self.healthy(link):
+            self.repause();raise Blocked('Resume evidence expired; remains paused')
+        return self.snapshot()

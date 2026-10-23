@@ -74,6 +74,14 @@ health. After a diagnosed startup fault is repaired, explicitly reset systemd's
 failed writer limiter and start it. Do not delete the journal or reset application
 budgets to conceal a failed recovery. See [storage repair](DHCP_STORAGE.md).
 
+Each client session retains at most 64 distinct first-seen DHCP REQUEST xids;
+requests without a reply also occupy this history. At capacity, proof is retired
+and the service must replace that client session and reacquire admission and
+fresh health. This can interrupt traffic. Do not interpret the limit as 64
+successful renewals or extrapolate uptime from the configured T1. The closure
+soak stays below this boundary; long-term rollover and its traffic/budget effects
+remain unqualified.
+
 ## Scope and evidence
 
 [Closure evidence](../reviews/closure/README.md) records the fresh VM identity,

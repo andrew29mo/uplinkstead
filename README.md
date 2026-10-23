@@ -63,8 +63,8 @@ Linux networking evidence comes from isolated namespaces sharing a VM kernel.
   source. The preserved-journal case reads unchanged old allocations before Agent
   start, excluding pre-shutdown cleanup. ENOSPC persists across reboot and repair.
 - [Clean installation and bounded soak](reviews/closure/README.md): current closure
-  receipt: 292 matching tests per platform, six fault/recovery cycles and 267
-  samples over 538.25 seconds. Tail writer RSS median rose 160 KiB; the other
+  receipt: 295 matching tests per platform, six fault/recovery cycles and 268
+  samples over 540.01 seconds. Tail writer RSS median rose 176 KiB; the other
   three processes and FD/thread medians stayed flat. These fit explicit short-run
   limits, not a zero-growth or long-term no-leak guarantee. Documented commands
   and installed wheel provenance are retained.

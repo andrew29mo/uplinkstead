@@ -1257,6 +1257,102 @@
       "passed": true,
       "rejected": 16
     },
-    "explanation": "Final same-source full gate: clean installed wheel/shipped units, six fault/recovery cycles, extended same-process resource tail, real CLI handoff, cgroup cleanup and automatic VM/container-data deletion. All checks pass."
+    "explanation": "Final same-source full gate: clean installed wheel/shipped units, six fault/recovery cycles, extended same-process resource tail, real CLI handoff, cgroup cleanup and automatic VM/container-data deletion. All checks pass. Superseded by independently reviewed stricter correspondence gate; original full receipt remains in Git commit 7c1f74a."
+  },
+  {
+    "run_id": "ab44c08f9940277e",
+    "source_sha256": "a9b59ef9057ecb65e2f595576a1c402f9f628ce2c5deb49f4ba7ca5ff64199d7",
+    "passed": true,
+    "stages": [
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.4081033749971539
+      },
+      {
+        "name": "create",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 21.77612974998192
+      },
+      {
+        "name": "clean-baseline",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2581460000074003
+      },
+      {
+        "name": "dependencies",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 28.80295429099351
+      },
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.059990999987349
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.417446250008652
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.328126666980097
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.35808341699885204
+      },
+      {
+        "name": "client-build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.405068457999732
+      },
+      {
+        "name": "closure",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 547.7578460829973
+      },
+      {
+        "name": "guest-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3795030420005787
+      },
+      {
+        "name": "delete",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.5519366250082385
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2212248329888098
+      }
+    ],
+    "vm_final": "Deleted",
+    "data_disk_initially_absent": true,
+    "data_disk_removed": true,
+    "samples": 268,
+    "cycles_completed": 6,
+    "tests_per_platform": 295,
+    "controls": {
+      "passed": true,
+      "rejected": 30
+    },
+    "explanation": "Independent review rerun: unchanged product, resource thresholds and natural renewal cadence; strengthened stage, privilege, client provenance, initial charge, fresh restart traffic/health and independent stale-token gates. Full current evidence and exact HTML retained. VM and data disk deleted."
   }
 ]

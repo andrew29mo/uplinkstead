@@ -125,3 +125,28 @@ retained a separate container-data disk. Final teardown uses `delete --data
 creation. Earlier disks from this task were removed with a separately retained
 scoped receipt; the existing relay profile remained stopped and was not deleted.
 The final source-bound run repeats the whole gate after this cleanup change.
+
+## Independent closure review
+
+The original closure receipt remains available in Git history at `7c1f74a`;
+its observed installation, process identities and resource values were valid.
+Review found missing automated correspondence checks, not evidence that the
+installed writer actually had excess privilege or that the recorded restart
+used expired health. The revised gate requires every runner stage in order,
+actual writer capability/NoNewPrivileges limits, qualified client source and
+transformation hashes, the initial budget charge, fresh dual-link lease/health
+at soak completion and restart, and a retained fresh restart-traffic receipt.
+
+Post-restart stale-epoch and stale-revision tests now vary one token dimension
+at a time. Actual CLI arguments, refusal, and before/after state are retained.
+An epoch test whose supposedly current revision changes during the request
+does not qualify; stale revision must not be allowed to conceal a missing epoch
+fence. The report checks unchanged pause/latch/history/operation authority.
+Reporter-only synthetic fixtures exercise these negative gates; they are
+included in the frozen source bundle and are not service or VM evidence.
+
+Resource thresholds and the natural renewal cadence are unchanged by this
+review. The public attempt ledger retains historical failures and their
+limitations. Earlier failed-run entries are summaries, not complete raw sample
+or packet archives, so not every historical failure can be independently
+recomputed from that ledger. The current full JSON preserves all current samples.

@@ -11,6 +11,8 @@ from tools.dhcp_stage1_guest import wait,exchange
 from tools.dhcp_systemd_guest import props,process,tree,alive,UNIT,WORKER,STATE,RUN,CONFIG
 from tools.guest import cmd,ip,ns
 from tools.dhcp_client_build import digest
+from tools.dhcp_closure_report import fresh_pair
+from tools.dhcp_automatic_report import chosen
 from uplinkstead.writer import now
 
 
@@ -40,8 +42,14 @@ def run(root):
             try:s=state();return s if test(s) else None
             except (OSError,RuntimeError):return None
         return wait(check,timeout)
-    def selected(k=None):return observed(lambda s:s['state']['active'] is not None and (k is None or s['state']['active']['link']==k))
-    def healthy():return observed(lambda s:all(r['state']=='HEALTHY' and r['until']>s['runtime']['as_of'] for r in s['state']['links'].values()))
+    def qualified(s,k=None,pair=False):
+        try:
+            chosen(s,k or s['state']['active']['link'])
+            if pair:fresh_pair(s)
+            return True
+        except (ValueError,TypeError):return False
+    def selected(k=None):return observed(lambda s:qualified(s,k))
+    def healthy():return observed(lambda s:qualified(s,pair=True))
     def traffic(k=None):
         r=f.client()
         if not r['ok'] or (k and r['response']['peer']!='10.99.'+str(LINKS[k]['transit'])+'.1'):raise RuntimeError('Fresh LAN TLS failed/wrong uplink')
@@ -49,7 +57,7 @@ def run(root):
     def ctl(op,**extra):
         args=['/usr/bin/python3','-I','-m','uplinkstead.dual_dhcp_cli','--socket',str(RUN/'control.sock'),op,*sum(([k,str(x)] for k,x in extra.items()),[])]
         if op=='reset-budget':args.append('--ack-reset-budget')
-        p=cmd(args,check=False);r=dict(operation=op,exit_code=p.returncode,answer=json.loads(p.stdout));v['operations'].append(r);return r
+        p=cmd(args,check=False);r=dict(operation=op,arguments=extra,exit_code=p.returncode,answer=json.loads(p.stdout));v['operations'].append(r);return r
     def okay(op,**extra):
         r=ctl(op,**extra)
         if r['exit_code'] or not r['answer']['ok']:raise RuntimeError('Operator command failed: '+op)
@@ -116,7 +124,7 @@ def run(root):
             f.fault(k,False);healthy();phase='cycle-'+str(i+1)+'-recovered';time.sleep(15);end=selected(other);healthy();end=selected(other)
             if end['state']['history']!=after['state']['history'] or end['state']['latched']:raise RuntimeError('Renewal consumed budget/preempted/latch')
             v['cycles'].append(dict(index=i+1,fault_link=k,started_at=began,selected_at=now(),before=before,after=after,settled=end,client=response));persist()
-        phase='tail';time.sleep(300);end=selected();healthy();v['soak_final']=state();v['scope_after']=network()
+        phase='tail';time.sleep(300);v['soak_final']=healthy();v['scope_after']=network()
         halt.set();sampler.join(5);v['sample_errors']=sample_errors
         if sampler.is_alive() or sample_errors:raise RuntimeError('Resource sampler failed')
         if v['scope_after']!=v['scope_before']:raise RuntimeError('Main/RPDB scope changed')
@@ -132,11 +140,14 @@ def run(root):
         with sqlite3.connect(STATE/'journal.sqlite') as db:stopped=json.loads(db.execute('select value from state where id=1').fetchone()[0])
         blocked=f.client();fallback=f.client('dd_r',source='198.18.0.2')
         if RUN.exists() or any(alive(p) for p in old_tree) or stopped['active'] is not None or any(r['current'] for r in stopped['links'].values()) or blocked['ok'] or not fallback['ok']:raise RuntimeError('Stop lifecycle failed')
-        system('start',UNIT);healthy();new=selected();traffic()
+        system('start',UNIT);new=healthy();new_traffic=traffic(new['state']['active']['link'])
         if new['state']['epoch']<=old['state']['epoch'] or any(new['state']['links'][k]['session']==old['state']['links'][k]['session'] for k in LINKS):raise RuntimeError('Restart reused authority')
-        stale_restart=ctl('pause',**{'--epoch':old['state']['epoch'],'--revision':old['state']['revision']})
-        if stale_restart['exit_code']==0:raise RuntimeError('Retired epoch accepted')
-        v['handoff']=dict(paused=paused,reset=reset,stopped=stopped,blocked=blocked,fallback=fallback,new=new,old=old,old_processes_gone=True,cgroups_empty=cgroups_empty)
+        rejected={}
+        for dimension in ('epoch','revision'):
+            before=selected();request=dict(epoch=old['state']['epoch'] if dimension=='epoch' else before['state']['epoch'],revision=before['state']['revision'] if dimension=='epoch' else old['state']['revision'])
+            reply=ctl('pause',**{'--epoch':request['epoch'],'--revision':request['revision']});after=selected()
+            rejected['stale_'+dimension]=dict(request=request,before=before,reply=reply,after=after)
+        v['handoff']=dict(paused=paused,reset=reset,stopped=stopped,blocked=blocked,fallback=fallback,new=new,traffic=new_traffic,old=old,old_processes_gone=True,cgroups_empty=cgroups_empty,**rejected)
         v['wire_counters']=f.counters();v['passed']=True
     except BaseException as exc:
         v['error']=type(exc).__name__+': '+str(exc);raise

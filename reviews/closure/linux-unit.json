@@ -93,6 +93,9 @@
     "test_dhcp_client_build.ClientBoundaryTests.test_unverified_archive_never_creates_build_directory",
     "test_dhcp_closure_report.CgroupTests.test_membership_does_not_inspect_ephemeral_proc_or_double_count",
     "test_dhcp_closure_report.CgroupTests.test_missing_group_and_invalid_members_never_mean_empty",
+    "test_dhcp_closure_report.EvidenceGateTests.test_initial_charge_and_fresh_restart_authority_are_required",
+    "test_dhcp_closure_report.EvidenceGateTests.test_recorded_observations_with_synthetic_stale_receipts_and_all_controls",
+    "test_dhcp_closure_report.EvidenceGateTests.test_stale_dimensions_and_no_side_effect_are_independent",
     "test_dhcp_closure_report.ResourceTests.test_bounded_series_and_exact_delta",
     "test_dhcp_closure_report.ResourceTests.test_growth_restart_and_resource_overflow_reject",
     "test_dhcp_closure_report.ResourceTests.test_short_missing_or_invalid_clock_reject",
@@ -294,11 +297,11 @@
     "test_service.ServiceTests.test_uncertain_command_does_not_keep_serving_even_without_pending",
     "test_service.ServiceTests.test_untrusted_peer_and_worker_operator_denied"
   ],
-  "count": 292,
+  "count": 295,
   "failures": 0,
   "errors": 0,
   "skipped": 0,
-  "source_sha256": "d090d3daf8c5ad2c9e73718fd496941547587d0c19012b6e09ab25e0314dfc39",
+  "source_sha256": "a9b59ef9057ecb65e2f595576a1c402f9f628ce2c5deb49f4ba7ca5ff64199d7",
   "platform": "Linux",
   "python": "3.12.3"
 }

@@ -348,6 +348,13 @@ it does not relabel their earlier VM receipts as current-source executions.
 - Exercise real operator status/pause/reset/resume, stale revision rejection,
   stop/new-start with new authority, old process cleanup and a viable positive
   main-route witness accompanying rejected LAN traffic after stop.
+- On restart require fresh leases/health for both links and retained fresh TLS
+  data-plane evidence. Test old epoch with a current revision and old revision
+  with a current epoch separately; bind actual CLI arguments to refusal and
+  unchanged authority observations. A simultaneous stale revision cannot stand
+  in for an epoch-fence test.
+- Verify every required runner stage in order, actual writer capability/NNP
+  limits and qualified client upstream/transformation/recipe provenance.
 - Identical same-source portable test IDs on macOS/Linux, verifier corruption
   controls, exact JSON/HTML, owned network/process cleanup and deletion of the
   newly created VM and its container-data disk are required. Creation must

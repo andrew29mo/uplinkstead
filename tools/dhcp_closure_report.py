@@ -1,7 +1,26 @@
 """Fail-closed qualification of installed-service closure and resource observations."""
-import copy,html,json,math,statistics
+import copy,html,json,math,re,statistics
 from .dhcp_stage1_report import require
 from .evidence import fingerprint
+from .dhcp_systemd_report import writer_privilege
+from .dhcp_automatic_report import chosen
+from .dhcp_client_build import TARBALL_SHA256,UPSTREAM_DHCPC_SHA256,PATCHED_DHCPC_SHA256
+
+STAGES=('initial','create','clean-baseline','dependencies','native','upload','linux','linux-read','client-build','closure','guest-read','delete','final')
+
+def fresh_pair(snapshot):
+    s=snapshot['state'];at=snapshot['runtime']['as_of']
+    chosen(snapshot,s['active']['link'])
+    for k,r in s['links'].items():
+        require(r['current'] is not None and r['state']=='HEALTHY' and r['good']>=2 and at<r['until']<=r['expires'] and not snapshot['runtime']['capture'][k]['pending'],'Missing fresh dual lease/health')
+
+def stale_receipt(r,dimension):
+    q,b,a=r['request'],r['before']['state'],r['after']['state'];reply=r['reply'];s=reply['answer']['status']
+    require(reply['arguments']=={'--epoch':q['epoch'],'--revision':q['revision']},'Stale evidence differs from actual CLI arguments')
+    require(reply['operation']=='pause' and reply['exit_code']!=0 and reply['answer']['ok'] is False and reply['answer']['detail']=='Stale operation token','Missing stale refusal')
+    if dimension=='epoch':require(q['epoch']<b['epoch']==s['epoch'] and q['revision']==b['revision']==s['revision'],'Epoch rejection confounded by revision race')
+    else:require(q['epoch']==b['epoch']==s['epoch'] and q['revision']<b['revision']<=s['revision'],'Revision rejection confounded by epoch')
+    require(all(b[k]==a[k] for k in ('boot','epoch','paused','latched','history','operations')) and b['active']['link']==a['active']['link'],'Stale operation changed authority')
 
 def resource_summary(rows):
     require(len(rows)>=230,'Too few samples')
@@ -36,7 +55,8 @@ def resource_summary(rows):
 def verify(v):
     require(v['passed'] is True and v['source_sha256']==fingerprint(v['source']) and v['source_changed'] is False,'Failed/changed source')
     require(v['fresh_profile'] is True and v['data_disk_initially_absent'] is True and v['data_disk_removed'] is True and v['vm_final']=='Deleted' and v['host_mounts']=='none','Not a fresh isolated/cleaned VM')
-    require(v['stages'] and all(r['exit_code']==0 and r['timed_out'] is False and math.isfinite(r['seconds']) and r['seconds']>=0 for r in v['stages']),'Failed/timed out stage')
+    require(tuple(r['name'] for r in v['stages'])==STAGES,'Missing/reordered/duplicate stage')
+    require(all(r['exit_code']==0 and r['timed_out'] is False and not r.get('interrupted',False) and math.isfinite(r['seconds']) and r['seconds']>=0 for r in v['stages']),'Failed/timed out stage')
     for key,name in (('native_unit','Darwin'),('linux_unit','Linux')):
         r=v[key];require(r['passed'] is True and r['platform']==name and r['source_sha256']==v['source_sha256'] and r['failures']==r['errors']==r['skipped']==0 and r['count']==len(r['tests'])==len(set(r['tests'])) and r['count']>=284,'Different/failed portable suite')
     require(v['native_unit']['tests']==v['linux_unit']['tests'],'Different platform tests')
@@ -47,27 +67,35 @@ def verify(v):
     for u in ('uplinkstead-dual.service','uplinkstead-dual-policy.service'):
         require(i['units'][u]['source']==i['units'][u]['installed']==v['source']['deploy/'+u] and i['namespace_only_dropins'][u]=='[Service]\nNetworkNamespacePath=/run/netns/dd_r\n','Different formal service')
     require(i['hook_installed']==v['source']['deploy/uplinkstead-dual-hook.py'] and i['worker_installed']==v['source']['uplinkstead/dual_dhcp_worker.py'] and i['client_installed']==i['client']['binary_sha256'],'Different client/hook/worker')
+    b=i['client'];require(b['source_tar_sha256']==TARBALL_SHA256 and b['upstream_dhcpc_sha256']==UPSTREAM_DHCPC_SHA256 and b['patched_dhcpc_sha256']==PATCHED_DHCPC_SHA256 and b['recipe_sha256']==v['source']['tools/dhcp_client_build.py'] and all(re.fullmatch('[0-9a-f]{64}',b[k]) for k in ('binary_sha256','config_sha256')) and b['compiler'].startswith('gcc '),'Unqualified client provenance')
     require(g['worker']['uid'][0]>0 and len(set(g['worker']['uid']))==1 and all(int(x,16)==0 for x in g['worker']['caps'].values()) and g['worker']['no_new_privs']=='1' and g['writer']['uid']==[0]*4 and g['service']['Type']=='notify','Privilege/readiness mismatch')
+    writer_privilege(g['writer'])
     require(g['sample_errors']==[] and g['scope_before']==g['scope_after'],'Sampler failure/scope change')
     require(len(g['cycles'])==6,'Missing complete fault cycles')
     history=g['baseline']['state']['history']
+    require(len(g['initial']['state']['history'])==len(history)==1,'Missing initial selection charge')
     for c in g['cycles']:
         a,b,e=(c[k]['state'] for k in ('before','after','settled'));other='B' if c['fault_link']=='A' else 'A'
         require(a['history']==history and a['active']['link']==c['fault_link'] and b['active']['link']==e['active']['link']==other and b['history'][:-1]==history and len(b['history'])==len(history)+1 and e['history']==b['history'] and not e['latched'] and c['client']['ok'] is True and c['client']['response']['peer']==('10.99.1.1' if other=='A' else '10.99.2.1'),'Cycle/fresh data/budget mismatch')
         for k,r in e['links'].items():require(r['current'] is not None and r['state']=='HEALTHY' and r['until']>c['settled']['runtime']['as_of'] and r['expires']>c['settled']['runtime']['as_of'],'No fresh lease/health after fault')
         history=b['history']
+    fresh_pair(g['soak_final'])
     require(g['soak_final']['state']['history']==history,'Natural renewal consumed budget')
     for k in ('A','B'):
-        require(g['soak_final']['state']['links'][k]['event_sequence']-g['baseline']['state']['links'][k]['event_sequence']>=10 and g['wire_counters'][k]['wrong_dhcp']==0,'Insufficient renewals/borrowed DHCP')
+        require(g['soak_final']['state']['links'][k]['event_sequence']-g['baseline']['state']['links'][k]['event_sequence']>=10 and g['wire_counters'][k]['wrong_dhcp']==0 and g['soak_final']['runtime']['metrics']['client_restarts'][k]==0,'Insufficient renewals/borrowed DHCP/client retirement')
     require(v['resources']==resource_summary(g['samples']),'Resource summary mismatch')
-    ops=g['operations'];require([o['operation'] for o in ops]==['status','pause','reset-budget','resume','resume','pause'] and all((o['exit_code']==0)==o['answer']['ok'] for o in ops) and [o['answer']['ok'] for o in ops]==[True,True,True,False,True,False],'Operator/stale operation mismatch')
+    ops=g['operations'];require([o['operation'] for o in ops]==['status','pause','reset-budget','resume','resume','pause','pause'] and all((o['exit_code']==0)==o['answer']['ok'] for o in ops) and [o['answer']['ok'] for o in ops]==[True,True,True,False,True,False,False],'Operator/stale operation mismatch')
     h=g['handoff'];require(h['paused']['state']['paused'] is True and h['reset']['state']['paused'] is True and h['reset']['state']['history']==[] and h['stopped']['active'] is None and all(r['current'] is None for r in h['stopped']['links'].values()) and h['old_processes_gone'] is True and h['cgroups_empty'] is True and h['blocked']['ok'] is False and h['fallback']['ok'] is True and h['new']['state']['epoch']>h['old']['state']['epoch'] and all(h['new']['state']['links'][k]['session']!=h['old']['state']['links'][k]['session'] for k in ('A','B')),'Stop/restart/handoff failed')
+    fresh_pair(h['new']);require(h['traffic']['ok'] is True and h['traffic']['response']['peer']==('10.99.1.1' if h['new']['state']['active']['link']=='A' else '10.99.2.1'),'Missing fresh restart traffic')
+    for dimension in ('epoch','revision'):stale_receipt(h['stale_'+dimension],dimension)
+    require(ops[-2:]==[h['stale_'+d]['reply'] for d in ('epoch','revision')],'Detached stale operation receipts')
     require(all(g['cleanup'][k] is True for k in ('namespaces_removed','root_network_unchanged','owned_children_reaped','services_stopped')),'Cleanup failed')
     require(v['power_loss_tested'] is False and v['boot_zero_gap_tested'] is False,'Untested claim')
     return True
 
 def controls(v):
     changes=[lambda x:x.update(data_disk_removed=False),lambda x:x.update(data_disk_initially_absent=False),lambda x:x.update(source_changed=True),lambda x:x['stages'][0].update(exit_code=1),lambda x:x['stages'][0].update(timed_out=True),lambda x:x.update(fresh_profile=False),lambda x:x.update(vm_final='Running'),lambda x:x['guest']['installation'].update(source_package_absent=False),lambda x:x['guest']['installation']['package']['files'].clear(),lambda x:x['guest']['cycles'].pop(),lambda x:x['guest']['cycles'][0]['settled']['state']['history'].clear(),lambda x:x['guest']['operations'][-1]['answer'].update(ok=True),lambda x:x['guest']['samples'][-1]['processes']['writer'].update(start_ticks='changed'),lambda x:x['guest']['samples'][-1].update(db_bytes=999999999),lambda x:x['guest']['cleanup'].update(services_stopped=False),lambda x:x.update(power_loss_tested=True)]
+    changes += [lambda x:x.update(stages=x['stages'][:1]),lambda x:x['stages'].reverse(),lambda x:x['stages'][0].update(interrupted=True),lambda x:x['guest']['writer'].update(no_new_privs='0'),lambda x:x['guest']['writer']['caps'].update(CapEff='ffffffffffffffff'),lambda x:x['guest']['installation']['client'].update(source_tar_sha256='0'*64),lambda x:x['guest']['installation']['client'].update(patched_dhcpc_sha256='0'*64),lambda x:x['guest']['installation']['client'].update(recipe_sha256='0'*64),lambda x:x['guest']['baseline']['state'].update(history=[]),lambda x:x['guest']['handoff']['new']['state']['links']['B'].update(current=None),lambda x:x['guest']['handoff']['traffic'].update(ok=False),lambda x:x['guest']['handoff']['stale_epoch']['request'].update(revision=-1),lambda x:x['guest']['handoff']['stale_revision']['request'].update(epoch=-1),lambda x:x['guest']['soak_final']['runtime']['metrics']['client_restarts'].update(B=1)]
     for change in changes:
         b=copy.deepcopy(v);change(b)
         try:verify(b)

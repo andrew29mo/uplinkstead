@@ -1,16 +1,17 @@
 # Dual-DHCP MVP closure: clean install and bounded integration
 
-Run `3c391f8967fca724`, frozen source
-`d090d3daf8c5ad2c9e73718fd496941547587d0c19012b6e09ab25e0314dfc39`.
+Run `ab44c08f9940277e`, frozen source
+`a9b59ef9057ecb65e2f595576a1c402f9f628ce2c5deb49f4ba7ca5ff64199d7`.
 
 [JSON](evidence.json) · [HTML](report.html) · [macOS](native-unit.json) ·
 [Linux](linux-unit.json) · [All attempts](attempts.json) ·
 [Negative preflight](preflight-refusal.json) · [Prior-disk cleanup](prior-data-cleanup.json)
 
-Both platforms passed **292 tests**, identical test IDs/source, no skips. All
-**16 mutated-evidence controls** rejected. Normal and optimized Python report
-verification and exact JSON/HTML correspondence were rechecked. This is a new
-installed-wheel gate, not a relabelling of historical VM receipts.
+Both platforms passed **295 tests**, identical test IDs/source, no skips. All
+**30 mutated-evidence controls** rejected. Normal and optimized Python report
+verification and exact JSON/HTML correspondence were rechecked. The revised gate repeats the whole installed-wheel run after independent review;
+[review findings and fixes](REVIEW.md) distinguish checker gaps from observed behavior.
+The original full closure receipt remains in [commit 7c1f74a](https://github.com/andrew29mo/uplinkstead/blob/7c1f74a7d4e83f5fb0c77727827cba01354f0e24/reviews/closure/evidence.json).
 
 ## Installed production path
 
@@ -42,34 +43,35 @@ The actual documented CLI exercised status, pause, acknowledged reset, stale
 revision refusal, resume and stale epoch refusal after formal stop/start. Stop
 quarantined allocations, terminated the old four processes and emptied both
 service cgroups. LAN traffic then failed while a separate viable main-path TLS
-witness succeeded, challenging borrowing. New start required a higher epoch,
+witness succeeded, challenging borrowing. Stale epoch and stale revision were independently refused after restart, with
+actual CLI arguments and before/after state retained. New start required a higher epoch,
 new client sessions, leases and health before fresh traffic. Main/RPDB readbacks
 and root-network semantic cleanup checks passed; wrong-WAN DHCP counters stayed zero.
 
 ## Resource observations
 
-**267 samples over 538.250 seconds** (about nine minutes), roughly
-two seconds apart; 257 are comparable stable samples. The five-minute
+**268 samples over 540.006 seconds** (about nine minutes), roughly
+two seconds apart; 258 are comparable stable samples. The five-minute
 tail is separately checked. RSS is KiB per Linux VM process; extrema below are
 sampled values over **all** phases, not continuously measured peaks.
 
 | Process | All sampled RSS range | Stable first → last third median | Stable delta | Tail median delta |
 |---|---:|---:|---:|---:|
-| writer | 24828–27276 | 26004 → 27196 | +1192 | +160 |
-| worker | 11872–11880 | 11880 → 11880 | +0 | +0 |
-| clientA | 1616–1624 | 1620 → 1624 | +4 | +0 |
-| clientB | 1604–1620 | 1612 → 1616 | +4 | +0 |
+| writer | 24732–27072 | 25960 → 27024 | +1064 | +176 |
+| worker | 11892–11900 | 11900 → 11900 | +0 | +0 |
+| clientA | 1616–1628 | 1624 → 1628 | +4 | +0 |
+| clientB | 1616–1632 | 1624 → 1628 | +4 | +0 |
 
 FD/thread tail median deltas were zero for all four processes. The writer's
 thread median was 13: main/capture/intake/control plus two outer and six target
-workers. Service cgroup counts ranged 4–7 including transient helpers.
+workers. Service cgroup counts ranged 4–6 including transient helpers.
 Product state-file lengths were 8192 bytes initially and 8192 finally,
-with a sampled maximum of 16912 bytes including temporary journal files.
+with a sampled maximum of 8192 bytes; no larger temporary file was sampled.
 These are logical file lengths, not filesystem allocation/whole-VM disk usage.
 Queues/diagnostic rings stayed within declared bounds; no sampler errors occurred.
 
 **RSS did grow**, especially during the earlier portion; it is not a zero-growth
-claim. Tail writer growth of 160 KiB fits the predeclared 256 KiB gate,
+claim. Tail writer growth of 176 KiB fits the predeclared 256 KiB gate,
 with other processes within 64 KiB. Global and tail thresholds, slopes, sampling
 phases and exclusions are in [reproduction/scope](../../docs/DHCP_CLOSURE.md).
 This short controlled series cannot prove long-term leak freedom. CPU utilization,
@@ -85,8 +87,9 @@ a pre-install quote error, deliberate preparation interruption, an invalid
 median-plus-two **peak** assumption, actual 64-transaction client-history retirement,
 and a resource-observer race reading a short-lived helper without VmRSS. The exact
 PID of the latter was not retained. Diagnostic samples from a failed run are not
-promoted into qualification. An earlier full pass remains historical under its
-original cleanup gate; the final run above repeats after data-disk hardening.
+promoted into qualification. Earlier full passes remain historical under their original gates; the current
+full run repeats data-disk hardening and the strengthened review checks. Historical
+failure entries are summaries, not complete raw traces that can all be recomputed.
 
 The production resource change is a bounded service-lifetime six-target executor;
 it preserves fresh bound TLS sockets/nonce/authentication. The final T1 values
@@ -96,7 +99,7 @@ before/after RSS comparison. The 64-entry history capacity was not enlarged or
 silently evicted. Long-term rollover and its traffic/budget effects remain unqualified.
 
 Owned namespaces/processes were cleaned, both units stopped, and the final VM
-**and container-data disk** deleted with absence read back. Actual runner preflight
+**and container-data disk** deleted with absence read back. The earlier source-bound runner preflight
 also rejected a retained same-name disk before VM creation and preserved its test
 sentinel. Separate scoped cleanup removed earlier task-owned disks; the preexisting
 relay profile stayed Stopped. Credentials, binaries, VM images, raw logs and runtime

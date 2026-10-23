@@ -176,8 +176,8 @@ checks the old journal, including a labelled shutdown-cleanup bypass case. New
 boot/epoch/session authority starts with no usable old lease or health. New ACKs
 without fresh target health do not select a route; pause/latch remain effective.
 
-[Boot evidence](reviews/dhcp-boot/README.md) records 276 tests per platform and
-22 negative controls. It covers normal restart, preserved old
+[Boot evidence](reviews/dhcp-boot/README.md) records 284 tests per platform and
+28 negative controls. It covers normal restart, preserved old
 journal, paused and budget-latched policies, and real ENOSPC across restart plus
 explicit repair. It retains both platform receipts, Linux VM process RSS and
 post-boot driver timings. The isolated topology prerequisites and fault overrides

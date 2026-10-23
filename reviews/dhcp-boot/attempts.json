@@ -1678,5 +1678,261 @@
       "capacity"
     ],
     "explanation": "Full same-source qualification passed, including typed stop-command proof, five distinct new boots, both platform suites, negative controls and complete cleanup."
+  },
+  {
+    "run_id": "25afed44b464a4ec",
+    "source_sha256": "516b1db02be989910ad6e7e8e6f4c3bcc55bc7423dfa80a9385165b653cf919d",
+    "passed": true,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.4652139590180013
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.5521988749969751
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 11.324484084005235
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3403370830055792
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.5664774590113666
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 8.82971079100389
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 3.4230626249918714
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3110612499876879
+      },
+      {
+        "name": "install",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 4.953494165994925
+      },
+      {
+        "name": "normal-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.9948437499988358
+      },
+      {
+        "name": "normal-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 3.4764415840036236
+      },
+      {
+        "name": "normal-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.25229841700638644
+      },
+      {
+        "name": "normal-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 16.288761000003433
+      },
+      {
+        "name": "normal-after",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 19.591557917010505
+      },
+      {
+        "name": "preserved-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.7164029580017086
+      },
+      {
+        "name": "preserved-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 4.74594841702492
+      },
+      {
+        "name": "preserved-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.23493441598839127
+      },
+      {
+        "name": "preserved-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 12.664645582990488
+      },
+      {
+        "name": "preserved-after",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 21.971655375004048
+      },
+      {
+        "name": "paused-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.661796583008254
+      },
+      {
+        "name": "paused-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.559416958014481
+      },
+      {
+        "name": "paused-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.20902083301916718
+      },
+      {
+        "name": "paused-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 9.499074916995596
+      },
+      {
+        "name": "paused-after",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 25.267522167006973
+      },
+      {
+        "name": "latched-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 11.02476495798328
+      },
+      {
+        "name": "latched-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.582418415986467
+      },
+      {
+        "name": "latched-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2835720000148285
+      },
+      {
+        "name": "latched-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 10.138219374988694
+      },
+      {
+        "name": "latched-after",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 24.565141250001034
+      },
+      {
+        "name": "capacity-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 8.85298670802149
+      },
+      {
+        "name": "capacity-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.750070708018029
+      },
+      {
+        "name": "capacity-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.27441116599948145
+      },
+      {
+        "name": "capacity-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 10.546249791019363
+      },
+      {
+        "name": "capacity-after",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 33.18880983299459
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.9682526660035364
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3730822090001311
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.5851865419826936
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.23994020800455473
+      }
+    ],
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true,
+      "fixture_removed": true,
+      "enabled_link_removed": true,
+      "loop_detached": true,
+      "volume_unmounted": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped",
+    "case_kinds_completed": [
+      "normal",
+      "preserved",
+      "paused",
+      "latched",
+      "capacity"
+    ],
+    "explanation": "Same-source review rerun after fixture ownership protection and fresh authority/budget evidence gates. Both platforms 284 tests; all five VM cases; 28 corruption controls rejected."
   }
 ]

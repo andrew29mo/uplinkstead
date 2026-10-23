@@ -299,6 +299,11 @@ separate bounded slice, not by a claim covering every I/O failure.
   session. New ACKs with blocked health must still reject LAN traffic. Only fresh
   leases and quorum permit new TLS; a viable independent main path challenges
   borrowing, while unrelated main/RPDB/foreign rules remain unchanged.
+- Fresh and selected snapshots must bind to the ready writer epoch and this
+  boot/session/generation, with valid lease and health deadlines at observation.
+  The new switch charge must use this boot and the ready-to-final clock interval.
+- Runtime shutdown overrides require exclusive creation and an ownership ledger
+  (path/device/inode/uid/boot/content); unknown or changed objects are preserved.
 - Paused/latched policies survive fresh health. A real exhausted switch budget
   must not reset on reboot; resume rejects while latched, and repair needs
   explicit acknowledged budget reset then resume. Old root/proposal/client

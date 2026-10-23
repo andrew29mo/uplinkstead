@@ -3,7 +3,7 @@
 The unchanged installed production ExecStart owns all journal/kernel recovery.
 One labelled runtime shutdown override preserves stale durable state; no power-loss claim.
 """
-import argparse,copy,json,os,pwd,shutil,signal,sqlite3,sys,time
+import argparse,copy,hashlib,json,os,pwd,shutil,signal,sqlite3,stat,sys,time
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from tools import dhcp_systemd_guest as installed
@@ -15,6 +15,7 @@ from tools.netproof import digest as network_digest
 from tools.dhcp_storage_guest import cleanup_volume
 from tools.evidence import manifest,fingerprint
 from tools.dhcp_client_build import digest
+from tools.dhcp_boot_checks import authority,charged
 from uplinkstead.writer import boot_id,now
 from uplinkstead.dual_dhcp_service import notify_ready
 UNIT,WORKER,STATE,RUN,CONFIG=installed.UNIT,installed.WORKER,installed.STATE,installed.RUN,installed.CONFIG
@@ -23,6 +24,7 @@ TIMER='uplinkstead-dual-boot.timer'
 SYSTEM=Path('/etc/systemd/system')
 FAULT=Path('/run/systemd/system')/(UNIT+'.d/reboot-fault.conf')
 KINDS=('normal','preserved','paused','latched','capacity')
+FAULT_TEXT='[Service]\nKillSignal=SIGKILL\nExecStopPost=\n'
 
 def save(path,value):
     temporary=path.with_name(path.name+'.tmp');temporary.write_text(json.dumps(value,indent=2,allow_nan=False)+'\n');temporary.replace(path)
@@ -137,7 +139,34 @@ def topology(root):
             save(root/('topology-cleanup-'+boot+'.json'),f.cleanup())
         finally:cleanup_volume(root)
 
+def fault_absent():
+    if FAULT.parent.is_symlink() or (FAULT.parent.exists() and not FAULT.parent.is_dir()):raise RuntimeError('Foreign runtime fault parent')
+    if FAULT.exists() or FAULT.is_symlink():raise FileExistsError('Refusing existing runtime fault')
+
+def install_fault(root):
+    fault_absent();FAULT.parent.mkdir(parents=True,exist_ok=True)
+    ownership=read(root/'installation.json')
+    if ownership.get('runtime_fault'):raise RuntimeError('Uncleared runtime fault ownership')
+    fd=os.open(FAULT,os.O_WRONLY|os.O_CREAT|os.O_EXCL|os.O_NOFOLLOW,0o600)
+    with os.fdopen(fd,'w') as file:
+        st=os.fstat(file.fileno())
+        ownership['runtime_fault']=dict(path=str(FAULT),device=st.st_dev,inode=st.st_ino,uid=st.st_uid,boot=boot_id(),sha256=hashlib.sha256(b'').hexdigest())
+        save(root/'installation.json',ownership)
+        file.write(FAULT_TEXT);file.flush()
+        ownership['runtime_fault']['sha256']=hashlib.sha256(FAULT_TEXT.encode()).hexdigest();save(root/'installation.json',ownership)
+
+def remove_fault(root):
+    if FAULT.parent.is_symlink():raise RuntimeError('Foreign runtime fault parent')
+    ledger=root/'installation.json';ownership=read(ledger) if ledger.exists() else {};owned=ownership.get('runtime_fault')
+    if FAULT.exists() or FAULT.is_symlink():
+        if not owned or owned['path']!=str(FAULT) or owned['boot']!=boot_id():raise RuntimeError('Unowned runtime fault')
+        st=FAULT.lstat()
+        if not stat.S_ISREG(st.st_mode) or st.st_dev!=owned['device'] or st.st_ino!=owned['inode'] or st.st_uid!=owned['uid'] or st.st_uid!=os.geteuid() or hashlib.sha256(FAULT.read_bytes()).hexdigest()!=owned['sha256']:raise RuntimeError('Runtime fault ownership/content changed')
+        FAULT.unlink()
+    if owned:ownership.pop('runtime_fault');save(ledger,ownership)
+
 def install(root):
+    fault_absent()
     source=root/'source';paths=[SYSTEM/u for u in (UNIT,WORKER,TOPO,TIMER)]+[CONFIG,STATE,RUN,Path('/usr/libexec/uplinkstead-dual-worker.py'),Path('/usr/libexec/uplinkstead-dual-hook.py'),Path('/usr/libexec/uplinkstead-busybox'),SYSTEM/'multi-user.target.wants'/UNIT,SYSTEM/'timers.target.wants'/TIMER]
     assert all(not p.exists() and not p.is_symlink() for p in paths)
     ownership=dict(files=[],dirs=[],created_user=False,uid=None,state_inode=None)
@@ -166,6 +195,7 @@ def install(root):
 
 def prepare(root,kind):
     assert kind in KINDS
+    remove_fault(root)
     if (root/'desired.json').exists():topology_command(root,True)
     if kind=='paused':
         assert operation('pause')['ok'];observed(lambda s:s['state']['paused'])
@@ -209,8 +239,7 @@ def prepare(root,kind):
         assert p.returncode!=0;pressure.update(api=dict(exit_code=p.returncode,answer=json.loads(p.stdout)))
         wait(lambda:installed.props(UNIT)['ActiveState']=='failed',25);pressure['faults']=faults();assert pressure['faults']
     if kind in ('preserved','capacity'):
-        FAULT.parent.mkdir(parents=True,exist_ok=True)
-        assert not FAULT.exists();FAULT.write_text('[Service]\nKillSignal=SIGKILL\nExecStopPost=\n');system('daemon-reload')
+        install_fault(root);system('daemon-reload')
     before=dict(boot=boot_id(),state=old,journal=stored(journal_path(root)),writer=installed.props(UNIT),worker=installed.props(WORKER),net=net(),at=now(),pressure=pressure,shutdown_fault=cmd(['systemctl','show',UNIT,'--all','-p','KillSignal','-p','ExecStopPost','-p','DropInPaths']).stdout,shutdown_exec_stop_post=stop_commands())
     if kind=='preserved':assert before['journal']['active'] is not None
     save(root/'before.json',before);save(root/'phase.json',dict(kind=kind,before=before));save(root/'desired.json',dict(token='boot',servers=False,holes=[]))
@@ -240,7 +269,7 @@ def after(root):
     topology_command(root,True,('A','B'));new=observed(lambda s:all(v['current'] for v in s['state']['links'].values()));time.sleep(.5);unhealthy=state();assert unhealthy['state']['active'] is None
     assert all(v['state']!='HEALTHY' for v in unhealthy['state']['links'].values());unhealthy_traffic=witness(root)
     topology_command(root,True);fresh=observed(lambda s:all(v['state']=='HEALTHY' for v in s['state']['links'].values()))
-    fresh_at=now();intervention=[]
+    fresh_at=now();authority(fresh,waiting,before['state'],boot_id(),fresh_at,all_links=True);intervention=[]
     if kind in ('paused','latched'):
         assert fresh['state']['active'] is None and fresh['state']['paused']==before['journal']['paused'] and fresh['state']['latched']==before['journal']['latched']
         blocked=witness(root)
@@ -249,14 +278,14 @@ def after(root):
             reset=operation('reset-budget',ack='reset-switch-budget');assert reset['ok'];intervention.append(dict(kind='reset-budget',reply=reset))
         resume=operation('resume');assert resume['ok'];intervention.append(dict(kind='resume',reply=resume))
     else:blocked=None
-    final=selected();response=client(root);assert response['ok'];late=stale(before['state']);assert outside()==baseline
+    final=selected();final_at=now();authority(final,waiting,before['state'],boot_id(),final_at);charged(final,before['journal'],boot_id(),ready_at,final_at,reset=kind=='latched');response=client(root);assert response['ok'];late=stale(before['state']);assert outside()==baseline
     worker=installed.process(int(installed.props(WORKER)['MainPID']));writer=installed.process(int(installed.props(UNIT)['MainPID']));assert all(int(n,16)==0 for n in worker['caps'].values()) and worker['uid'][0]>0 and worker['no_new_privs']=='1'
-    result=dict(passed=True,kind=kind,source_sha256=fingerprint(manifest()),boot=boot_id(),before=before,prestart=pre,ready=r,waiting=waiting,routes=routes,traffic=traffic,scope_before=baseline,scope_after=outside(),stale_before=reject,new_lease_unhealthy=unhealthy,new_lease_traffic=unhealthy_traffic,fresh=fresh,policy_blocked=blocked,intervention=intervention,final=final,client=response,stale_after=late,writer=writer,worker=worker,capacity=failure,case_seconds=now()-began,checkpoints=dict(prestart=pre['at'],ready_observed=ready_at,fresh_observed=fresh_at,final_observed=now()),wire_counters=Fixture(root,root/'source').counters(),power_loss_tested=False,boot_zero_gap_tested=False,previous_boot_cleanup=read(root/('topology-cleanup-'+before['boot']+'.json')))
+    result=dict(passed=True,kind=kind,source_sha256=fingerprint(manifest()),boot=boot_id(),before=before,prestart=pre,ready=r,waiting=waiting,routes=routes,traffic=traffic,scope_before=baseline,scope_after=outside(),stale_before=reject,new_lease_unhealthy=unhealthy,new_lease_traffic=unhealthy_traffic,fresh=fresh,policy_blocked=blocked,intervention=intervention,final=final,client=response,stale_after=late,writer=writer,worker=worker,capacity=failure,case_seconds=now()-began,checkpoints=dict(prestart=pre['at'],ready_observed=ready_at,fresh_observed=fresh_at,final_observed=final_at,driver_completed=now()),wire_counters=Fixture(root,root/'source').counters(),power_loss_tested=False,boot_zero_gap_tested=False,previous_boot_cleanup=read(root/('topology-cleanup-'+before['boot']+'.json')))
     save(root/('after-'+kind+'.json'),result);return result
 
 def cleanup(root):
+    remove_fault(root);system('daemon-reload')
     system('stop',TIMER,UNIT,WORKER,TOPO,check=False)
-    if FAULT.exists():FAULT.unlink();system('daemon-reload')
     cleanup_volume(root);installed.cleanup_install(root);result=cleanup_owned(root)
     result.update(fixture_removed=not (SYSTEM/TOPO).exists(),enabled_link_removed=not (SYSTEM/'timers.target.wants'/TIMER).exists() and not (SYSTEM/TIMER).exists(),loop_detached=not cmd(['losetup','-j',str(root/'storage.img')]).stdout.strip(),volume_unmounted=cmd(['mountpoint','-q',str(root/'storage-volume')],check=False).returncode!=0)
     return result

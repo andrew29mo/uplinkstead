@@ -76,6 +76,14 @@
     "test_dhcp_boot.BootTests.test_changed_boot_retires_old_authority_and_requires_new_evidence",
     "test_dhcp_boot.BootTests.test_old_boot_budget_cannot_age_out_or_unlock_on_reboot",
     "test_dhcp_boot.BootTests.test_storage_failure_on_new_boot_never_becomes_ready_then_repairs",
+    "test_dhcp_boot_review.EvidenceTests.test_charge_uses_this_boot_and_observation_clock",
+    "test_dhcp_boot_review.EvidenceTests.test_formal_core_observations_bind_new_authority",
+    "test_dhcp_boot_review.EvidenceTests.test_retired_snapshot_expired_health_and_wrong_allocation_reject",
+    "test_dhcp_boot_review.OwnershipTests.test_changed_ownership_content_or_boot_refuses_deletion",
+    "test_dhcp_boot_review.OwnershipTests.test_exclusive_creation_collision_does_not_overwrite",
+    "test_dhcp_boot_review.OwnershipTests.test_foreign_files_symlinks_and_parent_are_preserved",
+    "test_dhcp_boot_review.OwnershipTests.test_owned_creation_cleanup_and_missing_after_boot",
+    "test_dhcp_boot_review.OwnershipTests.test_prepare_error_after_creation_can_clean_owned_only",
     "test_dhcp_client_build.ClientBoundaryTests.test_exact_upstream_boundary_patch_and_no_silent_reapplication",
     "test_dhcp_client_build.ClientBoundaryTests.test_loss_diagnostic_and_synthetic_delayed_ACK_preserve_allocation",
     "test_dhcp_client_build.ClientBoundaryTests.test_new_xid_extends_but_replayed_old_ACK_cannot_replace_it",
@@ -278,11 +286,11 @@
     "test_service.ServiceTests.test_uncertain_command_does_not_keep_serving_even_without_pending",
     "test_service.ServiceTests.test_untrusted_peer_and_worker_operator_denied"
   ],
-  "count": 276,
+  "count": 284,
   "failures": 0,
   "errors": 0,
   "skipped": 0,
-  "source_sha256": "25310b967fd607b13669a07e986f0b84d9f073d911e7c58ffb50136396ea0c1f",
+  "source_sha256": "516b1db02be989910ad6e7e8e6f4c3bcc55bc7423dfa80a9385165b653cf919d",
   "platform": "Darwin",
   "python": "3.12.14"
 }

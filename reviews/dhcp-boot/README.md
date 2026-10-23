@@ -1,15 +1,15 @@
 # Installed dual-DHCP orderly VM reboot recovery
 
-Run `015d2e5305e9e3a6`, same-source fingerprint
-`25310b967fd607b13669a07e986f0b84d9f073d911e7c58ffb50136396ea0c1f`.
+Run `25afed44b464a4ec`, same-source fingerprint
+`516b1db02be989910ad6e7e8e6f4c3bcc55bc7423dfa80a9385165b653cf919d`.
 
 [JSON](evidence.json) · [HTML](report.html) · [macOS](native-unit.json) ·
 [Linux](linux-unit.json) · [All attempts](attempts.json) ·
 [Deployment, fault scope and reproduction](../../docs/DHCP_BOOT.md)
 
-Both platforms passed **276 tests**, no skips, with identical frozen source and
+Both platforms passed **284 tests**, no skips, with identical frozen source and
 test IDs. Five orderly VM stop/start cases passed with five distinct new Linux
-boot IDs. All **22** mutated-evidence controls rejected, including failed/timeout
+boot IDs. All **28** mutated-evidence controls rejected, including failed/timeout
 stages, reused boot identity, missing old journal, nonempty shutdown commands,
 policy loss, stale acceptance and false capacity success.
 
@@ -70,11 +70,11 @@ injections are distinct from the real installed-service VM observations.
 
 | Case | Post-boot driver seconds | Writer RSS KiB | Worker RSS KiB |
 |---|---:|---:|---:|
-| normal | 24.704 | 25136 | 11812 |
-| preserved | 21.533 | 25172 | 11824 |
-| paused | 24.553 | 25176 | 11824 |
-| latched | 25.118 | 25212 | 11828 |
-| capacity | 30.957 | 25128 | 11828 |
+| normal | 19.107 | 25116 | 11808 |
+| preserved | 21.642 | 25144 | 11824 |
+| paused | 24.959 | 25204 | 11820 |
+| latched | 24.000 | 25192 | 11836 |
+| capacity | 32.774 | 25196 | 11824 |
 
 Driver time begins when the host can invoke the after-boot checker. It includes
 timer wait, negative probes, health waits and explicit repair/policy operations.
@@ -104,3 +104,27 @@ strict root-scope failures; their original outcomes are unchanged. Earlier runs
 with five successful guest cases but failed report verification are not treated
 as qualification or selected as faster measurements. No synthetic diagnostic
 receipt is exported as a real observation.
+
+
+## Review corrections
+
+The review reproduced a fixture cleanup defect: an unowned runtime override
+could be removed, and a dangling symlink could be followed during creation.
+Creation now uses exclusive, no-follow semantics, with path/device/inode/UID,
+boot identity and content hash recorded in an ownership ledger. Unknown, changed
+or foreign files are preserved and cause failure. These adversarial file cases
+are portable regression tests; the VM run exercises the owned override lifecycle.
+A failure to update the ledger after writing the override conservatively refuses
+cleanup and needs manual inspection; that partial-I/O window was not injected.
+
+Two additional evidence gaps allowed substituted old final authority/expired
+health and a wrong-boot or out-of-range switch charge to pass verification.
+The prior raw observations contained fresh authority and correct charges; this
+was a validation gap, not observed stale production routing. Guest observations
+and report verification now bind current boot, READY epoch/session, allocation
+generation, lease/health deadlines and switch charge time. Eight added regression
+tests include actual production-core reboot observations and owned-file cases.
+Final observation time is sampled with the final snapshot; driver completion is
+recorded separately. The five-case VM run above was repeated after these fixes.
+The earlier successful run remains historical in the attempt ledger/Git history,
+and is not presented as qualification of the revised source.

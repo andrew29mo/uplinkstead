@@ -3,6 +3,7 @@ import copy,hashlib,html,json,math
 from tools.evidence import fingerprint
 from tools.dhcp_stage1_report import require
 from tools.dhcp_systemd_report import empty,stale,writer_privilege
+from tools.dhcp_boot_checks import authority,charged
 KINDS=('normal','preserved','paused','latched','capacity')
 
 def verify(v):
@@ -13,8 +14,10 @@ def verify(v):
     require({s['name'] for s in v['stages']}==expected and len(v['stages'])==len(expected),'Missing/duplicate stages')
     require(all(s['exit_code']==0 and s['timed_out'] is False and math.isfinite(s['seconds']) and s['seconds']>=0 for s in v['stages']),'Failed/timed-out stage')
     for key,platform in (('native_unit','Darwin'),('linux_unit','Linux')):
-        r=v[key];require(r['passed'] is True and r['platform']==platform and r['source_sha256']==v['source_sha256'] and r['count']==len(r['tests'])==len(set(r['tests'])) and r['count']>=276 and r['errors']==r['failures']==r['skipped']==0,'Different/failed portable suite')
+        r=v[key];require(r['passed'] is True and r['platform']==platform and r['source_sha256']==v['source_sha256'] and r['count']==len(r['tests'])==len(set(r['tests'])) and r['count']>=284 and r['errors']==r['failures']==r['skipped']==0,'Different/failed portable suite')
         require({'test_dhcp_boot.BootTests.'+n for n in ('test_changed_boot_retires_old_authority_and_requires_new_evidence','test_old_boot_budget_cannot_age_out_or_unlock_on_reboot','test_storage_failure_on_new_boot_never_becomes_ready_then_repairs')}<=set(r['tests']),'Formal boot tests missing')
+    review_ids={'test_dhcp_boot_review.EvidenceTests.'+n for n in ('test_formal_core_observations_bind_new_authority','test_retired_snapshot_expired_health_and_wrong_allocation_reject','test_charge_uses_this_boot_and_observation_clock')}|{'test_dhcp_boot_review.OwnershipTests.'+n for n in ('test_foreign_files_symlinks_and_parent_are_preserved','test_exclusive_creation_collision_does_not_overwrite','test_owned_creation_cleanup_and_missing_after_boot','test_changed_ownership_content_or_boot_refuses_deletion','test_prepare_error_after_creation_can_clean_owned_only')}
+    require(review_ids<=set(v['native_unit']['tests']),'Review regressions missing')
     require(v['native_unit']['tests']==v['linux_unit']['tests'],'Different platform tests')
     i=v['installation'];require(i['passed'] is True and i['client_binary_sha256']==i['client_build']['binary_sha256'],'Client provenance mismatch')
     trigger=i['boot_trigger'];require('OnBootSec=25s' in trigger['timer_text'] and 'Unit=uplinkstead-dual.service' in trigger['timer_text'] and trigger['enabled_target']=='../uplinkstead-dual-boot.timer' and hashlib.sha256(trigger['timer_text'].encode()).hexdigest()==trigger['timer_sha256'],'Boot trigger not qualified')
@@ -31,6 +34,7 @@ def verify(v):
         if kind=='normal':require(b['shutdown_exec_stop_post']['data'] and 'uplinkstead.dual_dhcp_stop' in json.dumps(b['shutdown_exec_stop_post']) and p['journal']['active'] is None and all(r['current'] is None for r in p['journal']['links'].values()) and p['journal']['epoch']>b['journal']['epoch'],'Normal stop cleanup not observed')
         require(all(p['journal'][k]==b['journal'][k]==s[k] for k in ('config_hash','history','operations','paused','latched')),'Boot reset policy/history/receipts')
         require(c['ready']['boot_trigger']['Unit']=='uplinkstead-dual.service' and c['ready']['boot_trigger']['LastTriggerUSecMonotonic'] not in ('','0'),'Boot timer did not trigger formal service')
+        require(c['ready']['writer']['ActiveState']==c['ready']['worker']['ActiveState']=='active','Formal services not ready')
         empty(c['waiting']);require(s['epoch']>old['epoch'] and c['ready']['writer']['InvocationID']!=b['writer']['InvocationID'] and c['ready']['writer']['Type']=='notify','Old writer authority reused')
         require(all(s['links'][k]['session']!=old['links'][k]['session'] and s['links'][k]['generation']>old['links'][k]['generation'] for k in ('A','B')),'Old client authority retained')
         for rows in (c['routes'],):require(all(not r for r in rows.values()),'Forwarding before lease')
@@ -38,6 +42,7 @@ def verify(v):
         for t in (c['traffic'],c['new_lease_traffic']):require(t['blocked']['ok'] is False and t['fallback']['ok'] is True and t['fallback']['response']['peer']=='10.99.2.1','Borrowing/unqualified negative traffic')
         new=c['new_lease_unhealthy']['state'];require(new['active'] is None and all(r['current'] is not None and r['state']!='HEALTHY' for r in new['links'].values()),'New lease inherited healthy selection')
         fresh=c['fresh']['state'];require(all(r['current'] is not None and r['state']=='HEALTHY' and r['good']>=2 and r['session']!=old['links'][k]['session'] and r['generation']>old['links'][k]['generation'] for k,r in fresh['links'].items()),'No fresh quorum')
+        authority(c['fresh'],c['waiting'],b['state'],c['boot'],c['checkpoints']['fresh_observed'],all_links=True)
         for d in (c['stale_before'],c['stale_after']):stale(d);require(d['routes_before']==d['routes_after'],'Stale route mutation')
         if kind in ('paused','latched'):
             require(fresh['active'] is None and fresh['paused']==b['journal']['paused'] is True and fresh['latched']==b['journal']['latched'] and c['policy_blocked']['blocked']['ok'] is False,'Policy lost after health')
@@ -46,10 +51,11 @@ def verify(v):
             if kind=='latched':require(b['journal']['latched'] is True and len(b['journal']['history'])==8,'No real budget latch')
         else:require(not c['intervention'],'Unexpected policy reset')
         final=c['final']['state'];require(final['active'] is not None and c['client']['ok'] is True and c['client']['response']['peer']==('10.99.1.1' if final['active']['link']=='A' else '10.99.2.1'),'New data path missing')
-        require(final['history']==[dict(boot=c['boot'],at=final['history'][0]['at'])] if kind=='latched' else final['history'][:-1]==b['journal']['history'],'New selection not charged/preserved')
+        authority(c['final'],c['waiting'],b['state'],c['boot'],c['checkpoints']['final_observed'])
+        charged(c['final'],b['journal'],c['boot'],c['checkpoints']['ready_observed'],c['checkpoints']['final_observed'],reset=kind=='latched')
         writer_privilege(c['writer']);w=c['worker'];require(w['uid'][0]>0 and len(set(w['uid']))==1 and all(int(n,16)==0 for n in w['caps'].values()) and w['no_new_privs']=='1' and c['writer']['rss_kib']>0 and w['rss_kib']>0,'Worker privilege/RSS invalid')
         require(all(c['wire_counters'][k]['wrong_dhcp']==0 for k in ('A','B')),'DHCP borrowed other WAN')
-        ts=c['checkpoints'];require(all(math.isfinite(n) and n>=0 for n in ts.values()) and ts['prestart']<=ts['ready_observed']<=ts['fresh_observed']<=ts['final_observed'] and math.isfinite(c['case_seconds']) and c['case_seconds']>=0,'Invalid observation clock')
+        ts=c['checkpoints'];require(all(math.isfinite(n) and n>=0 for n in ts.values()) and ts['prestart']<=ts['ready_observed']<=ts['fresh_observed']<=ts['final_observed']<=ts['driver_completed'] and math.isfinite(c['case_seconds']) and c['case_seconds']>=0,'Invalid observation clock')
         require(c['power_loss_tested'] is False and c['boot_zero_gap_tested'] is False,'Untested claim')
         require(all(c['previous_boot_cleanup'][k] is True for k in ('namespaces_removed','root_network_unchanged','owned_children_reaped')),'Prior boot cleanup failed')
         if kind=='capacity':
@@ -63,6 +69,7 @@ def verify(v):
 def controls(v):
     def case(kind,fn):return lambda x:fn(next(c for c in x['cases'] if c['kind']==kind))
     changes=[lambda x:x.update(source_changed=True),lambda x:x['stages'][0].update(exit_code=1),lambda x:x['stages'][0].update(timed_out=True),lambda x:x['installation']['boot_trigger'].update(timer_text=''),lambda x:x.update(vm_final='Running'),lambda x:x['cleanup'].update(loop_detached=False),lambda x:x['installation']['units']['uplinkstead-dual.service'].update(installed_sha256='0'*64),case('preserved',lambda c:c['prestart']['journal'].update(active=None)),case('preserved',lambda c:c['before']['shutdown_exec_stop_post'].update(data=['not-empty'])),case('normal',lambda c:c.update(boot=c['before']['boot'])),case('normal',lambda c:c['waiting']['state']['links']['A'].update(state='HEALTHY')),case('normal',lambda c:c['traffic']['blocked'].update(ok=True)),case('normal',lambda c:c['new_lease_unhealthy']['state'].update(active=c['final']['state']['active'])),case('normal',lambda c:c['stale_before']['replies'][0].update(ok=True)),case('paused',lambda c:c['fresh']['state'].update(paused=False)),case('latched',lambda c:c['fresh']['state'].update(latched=False)),case('latched',lambda c:c.update(intervention=[])),case('capacity',lambda c:c['capacity']['denied']['answer'].update(ok=True)),case('capacity',lambda c:c['capacity']['faults'][0]['message'].update(durable=True)),case('capacity',lambda c:c['capacity'].update(free_bytes=10000000)),case('normal',lambda c:c.update(power_loss_tested=True)),case('normal',lambda c:c['checkpoints'].update(prestart=1e99))]
+    changes += [case('normal',lambda c:c['fresh']['state']['links']['A'].update(until=0,last_event=-999,round=-1)),case('normal',lambda c:c['final']['state'].update(boot=c['before']['boot'])),case('normal',lambda c:c['final']['state']['links'][c['final']['state']['active']['link']].update(state='WAITING',good=0,until=0)),case('normal',lambda c:c['final']['state']['history'][-1].update(boot=c['before']['boot'])),case('normal',lambda c:c['final']['state']['history'][-1].update(at=1e99)),case('normal',lambda c:c['ready']['writer'].update(ActiveState='failed'))]
     for change in changes:
         b=copy.deepcopy(v);change(b)
         try:verify(b)

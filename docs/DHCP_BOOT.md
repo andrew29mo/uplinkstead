@@ -12,7 +12,11 @@ A new Linux boot invalidates old lease sessions, health, capture transactions an
 operator/proposal authority. The production writer must persist a new epoch,
 quarantine old allocations, and start with empty leases and WAITING health before
 READY. READY means the service is accepting work, not that a WAN is usable. New
-wire ACKs and fresh health quorum are both necessary for new forwarding. An ACK
+wire ACKs and fresh health quorum are both necessary for new forwarding. Fresh
+and selected observations are checked against this boot, the ready writer epoch,
+new client sessions/generations and nonexpired lease/health deadlines. Selected
+allocation identity must match the current admitted row. The added switch charge
+must belong to this boot and lie between ready and final snapshot observation. An ACK
 without healthy target paths must not authorize selection.
 
 Pause, latch, operation receipts and switch history survive. Old-boot monotonic
@@ -106,6 +110,23 @@ JSON verification rejects failed/timed-out stages, unchanged boot IDs, missing
 pre-Agent observations, policy loss, old authority acceptance, fake capacity
 success and incomplete cleanup. Mutated-evidence controls challenge these gates.
 
+## Runtime override ownership
+
+The shutdown-fault override is created exclusively with no symlink following.
+Installation refuses an existing file, dangling symlink or symlink parent.
+A dedicated installation-ledger entry records path, device, inode, owner, boot ID
+and content SHA-256. Cleanup checks those fields before removing the override or
+stopping fixture services. Unknown or changed files remain untouched and fail
+cleanup; a missing file after normal reboot only retires its old ledger entry.
+Portable filesystem tests cover collisions, foreign objects, changed ownership/
+content, missing post-boot files and failure after completed creation. They do
+not claim that adversarial filesystem actors were exercised inside systemd.
+
+If override contents are written but the following ledger update fails, cleanup
+may conservatively refuse because the recorded digest no longer matches. This
+I/O window is not fault-injected here; it can require inspection/manual repair.
+It does not authorize deleting a file whose ownership cannot be established.
+
 ## Reproduce
 
 Use the same already provisioned dedicated relay VM, toolchain and hash-qualified
@@ -130,7 +151,10 @@ Post-boot driver seconds begin after the host can invoke the after-boot driver;
 they include negative tests, deliberate delays, policy interventions and resource
 repair. They are not boot time, WAN outage duration, a recovery deadline or an SLO.
 Kernel boot-time observation checkpoints and systemd start/active timestamps are
-retained separately. Process RSS snapshots belong to the Linux VM and are not
+retained separately. `fresh_observed` and `final_observed` are captured immediately
+after their state snapshots; `driver_completed` records the later end of checks.
+Health expiry is evaluated at the snapshot observation, not after unrelated
+cleanup/readback work. Process RSS snapshots belong to the Linux VM and are not
 peaks, host consumption, or a performance comparison against macOS.
 
 No abrupt power loss, boot-zero-gap, uninterrupted existing connection, arbitrary

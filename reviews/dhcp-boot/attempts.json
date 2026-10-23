@@ -1,0 +1,1682 @@
+[
+  {
+    "run_id": "ff7ea04340dbdeb5",
+    "source_sha256": "cb91619f7ea3fff8b397bcfb301af2b06bb7238a70b9941b47567d5713c6de3b",
+    "passed": false,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.341741792013636
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3745228330080863
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 12.710591333016055
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.34007891701185144
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.5161790419952013
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.596483417000854
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.796436625008937
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.33449895901139826
+      },
+      {
+        "name": "install",
+        "exit_code": 1,
+        "timed_out": false,
+        "seconds": 1.027780917007476
+      },
+      {
+        "name": "diagnose",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.5716128750063945
+      },
+      {
+        "name": "diagnose-prestart.json",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.24270525001338683
+      },
+      {
+        "name": "diagnose-before.json",
+        "exit_code": 1,
+        "timed_out": false,
+        "seconds": 0.24727429100312293
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.35769754101056606
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.28109220799524337
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.524918708979385
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.20212233299389482
+      }
+    ],
+    "error": "RuntimeError: install failed or timed out",
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true,
+      "fixture_removed": true,
+      "enabled_link_removed": true,
+      "loop_detached": true,
+      "volume_unmounted": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped",
+    "case_kinds_completed": [],
+    "explanation": "Initial empty route-table readback returned non-JSON output on FIB-not-present; fixture dependency failed and writer never started. Fixed strict absent-table observation."
+  },
+  {
+    "run_id": "6f6744cc3179a3fb",
+    "source_sha256": "cd0603abfc81ea6b7f6bd8fd0b7a08408d2e2162dfa813d7198bee9d974f59a1",
+    "passed": false,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.0066325000079814
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3068968750012573
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 12.407037625001976
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.25420912497793324
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.363905958016403
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.421966291003628
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.735122792015318
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.25003691599704325
+      },
+      {
+        "name": "install",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 4.77246766697499
+      },
+      {
+        "name": "normal-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.5844107920129318
+      },
+      {
+        "name": "normal-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.5807857920008246
+      },
+      {
+        "name": "normal-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2944409170013387
+      },
+      {
+        "name": "normal-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 11.692827833001502
+      },
+      {
+        "name": "normal-after",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.061044000001857
+      },
+      {
+        "name": "preserved-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.7105197080236394
+      },
+      {
+        "name": "preserved-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 4.525188667001203
+      },
+      {
+        "name": "preserved-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.23111420799978077
+      },
+      {
+        "name": "preserved-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 11.926010166993365
+      },
+      {
+        "name": "preserved-after",
+        "exit_code": 1,
+        "timed_out": false,
+        "seconds": 7.04019270799472
+      },
+      {
+        "name": "diagnose",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.5079560830199625
+      },
+      {
+        "name": "diagnose-prestart.json",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.23124191598617472
+      },
+      {
+        "name": "diagnose-before.json",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.292109125002753
+      },
+      {
+        "name": "diagnose-phase.json",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.26346229200134985
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 1,
+        "timed_out": false,
+        "seconds": 0.5385684159991797
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.4669390830094926
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.19898200000170618
+      }
+    ],
+    "error": "RuntimeError: preserved-after failed or timed out",
+    "cleanup_error": "RuntimeError",
+    "vm_final": "Stopped",
+    "case_kinds_completed": [
+      "normal"
+    ],
+    "explanation": "Normal case passed; preserved case completed recovery but its prior-boot cleanup receipt was absent. Strict root-network check detected Docker/Lima initialization after fixture baseline. Automatic installer cleanup completed but root-scope check failed; only the owned source snapshot was manually removed after checks.",
+    "manual_remediation": {
+      "owner_matched": true,
+      "namespaces_absent": true,
+      "installed_units_absent": true,
+      "installation_removed": true,
+      "snapshot_removed": true,
+      "vm_final": "Stopped",
+      "scope": "Only the run-owner-matched remaining snapshot was removed after actual readback; the original root-scope cleanup failure remains failed."
+    }
+  },
+  {
+    "run_id": "3d2ba36c0963d6d4",
+    "source_sha256": "85143799ee914cdbe7cfeaa9b4efcdb1015af8e8c1e302a07d0b020aa9999cde",
+    "passed": false,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.068697750015417
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2000537909916602
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 8.606161834002705
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.25978837499860674
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.4701412499998696
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.325845375016797
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.5539344160060864
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.34726991699426435
+      },
+      {
+        "name": "install",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 4.925620958005311
+      },
+      {
+        "name": "normal-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.5038585420115851
+      },
+      {
+        "name": "normal-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.6668577090022154
+      },
+      {
+        "name": "normal-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.27042354198056273
+      },
+      {
+        "name": "normal-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 33.40774579101708
+      },
+      {
+        "name": "normal-after",
+        "exit_code": 1,
+        "timed_out": false,
+        "seconds": 30.400355417019455
+      },
+      {
+        "name": "diagnose",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.49980329201207496
+      },
+      {
+        "name": "diagnose-prestart.json",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.30612183397170156
+      },
+      {
+        "name": "diagnose-before.json",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3155655839946121
+      },
+      {
+        "name": "diagnose-phase.json",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.34403370798099786
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.38839737500529736
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2931570000073407
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.5816314999829046
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.27434383300715126
+      }
+    ],
+    "error": "RuntimeError: normal-after failed or timed out",
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true,
+      "fixture_removed": true,
+      "enabled_link_removed": true,
+      "loop_detached": true,
+      "volume_unmounted": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped",
+    "case_kinds_completed": [],
+    "explanation": "Waiting for host-postprovisioned Lima DNS inside early boot created an initialization dependency; topology timed out and writer did not become ready. Removed that circular readiness condition."
+  },
+  {
+    "run_id": "2deb33d558f2ed5f",
+    "source_sha256": "68de9677713fe77916ca05f1635c0f68dff8dfbf8535b8d45e4dbefafdad420d",
+    "passed": false,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.0156657499901485
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2643124580208678
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 9.153978458984056
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.24936516702291556
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.353849209001055
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.294184500002302
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.712372709007468
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3132183330017142
+      },
+      {
+        "name": "install",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 4.584237667004345
+      },
+      {
+        "name": "normal-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.8611195420089643
+      },
+      {
+        "name": "normal-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.9077789170260075
+      },
+      {
+        "name": "normal-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.18080704100430012
+      },
+      {
+        "name": "normal-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 9.500187208002899
+      },
+      {
+        "name": "normal-after",
+        "exit_code": 1,
+        "timed_out": false,
+        "seconds": 30.28115358299692
+      },
+      {
+        "name": "diagnose",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.546881582995411
+      },
+      {
+        "name": "diagnose-prestart.json",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.23306145798414946
+      },
+      {
+        "name": "diagnose-before.json",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.23876529099652544
+      },
+      {
+        "name": "diagnose-phase.json",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.23131766699953005
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 1,
+        "timed_out": false,
+        "seconds": 0.377662250015419
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.7118417089805007
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.208139292022679
+      }
+    ],
+    "error": "RuntimeError: normal-after failed or timed out",
+    "cleanup_error": "RuntimeError",
+    "vm_final": "Stopped",
+    "case_kinds_completed": [],
+    "explanation": "Requires=docker propagated a Colima host-side Docker restart into fixture/writer stop. Changed fixture to Wants/After plus explicitly delayed automatic boot timer. Strict root-network cleanup failed; owned remaining snapshot manually removed.",
+    "manual_remediation": {
+      "owner_matched": true,
+      "namespaces_absent": true,
+      "installed_units_absent": true,
+      "installation_removed": true,
+      "snapshot_removed": true,
+      "vm_final": "Stopped",
+      "scope": "Only the run-owner-matched remaining snapshot was removed after actual readback; the original root-scope cleanup failure remains failed."
+    }
+  },
+  {
+    "run_id": "8d94ed217d025265",
+    "source_sha256": "038cb2e654a07f0ebea114a4c24cd698d7266aa262af0ec001d05ca598504436",
+    "passed": false,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.944721291976748
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.19940429102280177
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 9.806328917009523
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.34169687499525025
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3216893750068266
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.575207040994428
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.603673042001901
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.24893004199839197
+      },
+      {
+        "name": "install",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 4.572455292014638
+      },
+      {
+        "name": "normal-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.8742700000002515
+      },
+      {
+        "name": "normal-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.7140918750083074
+      },
+      {
+        "name": "normal-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.20921525001176633
+      },
+      {
+        "name": "normal-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 8.77020141700632
+      },
+      {
+        "name": "normal-after",
+        "exit_code": 1,
+        "timed_out": false,
+        "seconds": 0.28089958301279694
+      },
+      {
+        "name": "diagnose",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.5969075839966536
+      },
+      {
+        "name": "diagnose-prestart.json",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2485506670200266
+      },
+      {
+        "name": "diagnose-before.json",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3253566669882275
+      },
+      {
+        "name": "diagnose-phase.json",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2523984170111362
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.47660941697540693
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3913714579830412
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.692942916008178
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.19139399999403395
+      }
+    ],
+    "error": "RuntimeError: normal-after failed or timed out",
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true,
+      "fixture_removed": true,
+      "enabled_link_removed": true,
+      "loop_detached": true,
+      "volume_unmounted": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped",
+    "case_kinds_completed": [],
+    "explanation": "After-boot observer read the previous boot prestart file before the delayed timer fired. Boot-ID gate correctly rejected it; added bounded wait for this boot receipt."
+  },
+  {
+    "run_id": "142dd21e31119cee",
+    "source_sha256": "d79bde6602daf0b1699b9efb9c2cce942a0899f0e1f50c4db8c05a4c3994c5c8",
+    "passed": false,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.689308125001844
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.21526970900595188
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 9.326707832980901
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2575472919852473
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.39431524998508394
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.388977499998873
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.421971333998954
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.23996983299730346
+      },
+      {
+        "name": "install",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 5.8787940419861116
+      },
+      {
+        "name": "normal-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.6002228339784779
+      },
+      {
+        "name": "normal-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.505892707995372
+      },
+      {
+        "name": "normal-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2857066659780685
+      },
+      {
+        "name": "normal-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 8.45229095799732
+      },
+      {
+        "name": "diagnose",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.4555705419916194
+      },
+      {
+        "name": "diagnose-prestart.json",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.20690954200108536
+      },
+      {
+        "name": "diagnose-before.json",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.28583474998595193
+      },
+      {
+        "name": "diagnose-phase.json",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.20507204200839624
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.36638945899903774
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3380929169943556
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.5359937500033993
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.1946344159950968
+      }
+    ],
+    "error": "KeyboardInterrupt: ",
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true,
+      "fixture_removed": true,
+      "enabled_link_removed": true,
+      "loop_detached": true,
+      "volume_unmounted": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped",
+    "case_kinds_completed": [],
+    "explanation": "Intentionally interrupted to also wait for complete prestart observation fields. Cleanup and VM stop completed. Runner interruption handling was hardened to reap its child process group."
+  },
+  {
+    "run_id": "6b528a59659683e6",
+    "source_sha256": "ae8e0c7e62729c10f0a1318de9c124df56f1b7ef0e05d14655120aeb004b952e",
+    "passed": false,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.6423271670064423
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.19724987499648705
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 9.470871291996446
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3255672079976648
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.36770295799942687
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.041528458008543
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.27099520797492
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.21881470800144598
+      },
+      {
+        "name": "install",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 4.687762124987785
+      },
+      {
+        "name": "normal-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.5026743749913294
+      },
+      {
+        "name": "normal-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.5551747920108028
+      },
+      {
+        "name": "normal-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2029258749971632
+      },
+      {
+        "name": "normal-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 9.1801878749975
+      },
+      {
+        "name": "normal-after",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 30.19469258398749
+      },
+      {
+        "name": "preserved-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.6087782499962486
+      },
+      {
+        "name": "preserved-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 4.5377670410089195
+      },
+      {
+        "name": "preserved-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2005758750019595
+      },
+      {
+        "name": "preserved-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 8.417785333993379
+      },
+      {
+        "name": "preserved-after",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 31.262345417024335
+      },
+      {
+        "name": "paused-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.0075751660042442
+      },
+      {
+        "name": "paused-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.6159233749785926
+      },
+      {
+        "name": "paused-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.21655754200764932
+      },
+      {
+        "name": "paused-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 10.438679959013825
+      },
+      {
+        "name": "paused-after",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 29.74593674999778
+      },
+      {
+        "name": "latched-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 11.139721582992934
+      },
+      {
+        "name": "latched-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.6115854590025265
+      },
+      {
+        "name": "latched-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.20396866701776162
+      },
+      {
+        "name": "latched-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 8.638132250023773
+      },
+      {
+        "name": "latched-after",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 31.036506166972686
+      },
+      {
+        "name": "capacity-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 9.396789708000142
+      },
+      {
+        "name": "capacity-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.602592082985211
+      },
+      {
+        "name": "capacity-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2086117919825483
+      },
+      {
+        "name": "capacity-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 12.912204124993877
+      },
+      {
+        "name": "capacity-after",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 34.98735645797569
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.6484399169858079
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3957020840025507
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.562660915980814
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2681605830148328
+      }
+    ],
+    "verification_error": "Shutdown cleanup not excluded",
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true,
+      "fixture_removed": true,
+      "enabled_link_removed": true,
+      "loop_detached": true,
+      "volume_unmounted": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped",
+    "case_kinds_completed": [
+      "normal",
+      "preserved",
+      "paused",
+      "latched",
+      "capacity"
+    ],
+    "explanation": "All five guest cases completed, but report rejected ambiguous missing ExecStopPost display field. Not qualification."
+  },
+  {
+    "run_id": "76833a66345cb971",
+    "source_sha256": "dda55f26b4ce19888594535ddc0a91ad555ecf81a367c835bb75495613a8fa7c",
+    "passed": false,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.1099195419810712
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.34156954201171175
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 12.67849925000337
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2472055419930257
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3421692500123754
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.522987707983702
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.5810412499995437
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3351288749836385
+      },
+      {
+        "name": "install",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 4.884838375000982
+      },
+      {
+        "name": "normal-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.5332887500117067
+      },
+      {
+        "name": "normal-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.6082721250131726
+      },
+      {
+        "name": "normal-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.20835629099747166
+      },
+      {
+        "name": "normal-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 9.782099625008414
+      },
+      {
+        "name": "normal-after",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 24.7792523750104
+      },
+      {
+        "name": "preserved-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.6615103340009227
+      },
+      {
+        "name": "preserved-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 4.5324374589836225
+      },
+      {
+        "name": "preserved-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.25791754099191166
+      },
+      {
+        "name": "preserved-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 8.578888249990996
+      },
+      {
+        "name": "preserved-after",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 25.805782707990147
+      },
+      {
+        "name": "paused-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.6452896659902763
+      },
+      {
+        "name": "paused-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.510672333999537
+      },
+      {
+        "name": "paused-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.20154883299255744
+      },
+      {
+        "name": "paused-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 9.552591499988921
+      },
+      {
+        "name": "paused-after",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 24.762736666976707
+      },
+      {
+        "name": "latched-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 10.934312208992196
+      },
+      {
+        "name": "latched-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.520008459017845
+      },
+      {
+        "name": "latched-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.26203491602791473
+      },
+      {
+        "name": "latched-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 8.814593916991726
+      },
+      {
+        "name": "latched-after",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 25.784364874998573
+      },
+      {
+        "name": "capacity-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 8.836822749988642
+      },
+      {
+        "name": "capacity-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.690328458993463
+      },
+      {
+        "name": "capacity-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.17741583299357444
+      },
+      {
+        "name": "capacity-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 11.513883709005313
+      },
+      {
+        "name": "capacity-after",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 31.28705195899238
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.7340479579870589
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.38361720799002796
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.4897341250034515
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.17910033400403336
+      }
+    ],
+    "verification_error": "Shutdown cleanup not excluded",
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true,
+      "fixture_removed": true,
+      "enabled_link_removed": true,
+      "loop_detached": true,
+      "volume_unmounted": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped",
+    "case_kinds_completed": [
+      "normal",
+      "preserved",
+      "paused",
+      "latched",
+      "capacity"
+    ],
+    "explanation": "All five guest cases completed, but systemctl --all still omitted the empty command array. Report remained failed. Replaced display inference with observed typed D-Bus property."
+  },
+  {
+    "run_id": "015d2e5305e9e3a6",
+    "source_sha256": "25310b967fd607b13669a07e986f0b84d9f073d911e7c58ffb50136396ea0c1f",
+    "passed": true,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.9085141660179943
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.29092966599273495
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 9.64379462497891
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.35803049997775815
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3944437080062926
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.398909584007924
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.6011466670024674
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2486280409793835
+      },
+      {
+        "name": "install",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 4.777972166979453
+      },
+      {
+        "name": "normal-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.6028694580018055
+      },
+      {
+        "name": "normal-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.4939604160026647
+      },
+      {
+        "name": "normal-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2668085829936899
+      },
+      {
+        "name": "normal-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 9.555437624978367
+      },
+      {
+        "name": "normal-after",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 24.998728125006892
+      },
+      {
+        "name": "preserved-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.6331877920019906
+      },
+      {
+        "name": "preserved-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.509596125019016
+      },
+      {
+        "name": "preserved-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.28109008297906257
+      },
+      {
+        "name": "preserved-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 12.486341458017705
+      },
+      {
+        "name": "preserved-after",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 21.815308082994306
+      },
+      {
+        "name": "paused-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.603815417009173
+      },
+      {
+        "name": "paused-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.633747249987209
+      },
+      {
+        "name": "paused-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.23617062502307817
+      },
+      {
+        "name": "paused-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 9.452016082999762
+      },
+      {
+        "name": "paused-after",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 24.83639545799815
+      },
+      {
+        "name": "latched-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 10.894664166000439
+      },
+      {
+        "name": "latched-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.605313667008886
+      },
+      {
+        "name": "latched-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.26230079200468026
+      },
+      {
+        "name": "latched-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 8.975342542020371
+      },
+      {
+        "name": "latched-after",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 25.408326333010336
+      },
+      {
+        "name": "capacity-prepare",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 8.817100624990417
+      },
+      {
+        "name": "capacity-stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.5163822080066893
+      },
+      {
+        "name": "capacity-between",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.19884229198214598
+      },
+      {
+        "name": "capacity-start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 11.881696999975247
+      },
+      {
+        "name": "capacity-after",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 31.264271750027547
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.746296416997211
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.3030261670064647
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.5261923749931157
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2062449580116663
+      }
+    ],
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true,
+      "fixture_removed": true,
+      "enabled_link_removed": true,
+      "loop_detached": true,
+      "volume_unmounted": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped",
+    "controls": {
+      "passed": true,
+      "rejected": 22
+    },
+    "case_kinds_completed": [
+      "normal",
+      "preserved",
+      "paused",
+      "latched",
+      "capacity"
+    ],
+    "explanation": "Full same-source qualification passed, including typed stop-command proof, five distinct new boots, both platform suites, negative controls and complete cleanup."
+  }
+]

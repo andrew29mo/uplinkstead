@@ -75,7 +75,7 @@ class Fixture:
         self.before = None
         self.names = []
 
-    def setup(self):
+    def setup(self, start_servers=True):
         if os.geteuid() != 0 or not Path('/proc/sys/kernel/random/boot_id').exists():
             raise RuntimeError('Dedicated root Linux VM required')
         present = {r.split()[0] for r in cmd(['ip', 'netns', 'list']).stdout.splitlines()}
@@ -130,7 +130,8 @@ class Fixture:
                  '-out',self.root/'ca.crt','-days','2','-subj','/CN=probe.test','-addext','subjectAltName=DNS:probe.test'])
             self.spawn('dd_s',['python3',str(self.source/'tools/server.py'),str(self.root/'ca.crt'),str(self.root/'server.key')],'tls')
             time.sleep(.25)
-            for link in LINKS: self.server(link)
+            if start_servers:
+                for link in LINKS: self.server(link)
             return self
         except BaseException:
             self.cleanup(); raise

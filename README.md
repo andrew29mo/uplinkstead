@@ -146,9 +146,10 @@ the correct applet identity.
 
 [Installed-service evidence](reviews/dhcp-systemd/README.md) distinguishes normal
 units from one explicitly delayed real-ip-helper fault case, plus bounded startup
-failure and explicit repair. VM reboot, sudden power loss, boot-zero-gap and
-capacity longevity remain unqualified. The bounded storage-failure slice below is
-qualified separately. Writer readiness is not WAN recovery.
+failure and explicit repair. Those historical receipts cover process restart;
+storage faults and VM reboot have separate gates below. Sudden power loss,
+boot-zero-gap and capacity longevity remain unqualified. Writer readiness is not
+WAN recovery.
 
 ## Dual-DHCP storage failure and repair
 
@@ -163,8 +164,27 @@ this is not a universal fail-closed guarantee.
 platform and three additional isolated Linux VM cases: real ext4 ENOSPC, SQLite
 page-capacity FULL, and readonly post-crash stop recovery. Repair retains policy
 limits/receipts and requires a fresh durable epoch, leases and health. Timings and
-process RSS snapshots are labelled VM observations. Abrupt power loss, VM reboot
-for this storage slice, corruption recovery and boot-zero-gap are not tested.
+process RSS snapshots are labelled VM observations. That storage run did not
+exercise reboot; the separate boot gate below covers ENOSPC across restart.
+Abrupt power loss, corruption recovery and boot-zero-gap remain untested.
+
+## Installed dual-DHCP VM reboot recovery
+
+[Orderly VM reboot deployment](docs/DHCP_BOOT.md) qualifies the formal service's
+cross-boot handoff separately from process restart. A pre-Agent read-only observer
+checks the old journal, including a labelled shutdown-cleanup bypass case. New
+boot/epoch/session authority starts with no usable old lease or health. New ACKs
+without fresh target health do not select a route; pause/latch remain effective.
+
+[Boot evidence](reviews/dhcp-boot/README.md) records 276 tests per platform and
+22 negative controls. It covers normal restart, preserved old
+journal, paused and budget-latched policies, and real ENOSPC across restart plus
+explicit repair. It retains both platform receipts, Linux VM process RSS and
+post-boot driver timings. The isolated topology prerequisites and fault overrides
+are labelled. A fixture-only systemd timer starts the formal service at
+OnBootSec=25s to avoid Colima provisioning interference; this is not a product
+early-boot gate. These are orderly VM stop/start trials, not sudden power loss,
+boot-zero-gap, physical WAN or uninterrupted existing-connection guarantees.
 
 ## Reproduce
 

@@ -2,6 +2,9 @@
 
 Acceptance is tied to the retained matching-source evidence in [Validation](VALIDATION.md).
 A passing portable test is separate from real Linux installed-service evidence.
+The initial sections describe the static writer. Later DHCP headings specify its
+separate lifecycle contracts; the latest installed dual-DHCP cross-boot contract
+is detailed in [DHCP_BOOT.md](DHCP_BOOT.md).
 
 ## Required invariants
 
@@ -281,3 +284,32 @@ The gate does not qualify storage corruption, VM reboot for this fault slice,
 abrupt power loss, boot zero-gap or capacity longevity. Historical installed
 systemd evidence's lack of storage qualification is superseded only by this
 separate bounded slice, not by a claim covering every I/O failure.
+
+
+## Installed orderly VM reboot gate
+
+- Five distinct new Linux boot IDs: normal, preserved journal, paused, latched,
+  and ENOSPC across restart with explicit resource repair.
+- Exact shipped writer/worker units; explicit fixture prerequisites, namespace
+  and path overrides; capability-free worker retained after new boot.
+- Read the durable journal before production ExecStart. For the preserved case,
+  require full equality with old nonempty active allocations and prove the
+  runtime-only shutdown override is absent on the new boot.
+- READY must have no current leases, zero health/round/deadline and a new epoch /
+  session. New ACKs with blocked health must still reject LAN traffic. Only fresh
+  leases and quorum permit new TLS; a viable independent main path challenges
+  borrowing, while unrelated main/RPDB/foreign rules remain unchanged.
+- Paused/latched policies survive fresh health. A real exhausted switch budget
+  must not reset on reboot; resume rejects while latched, and repair needs
+  explicit acknowledged budget reset then resume. Old root/proposal/client
+  operations reject before and after fresh forwarding without changing routing.
+- ENOSPC remains a failed operation across boot, without READY or active worker;
+  retry count stays bounded. Remove filler, not journal or policy, then acquire
+  fresh authority. Separate portable core tests challenge failed startup writes.
+- JSON/HTML must match same-source receipts; reject invalid observations and
+  corrupted-evidence controls. Verify namespace/process/installation/mount/loop
+  cleanup, enable-link removal, source removal and final stopped VM.
+
+No abrupt power loss, boot-zero-gap, arbitrary corruption, existing-connection
+continuity or general DHCP/physical-WAN compatibility claim follows from this gate.
+See [deployment and evidence interpretation](DHCP_BOOT.md).

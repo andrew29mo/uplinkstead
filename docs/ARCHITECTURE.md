@@ -307,7 +307,7 @@ continuous userspace safety enforcement. Bounded restart exhaustion requires
 explicit service-manager repair and never resets the application switch budget.
 One test-only pre-exec ip delay observes inherited-lock ownership and cgroup kill
 before takeover; this is not evidence for every helper failure or escaped root
-process. Installed orderly VM reboot remains a separate gate. Bounded storage-exhaustion
+process. Installed orderly VM reboot has a separate [qualification](DHCP_BOOT.md). Bounded storage-exhaustion
 safety now has its own [qualification](DHCP_STORAGE.md).
 
 
@@ -326,3 +326,20 @@ and acquire fresh leases/health before forwarding. Pause/latch, switch budget
 history and operation receipts survive. Root-only storage page limits can be
 changed on restart without changing route authority identity; all route-related
 configuration remains bound. See [contract and limits](DHCP_STORAGE.md).
+
+
+## Installed dual-DHCP cross-boot handoff
+
+The [orderly VM boot gate](DHCP_BOOT.md) separates durable policy from volatile
+lease/health evidence. The unchanged production recovery entry point advances
+persisted epoch before readiness and rebuilds client sessions; no old ACK or
+health result authorizes a new selection. Old boot switch history is retained
+conservatively because boot-time clocks are not comparable. Pause and latch need
+explicit operator transitions; reboot is not a budget reset.
+
+A fixture-only prerequisite service reconstructs isolated interfaces/return paths
+and reads the pre-Agent journal. It does not restore product routing or journal
+state. Normal shutdown and a separately labelled cleanup-bypass case establish
+different evidence: only the latter challenges recovery with old durable active
+allocations still present. ENOSPC is carried through one normal VM stop/start on
+the same ext4 image. No boot-zero-gap or sudden power-loss property is inferred.

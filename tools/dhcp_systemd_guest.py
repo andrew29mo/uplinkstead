@@ -45,7 +45,7 @@ def cleanup_install(root):
     if not ledger.exists():return True
     owned=json.loads(ledger.read_text())
     allowed={str(Path('/etc/systemd/system')/u) for u in (UNIT,WORKER)}|{str(CONFIG),'/usr/libexec/uplinkstead-dual-worker.py','/usr/libexec/uplinkstead-dual-hook.py','/usr/libexec/uplinkstead-busybox'}
-    allowed|={str(Path('/etc/systemd/system')/(u+'.d/fixture.conf')) for u in (UNIT,WORKER)}|{str(Path('/etc/systemd/system')/(UNIT+'.d/fault.conf')),str(Path('/etc/systemd/system')/(UNIT+'.d/storage.conf'))}
+    allowed|={str(Path('/etc/systemd/system')/(u+'.d/fixture.conf')) for u in (UNIT,WORKER)}|{str(Path('/etc/systemd/system')/(UNIT+'.d/fault.conf')),str(Path('/etc/systemd/system')/(UNIT+'.d/storage.conf')),str(Path('/etc/systemd/system')/(UNIT+'.d/boot.conf')),str(Path('/etc/systemd/system')/(UNIT+'.d/capacity.conf')),'/etc/systemd/system/uplinkstead-dual-topology.service','/etc/systemd/system/multi-user.target.wants/'+UNIT,'/etc/systemd/system/uplinkstead-dual-boot.timer','/etc/systemd/system/timers.target.wants/uplinkstead-dual-boot.timer'}
     for row in owned['files']:
         p=Path(row['path'])
         if str(p) not in allowed:raise RuntimeError('Foreign installation cleanup target')

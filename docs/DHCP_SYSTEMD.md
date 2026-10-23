@@ -28,7 +28,9 @@ and private, including `runtime.automatic_selection: true`. Install the two ship
 service manager, and enable/start `uplinkstead-dual.service`. The writer pulls in
 the policy unit; only the writer is enabled for boot. Interface readiness remains
 a deployment prerequisite: the units do not enable or configure the host network.
-Enabling a unit for boot is not evidence that reboot behavior has been tested.
+Enabling a unit alone is not reboot evidence. The separate
+[orderly VM boot gate](DHCP_BOOT.md) tests the installed units with explicit
+isolated topology prerequisites; it is not general host-network provisioning.
 
 ```sh
 systemctl daemon-reload
@@ -132,3 +134,7 @@ connections. No universal failover or recovery time bound is claimed.
 
 The installed storage-fault extension and its explicit drop-ins are documented in
 [DHCP_STORAGE.md](DHCP_STORAGE.md); historical systemd receipts above remain unchanged.
+
+The separate [boot gate](DHCP_BOOT.md) adds five orderly VM restart cases. The
+original process-restart receipts remain historical and do not themselves
+qualify reboot behavior or power loss.

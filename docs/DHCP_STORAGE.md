@@ -156,3 +156,9 @@ and final-write injections are identified separately from real VM filesystem
 faults. Unknown scope/authority or failing kernel operations can prevent safe
 quarantine. Long-running history/receipt rollover and physical-WAN deployment
 remain separate gates.
+
+
+The separate [installed boot gate](DHCP_BOOT.md) additionally tests ENOSPC across
+an orderly VM restart and subsequent repair. It does not extend the original
+readonly/SQLite FULL cases to reboot, and neither gate qualifies abrupt power
+loss or corruption recovery. Historical storage-run measurements remain unchanged.

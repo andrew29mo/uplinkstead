@@ -1312,5 +1312,106 @@
       "regression": 57,
       "installed": 14
     }
+  },
+  {
+    "run_id": "e812bfb7ccb4eef9",
+    "source_sha256": "8ef0c53922cb8a83c5cc9dbd737d942689c75b2ddaaa44cc9b1dd9f557f26690",
+    "passed": true,
+    "source_changed": false,
+    "stages": [
+      {
+        "name": "native",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 1.626368375000311
+      },
+      {
+        "name": "initial",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.416285292012617
+      },
+      {
+        "name": "start",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 13.219971584010636
+      },
+      {
+        "name": "preflight",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.2474885839910712
+      },
+      {
+        "name": "upload",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.4627220839902293
+      },
+      {
+        "name": "build",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 7.756423207989428
+      },
+      {
+        "name": "linux",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.78294645799906
+      },
+      {
+        "name": "linux-read",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.23321262499666773
+      },
+      {
+        "name": "cases",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 93.99157512499369
+      },
+      {
+        "name": "cleanup",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.4241499579802621
+      },
+      {
+        "name": "remove",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.36281720802071504
+      },
+      {
+        "name": "stop",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 2.699334250006359
+      },
+      {
+        "name": "final",
+        "exit_code": 0,
+        "timed_out": false,
+        "seconds": 0.20275095899705775
+      }
+    ],
+    "cleanup": {
+      "namespaces_removed": true,
+      "root_network_unchanged": true,
+      "owned_children_reaped": true,
+      "idempotent": true
+    },
+    "snapshot_removed": true,
+    "vm_final": "Stopped",
+    "controls": {
+      "passed": true,
+      "rejected": 80,
+      "regression": 57,
+      "installed": 23
+    },
+    "observation": "Matching-source agents-review rerun: explicit writer privilege, cold/fresh health and current-fault journal cursor gates"
   }
 ]

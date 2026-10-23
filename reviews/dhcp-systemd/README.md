@@ -1,7 +1,7 @@
 # Installed dual-DHCP supervision and writer takeover
 
-Run `ad52c54f857b06be`, matching-source fingerprint
-`648ec015e1f0c99a4b56583cd6090d0d5465fa099de96d529fc9095bd6b3f012`.
+Run `e812bfb7ccb4eef9`, matching-source fingerprint
+`8ef0c53922cb8a83c5cc9dbd737d942689c75b2ddaaa44cc9b1dd9f557f26690`.
 
 [JSON](evidence.json) · [HTML](report.html) · [macOS](native-unit.json) ·
 [Linux](linux-unit.json) · [All attempts](attempts.json) ·
@@ -20,11 +20,11 @@ units were neither substituted nor modified.
 
 | Installed case | Observation | Case seconds |
 |---|---|---:|
-| Readiness and credentials | Actual Type=notify writer, then non-root worker, new DHCP/health and LAN TLS | 3.777 |
-| Orderly stop/start | Old process tree and IPC removed; allocations/selection withdrawn; pause/history retained; old operations reject before and after new forwarding | 5.289 |
-| Whole writer SIGKILL | New writer/worker invocation; old processes gone; higher epoch and WAITING/empty allocations before reacquisition; old requests reject; new TLS works | 7.165 |
-| Delayed old ip helper | Real inherited lock blocks competitor after writer death; systemd kills old helper before replacement; deferred old ip never executes; fresh B works | 12.850 |
-| Startup limiter and explicit repair | Invalid config exhausts the real start limiter; valid config alone remains blocked; explicit writer reset permits recovery without resetting switch history | 6.070 |
+| Readiness and credentials | Actual Type=notify writer, then non-root worker, new DHCP/health and LAN TLS | 3.814 |
+| Orderly stop/start | Old process tree and IPC removed; allocations/selection withdrawn; pause/history retained; old operations reject before and after new forwarding | 5.467 |
+| Whole writer SIGKILL | New writer/worker invocation; old processes gone; higher epoch and WAITING/empty allocations before reacquisition; old requests reject; new TLS works | 7.222 |
+| Delayed old ip helper | Real inherited lock blocks competitor after writer death; systemd kills old helper before replacement; deferred old ip never executes; fresh B works | 12.895 |
+| Startup limiter and explicit repair | Invalid config exhausts the real start limiter; valid config alone remains blocked; explicit writer reset permits recovery without resetting switch history | 6.224 |
 
 The actual installed worker readback is UID **996**, GID **990**, in all four
 credential fields; effective/permitted/inheritable/ambient/bounding capabilities
@@ -69,20 +69,22 @@ is deleted; relying on that same interface would make a negative-only test weak.
 ## Measurements and limiter interpretation
 
 One controlled SIGKILL-to-observed-writer/worker-ready-and-IPC interval was
-**2.194 seconds**. It is not time to WAN restoration, a repeated latency
+**2.215 seconds**. It is not time to WAN restoration, a repeated latency
 statistic, an upper bound or an availability guarantee. Subsequent lease/health
 and TLS checks are separate observations. Case durations include server control,
 intentional waits and observations; they are not comparative performance results.
 
 VM process RSS snapshots after the SIGKILL recovery/forwarding check:
-writer **25,232 KiB**, worker **11,820 KiB**. They are not peaks and exclude clients,
+writer **24,624 KiB**, worker **11,832 KiB**. They are not peaks and exclude clients,
 kernel, fixture and whole-VM overhead. No native-macOS-versus-VM speed/RSS advantage
 is claimed; macOS runs portable tests only.
 
 StartLimitBurst is **3** in **60 seconds**; RestartSec is **2 seconds**. In this
 VM the recorded NRestarts is **1**, while the service-manager log confirms the
 start-request limit. NRestarts is not the count of all start requests. Result
-remains **exit-code** here, so the gate checks the actual limiter observation,
+remains **exit-code** here. The report retains the cursor sampled before the
+fault and the matching journal entry read after it: same boot, newer monotonic
+time and the correct unit. The gate checks this scoped limiter observation,
 bounded/stable restart count and repaired-start rejection rather than assuming
 Result must be the string start-limit-hit. A failed/inactive worker has no network
 write authority. Explicit reset restores service while preserving prior switch
@@ -96,12 +98,13 @@ history; the new initial selection adds its normal charged entry.
   behavior is portable logic coverage, not Linux enforcement.
 - The same frozen source/client runs **five control plus nine automatic VM
   regression cases** in fresh fixtures after the five installed cases.
-- **71 corrupted-evidence controls** reject: 57 inherited and 14 installed-specific.
+- **80 corrupted-evidence controls** reject: 57 inherited and 23 installed-specific.
   Normal and optimized Python verification agree. Unit hashes, cross-phase client
   builds, source, credentials, old requests, quarantine, limiter and cleanup are
   checked; HTML exactly renders JSON and standalone test receipts match embeds.
-- Twelve recorded workflow attempts are retained: eleven failed during integration
-  and the twelfth passed all gates. None of the failures is relabelled a pass.
+- Thirteen workflow attempts are retained: eleven failed during initial integration,
+  the twelfth passed the original gates, and this review rerun passed the stricter
+  gates on its revised source. None of the failures is relabelled a pass.
   Attempts include hook permissions, a production BusyBox argv[0] dispatch defect,
   fixture API errors, invalid fallback assumptions, legitimate revision changes,
   unloaded-unit reset handling and actual systemd CONT/Result semantics.
@@ -111,6 +114,29 @@ history; the new initial selection adds its normal charged entry.
   VM root-network semantics are unchanged, source/build snapshot is removed and
   the dedicated VM is **Stopped**. Existing host accounts are left unchanged;
   a fixture-created account is removed only after ownership checking.
+
+## Agents review and evidence corrections
+
+Two independent read-only reviews checked production lifecycle/locking and the
+VM/report correspondence. No reproducible product privilege or takeover defect
+was found. A concrete verifier gap was reproduced: changing the writer readback
+to excessive capabilities or NoNewPrivs=0 still passed the original gate, although
+the real recorded process had the correct restrictions. The revised guest and
+report explicitly require the exact 0x3400 mask and NoNewPrivs=1.
+
+The review also tightened proof of recovery: WAITING must include zero good/bad/
+deadline and round -1; later selection must use a new session, higher generation
+and at least two fresh health rounds. Restart-limit evidence is scoped by a
+pre-fault journal cursor plus boot/time/unit correspondence rather than a boolean
+from an unscoped log search. Nine new whole-report negative controls reject
+writer privilege changes, residual health, insufficient fresh quorum, reused
+session, missing limiter entries, old timestamps and a different boot.
+
+The complete same-source dual-platform and installed/foreground VM suites were
+rerun after these changes. The original passing attempt is retained with its old
+source fingerprint; it has not been assigned this revision's fingerprint. Both
+normal and optimized verification pass all 80 corruption controls, and HTML and
+standalone test receipts correspond to this new JSON.
 
 ## Material limits
 

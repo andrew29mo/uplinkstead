@@ -127,7 +127,7 @@ def run(root,source):
             except OSError:return
         return wait(check,30)
     def assert_empty(s):
-        assert s['state']['active'] is None and all(r['current'] is None and r['state']=='WAITING' for r in s['state']['links'].values())
+        assert s['state']['active'] is None and all(r['current'] is None and r['state']=='WAITING' and r['good']==r['bad']==r['until']==0 and r['round']==-1 for r in s['state']['links'].values())
         assert all(not rows for rows in net().values())
     def start():system('start',UNIT);return ready()
     def write(path,value,mode=0o644):
@@ -170,7 +170,7 @@ def run(root,source):
         began=time.monotonic();started=start();state_inode=STATE.stat().st_ino;ownership['state_inode']=state_inode;own();s=selected()
         writer=process(int(started['writer']['MainPID']));worker=process(int(started['worker']['MainPID']))
         assert worker['uid']==[identity.pw_uid]*4 and all(int(v,16)==0 for v in worker['caps'].values()) and worker['no_new_privs']=='1'
-        assert writer['uid']==[0]*4 and started['writer']['Type']=='notify' and started['writer']['KillMode']=='control-group'
+        assert writer['uid']==[0]*4 and writer['no_new_privs']=='1' and all(int(writer['caps'][k],16)==0x3400 for k in ('CapEff','CapPrm','CapBnd')) and all(int(writer['caps'][k],16)==0 for k in ('CapInh','CapAmb')) and started['writer']['Type']=='notify' and started['writer']['KillMode']=='control-group'
         denied=cmd(['runuser','-u','uplinkstead','--','cat',str(STATE/'journal.sqlite')],check=False);assert denied.returncode!=0
         response=f.client();assert response['ok']
         case('installed_units_readiness_and_worker',began,start=started,selected=s,writer=writer,worker=worker,worker_journal_denied=True,client=response)
@@ -214,17 +214,23 @@ def run(root,source):
         system('stop',UNIT);fault.unlink();installed.remove(fault);system('daemon-reload');f.fault('A',False)
         began=time.monotonic()
         with sqlite3.connect(STATE/'journal.sqlite') as db:before_failure=json.loads(db.execute('select value from state where id=1').fetchone()[0])
+        journal_before=json.loads(cmd(['journalctl','-b','-u',UNIT,'-n','1','--no-pager','-o','json']).stdout)
+        journal_fields=('__CURSOR','__MONOTONIC_TIMESTAMP','_BOOT_ID','UNIT','_SYSTEMD_UNIT','MESSAGE')
+        journal_before={k:journal_before[k] for k in journal_fields if k in journal_before}
         saved=CONFIG.read_text();CONFIG.write_text('{invalid-json');system('reset-failed',UNIT,WORKER,check=False);system('start',UNIT,check=False)
         wait(lambda:props(UNIT)['ActiveState']=='failed',25);failed=props(UNIT);failed_worker=props(WORKER)
         time.sleep(3);stable_failure=props(UNIT)
-        messages=cmd(['journalctl','-b','-u',UNIT,'-n','120','--no-pager','-o','cat']).stdout
-        limit_observed='Start request repeated too quickly.' in messages
+        messages=cmd(['journalctl','-b','-u',UNIT,'--after-cursor='+journal_before['__CURSOR'],'--no-pager','-o','json']).stdout
+        entries=[json.loads(row) for row in messages.splitlines()]
+        limit_entries=[{k:r[k] for k in journal_fields if k in r} for r in entries if r.get('MESSAGE','').endswith('Start request repeated too quickly.')]
+        limit_observed=bool(limit_entries)
+        assert all(r['_BOOT_ID']==journal_before['_BOOT_ID'] and int(r['__MONOTONIC_TIMESTAMP'])>int(journal_before['__MONOTONIC_TIMESTAMP']) and r['__CURSOR']!=journal_before['__CURSOR'] for r in limit_entries)
         assert limit_observed and stable_failure['ActiveState']=='failed' and stable_failure['NRestarts']==failed['NRestarts'] and 1<=int(failed['NRestarts'])<=3
         assert failed_worker['ActiveState']!='active' and not net()['41203']
         CONFIG.write_text(saved);retry=system('start',UNIT,check=False);assert retry.returncode!=0
         system('reset-failed',UNIT);system('reset-failed',WORKER,check=False);start();after=selected();assert f.client()['ok']
         assert after['state']['history'][:-1]==before_failure['history'] and after['state']['paused']==before_failure['paused'] and after['state']['latched']==before_failure['latched']
-        case('bounded_restart_failure_and_explicit_repair',began,failed=failed,failed_worker=failed_worker,stable_failure=stable_failure,start_limit_observed=limit_observed,before=before_failure,repair_without_reset_exit=retry.returncode,after=after,explicit_reset_recovered=True)
+        case('bounded_restart_failure_and_explicit_repair',began,failed=failed,failed_worker=failed_worker,stable_failure=stable_failure,start_limit_observed=limit_observed,journal_before=journal_before,limit_entries=limit_entries,before=before_failure,repair_without_reset_exit=retry.returncode,after=after,explicit_reset_recovered=True)
         result['worker_file_sha256']=digest(Path('/usr/libexec/uplinkstead-dual-worker.py'));result['wire_counters']=f.counters()
     except BaseException as exc:
         result['failure']=dict(type=type(exc).__name__,message=str(exc)[:1500]);persist()

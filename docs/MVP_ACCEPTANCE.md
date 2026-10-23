@@ -250,3 +250,8 @@ configuration alone must not silently reset the limiter, and explicit repair mus
 restore service without application budget reset. Identical dual-platform suites,
 prior VM regressions, unit/client/source correspondence, negative report controls
 and owned cleanup are required. No reboot/power-loss/zero-gap/capacity claim.
+Writer capability and NoNewPrivs readbacks are checked explicitly, not only inferred
+from the unit file. Cold health includes zero good/bad/deadline and round -1;
+reacquisition must replace session/generation and earn new quorum. Limiter evidence
+must include actual same-boot journal records newer than the pre-fault cursor/time,
+in addition to the bounded failed state and repaired-start rejection.

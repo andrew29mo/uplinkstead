@@ -117,6 +117,12 @@ fixtures. Portable tests check the formal stop recovery core and notify socket;
 macOS does not execute systemd or Linux routing. JSON/HTML verification binds unit
 hashes, worker/client provenance, epochs, fresh acquisition, rejection and cleanup.
 VM RSS values are process snapshots, not peaks or physical host memory comparisons.
+The evidence gate checks the writer's exact capability mask and NoNewPrivs as
+well as worker credentials. Recovery must clear health counters, round and
+deadline; later forwarding needs a different client session, higher generation
+and new health quorum. Restart-limit journal entries are read after a cursor
+sampled before the fault, retained with boot/time/unit identity, and rejected if
+they belong to an earlier interval. A boolean copied from an old log is not proof.
 
 This does **not** qualify VM reboot, sudden power loss, boot-zero-gap protection,
 capacity exhaustion, every helper/kernel interleaving or uninterrupted existing

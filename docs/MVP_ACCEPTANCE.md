@@ -266,7 +266,11 @@ Qualified separately in [storage evidence](../reviews/dhcp-storage/README.md):
 - Real readonly-volume post-crash ExecStopPost recovery must observe READONLY;
   competing lock and foreign scope must prevent unauthorized withdrawal.
 - A non-durable quarantine receipt must never mean successful mutation or READY.
-- Repair must preserve policy/history/receipts, start with no usable old lease or
+- A narrowly identified zero-byte, owned, sidecar-free initial SQLite file must
+  recover after first-CREATE failure; missing schemas in nonempty DBs or sidecars
+  must not grant fresh-state authority (portable core qualification).
+- Repair must retain pause/latch before acquisition and after fresh health, require
+  explicit successful resume when paused, preserve policy/history/receipts, start with no usable old lease or
   health, reject retired operations, and require fresh evidence before new traffic.
 - Main routes, RPDB and unrelated foreign routes must remain unchanged, with a
   separate positive traffic witness and negative no-borrowing test.

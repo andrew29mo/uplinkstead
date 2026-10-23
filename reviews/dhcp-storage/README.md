@@ -1,15 +1,15 @@
 # Dual-DHCP storage failure and repair
 
-Run `d3033d933f295d2c`, same-source fingerprint
-`0210c9e78bc6e55800048a47b71db6283b27c5e194109fe8faaf946da4a23e60`.
+Run `6c2e88e117fa9d80`, same-source fingerprint
+`e94b2ed163e80cf69d09e1682fdec7dbd0134a0ec57a8896f1208f173a946441`.
 
 [JSON](evidence.json) · [HTML](report.html) · [macOS](native-unit.json) ·
 [Linux](linux-unit.json) · [All attempts](attempts.json) ·
 [Contract and reproduction](../../docs/DHCP_STORAGE.md)
 
-macOS and Linux each passed 270 tests, with no skips. The installed-service VM
+macOS and Linux each passed 273 tests, with no skips. The installed-service VM
 suite passed five systemd cases, five control cases, nine automatic-routing cases
-and three additional storage cases. All 94 corrupted-evidence controls rejected.
+and three additional storage cases. All 97 corrupted-evidence controls rejected.
 The VM was stopped; owned processes, namespaces, installed artifacts, source
 snapshot, loop mount and loop device were removed. Root networking was unchanged.
 
@@ -54,9 +54,9 @@ difference by requiring every journal byte to remain unchanged.
 
 | Case | Whole-case seconds | Recovered process RSS snapshots (KiB) |
 |---|---:|---|
-| enospc | 10.111 | {"worker": 11828, "writer": 24592} |
-| sqlite_full | 10.427 | {"worker": 11828, "writer": 25396} |
-| readonly | 9.736 | {"worker": 11828, "writer": 24532} |
+| enospc | 10.356 | {"worker": 11828, "writer": 24536} |
+| sqlite_full | 10.405 | {"worker": 11832, "writer": 25376} |
+| readonly | 9.681 | {"worker": 11832, "writer": 24556} |
 
 These are Linux VM observations, separate from macOS unit receipts. Whole-case
 time includes fault setup, polling, failed operations, repair and fresh traffic;
@@ -75,3 +75,28 @@ Two unsuccessful attempts are retained separately, including manual cleanup of
 the second run's owned source snapshot after its syntax error. They are not
 relabelled as passes. The successful runner additionally checks all frozen Python
 source syntax before installing anything.
+
+
+## Follow-up review corrections
+
+Independent code and evidence review identified and fixed:
+
+- A failed initial SQLite CREATE can leave an empty file. The formal core now
+  permits only a narrowly identified owned, single-link, zero-byte file without
+  journal/WAL/SHM sidecars as uninitialized, granting no durable route authority.
+  Three new portable tests reproduce initial FULL and repair, reject sidecars,
+  and reject nonempty missing-schema databases. This edge was not separately
+  fault-injected into systemd in the VM; external truncation/corruption remains
+  unqualified.
+- Repair validation now checks pause/latch retention before acquisition and after
+  fresh health, and requires a successful explicit resume for previously paused
+  policy. Negative controls reject cleared policy and missing resume receipts.
+  Prior raw evidence had retained pause correctly; the defect was a validation
+  gap, not observed unauthorized forwarding.
+- HTML now distinguishes qualified bounded storage faults from untested capacity
+  longevity; the inherited blanket denial of capacity qualification was removed.
+
+The current receipts are a new same-source full run after these changes. The prior
+successful run remains in Git history and its attempt metadata is retained; no
+old observations have been relabelled as new measurements. Abrupt power loss,
+VM reboot under these faults and boot zero-gap remain untested.

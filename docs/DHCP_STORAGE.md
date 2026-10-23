@@ -24,6 +24,15 @@ Helpers inherit the same lock descriptor.
 An existing lock is opened read-only, so acquiring the same flock does not itself
 require a writable filesystem. Startup reads and validates an existing snapshot
 through a read-only SQLite connection before attempting normal writable recovery.
+A failed first CREATE can leave a zero-byte SQLite file. Only an owned regular
+file with one link and no journal/WAL/SHM sidecar is accepted as uninitialized;
+it confers no durable ownership. Nonempty databases missing the schema remain
+errors, not fresh state. Portable tests reproduce the initial SQLite FULL and
+reopen after resource repair, and reject sidecars or unrelated schemas. This
+startup edge is a portable formal-core test, not a separately injected VM fault.
+An empty file cannot distinguish failed first creation from external truncation
+of an old journal; corruption/history recovery after truncation is not qualified.
+
 Invalid/mismatched/unreadable state, missing durable authority, a competing lock
 or foreign scoped network contents do not authorize blind deletion. Failure to
 confirm quarantine is reported as such; it is not a safety-success receipt.
@@ -108,6 +117,11 @@ a third fixture-only main path remains viable while LAN forwarding is rejected.
 
 After each repair, the same journal is reopened, servers initially withhold new
 leases, and new sessions/zero health are observed before new acquisition/quorum.
+Repair must retain paused and latched at both the pre-acquisition and fresh-health
+checkpoints. A previously paused service needs an explicitly successful resume;
+fresh health alone must not clear that policy. Report controls deliberately
+corrupt these fields and omit the resume receipt to challenge false acceptance.
+
 Old root operations, worker proposals and retired hooks reject before and after
 fresh forwarding. JSON/HTML retain actual errors, scope/readback, API outcomes,
 recovery, process RSS snapshots, case durations and cleanup. Durations include

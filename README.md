@@ -159,7 +159,7 @@ snapshot, production recovery can withdraw only its controlled routing without a
 successful journal write. Foreign scope or unknown ownership refuses withdrawal;
 this is not a universal fail-closed guarantee.
 
-[Same-source evidence](reviews/dhcp-storage/README.md) contains 270 tests on each
+[Same-source evidence](reviews/dhcp-storage/README.md) contains 273 tests on each
 platform and three additional isolated Linux VM cases: real ext4 ENOSPC, SQLite
 page-capacity FULL, and readonly post-crash stop recovery. Repair retains policy
 limits/receipts and requires a fresh durable epoch, leases and health. Timings and

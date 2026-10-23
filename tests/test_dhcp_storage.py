@@ -68,3 +68,34 @@ class StorageTests(unittest.TestCase):
         with patch.object(self.w.backend,'reconcile',side_effect=RuntimeError('foreign scope')),contextlib.redirect_stderr(io.StringIO()),self.assertRaises(StorageUnavailable):self.pause()
         self.assertFalse(self.w.storage_fault['quarantined']);self.assertIn('foreign scope',self.w.storage_fault['quarantine_error'])
         with self.assertRaises(RuntimeError):self.choose('B')
+
+    def test_failed_first_create_empty_database_recovers_without_invented_authority(self):
+        import tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as path:
+            dbpath=Path(path)/'journal.sqlite';db=sqlite3.connect(dbpath,isolation_level=None)
+            db.execute('PRAGMA max_page_count=1')
+            with self.assertRaises(sqlite3.OperationalError) as error:
+                db.execute('CREATE TABLE state (id INTEGER PRIMARY KEY, value TEXT NOT NULL)')
+            self.assertEqual(error.exception.sqlite_errorcode&255,13);db.close();self.assertEqual(dbpath.stat().st_size,0)
+            with DualLifecycle(self.c,path,core.ScopedBackend,clock=lambda:self.time,boot=lambda:self.boot) as writer:
+                self.assertEqual(writer.s['phase'],'READY');self.assertIsNone(writer.s['active'])
+                self.assertEqual(writer.s['history'],[])
+                self.assertTrue(all(v['current'] is None for v in writer.s['links'].values()))
+
+    def test_empty_database_with_sidecar_is_not_treated_as_fresh(self):
+        import tempfile
+        from pathlib import Path
+        for suffix in ('-journal','-wal','-shm'):
+            with self.subTest(suffix=suffix),tempfile.TemporaryDirectory() as path:
+                p=Path(path)/'journal.sqlite';p.touch();Path(str(p)+suffix).touch();factory=Mock()
+                with self.assertRaises(sqlite3.Error):DualLifecycle(self.c,path,factory).__enter__()
+                factory.assert_not_called()
+
+    def test_nonempty_missing_schema_is_not_treated_as_fresh(self):
+        import tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as path:
+            db=sqlite3.connect(Path(path)/'journal.sqlite');db.execute('CREATE TABLE unrelated (value TEXT)');db.close();factory=Mock()
+            with self.assertRaises(sqlite3.Error):DualLifecycle(self.c,path,factory).__enter__()
+            factory.assert_not_called()

@@ -96,8 +96,10 @@ def storage_tests(ctx):
         system('reset-failed',UNIT,WORKER,check=False);system('start',UNIT);r=ready();installed_status=r['status'];assert installed_status['state']['active'] is None
         assert all(v['current'] is None and v['state']=='WAITING' and v['good']==v['bad']==v['until']==0 and v['round']==-1 for v in installed_status['state']['links'].values())
         assert installed_status['state']['config_hash']==before['config_hash'] and installed_status['state']['history']==before['history'] and installed_status['state']['operations']==before['operations']
+        assert all(installed_status['state'][k]==before[k] for k in ('paused','latched'))
         rejected=stale(old);servers(True)
         fresh=ctx['observed'](lambda s:all(v['state']=='HEALTHY' for v in s['state']['links'].values()))
+        assert all(fresh['state'][k]==before[k] for k in ('paused','latched'))
         resume=cli('resume') if fresh['state']['paused'] else None
         if resume:assert resume['exit_code']==0
         after=selected();again=stale(old);client=f.client();assert client['ok']

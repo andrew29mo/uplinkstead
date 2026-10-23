@@ -120,7 +120,10 @@
     "test_dhcp_stage1_fixture.Stage1FixtureTests.test_wait_predicate_failure_is_not_swallowed",
     "test_dhcp_stage1_fixture.Stage1FixtureTests.test_wait_returns_observed_payload",
     "test_dhcp_storage.StorageTests.test_competing_readonly_lock_cannot_reach_backend",
+    "test_dhcp_storage.StorageTests.test_empty_database_with_sidecar_is_not_treated_as_fresh",
+    "test_dhcp_storage.StorageTests.test_failed_first_create_empty_database_recovers_without_invented_authority",
     "test_dhcp_storage.StorageTests.test_fresh_storage_failure_cannot_invent_durable_ownership",
+    "test_dhcp_storage.StorageTests.test_nonempty_missing_schema_is_not_treated_as_fresh",
     "test_dhcp_storage.StorageTests.test_partial_actual_write_uses_both_durable_and_memory_authority",
     "test_dhcp_storage.StorageTests.test_real_sqlite_full_and_restart_only_capacity_repair",
     "test_dhcp_storage.StorageTests.test_real_sqlite_readonly_retires_and_quarantines_without_commit",
@@ -272,11 +275,11 @@
     "test_service.ServiceTests.test_uncertain_command_does_not_keep_serving_even_without_pending",
     "test_service.ServiceTests.test_untrusted_peer_and_worker_operator_denied"
   ],
-  "count": 270,
+  "count": 273,
   "failures": 0,
   "errors": 0,
   "skipped": 0,
-  "source_sha256": "0210c9e78bc6e55800048a47b71db6283b27c5e194109fe8faaf946da4a23e60",
+  "source_sha256": "e94b2ed163e80cf69d09e1682fdec7dbd0134a0ec57a8896f1208f173a946441",
   "platform": "Linux",
   "python": "3.12.3"
 }

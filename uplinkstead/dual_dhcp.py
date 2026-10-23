@@ -82,7 +82,15 @@ class DualLifecycle(Writer):
             path = self.directory/'journal.sqlite'
             if path.is_symlink():raise Blocked('Unsafe journal')
             row=None
+            uninitialized=False
             if path.exists():
+                st=path.lstat()
+                uninitialized=(stat.S_ISREG(st.st_mode) and st.st_uid==os.geteuid() and st.st_nlink==1 and st.st_size==0 and
+                               not any(Path(str(path)+suffix).exists() or Path(str(path)+suffix).is_symlink() for suffix in ('-journal','-wal','-shm')))
+            # A failed first CREATE can leave an owned empty SQLite file. It
+            # carries no durable authority; never generalize this to missing
+            # schemas, hot journals or corrupt/nonempty snapshots.
+            if path.exists() and not uninitialized:
                 reader=sqlite3.connect(path.resolve().as_uri()+'?mode=ro',uri=True,isolation_level=None)
                 try:row=reader.execute('SELECT value FROM state WHERE id=1').fetchone()
                 finally:reader.close()
